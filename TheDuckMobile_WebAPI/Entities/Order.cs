@@ -5,6 +5,7 @@ namespace TheDuckMobile_WebAPI.Entities
 {
     public class Order
     {
+        [Key]
         public Guid OrderId { get; set; }
 
         [Range(minimum: 0, maximum: double.MaxValue)]

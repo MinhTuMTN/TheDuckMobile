@@ -4,7 +4,6 @@ namespace TheDuckMobile_WebAPI.Entities
 {
     public class StoreProduct
     {
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
         [Key]
         public Guid StoreProductId { get; set; }
         [Required]
@@ -22,6 +21,8 @@ namespace TheDuckMobile_WebAPI.Entities
         //Quan hệ 1-n đến ProductVersion
         public Guid ProductVersionId { get; set; }
         public virtual ProductVersion ProductVersion { get; set; }
+
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
 
     }
 }

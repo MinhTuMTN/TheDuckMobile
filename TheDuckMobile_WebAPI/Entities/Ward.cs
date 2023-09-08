@@ -1,7 +1,10 @@
-﻿namespace TheDuckMobile_WebAPI.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TheDuckMobile_WebAPI.Entities
 {
     public class Ward
     {
+        [Key]
         public Guid WardId { get; set; }
         public string WardName { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace TheDuckMobile_WebAPI.Entities
 {
-    public class SmartWatch
+    public class SmartWatch : ProductVersion
     {
         public int InternalMemory { get; set; }
         public string WaterResistance { get; set; }

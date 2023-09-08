@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace TheDuckMobile_WebAPI.Entities
 {
@@ -13,11 +15,22 @@ namespace TheDuckMobile_WebAPI.Entities
         [RegularExpression(@"^(\+84|0)\d{9}$")]
         public string FeedbackPersonPhone { get; set; }
         [Required]
-        public string Content { get; set; } 
-        public List<string> FeedbackImages { get; set; }
+        public string Content { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public Guid CustomerId { get; set; }
-        public virtual Customer Customer { get; set; }
+        public string FeedbackImagesJson
+        {
+            get
+            {
+                return JsonSerializer.Serialize(FeedbackImages);
+            }
+            set
+            {
+                FeedbackImages = JsonSerializer.Deserialize<List<string>>(value);
+            }
+        }
+
+        [NotMapped]
+        public List<string> FeedbackImages { get; set; } = new List<string>();
     }
 }

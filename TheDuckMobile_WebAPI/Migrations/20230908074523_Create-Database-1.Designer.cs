@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheDuckMobile_WebAPI.Entities;
 
@@ -11,9 +12,11 @@ using TheDuckMobile_WebAPI.Entities;
 namespace TheDuckMobile_WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230908074523_Create-Database-1")]
+    partial class CreateDatabase1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,6 +248,9 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("FeedbackImagesJson")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -261,6 +267,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FeedbackId");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Feedbacks");
                 });
@@ -417,6 +425,9 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("BrandId")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("ColorId")
                         .HasColumnType("uniqueidentifier");
 
@@ -474,6 +485,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductVersionId");
+
+                    b.HasIndex("BrandId");
 
                     b.HasIndex("ColorId");
 
@@ -1058,6 +1071,17 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("Provine");
                 });
 
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Feedback", b =>
+                {
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.Customer", "Customer")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Order", b =>
                 {
                     b.HasOne("TheDuckMobile_WebAPI.Entities.Address", "Address")
@@ -1141,6 +1165,10 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.ProductVersion", b =>
                 {
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.Brand", null)
+                        .WithMany("ProductVersions")
+                        .HasForeignKey("BrandId");
+
                     b.HasOne("TheDuckMobile_WebAPI.Entities.Color", "Color")
                         .WithMany("ProductVersions")
                         .HasForeignKey("ColorId")
@@ -1225,6 +1253,8 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Brand", b =>
                 {
+                    b.Navigation("ProductVersions");
+
                     b.Navigation("Products");
                 });
 
@@ -1306,6 +1336,8 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Customer", b =>
                 {
+                    b.Navigation("Feedbacks");
+
                     b.Navigation("Orders");
 
                     b.Navigation("Votes");

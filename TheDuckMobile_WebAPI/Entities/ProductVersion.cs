@@ -1,7 +1,10 @@
-﻿namespace TheDuckMobile_WebAPI.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TheDuckMobile_WebAPI.Entities
 {
     public class ProductVersion
     {
+        [Key]
         public Guid ProductVersionId { get; set; }
         public double Price { get; set; }
         public string RAM { get; set; }

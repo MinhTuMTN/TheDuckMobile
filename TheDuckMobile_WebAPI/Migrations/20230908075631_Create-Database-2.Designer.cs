@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheDuckMobile_WebAPI.Entities;
 
@@ -11,9 +12,11 @@ using TheDuckMobile_WebAPI.Entities;
 namespace TheDuckMobile_WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230908075631_Create-Database-2")]
+    partial class CreateDatabase2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,6 +248,9 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("CustomerUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("FeedbackImagesJson")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -261,6 +267,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FeedbackId");
+
+                    b.HasIndex("CustomerUserId");
 
                     b.ToTable("Feedbacks");
                 });
@@ -1058,6 +1066,13 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("Provine");
                 });
 
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Feedback", b =>
+                {
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.Customer", null)
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("CustomerUserId");
+                });
+
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Order", b =>
                 {
                     b.HasOne("TheDuckMobile_WebAPI.Entities.Address", "Address")
@@ -1306,6 +1321,8 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Customer", b =>
                 {
+                    b.Navigation("Feedbacks");
+
                     b.Navigation("Orders");
 
                     b.Navigation("Votes");

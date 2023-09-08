@@ -14,7 +14,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("LearnASPDB"));
+            options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("TheDuckMobile"));
         }
 
 
@@ -77,19 +77,22 @@ namespace TheDuckMobile_WebAPI.Entities
             modelBuilder.Entity<Address>()
                 .HasOne(address => address.Ward)
                 .WithMany(w => w.Addresses)
-                .HasForeignKey (address => address.WardId);
+                .HasForeignKey(address => address.WardId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             //Quan hệ address - district
             modelBuilder.Entity<Address>()
                 .HasOne(address => address.District)
                 .WithMany(district => district.Addresses)
-                .HasForeignKey(address => address.DistrictId);
+                .HasForeignKey(address => address.DistrictId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             //Quan hệ address - provine
             modelBuilder.Entity<Address>()
                 .HasOne(address => address.Provine)
                 .WithMany(provine => provine.Addresses)
-                .HasForeignKey(address => address.ProvineId);
+                .HasForeignKey(address => address.ProvineId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Brand - Product Relationship
             modelBuilder.Entity<Product>()
@@ -125,7 +128,8 @@ namespace TheDuckMobile_WebAPI.Entities
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.StoreProduct)
                 .WithMany(StoreProduct => StoreProduct.OrderItems)
-                .HasForeignKey(oi => oi.StoreProductId);
+                .HasForeignKey(oi => oi.StoreProductId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // OrderItem - Order Relationship
             modelBuilder.Entity<OrderItem>()
@@ -143,13 +147,15 @@ namespace TheDuckMobile_WebAPI.Entities
             modelBuilder.Entity<Order>()
                 .HasOne(order => order.Staff)
                 .WithMany(staff => staff.Orders)
-                .HasForeignKey(order => order.StaffId);
+                .HasForeignKey(order => order.StaffId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Order - Store Relationship
             modelBuilder.Entity<Order>()
                 .HasOne(order => order.Store)
                 .WithMany(store => store.Orders)
-                .HasForeignKey(order => order.StoreId);
+                .HasForeignKey(order => order.StoreId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Order - Address Relationship
             modelBuilder.Entity<Order>()
@@ -169,11 +175,12 @@ namespace TheDuckMobile_WebAPI.Entities
             modelBuilder.Entity<Staff>()
                 .HasOne(staff => staff.Store)
                 .WithMany(store => store.Staffs)
-                .HasForeignKey(staff => staff.StoreId);
+                .HasForeignKey(staff => staff.StoreId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             //Quan hệ StoreProduct - Store
             modelBuilder.Entity<StoreProduct>()
-                .HasOne (sp => sp.Store)
+                .HasOne(sp => sp.Store)
                 .WithMany(store => store.StoreProducts)
                 .HasForeignKey(sp => sp.StoreId);
 
@@ -226,10 +233,12 @@ namespace TheDuckMobile_WebAPI.Entities
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<OS> OSs { get; set; }
+        public DbSet<Phone> Phones { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductVersion> ProductVersions { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<Provine> Provines { get; set; }
+        public DbSet<SmartWatch> SmartWatches { get; set; }
         public DbSet<SpecialFeature> SpecialFeatures { get; set; }
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Store> Stores { get; set; }

@@ -16,6 +16,6 @@
 
 
         public Guid OrderId;
-        public Order Order { get; set; }
+        public virtual Order Order { get; set; }
     }
 }
