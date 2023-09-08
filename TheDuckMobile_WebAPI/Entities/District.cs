@@ -11,7 +11,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         //Tham chieu toi bang provine qua ProvineId (1 district thuoc 1 provine)
         public byte ProvineId { get; set; }
-        public Provine Provine { get; set; }
+        public virtual Provine Provine { get; set; }
 
         //Chứa danh sách các Address (1 district chứa nhiều Address)
         public virtual ICollection<Address> Addresses { get; set; }

@@ -13,10 +13,15 @@ namespace TheDuckMobile_WebAPI.Entities
         public bool IsDeleted { get; set; }
 
         //Quan hệ 1 - 1 với bảng Address
-        public Guid AddressId { get; set; }
-        public Address Address { get; set; }
+        public virtual Address Address { get; set; }
 
+        //1 cửa hàng có nhiều nhân viên
+        public virtual ICollection<Staff> Staffs { get; set;}
 
+        //1 cửa hàng có nhiều StoreProduct
+        public virtual ICollection<StoreProduct> StoreProducts { get; set;}
 
+        //1 cửa hàng có nhiều order
+        public virtual ICollection<Order> Orders { get; set;}
     }
 }

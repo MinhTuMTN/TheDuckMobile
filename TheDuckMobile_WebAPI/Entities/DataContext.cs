@@ -45,6 +45,11 @@ namespace ASPWebAPI.Entities
                 .HasOne<Account>(u => u.Account)
                 .WithOne(acc => acc.User)
                 .HasForeignKey<Account>(account => account.UserId);
+
+            modelBuilder.Entity<Store>()
+                .HasOne(store => store.Address)
+                .WithOne(address => address.Store)
+                .HasForeignKey<Address>(add => add.StoreId);
             #endregion
 
             #region Primary Key 
@@ -82,6 +87,24 @@ namespace ASPWebAPI.Entities
                 .WithMany(provine => provine.Addresses)
                 .HasForeignKey(address => address.ProvineId);
 
+            //Quan hệ staff - store
+            modelBuilder.Entity<Staff>()
+                .HasOne(staff => staff.Store)
+                .WithMany(store => store.Staffs)
+                .HasForeignKey(staff => staff.StoreId);
+
+            //Quan hệ StoreProduct - Store
+            modelBuilder.Entity<StoreProduct>()
+                .HasOne (sp => sp.Store)
+                .WithMany(store => store.StoreProducts)
+                .HasForeignKey(sp => sp.StoreId);
+
+            //Quan hệ StoreProduct - ProductVersion
+            modelBuilder.Entity<StoreProduct>()
+                .HasOne(sp => sp.ProductVersion)
+                .WithMany(pdv => pdv.StoreProducts)
+                .HasForeignKey(sp => sp.ProductVersionId);
+
             #endregion
 
             #region Many to Many with extra column
@@ -89,11 +112,13 @@ namespace ASPWebAPI.Entities
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Staff> Staffs { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Provine> Provines { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Ward> Wards { get; set; }
         public DbSet<Address> Addresss { get; set; }
+        public DbSet<Store> Stores { get; set; }
 
     }
 }

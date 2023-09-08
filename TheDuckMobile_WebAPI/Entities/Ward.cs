@@ -7,7 +7,7 @@
 
         //Tham chiếu tới bảng district
         public Guid DistrictId { get; set; }
-        public District District { get; set; }
+        public virtual District District { get; set; }
 
         //Chứa danh sách các address
         public virtual ICollection<Address> Addresses { get; set; }
