@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TheDuckMobile_WebAPI.Entities;
 
 namespace ASPWebAPI.Entities
 {
@@ -51,6 +52,23 @@ namespace ASPWebAPI.Entities
 
 
             #region One to Many
+            // Product - Brand Relationship
+            /*modelBuilder.Entity<Product>()
+                .HasOne<Brand>(product => product.Brand)
+                .WithMany(brand => brand.Products)
+                .HasForeignKey<Product>(product => product.BrandId);*/
+
+            // Product - Vote Relationship
+            modelBuilder.Entity<Vote>()
+                .HasOne<Product>(vote => vote.Product)
+                .WithMany(product => product.Votes)
+                .HasForeignKey(vote => vote.ProductId);
+
+            // Customer - Vote Relationship
+            modelBuilder.Entity<Vote>()
+                .HasOne<Customer>(vote => vote.Customer)
+                .WithMany(customer => customer.Votes)
+                .HasForeignKey(vote => vote.CustomerId);
             #endregion
 
             #region Many to Many with extra column
@@ -59,5 +77,11 @@ namespace ASPWebAPI.Entities
 
         public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<OS> OSs { get; set; }
+        public DbSet<Catalog> Catalogs { get; set; }
+        public DbSet<Vote> Votes { get; set; }
+        public DbSet<Promotion> Promotions { get; set; }
+        public DbSet<SpecialFeature> SpecialFeatures { get; set; }
     }
 }
