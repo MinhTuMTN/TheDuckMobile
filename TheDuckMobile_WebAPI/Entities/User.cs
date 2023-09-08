@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TheDuckMobile_WebAPI.Common;
 
-namespace ASPWebAPI.Entities
+namespace TheDuckMobile_WebAPI.Entities
 {
     public class User
     {
@@ -12,13 +13,18 @@ namespace ASPWebAPI.Entities
         [MaxLength(100)]
         public string FullName { get; set; }
 
-        public string PhoneNumber { get; set; }
+        public Gender Gender { get; set; }
+
+        public string Avatar { get; set; }
+
+        [RegularExpression(@"^(\+84|0)\d{9}$")]
+        public string Phone { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedAt { get; set; }
+        public DateTime LastModifiredAt { get; set; }
 
         public bool IsDeleted { get; set; }
 
@@ -27,7 +33,9 @@ namespace ASPWebAPI.Entities
         public User()
         {
             this.FullName = "";
-            this.PhoneNumber = "";
+            this.Phone = "";
+            this.Avatar = "";
+            this.Account = new Account();
         }
     }
 }

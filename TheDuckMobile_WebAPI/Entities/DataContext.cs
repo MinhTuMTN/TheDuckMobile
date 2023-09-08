@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TheDuckMobile_WebAPI.Entities;
 
-namespace ASPWebAPI.Entities
+namespace TheDuckMobile_WebAPI.Entities
 {
     public class DataContext : DbContext
     {
@@ -13,7 +14,7 @@ namespace ASPWebAPI.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("LearnASPDB"));
+            options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("TheDuckMobile"));
         }
 
 
@@ -26,14 +27,14 @@ namespace ASPWebAPI.Entities
 
         private void TrackDate()
         {
-            foreach (var entityEntry in ChangeTracker.Entries())
-            {
-                if (entityEntry.Entity is User e
-                    && entityEntry.State != EntityState.Added)
-                {
-                    e.UpdatedAt = DateTime.Now;
-                }
-            }
+            //foreach (var entityEntry in ChangeTracker.Entries())
+            //{
+            //    if (entityEntry.Entity is User e
+            //        && entityEntry.State != EntityState.Added)
+            //    {
+            //        e.UpdatedAt = DateTime.Now;
+            //    }
+            //}
         }
 
 
@@ -51,6 +52,11 @@ namespace ASPWebAPI.Entities
 
 
             #region One to Many
+            modelBuilder.Entity<OrderItem>()
+                .HasOne<Order>(oi => oi.Order)
+                .WithMany(o => o.OrderItems)
+                .HasForeignKey(oi => oi.OrderId);
+
             #endregion
 
             #region Many to Many with extra column
@@ -59,5 +65,10 @@ namespace ASPWebAPI.Entities
 
         public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<ProductVersion> ProductVersions { get; set; }
+        public DbSet<Color> Colors { get; set; }
     }
 }

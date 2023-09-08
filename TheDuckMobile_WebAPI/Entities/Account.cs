@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ASPWebAPI.Entities
+namespace TheDuckMobile_WebAPI.Entities
 {
 
     public class Account
