@@ -6,7 +6,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
     public class Customer : User
     {
-        // public virtual ICollection<FeedBack> FeedBacks { get; set; }
+        public virtual ICollection<Feedback> Feedbacks { get; set; }
 
         public virtual ICollection<Vote> Votes { get; set; }
 

@@ -22,5 +22,7 @@
         public virtual Color Color { get; set; }
 
         public virtual ICollection<StoreProduct> StoreProducts { get; set;}
+        public Guid PromotionId { get; set; }
+        public virtual Promotion Promotion { get; set; }
     }
 }

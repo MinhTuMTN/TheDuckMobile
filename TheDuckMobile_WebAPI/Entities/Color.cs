@@ -10,11 +10,9 @@
         public DateTime LastModifiredAt { get; set; }
         public bool IsDeleted { get; set; }
 
-        public virtual ICollection<ProductVersion> ProductVersions { get; set; } = new List<ProductVersion>();
+        public virtual ICollection<ProductVersion> ProductVersions { get; set; }
 
-        public Guid ProductId;
+        public Guid ProductId { get; set; }
         public virtual Product Product { get; set; }
-
-
     }
 }

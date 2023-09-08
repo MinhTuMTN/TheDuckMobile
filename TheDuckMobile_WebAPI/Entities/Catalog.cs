@@ -16,5 +16,9 @@ namespace TheDuckMobile_WebAPI.Entities
         public DateTime LastModifiedAt { get; set; }
 
         public Boolean IsDeleted { get; set; }
+
+        public virtual ICollection<Brand> Brands { get; set; }
+
+        public virtual ICollection<SpecialFeature> SpecialFeatures { get; set; }
     }
 }

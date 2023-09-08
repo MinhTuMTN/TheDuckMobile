@@ -22,10 +22,15 @@ namespace TheDuckMobile_WebAPI.Entities
         public Boolean IsDeleted { get; set; }
 
         public int BrandId { get; set; }
-        // public virtual Brand Brands { get; set;  }
+        public virtual Brand Brand { get; set;  }
 
-        public virtual ICollection<Vote> Votes { get; set; } = new List<Vote>();
+        public virtual ICollection<Vote> Votes { get; set; }
 
-        public virtual ICollection<Color> Colors { get; set; } = new List<Color>();
+        public virtual ICollection<Color> Colors { get; set; }
+
+        public byte OSId { get; set; }
+        public virtual OS OS { get; set; }
+
+        public virtual ICollection<SpecialFeature> SpecialFeatures { get; set; }
     }
 }

@@ -91,11 +91,17 @@ namespace TheDuckMobile_WebAPI.Entities
                 .WithMany(provine => provine.Addresses)
                 .HasForeignKey(address => address.ProvineId);
 
-            // Product - Brand Relationship
-            /*modelBuilder.Entity<Product>()
+            // Brand - Product Relationship
+            modelBuilder.Entity<Product>()
                 .HasOne<Brand>(product => product.Brand)
                 .WithMany(brand => brand.Products)
-                .HasForeignKey<Product>(product => product.BrandId);*/
+                .HasForeignKey(product => product.BrandId);
+
+            // OS - Product Relationship
+            modelBuilder.Entity<Product>()
+                .HasOne<OS>(product => product.OS)
+                .WithMany(os => os.Products)
+                .HasForeignKey(product => product.OSId);
 
             // Product - Vote Relationship
             modelBuilder.Entity<Vote>()
@@ -176,10 +182,35 @@ namespace TheDuckMobile_WebAPI.Entities
                 .HasOne(sp => sp.ProductVersion)
                 .WithMany(pdv => pdv.StoreProducts)
                 .HasForeignKey(sp => sp.ProductVersionId);
+            // Vote - Customer Relationship
+            modelBuilder.Entity<Vote>()
+                .HasOne<Customer>(vote => vote.Customer)
+                .WithMany(customer => customer.Votes)
+                .HasForeignKey(vote => vote.CustomerId);
+
+            // Promotion - ProductVersion Relationship
+            modelBuilder.Entity<ProductVersion>()
+                .HasOne<Promotion>(productVersion => productVersion.Promotion)
+                .WithMany(promotion => promotion.ProductVersions)
+                .HasForeignKey(productVersion => productVersion.PromotionId);
 
             #endregion
 
             #region Many to Many with extra column
+            // Catalog - Brand Relationship
+            modelBuilder.Entity<Catalog>()
+                .HasMany<Brand>(catalog => catalog.Brands)
+                .WithMany(brand => brand.Catalogs);
+
+            // SpecialFeature - Catalog Relationship
+            modelBuilder.Entity<Catalog>()
+                .HasMany<SpecialFeature>(catalog => catalog.SpecialFeatures)
+                .WithMany(specialFeature => specialFeature.Catalogs);
+
+            // SpecialFeature - Product Relationship
+            modelBuilder.Entity<Product>()
+                .HasMany<SpecialFeature>(product => product.SpecialFeatures)
+                .WithMany(specialFeature => specialFeature.Products);
             #endregion
         }
         public DbSet<Account> Accounts { get; set; }

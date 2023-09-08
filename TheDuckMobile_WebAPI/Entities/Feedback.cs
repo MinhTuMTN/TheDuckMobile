@@ -15,6 +15,9 @@ namespace TheDuckMobile_WebAPI.Entities
         [Required]
         public string Content { get; set; } 
         public List<string> FeedbackImages { get; set; }
-        public DateTime CreatAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        public Guid CustomerId { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

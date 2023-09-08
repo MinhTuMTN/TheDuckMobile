@@ -14,5 +14,9 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public virtual ICollection<ProductVersion> ProductVersions { get; set; }
 
+
+        public virtual ICollection<Product> Products { get; set; }
+
+        public virtual ICollection<Catalog> Catalogs { get; set; }
     }
 }
