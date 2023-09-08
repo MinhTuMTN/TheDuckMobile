@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace ASPWebAPI.Config
+namespace TheDuckMobile_WebAPI.Config
 {
     public class AutoMapperProfile : Profile
     {

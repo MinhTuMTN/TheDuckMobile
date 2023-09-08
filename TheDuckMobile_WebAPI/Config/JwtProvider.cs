@@ -1,11 +1,11 @@
-﻿using ASPWebAPI.Entities;
+﻿using TheDuckMobile_WebAPI.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ASPWebAPI.Config
+namespace TheDuckMobile_WebAPI.Config
 {
     public class JwtProvider
     {

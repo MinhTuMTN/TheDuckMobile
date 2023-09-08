@@ -1,4 +1,4 @@
-﻿namespace ASPWebAPI.Models
+﻿namespace TheDuckMobile_WebAPI.Models
 {
     public class GenericResponse
     {
