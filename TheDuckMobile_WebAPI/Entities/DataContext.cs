@@ -32,7 +32,7 @@ namespace ASPWebAPI.Entities
                 if (entityEntry.Entity is User e
                     && entityEntry.State != EntityState.Added)
                 {
-                    e.UpdatedAt = DateTime.Now;
+                    //e.UpdatedAt = DateTime.Now;
                 }
             }
         }
