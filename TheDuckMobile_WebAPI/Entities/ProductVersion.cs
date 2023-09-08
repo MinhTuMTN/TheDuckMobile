@@ -20,5 +20,8 @@
 
         public Guid ColorId { get; set; }
         public virtual Color Color { get; set; }
+
+        public Guid PromotionId { get; set; }
+        public virtual Promotion Promotion { get; set; }
     }
 }
