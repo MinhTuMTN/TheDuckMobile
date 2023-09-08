@@ -20,5 +20,7 @@
 
         public Guid ColorId { get; set; }
         public virtual Color Color { get; set; }
+
+        public virtual ICollection<StoreProduct> StoreProducts { get; set;}
     }
 }

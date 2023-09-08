@@ -46,6 +46,11 @@ namespace TheDuckMobile_WebAPI.Entities
                 .HasOne<Account>(u => u.Account)
                 .WithOne(acc => acc.User)
                 .HasForeignKey<Account>(account => account.UserId);
+
+            modelBuilder.Entity<Store>()
+                .HasOne(store => store.Address)
+                .WithOne(address => address.Store)
+                .HasForeignKey<Address>(add => add.StoreId);
             #endregion
 
             #region Primary Key 
@@ -154,6 +159,23 @@ namespace TheDuckMobile_WebAPI.Entities
 
 
 
+            //Quan hệ staff - store
+            modelBuilder.Entity<Staff>()
+                .HasOne(staff => staff.Store)
+                .WithMany(store => store.Staffs)
+                .HasForeignKey(staff => staff.StoreId);
+
+            //Quan hệ StoreProduct - Store
+            modelBuilder.Entity<StoreProduct>()
+                .HasOne (sp => sp.Store)
+                .WithMany(store => store.StoreProducts)
+                .HasForeignKey(sp => sp.StoreId);
+
+            //Quan hệ StoreProduct - ProductVersion
+            modelBuilder.Entity<StoreProduct>()
+                .HasOne(sp => sp.ProductVersion)
+                .WithMany(pdv => pdv.StoreProducts)
+                .HasForeignKey(sp => sp.ProductVersionId);
 
             #endregion
 
