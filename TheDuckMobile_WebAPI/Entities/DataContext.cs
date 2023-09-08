@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Entities;
 
-namespace TheDuckMobile_WebAPI.Entities
+namespace ASPWebAPI.Entities
 {
     public class DataContext : DbContext
     {
@@ -14,7 +14,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("TheDuckMobile"));
+            options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("LearnASPDB"));
         }
 
 
@@ -27,14 +27,14 @@ namespace TheDuckMobile_WebAPI.Entities
 
         private void TrackDate()
         {
-            //foreach (var entityEntry in ChangeTracker.Entries())
-            //{
-            //    if (entityEntry.Entity is User e
-            //        && entityEntry.State != EntityState.Added)
-            //    {
-            //        e.UpdatedAt = DateTime.Now;
-            //    }
-            //}
+            foreach (var entityEntry in ChangeTracker.Entries())
+            {
+                if (entityEntry.Entity is User e
+                    && entityEntry.State != EntityState.Added)
+                {
+                    e.UpdatedAt = DateTime.Now;
+                }
+            }
         }
 
 
@@ -52,10 +52,35 @@ namespace TheDuckMobile_WebAPI.Entities
 
 
             #region One to Many
-            modelBuilder.Entity<OrderItem>()
-                .HasOne<Order>(oi => oi.Order)
-                .WithMany(o => o.OrderItems)
-                .HasForeignKey(oi => oi.OrderId);
+            //Quan hệ district - provine
+            modelBuilder.Entity<District>()
+                .HasOne(district => district.Provine)
+                .WithMany(provine => provine.Districts)
+                .HasForeignKey(district => district.ProvineId);
+
+            //Quan hệ ward - district
+            modelBuilder.Entity<Ward>()
+                .HasOne(w => w.District)
+                .WithMany(district => district.Wards)
+                .HasForeignKey(w => w.DistrictId);
+
+            //Quan hệ address - ward
+            modelBuilder.Entity<Address>()
+                .HasOne(address => address.Ward)
+                .WithMany(w => w.Addresses)
+                .HasForeignKey (address => address.WardId);
+
+            //Quan hệ address - district
+            modelBuilder.Entity<Address>()
+                .HasOne(address => address.District)
+                .WithMany(district => district.Addresses)
+                .HasForeignKey(address => address.DistrictId);
+
+            //Quan hệ address - provine
+            modelBuilder.Entity<Address>()
+                .HasOne(address => address.Provine)
+                .WithMany(provine => provine.Addresses)
+                .HasForeignKey(address => address.ProvineId);
 
             // Product - Brand Relationship
             /*modelBuilder.Entity<Product>()
@@ -93,5 +118,10 @@ namespace TheDuckMobile_WebAPI.Entities
         public DbSet<Vote> Votes { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<SpecialFeature> SpecialFeatures { get; set; }
+        public DbSet<Provine> Provines { get; set; }
+        public DbSet<District> Districts { get; set; }
+        public DbSet<Ward> Wards { get; set; }
+        public DbSet<Address> Addresss { get; set; }
+
     }
 }
