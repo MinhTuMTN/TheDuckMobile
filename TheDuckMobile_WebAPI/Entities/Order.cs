@@ -17,5 +17,17 @@ namespace TheDuckMobile_WebAPI.Entities
         public OrderState OrderState { get; set; }
 
         public virtual ICollection<OrderItem> OrderItems { get; set; }
+
+        public Guid StoreId { get; set; }
+        public virtual Store Store { get; set; }
+
+        public Guid StaffId { get; set; }
+        public virtual Staff Staff { get; set; }
+
+        public Guid CustomerId { get; set; }
+        public virtual Customer Customer { get; set; }
+
+        public Guid AddressId { get; set; }
+        public virtual Address Address { get; set; }
     }
 }

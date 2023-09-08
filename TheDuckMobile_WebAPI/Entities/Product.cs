@@ -24,6 +24,8 @@ namespace TheDuckMobile_WebAPI.Entities
         public int BrandId { get; set; }
         // public virtual Brand Brands { get; set;  }
 
-        public virtual ICollection<Vote> Votes { get; set; }
+        public virtual ICollection<Vote> Votes { get; set; } = new List<Vote>();
+
+        public virtual ICollection<Color> Colors { get; set; } = new List<Color>();
     }
 }

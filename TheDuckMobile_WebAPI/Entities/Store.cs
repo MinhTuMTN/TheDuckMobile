@@ -16,7 +16,6 @@ namespace TheDuckMobile_WebAPI.Entities
         public Guid AddressId { get; set; }
         public Address Address { get; set; }
 
-
-
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

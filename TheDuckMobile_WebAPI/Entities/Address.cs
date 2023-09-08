@@ -23,6 +23,6 @@ namespace TheDuckMobile_WebAPI.Entities
         public Ward Ward { get; set; }
 
 
-
+        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }

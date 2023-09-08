@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Entities;
 
-namespace ASPWebAPI.Entities
+namespace TheDuckMobile_WebAPI.Entities
 {
     public class DataContext : DbContext
     {
@@ -41,6 +41,7 @@ namespace ASPWebAPI.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region One to One
+            // User - Account Relationship
             modelBuilder.Entity<User>()
                 .HasOne<Account>(u => u.Account)
                 .WithOne(acc => acc.User)
@@ -48,6 +49,9 @@ namespace ASPWebAPI.Entities
             #endregion
 
             #region Primary Key 
+            // OrderItem Primary Key
+            modelBuilder.Entity<OrderItem>()
+                .HasKey(oi => new { oi.OrderId, oi.StoreProductId });
             #endregion
 
 
@@ -99,29 +103,87 @@ namespace ASPWebAPI.Entities
                 .HasOne<Customer>(vote => vote.Customer)
                 .WithMany(customer => customer.Votes)
                 .HasForeignKey(vote => vote.CustomerId);
+
+            // OrderItem - Promotion Relationship
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Promotion)
+                .WithMany(promotion => promotion.OrderItems)
+                .HasForeignKey(oi => oi.PromotionId);
+
+            // OrderItem - StoreProduct Relationship
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.StoreProduct)
+                .WithMany(StoreProduct => StoreProduct.OrderItems)
+                .HasForeignKey(oi => oi.StoreProductId);
+
+            // OrderItem - Order Relationship
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Order)
+                .WithMany(order => order.OrderItems)
+                .HasForeignKey(oi => oi.OrderId);
+
+            // Order - Customer Relationship
+            modelBuilder.Entity<Order>()
+                .HasOne(order => order.Customer)
+                .WithMany(customer => customer.Orders)
+                .HasForeignKey(order => order.CustomerId);
+
+            // Order - Staff Relationship
+            modelBuilder.Entity<Order>()
+                .HasOne(order => order.Staff)
+                .WithMany(staff => staff.Orders)
+                .HasForeignKey(order => order.StaffId);
+
+            // Order - Store Relationship
+            modelBuilder.Entity<Order>()
+                .HasOne(order => order.Store)
+                .WithMany(store => store.Orders)
+                .HasForeignKey(order => order.StoreId);
+
+            // Order - Address Relationship
+            modelBuilder.Entity<Order>()
+                .HasOne(order => order.Address)
+                .WithMany(address => address.Orders)
+                .HasForeignKey(order => order.AddressId);
+
+            // Color - Product Relationship
+            modelBuilder.Entity<Color>()
+                .HasOne(color => color.Product)
+                .WithMany(product => product.Colors)
+                .HasForeignKey(color => color.ProductId);
+
+
+
+
             #endregion
 
             #region Many to Many with extra column
             #endregion
         }
-
-        public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Admin> Admins { get; set; }
-        public DbSet<ProductVersion> ProductVersions { get; set; }
-        public DbSet<Color> Colors { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<OS> OSs { get; set; }
-        public DbSet<Catalog> Catalogs { get; set; }
-        public DbSet<Vote> Votes { get; set; }
-        public DbSet<Promotion> Promotions { get; set; }
-        public DbSet<SpecialFeature> SpecialFeatures { get; set; }
-        public DbSet<Provine> Provines { get; set; }
-        public DbSet<District> Districts { get; set; }
-        public DbSet<Ward> Wards { get; set; }
         public DbSet<Address> Addresss { get; set; }
-
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Catalog> Catalogs { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<District> Districts { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Laptop> Laptops { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<OS> OSs { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductVersion> ProductVersions { get; set; }
+        public DbSet<Promotion> Promotions { get; set; }
+        public DbSet<Provine> Provines { get; set; }
+        public DbSet<SpecialFeature> SpecialFeatures { get; set; }
+        public DbSet<Staff> Staffs { get; set; }
+        public DbSet<Store> Stores { get; set; }
+        public DbSet<StoreProduct> StoreProducts { get; set; }
+        public DbSet<Tablet> Tablets { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Vote> Votes { get; set; }
+        public DbSet<Ward> Wards { get; set; }
     }
 }

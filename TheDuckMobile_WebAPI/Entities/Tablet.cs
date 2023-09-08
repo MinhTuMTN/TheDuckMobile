@@ -1,4 +1,4 @@
-﻿using ASPWebAPI.Entities;
+﻿using TheDuckMobile_WebAPI.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace TheDuckMobile_WebAPI.Entities

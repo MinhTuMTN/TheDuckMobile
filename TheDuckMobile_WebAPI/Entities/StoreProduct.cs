@@ -2,6 +2,6 @@
 {
     public class StoreProduct
     {
-
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

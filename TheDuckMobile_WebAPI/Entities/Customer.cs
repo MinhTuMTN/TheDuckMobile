@@ -1,4 +1,4 @@
-﻿using ASPWebAPI.Entities;
+﻿using TheDuckMobile_WebAPI.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace TheDuckMobile_WebAPI.Entities
@@ -9,5 +9,7 @@ namespace TheDuckMobile_WebAPI.Entities
         // public virtual ICollection<FeedBack> FeedBacks { get; set; }
 
         public virtual ICollection<Vote> Votes { get; set; }
+
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

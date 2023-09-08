@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ASPWebAPI.Entities;
+using TheDuckMobile_WebAPI.Entities;
 
 namespace TheDuckMobile_WebAPI.Entities
 {
