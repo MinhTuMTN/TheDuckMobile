@@ -39,6 +39,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 #region
 builder.Services.AddScoped<JwtProvider>();
+builder.Services.AddScoped<CloudinaryProvider>();
 #endregion
 
 var app = builder.Build();
