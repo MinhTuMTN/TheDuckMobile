@@ -37,5 +37,7 @@ namespace TheDuckMobile_WebAPI.Entities
             this.Avatar = "";
             this.Account = new Account();
         }
+
+        public virtual ICollection<Address> Address { get; set; }
     }
 }

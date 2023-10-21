@@ -47,6 +47,7 @@ const Figure = styled("figure")(({ theme }) => ({
   padding: 0,
   marginBottom: "2rem",
 }));
+
 const ProductTabRoot = styled("div")(({ theme }) => ({}));
 function ProductDetails(props) {
   return (
@@ -62,9 +63,7 @@ function ProductDetails(props) {
                 </Figure>
               </ProductThumbnail>
             </ProductHeader>
-            <ProductTabRoot>
-              <figure></figure>
-            </ProductTabRoot>
+            <ProductTabRoot></ProductTabRoot>
           </PageContainer>
         </Container>
       </ShopArea>

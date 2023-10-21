@@ -26,6 +26,9 @@ namespace TheDuckMobile_WebAPI.Entities
         public Guid StoreId { get; set; }
         public virtual Store? Store { get; set; }
 
+        //Tham chieu toi bang User
+        public Guid UserId { get; set; }
+        public virtual User? User { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
     }
