@@ -44,6 +44,9 @@ function CustomThemeProvider(props) {
       color4: {
         main: "#141E46",
       },
+      breadcrumb_gray: {
+        main: "#f7f7f7",
+      },
       text: {
         teal: "#006451",
         green: "#EAFFD0",
