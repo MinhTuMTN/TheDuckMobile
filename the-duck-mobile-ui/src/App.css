@@ -3,3 +3,11 @@
   padding: 0;
   box-sizing: border-box !important;
 }
+
+.MuiFormLabel-root {
+  font-size: 1rem !important;
+}
+
+body {
+  color: "#000000" !important;
+}

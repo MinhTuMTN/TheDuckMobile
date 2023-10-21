@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   fontWeight: "bold",
-  color: theme.palette.text.color4,
+  color: theme.color ? theme.color : theme.palette.color4.main,
 }));
 
 function CustomLink(props) {
@@ -15,6 +15,7 @@ function CustomLink(props) {
       sx={{
         width: width ? width : "100%",
         height: height ? height : "100%",
+        color: props.color ? props.color : "white",
       }}
       {...other}
     >

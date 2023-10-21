@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
-import { CssBaseline, createTheme } from "@mui/material";
+import { CssBaseline, GlobalStyles, createTheme } from "@mui/material";
 import React from "react";
 
 import typography from "./typography";
@@ -7,6 +7,7 @@ import typography from "./typography";
 function CustomThemeProvider(props) {
   const themeOptions = {
     palette: {
+      type: "dark",
       primary: {
         main: "#006451",
       },
@@ -54,15 +55,20 @@ function CustomThemeProvider(props) {
         color2: "#FF6969",
         color3: "#FFF5E0",
         color4: "#141E46",
+        primary: "#000",
       },
     },
-    typography,
+    typography: {
+      color: "red",
+      ...typography,
+    },
   };
 
   let theme = createTheme(themeOptions);
 
   return (
     <ThemeProvider theme={theme}>
+      <GlobalStyles />
       <CssBaseline />
       {props.children}
     </ThemeProvider>
