@@ -247,5 +247,6 @@ namespace TheDuckMobile_WebAPI.Entities
         public DbSet<User> Users { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<Ward> Wards { get; set; }
+        public DbSet<ToDo> ToDos { get; set; }
     }
 }
