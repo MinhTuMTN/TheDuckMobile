@@ -1,4 +1,4 @@
-﻿namespace TheDuckMobile_WebAPI.Models
+﻿namespace TheDuckMobile_WebAPI.Models.Response
 {
     public class GenericResponse
     {

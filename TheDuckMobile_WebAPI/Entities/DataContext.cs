@@ -94,13 +94,6 @@ namespace TheDuckMobile_WebAPI.Entities
                 .HasForeignKey(address => address.ProvineId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //Quan he address - user
-            modelBuilder.Entity<Address>()
-                .HasOne(address => address.User)
-                .WithMany(u => u.Addresses)
-                .HasForeignKey(address => address.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             // Brand - Product Relationship
             modelBuilder.Entity<Product>()
                 .HasOne<Brand>(product => product.Brand)
@@ -254,5 +247,6 @@ namespace TheDuckMobile_WebAPI.Entities
         public DbSet<User> Users { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<Ward> Wards { get; set; }
+        public DbSet<ToDo> ToDos { get; set; }
     }
 }

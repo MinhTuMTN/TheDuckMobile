@@ -37,7 +37,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
-#region
+#region Dependency Injection
 builder.Services.AddScoped<JwtProvider>();
 #endregion
 
@@ -50,7 +50,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+#region CORS
+app.UseCors(x => x
+    .AllowAnyOrigin()
+       .AllowAnyMethod()
+          .AllowAnyHeader());
+#endregion
+
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
