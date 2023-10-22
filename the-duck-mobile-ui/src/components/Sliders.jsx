@@ -7,22 +7,25 @@ import img2 from "../assets/slider/img2-1.png";
 import img3 from "../assets/slider/img3-1.png";
 import img4 from "../assets/slider/img4-1.png";
 import { Box } from "@mui/material";
+import FlexContainer from "./FlexContainer";
 
 
-const Image = styled('div')(({ theme, image }) => ({
-    display: "flex",
-    alignItems: "center",
+const Image = styled(FlexContainer)(({ theme, image }) => ({
     justifyContent: "center",
     backgroundSize: "cover",
-    backgroundRepeat: 'no-repeat',
-    height: '160px',
-    width: '535px',
+    backgroundRepeat: "no-repeat",
+    height: "180px",
+    width: "615px",
     borderRadius: "25px",
     backgroundImage: `url(${image})`,
+
+    "&:hover": {
+        cursor: "pointer",
+    }
 }));
 
 const SlideContainer = styled(Box)(({ theme }) => ({
-    padding: "0 200px 200px 200px",
+    padding: "20px 0 5px 0",
 
 }));
 
