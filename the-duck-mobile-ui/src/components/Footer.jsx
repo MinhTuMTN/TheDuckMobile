@@ -155,9 +155,8 @@ function Footer(props) {
         <Stack spacing={1}>
           <Typography
             sx={{
-              fontWeight: "0 !important",
-              fontSize: "0.7rem !important",
-              textAlign: "left",
+              fontSize: ".8rem !important",
+              textAlign: "justify",
             }}
           >
             Đăng ký nhận email để nhận các thông báo mới nhất về các sản phẩm
