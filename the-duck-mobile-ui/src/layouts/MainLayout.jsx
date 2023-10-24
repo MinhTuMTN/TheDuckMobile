@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
 import Footer from "../components/Footer";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const StyledMain = styled(Box)(({ theme }) => ({
   marginTop: "80px",

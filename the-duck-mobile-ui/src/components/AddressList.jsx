@@ -2,6 +2,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import React from "react";
+import DialogConfirm from "./DialogConfirm";
 
 AddressList.propTypes = {
   margin: PropTypes.string,
@@ -9,6 +10,8 @@ AddressList.propTypes = {
 
 function AddressList(props) {
   const { margin } = props;
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
+
   const address = [
     "1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, TP.HCM",
     "484 Lê Văn Việt, Linh Chiểu, Thủ Đức, TP.HCM",
@@ -24,9 +27,8 @@ function AddressList(props) {
       />
       <Stack spacing={1}>
         {address.map((item, index) => (
-          <>
+          <Box key={index}>
             <Stack
-              key={index}
               direction={"row"}
               alignContent={"center"}
               justifyContent={"space-between"}
@@ -50,14 +52,33 @@ function AddressList(props) {
                   variant="outlined"
                   color="color1"
                   startIcon={<Delete />}
+                  onClick={() => {
+                    setDeleteDialog(true);
+                  }}
                 >
                   Xóa
                 </Button>
               </Stack>
             </Stack>
-          </>
+          </Box>
         ))}
       </Stack>
+
+      <DialogConfirm
+        open={deleteDialog}
+        title={"Xóa địa chỉ"}
+        content={"Bạn có chắc chắn muốn xóa địa chỉ này?"}
+        okText={"Xóa"}
+        cancelText={"Hủy"}
+        onOk={() => {
+          console.log("Xóa địa chỉ");
+          setDeleteDialog(false);
+        }}
+        onCancel={() => {
+          console.log("Hủy");
+          setDeleteDialog(false);
+        }}
+      />
     </Box>
   );
 }

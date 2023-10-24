@@ -3,7 +3,7 @@ import React from "react";
 
 import CartTable from "../components/CartTable";
 import CartTotal from "../components/CartTotal";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 function Cart(props) {
   return (

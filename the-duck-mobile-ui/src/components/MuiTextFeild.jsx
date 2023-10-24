@@ -10,11 +10,11 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
 }));
 
 MuiTextFeild.propTypes = {
-  label: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  name: PropTypes.string,
   fontSize: PropTypes.number,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
   error: PropTypes.string,
   children: PropTypes.node,
 };

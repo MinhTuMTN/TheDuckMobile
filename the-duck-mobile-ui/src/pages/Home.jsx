@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import HomeCatalogs from "../components/HomeCatalogs";
 import TabProducts from "../components/TabProducts";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const HomeImage = styled("div")(({ theme }) => ({
   backgroundSize: "cover",
