@@ -3,28 +3,35 @@ import React from "react";
 
 import CartTable from "../components/CartTable";
 import CartTotal from "../components/CartTotal";
+import { Helmet } from "react-helmet";
 
 function Cart(props) {
   return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-      }}
-      mt={10}
-      mb={10}
-    >
-      <Stack sx={{ width: "80%" }} mt={10}>
-        <Typography variant="h4" component="h1">
-          Giỏ hàng của bạn
-        </Typography>
+    <>
+      <Helmet>
+        <title>Giỏ hàng | The Duck Mobile</title>
+        <meta name="description" content="Giỏ hàng của bạn" />
+      </Helmet>
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+        mt={10}
+        mb={10}
+      >
+        <Stack sx={{ width: "80%" }} mt={10}>
+          <Typography variant="h4" component="h1">
+            Giỏ hàng của bạn
+          </Typography>
 
-        <CartTable />
+          <CartTable />
 
-        <CartTotal />
-      </Stack>
-    </Box>
+          <CartTotal />
+        </Stack>
+      </Box>
+    </>
   );
 }
 

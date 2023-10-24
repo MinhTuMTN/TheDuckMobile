@@ -5,17 +5,18 @@ import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 import HomeCatalogs from "../components/HomeCatalogs";
 import TabProducts from "../components/TabProducts";
+import { Helmet } from "react-helmet";
 
-const HomeImage = styled('div')(({ theme }) => ({
+const HomeImage = styled("div")(({ theme }) => ({
   backgroundSize: "cover",
-  backgroundRepeat: 'no-repeat',
-  height: '620px',
-  width: '100%',
+  backgroundRepeat: "no-repeat",
+  height: "620px",
+  width: "100%",
   borderRadius: "10px",
   backgroundImage: `url(${homeImg})`,
   "&:hover": {
     cursor: "pointer",
-  }
+  },
 }));
 
 const HomeContainer = styled(Box)(({ theme }) => ({
@@ -24,14 +25,20 @@ const HomeContainer = styled(Box)(({ theme }) => ({
 
 function Home(props) {
   return (
-    <HomeContainer>
+    <>
+      <Helmet>
+        <title>Trang chủ | The Duck Mobile</title>
+        <meta name="description" content="Trang chủ" />
+      </Helmet>
+      <HomeContainer>
         <HomeImage />
-      <Sliders />
+        <Sliders />
 
-      <HomeCatalogs />
+        <HomeCatalogs />
 
-      <TabProducts/>
-    </HomeContainer>
-  )
-};
+        <TabProducts />
+      </HomeContainer>
+    </>
+  );
+}
 export default Home;

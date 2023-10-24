@@ -23,7 +23,7 @@ const DeleteButton = styled(IconButton)(({ theme }) => ({
 
 function CartTable(props) {
   return (
-    <TableContainer component={Paper} sx={{ marginTop: "1rem" }}>
+    <TableContainer component={Paper} sx={{ marginTop: "1rem" }} elevation={3}>
       <Table>
         <TableHead>
           <TableRow>
