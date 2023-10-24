@@ -11,6 +11,13 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
 
 MuiTextFeild.propTypes = {
   style: PropTypes.object,
+  label: PropTypes.string,
+  name: PropTypes.string,
+  fontSize: PropTypes.number,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  error: PropTypes.string,
+  children: PropTypes.node,
 };
 
 function MuiTextFeild(props) {
@@ -27,6 +34,7 @@ function MuiTextFeild(props) {
   return (
     <CustomTextField
       variant="outlined"
+      InputProps={{ style: { fontSize: props.fontSize } }}
       label={label}
       name={name}
       value={value}

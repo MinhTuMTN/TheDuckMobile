@@ -1,10 +1,18 @@
 import styled from "@emotion/styled/macro";
-import { Box, Card, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  InputAdornment,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import React, { memo } from "react";
 import CustomLink from "./CustomLink";
 import Logo from "./Logo";
+import { Search } from "@mui/icons-material";
 
 const Wrapper = styled(Box)(({ theme }) => ({
   width: "100vw",
@@ -94,10 +102,26 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
         </Left>
         <Center>
           <MenuItem>
-            <CustomLink to={"/home"}>Trang chủ</CustomLink>
+            <TextField
+              type="text"
+              variant="outlined"
+              component={Paper}
+              placeholder="Bạn muốn tìm gì ..."
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+                style: { fontSize: 15 },
+              }}
+            />
           </MenuItem>
           <MenuItem>
-            <CustomLink to={"/home"}>Danh mục</CustomLink>
+            <CustomLink to={"/"}>Trang chủ</CustomLink>
+          </MenuItem>
+          <MenuItem>
+            <CustomLink to={"/category"}>Danh mục</CustomLink>
             <SubMenu sx={{ width: "150px" }}>
               <CustomLink>Điện thoại</CustomLink>
               <CustomLink>Laptop</CustomLink>
@@ -105,10 +129,7 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
             </SubMenu>
           </MenuItem>
           <MenuItem>
-            <CustomLink to={"/home"}>About us</CustomLink>
-          </MenuItem>
-          <MenuItem>
-            <CustomLink to={"/home"}>Feedback</CustomLink>
+            <CustomLink to={"/contact"}>Liên hệ</CustomLink>
           </MenuItem>
         </Center>
         <Right>
@@ -120,7 +141,7 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
               }}
             />
           </CustomLink>
-          <CustomLink to={"/home"}>
+          <CustomLink to={"/profile"}>
             <AccountCircleOutlinedIcon
               sx={{
                 fontSize: "1.75rem",
