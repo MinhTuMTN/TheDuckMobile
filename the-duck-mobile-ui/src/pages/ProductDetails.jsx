@@ -15,6 +15,7 @@ import QuantityCounter from "../components/QuantityCounter";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import TabRelative from "../components/TabRelative";
+import ProductGrid from "../components/ProductGrid";
 
 const Wrapper = styled.div``;
 const ShopArea = styled.div`
@@ -296,6 +297,27 @@ function ProductDetails(props) {
                 paddingRight={"15px"}
               >
                 <TabRelative />
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                paddingLeft={"15px"}
+                paddingRight={"15px"}
+                marginTop={"4rem"}
+              >
+                <Typography
+                  variant={"h4"}
+                  textAlign={"left"}
+                  sx={{
+                    paddingBottom: "1rem",
+                    borderBottom: "1px solid #cbcaca",
+                    marginBottom: "1.5rem",
+                  }}
+                >
+                  Sản phẩm liên quan
+                </Typography>
+                <ProductGrid numberColumn={5} />
               </Grid>
             </Grid>
           </PageContainer>
