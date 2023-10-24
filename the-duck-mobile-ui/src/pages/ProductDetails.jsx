@@ -3,14 +3,17 @@ import React from "react";
 import CustomBreadcrumb from "../components/CustomBreadcrumb";
 import {
   Box,
+  Button,
   Card,
+  Checkbox,
   Grid,
-  Radio,
-  RadioGroup,
   Rating,
   Stack,
   Typography,
 } from "@mui/material";
+import QuantityCounter from "../components/QuantityCounter";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
 const Wrapper = styled.div``;
 const ShopArea = styled.div`
@@ -45,9 +48,13 @@ const PageContainer = styled.div`
   margin-bottom: 5rem;
 `;
 
-const RadioCustom = styled(Radio)`
-  accent-color: #232323;
-`;
+const StyledButton = styled(Button)(({ theme }) => ({
+  "&:hover": {
+    backgroundColor: theme.palette.color1.main,
+    color: theme.palette.color4.main4,
+  },
+}));
+
 function ProductDetails(props) {
   const urlImage =
     "https://minhtumtn.github.io/Demo-Template/assets/img/product/fashion/1.jpg";
@@ -107,11 +114,7 @@ function ProductDetails(props) {
                     },
                   }}
                 >
-                  <Typography
-                    variant={"h4"}
-                    color={"#121111ca"}
-                    fontWeight="150"
-                  >
+                  <Typography variant={"h4"} color={"#0c0b0bc9"}>
                     Sound Intone I65 Earphone White Version
                   </Typography>
                   <Box margin={"0.5% 0 3%"}>
@@ -138,6 +141,8 @@ function ProductDetails(props) {
                     marginBottom={"2rem"}
                     display={"flex"}
                     alignItems={"center"}
+                    borderLeft={"1px solid #cbcaca"}
+                    paddingLeft={"10px"}
                   >
                     <Rating
                       name="rating"
@@ -152,8 +157,8 @@ function ProductDetails(props) {
                   </Box>
                   <div
                     style={{
-                      marginBottom: "2.5rem",
-                      marginTop: "20px",
+                      marginBottom: "1.5rem",
+                      marginTop: "10px",
                       paddingBottom: "37px",
                       borderBottom: "1px solid #e5e5e5",
                     }}
@@ -180,20 +185,104 @@ function ProductDetails(props) {
                       này sẽ giúp bạn up level ngay trong 1 tuần.
                     </Typography>
                   </div>
-                  <Stack direction={"row"}>
+
+                  <Stack
+                    direction={"column"}
+                    spacing={2}
+                    sx={{
+                      borderBottom: "1px solid #cbcaca",
+                      paddingBottom: "2rem",
+                    }}
+                  >
                     <Box style={{ marginRight: "20px" }}>
-                      <Typography variant={"h6"}>Color</Typography>
-                      <RadioGroup>
-                        <Typography
-                          variant="div"
-                          component={"input"}
-                          type="radio"
-                          name="color"
-                          value="red"
-                          style={{ color: "red" }}
-                        />
-                      </RadioGroup>
+                      <Typography variant={"h6"}>Màu sắc</Typography>
+                      <Stack direction={"row"} spacing={2} marginTop={1}>
+                        <Button
+                          variant="outlined"
+                          color="inherit"
+                          sx={{
+                            ":hover": {
+                              backgroundColor: "#e22626",
+                              color: "#fff",
+                              opacity: "0.8",
+                            },
+                          }}
+                        >
+                          Hồng
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="inherit"
+                          sx={{
+                            ":hover": {
+                              backgroundColor: "#e22626",
+                              color: "#fff",
+                              opacity: "0.8",
+                            },
+                          }}
+                        >
+                          Tím
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="inherit"
+                          sx={{
+                            ":hover": {
+                              backgroundColor: "#e22626",
+                              color: "#fff",
+                              opacity: "0.8",
+                            },
+                          }}
+                        >
+                          Xanh dương
+                        </Button>
+                      </Stack>
                     </Box>
+                    <Box style={{ marginRight: "20px" }}>
+                      <Typography variant={"h6"}>Dung lượng</Typography>
+                      <Stack direction={"row"} spacing={2} marginTop={1}>
+                        <Button variant="outlined" color="inherit">
+                          64GB
+                        </Button>
+                        <Button variant="outlined" color="inherit">
+                          128GB
+                        </Button>
+                        <Button variant="outlined" color="inherit">
+                          256GB
+                        </Button>
+                      </Stack>
+                    </Box>
+                    <Stack direction={"column"} spacing={1}>
+                      <Stack direction={"row"} spacing={2} alignItems={"end"}>
+                        <Typography variant={"h6"}>Số lượng</Typography>
+                        <QuantityCounter />
+                      </Stack>
+                      <Stack
+                        direction={"row"}
+                        spacing={2}
+                        alignItems={"center"}
+                      >
+                        <StyledButton
+                          variant="contained"
+                          color="color4"
+                          size="large"
+                          endIcon={<AddShoppingCartIcon />}
+                          style={{
+                            height: "100%",
+                            flexBasis: "75%",
+                            marginTop: "10px",
+                            color: "#fff",
+                          }}
+                        >
+                          Thêm vào giỏ hàng
+                        </StyledButton>
+                        <Checkbox
+                          icon={<FavoriteBorder />}
+                          checkedIcon={<Favorite />}
+                          color="color1"
+                        />
+                      </Stack>
+                    </Stack>
                   </Stack>
                 </Stack>
               </Grid>
