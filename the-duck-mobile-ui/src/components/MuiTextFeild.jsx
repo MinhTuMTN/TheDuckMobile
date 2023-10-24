@@ -28,6 +28,7 @@ function MuiTextFeild(props) {
       onChange={onChange}
       {...(error && { error: true, helperText: error })}
       {...others}
+      fullWidth
     >
       {children}
     </CustomTextField>

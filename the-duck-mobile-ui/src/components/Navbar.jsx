@@ -85,9 +85,11 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
     <Wrapper>
       <Container>
         <Left>
-          <StyledLogo />
+          <CustomLink to={"/"}>
+            <StyledLogo />
+          </CustomLink>
           <Typography variant="h5" component="h1">
-            The Duck Mobile
+            <CustomLink to={"/"}>The Duck Mobile</CustomLink>
           </Typography>
         </Left>
         <Center>
@@ -110,7 +112,7 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
           </MenuItem>
         </Center>
         <Right>
-          <CustomLink to={"/home"}>
+          <CustomLink to={"/cart"}>
             <ShoppingCartOutlinedIcon
               sx={{
                 fontSize: "1.75rem",

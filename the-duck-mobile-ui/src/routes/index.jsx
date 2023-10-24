@@ -3,6 +3,7 @@ import { useRoutes } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import ProductDetails from "../pages/ProductDetails";
+import Cart from "../pages/Cart";
 
 function Router(props) {
   return useRoutes([
@@ -17,6 +18,10 @@ function Router(props) {
         {
           path: "/product",
           element: <ProductDetails />,
+        },
+        {
+          path: "/cart",
+          element: <Cart />,
         },
       ],
     },

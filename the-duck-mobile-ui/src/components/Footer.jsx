@@ -21,6 +21,8 @@ import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 import MuiTextFeild from "../components/MuiTextFeild";
 import Logo from "./Logo";
+import { useEffect, useState } from "react";
+import NavigationIcon from '@mui/icons-material/Navigation';
 
 const Container = styled(Box)(({ theme }) => ({
   backgroundColor: "#f6f6f8",
@@ -46,7 +48,47 @@ const StyledLogo = styled(Logo)(({ theme }) => ({
   height: theme.spacing(5),
 }));
 
+const CustomToTopButton = styled(Button)(({ theme }) => ({
+    position: "fixed",
+    right: "20px",
+    bottom: "50px",
+    width: "50px",
+    height: "60px",
+    textAlign: "center",
+    color: "#FFF",
+    borderRadius: "50%",
+    backgroundColor: "#C70039",
+    "&:hover": {
+      backgroundColor: "#006451",
+      opacity: "0.5",
+    }
+}));
+
 function Footer(props) {
+  const [showTopButton, setShowTopButton] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+      });
+  };
+
+  const handleScroll = () => {
+    if (window.scrollY > 400) {
+      setShowTopButton(true);
+  } else {
+    setShowTopButton(false);
+  }
+  };
+
   return (
     <Container>
       <Stack
@@ -155,9 +197,8 @@ function Footer(props) {
         <Stack spacing={1}>
           <Typography
             sx={{
-              fontWeight: "0 !important",
-              fontSize: "0.7rem !important",
-              textAlign: "left",
+              fontSize: ".8rem !important",
+              textAlign: "justify",
             }}
           >
             Đăng ký nhận email để nhận các thông báo mới nhất về các sản phẩm
@@ -182,6 +223,13 @@ function Footer(props) {
           </Button>
         </Stack>
       </Item>
+      {showTopButton &&
+      <CustomToTopButton
+        onClick={scrollToTop}
+      >
+        <NavigationIcon />
+      </CustomToTopButton>
+      }
     </Container>
   );
 }
