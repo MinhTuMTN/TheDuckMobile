@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   FormHelperText,
   Grid,
   Rating,
@@ -14,7 +15,7 @@ import MuiTextFeild from "./MuiTextFeild";
 function ReviewProduct(props) {
   return (
     <Grid spacing={7} container>
-      <Grid item xs={12} md={7} component={Stack}>
+      <Grid item xs={12} md={6.5} component={Stack}>
         <Stack direction={"row"} spacing={1.75}>
           <Avatar
             sx={{
@@ -56,21 +57,32 @@ function ReviewProduct(props) {
           </Stack>
         </Stack>
       </Grid>
-      <Grid item xs={12} md={5} component={Stack}>
-        <Stack spacing={1.2} direction={"column"}>
+      <Grid item xs={12} md={5.5} component={Stack}>
+        <Stack spacing={2.5} width={"100%"} direction={"column"}>
           <Typography variant="h5">Tạo đánh giá mới</Typography>
           <Stack direction={"row"} spacing={1.2}>
             <FormHelperText marginRight={2}>Đánh giá:</FormHelperText>
             <Rating name="rating" precision={0.5} size="small" value={5} />
           </Stack>
           <Stack direction={"row"} spacing={1.2}>
-            <Box flexBasis={"70%"}>
-              <MuiTextFeild required label="Họ tên" />
+            <Box flexBasis={"65%"}>
+              <MuiTextFeild required label="Họ tên" fontSize={14} />
             </Box>
-            <Box flexBasis={"30%"}>
-              <MuiTextFeild required label="Số điện thoại" />
+            <Box flexBasis={"35%"}>
+              <MuiTextFeild required label="Số điện thoại" fontSize={14} />
             </Box>
           </Stack>
+          <TextField multiline label="Cảm nhận của bạn" rows={4} />
+          <Button
+            variant="contained"
+            color="color1"
+            size="large"
+            sx={{
+              color: "#fff",
+            }}
+          >
+            Gửi
+          </Button>
         </Stack>
       </Grid>
     </Grid>
