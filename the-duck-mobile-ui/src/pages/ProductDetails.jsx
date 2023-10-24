@@ -14,6 +14,7 @@ import {
 import QuantityCounter from "../components/QuantityCounter";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import TabRelative from "../components/TabRelative";
 
 const Wrapper = styled.div``;
 const ShopArea = styled.div`
@@ -285,6 +286,16 @@ function ProductDetails(props) {
                     </Stack>
                   </Stack>
                 </Stack>
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                direction={"column"}
+                paddingLeft={"15px"}
+                paddingRight={"15px"}
+              >
+                <TabRelative />
               </Grid>
             </Grid>
           </PageContainer>
