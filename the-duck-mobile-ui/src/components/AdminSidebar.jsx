@@ -8,7 +8,7 @@ const Sidebar = styled(Paper)(({ theme }) => ({
   display: "flex",
   flex: 2,
   flexDirection: "column",
-  marginBottom: theme.spacing(5),
+  margin: `${theme.spacing(1)} 0 ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
 const CustomListItemButton = styled(ListItemButton)(({ theme, active }) => ({
