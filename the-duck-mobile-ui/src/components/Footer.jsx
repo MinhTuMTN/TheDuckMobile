@@ -22,7 +22,7 @@ import React from "react";
 import MuiTextFeild from "../components/MuiTextFeild";
 import Logo from "./Logo";
 import { useEffect, useState } from "react";
-import NavigationIcon from '@mui/icons-material/Navigation';
+import NavigationIcon from "@mui/icons-material/Navigation";
 
 const Container = styled(Box)(({ theme }) => ({
   backgroundColor: "#f6f6f8",
@@ -49,19 +49,19 @@ const StyledLogo = styled(Logo)(({ theme }) => ({
 }));
 
 const CustomToTopButton = styled(Button)(({ theme }) => ({
-    position: "fixed",
-    right: "20px",
-    bottom: "50px",
-    width: "50px",
-    height: "60px",
-    textAlign: "center",
-    color: "#FFF",
-    borderRadius: "50%",
-    backgroundColor: "#C70039",
-    "&:hover": {
-      backgroundColor: "#006451",
-      opacity: "0.5",
-    }
+  position: "fixed",
+  right: "20px",
+  bottom: "50px",
+  width: "50px",
+  height: "60px",
+  textAlign: "center",
+  color: "#FFF",
+  borderRadius: "50%",
+  backgroundColor: "#C70039",
+  "&:hover": {
+    backgroundColor: "#006451",
+    opacity: "0.5",
+  },
 }));
 
 function Footer(props) {
@@ -76,17 +76,17 @@ function Footer(props) {
 
   const scrollToTop = () => {
     window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-      });
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const handleScroll = () => {
     if (window.scrollY > 400) {
       setShowTopButton(true);
-  } else {
-    setShowTopButton(false);
-  }
+    } else {
+      setShowTopButton(false);
+    }
   };
 
   return (
@@ -95,6 +95,7 @@ function Footer(props) {
         direction="column"
         justifyContent="center"
         flex={1}
+        spacing={1.5}
         alignItems="center"
       >
         <Stack direction="row" alignItems="center" spacing={1}>
@@ -130,6 +131,8 @@ function Footer(props) {
           sx={{
             width: "90%",
             height: "1px",
+            margin: "0.5rem 0",
+            borderColor: "rgba(0, 0, 0, 0.3)",
           }}
         />
         <ListItem disablePadding>
@@ -161,6 +164,8 @@ function Footer(props) {
           sx={{
             width: "90%",
             height: "1px",
+            margin: "0.5rem 0",
+            borderColor: "rgba(0, 0, 0, 0.3)",
           }}
         />
         <ListItem disablePadding>
@@ -192,14 +197,15 @@ function Footer(props) {
           sx={{
             width: "90%",
             height: "1px",
+            margin: "0.5rem 0",
+            borderColor: "rgba(0, 0, 0, 0.3)",
           }}
         />
-        <Stack spacing={1}>
+        <Stack spacing={2} width={"90%"}>
           <Typography
             sx={{
-              fontWeight: "0 !important",
-              fontSize: "0.7rem !important",
-              textAlign: "left",
+              fontSize: ".9rem !important",
+              textAlign: "justify",
             }}
           >
             Đăng ký nhận email để nhận các thông báo mới nhất về các sản phẩm
@@ -224,13 +230,11 @@ function Footer(props) {
           </Button>
         </Stack>
       </Item>
-      {showTopButton &&
-      <CustomToTopButton
-        onClick={scrollToTop}
-      >
-        <NavigationIcon />
-      </CustomToTopButton>
-      }
+      {showTopButton && (
+        <CustomToTopButton onClick={scrollToTop}>
+          <NavigationIcon />
+        </CustomToTopButton>
+      )}
     </Container>
   );
 }

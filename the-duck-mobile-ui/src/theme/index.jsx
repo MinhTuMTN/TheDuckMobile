@@ -62,6 +62,13 @@ function CustomThemeProvider(props) {
       color: "red",
       ...typography,
     },
+    components: {
+      MuiStack: {
+        defaultProps: {
+          useFlexGap: true,
+        },
+      },
+    },
   };
 
   let theme = createTheme(themeOptions);
