@@ -70,65 +70,31 @@ function Router(props) {
       element: <AdminLayout />,
       children: [
         {
-          path: "/admin/catalog-management/list",
+          path: "catalog-management/list",
           element: <CatalogListPage />,
         },
         {
-          path: "/admin/catalog-management/add",
+          path: "catalog-management/add",
           element: <AddCatalogPage />,
         },
         {
-          path: "/admin/product-management/list",
+          path: "product-management/list",
           element: <ProductListPage />,
         },
         {
-          path: "/admin/product-management/add",
+          path: "product-management/add",
           element: <AddProductPage />,
         },
         {
-          path: "/admin/user-management/list",
+          path: "user-management/list",
           element: <UserListPage />,
         },
         {
-          path: "/admin/brand-management/list",
+          path: "brand-management/list",
           element: <BrandListPage />,
         },
         {
-          path: "/admin/brand-management/add",
-          element: <AddBrandPage />,
-        }
-      ],
-    },
-    {
-      path: "/admin",
-      element: <AdminLayout />,
-      children: [
-        {
-          path: "/admin/catalog-management/list",
-          element: <CatalogListPage />,
-        },
-        {
-          path: "/admin/catalog-management/add",
-          element: <AddCatalogPage />,
-        },
-        {
-          path: "/admin/product-management/list",
-          element: <ProductListPage />,
-        },
-        {
-          path: "/admin/product-management/add",
-          element: <AddProductPage />,
-        },
-        {
-          path: "/admin/user-management/list",
-          element: <UserListPage />,
-        },
-        {
-          path: "/admin/brand-management/list",
-          element: <BrandListPage />,
-        },
-        {
-          path: "/admin/brand-management/add",
+          path: "brand-management/add",
           element: <AddBrandPage />,
         }
       ],
