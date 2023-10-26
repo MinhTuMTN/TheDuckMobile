@@ -1,12 +1,13 @@
 import styled from "@emotion/styled";
-import { Paper, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { Paper, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Typography } from "@mui/material";
 import React from 'react'
 // import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const Sidebar = styled(Paper)(({ theme }) => ({
-  flex: 2,
   display: "flex",
+  flex: 2,
+  flexDirection: "column",
   marginBottom: theme.spacing(5),
 }));
 
@@ -28,25 +29,25 @@ const CustomListItemIcon = styled(ListItemIcon)(({ theme }) => ({
 
 const sidebarItems = [
   {
-    display: 'Quản Lý Người Dùng',
+    display: 'Người Dùng',
     icon: null,
     to: '/admin/user-management/list',
     section: 'user-management'
   },
   {
-    display: 'Quản Lý Sản Phẩm',
+    display: 'Sản Phẩm',
     icon: null,
     to: '/admin/product-management/list',
     section: 'product-management'
   },
   {
-    display: 'Quản Lý Danh Mục',
+    display: 'Danh Mục',
     icon: null,
     to: '/admin/catalog-management/list',
     section: 'catalog-management'
   },
   {
-    display: 'Quản Lý Thương Hiệu',
+    display: 'Thương Hiệu',
     icon: null,
     to: '/admin/brand-management/list',
     section: 'brand-management'
@@ -59,8 +60,8 @@ function AdminSidebar(props) {
   const location = useLocation();
   const currentSection = location.pathname.split('/').filter(part => part !== '')[1];
   const activeSection = sidebarItems.find(item => item.section === currentSection).section;
-    console.log(currentSection);
-    console.log(activeSection);
+  console.log(currentSection);
+  console.log(activeSection);
 
   // useEffect(() => {
   //   setSection(activeSection);
@@ -69,25 +70,47 @@ function AdminSidebar(props) {
   // }, []) 
 
   return (
-        <Sidebar>
-          <List>
-            {sidebarItems.map((item, index) => (
+    <Sidebar>
+      <Divider
+        textAlign="center"
+        sx={{
+          width: "100%",
+          height: "1px",
+          margin: "1rem 0 0.5rem 0",
+          borderColor: "black",
+        }}
+      >
+        <Typography
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
 
-              <ListItem disablePadding key={item.section}>
-                <CustomListItemButton
-                  active={activeSection === item.section}
-                  to={item.to}
-                  // onClick={() => {
-                  //   setSection(item.section);
-                  // }}
-                >
-                  <CustomListItemIcon>{item.icon}</CustomListItemIcon>
-                  <ListItemText primary={item.display} />
-                </CustomListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Sidebar>
+          }}
+        >
+          Quản Lý
+        </Typography>
+      </Divider>
+      <List>
+        {sidebarItems.map((item, index) => (
+
+          <ListItem disablePadding key={item.section}>
+            <CustomListItemButton
+              active={activeSection === item.section}
+              to={item.to}
+            // onClick={() => {
+            //   setSection(item.section);
+            // }}
+            >
+              <CustomListItemIcon>{item.icon}</CustomListItemIcon>
+              <ListItemText primary={item.display} />
+            </CustomListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Sidebar>
   );
 }
 
