@@ -9,6 +9,7 @@ import NotFound from "../pages/NotFound";
 import ContactUs from "../pages/ContactUs";
 import ProfileLayout from "../layouts/ProfileLayout";
 import Profile from "../pages/Profile";
+import Login from "../pages/Login";
 
 function Router(props) {
   return useRoutes([
@@ -35,6 +36,10 @@ function Router(props) {
         {
           path: "/contact",
           element: <ContactUs />,
+        },
+        {
+          path: "/login",
+          element: <Login />,
         },
       ],
     },
