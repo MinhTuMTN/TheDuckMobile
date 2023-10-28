@@ -15,10 +15,16 @@ import {
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useState } from "react";
 import MuiButton from "../../../components/MuiButton";
-import { Link } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+
+const RootPageAccountList = styled(Box)(({ theme }) => ({
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
+}));
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -47,22 +53,7 @@ function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
 
-const RootPageBrandList = styled(Box)(({ theme }) => ({
-    display: "flex",
-    width: "100%",
-    flexDirection: "column",
-    padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
-}));
-
-const AddButton = styled(MuiButton)(({ theme }) => ({
-    width: "25%",
-    marginBottom: theme.spacing(1),
-    "&:hover": {
-        backgroundColor: "#FF6969",
-      }
-}));
-
-function BrandListPage() {
+function AccountListPage() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -80,14 +71,9 @@ function BrandListPage() {
     };
 
     return (
-        <RootPageBrandList>
-            <Typography variant="h3">Danh sách thương hiệu</Typography>
-            <AddButton component={Link} variant="contained" color="color1" to="/admin/brand-management/add">
-                <Typography color={"white"}>
-                    Thêm Thương Hiệu Mới
-                </Typography>
-            </AddButton>
-            <TableContainer component={Paper} sx={{ maxHeight: 510, minWidth: 1035, maxWidth: 1035 }}>
+        <RootPageAccountList>
+            <Typography variant="h3">Danh sách tài khoản</Typography>
+            <TableContainer component={Paper} sx={{ maxHeight: 562, minWidth: 1035, maxWidth: 1035 }}>
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
@@ -120,7 +106,7 @@ function BrandListPage() {
                                 <TableCell style={{ minWidth: 100 }} align="right">
                                     {row.protein}
                                 </TableCell>
-                                <TableCell style={{ minWidth: 200 }} align="center">
+                                <TableCell style={{ minWidth: 230 }} align="center">
                                     <MuiButton color="oldPrimary"><InfoIcon /></MuiButton>
                                     <MuiButton color="teal"><EditIcon /></MuiButton>
                                     <MuiButton color="color1"><DeleteIcon /></MuiButton>
@@ -150,8 +136,8 @@ function BrandListPage() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </RootPageBrandList>
+        </RootPageAccountList>
     );
 }
 
-export default BrandListPage;
+export default AccountListPage;

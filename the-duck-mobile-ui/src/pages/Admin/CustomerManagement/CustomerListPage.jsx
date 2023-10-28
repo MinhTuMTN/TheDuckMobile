@@ -14,10 +14,9 @@ import {
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useState } from "react";
-import MuiButton from "../../../components/MuiButton";
-import { Link } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from '@mui/icons-material/Delete';
+import MuiButton from "../../../components/MuiButton";
 import EditIcon from '@mui/icons-material/Edit';
 
 const rows = [
@@ -47,22 +46,14 @@ function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
 
-const RootPageBrandList = styled(Box)(({ theme }) => ({
+const RootPageCustomerList = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
     padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
-const AddButton = styled(MuiButton)(({ theme }) => ({
-    width: "25%",
-    marginBottom: theme.spacing(1),
-    "&:hover": {
-        backgroundColor: "#FF6969",
-      }
-}));
-
-function BrandListPage() {
+function CustomerListPage() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -80,14 +71,9 @@ function BrandListPage() {
     };
 
     return (
-        <RootPageBrandList>
-            <Typography variant="h3">Danh sách thương hiệu</Typography>
-            <AddButton component={Link} variant="contained" color="color1" to="/admin/brand-management/add">
-                <Typography color={"white"}>
-                    Thêm Thương Hiệu Mới
-                </Typography>
-            </AddButton>
-            <TableContainer component={Paper} sx={{ maxHeight: 510, minWidth: 1035, maxWidth: 1035 }}>
+        <RootPageCustomerList>
+            <Typography variant="h3">Danh sách khách hàng</Typography>
+            <TableContainer component={Paper} sx={{ maxHeight: 562, minWidth: 1035, maxWidth: 1035 }}>
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
@@ -125,6 +111,7 @@ function BrandListPage() {
                                     <MuiButton color="teal"><EditIcon /></MuiButton>
                                     <MuiButton color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>
+                                
                             </TableRow>
                         ))}
                         {emptyRows > 0 && (
@@ -150,8 +137,8 @@ function BrandListPage() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </RootPageBrandList>
+        </RootPageCustomerList>
     );
 }
 
-export default BrandListPage;
+export default CustomerListPage;

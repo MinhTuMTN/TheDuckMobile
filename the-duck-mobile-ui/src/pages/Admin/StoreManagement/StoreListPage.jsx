@@ -47,7 +47,7 @@ function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
 
-const RootPageBrandList = styled(Box)(({ theme }) => ({
+const RootPageStoreList = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
@@ -62,7 +62,7 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
       }
 }));
 
-function BrandListPage() {
+function StoreListPage() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -80,11 +80,11 @@ function BrandListPage() {
     };
 
     return (
-        <RootPageBrandList>
-            <Typography variant="h3">Danh sách thương hiệu</Typography>
-            <AddButton component={Link} variant="contained" color="color1" to="/admin/brand-management/add">
+        <RootPageStoreList>
+            <Typography variant="h3">Danh sách chi nhánh</Typography>
+            <AddButton component={Link} variant="contained" color="color1" to="/admin/store-management/add">
                 <Typography color={"white"}>
-                    Thêm Thương Hiệu Mới
+                    Thêm Chi Nhánh Mới
                 </Typography>
             </AddButton>
             <TableContainer component={Paper} sx={{ maxHeight: 510, minWidth: 1035, maxWidth: 1035 }}>
@@ -150,8 +150,8 @@ function BrandListPage() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </RootPageBrandList>
+        </RootPageStoreList>
     );
 }
 
-export default BrandListPage;
+export default StoreListPage;

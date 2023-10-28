@@ -14,6 +14,7 @@ const Sidebar = styled(Paper)(({ theme }) => ({
 const CustomListItemButton = styled(ListItemButton)(({ theme, active }) => ({
   backgroundColor: (active ? "#86C8BC" : ""),
   borderRadius: "0 25px 25px 0",
+  marginRight: theme.spacing(0.5),
   width: "100%",
 
   "&:hover": {
@@ -29,10 +30,22 @@ const CustomListItemIcon = styled(ListItemIcon)(({ theme }) => ({
 
 const sidebarItems = [
   {
-    display: 'Người Dùng',
+    display: 'Khách Hàng',
     icon: null,
-    to: '/admin/user-management/list',
-    section: 'user-management'
+    to: '/admin/customer-management/list',
+    section: 'customer-management'
+  },
+  {
+    display: 'Nhân Viên',
+    icon: null,
+    to: '/admin/staff-management/list',
+    section: 'staff-management'
+  },
+  {
+    display: 'Tài Khoản',
+    icon: null,
+    to: '/admin/account-management/list',
+    section: 'account-management'
   },
   {
     display: 'Sản Phẩm',
@@ -51,7 +64,37 @@ const sidebarItems = [
     icon: null,
     to: '/admin/brand-management/list',
     section: 'brand-management'
-  }
+  },
+  {
+    display: 'Chi Nhánh',
+    icon: null,
+    to: '/admin/store-management/list',
+    section: 'store-management'
+  },
+  {
+    display: 'Hệ Điều Hành',
+    icon: null,
+    to: '/admin/os-management/list',
+    section: 'os-management'
+  },
+  {
+    display: 'Đơn Hàng',
+    icon: null,
+    to: '/admin/order-management/list',
+    section: 'order-management'
+  },
+  {
+    display: 'Mã Giảm Giá',
+    icon: null,
+    to: '/admin/promotion-management/list',
+    section: 'promotion-management'
+  },
+  {
+    display: 'Phản Hồi',
+    icon: null,
+    to: '/admin/feedback-management/list',
+    section: 'feedback-management'
+  },
 ]
 
 function AdminSidebar(props) {

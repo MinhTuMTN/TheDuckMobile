@@ -16,22 +16,9 @@ import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import { Link } from "react-router-dom";
-
-const RootPageProductList = styled(Box)(({ theme }) => ({
-    display: "flex",
-    width: "100%",
-    flexDirection: "column",
-    padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
-}));
-
-const AddButton = styled(MuiButton)(({ theme }) => ({
-    width: "25%",
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(1),
-    "&:hover": {
-        backgroundColor: "#FF6969",
-      }
-}));
+import InfoIcon from '@mui/icons-material/Info';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -60,6 +47,21 @@ function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
 
+const RootPageProductList = styled(Box)(({ theme }) => ({
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
+}));
+
+const AddButton = styled(MuiButton)(({ theme }) => ({
+    width: "25%",
+    marginBottom: theme.spacing(1),
+    "&:hover": {
+        backgroundColor: "#FF6969",
+      }
+}));
+
 function ProductListPage() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -85,8 +87,8 @@ function ProductListPage() {
                     Thêm Sản Phẩm Mới
                 </Typography>
             </AddButton>
-            <TableContainer component={Paper}>
-                <Table stickyHeader sx={{ minWidth: 500 }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 510, minWidth: 1035, maxWidth: 1035 }}>
+                <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
                             <TableCell>Dessert (100g serving)</TableCell>
@@ -94,6 +96,7 @@ function ProductListPage() {
                             <TableCell align="right">Fat&nbsp;(g)</TableCell>
                             <TableCell align="right">Carbs&nbsp;(g)</TableCell>
                             <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                            <TableCell align="center">Lựa Chọn</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -102,26 +105,31 @@ function ProductListPage() {
                             : rows
                         ).map((row) => (
                             <TableRow key={row.name}>
-                                <TableCell style={{ width: 100 }}>
+                                <TableCell style={{ minWidth: 100 }}>
                                     {row.name}
                                 </TableCell>
-                                <TableCell style={{ width: 100 }} align="right">
+                                <TableCell style={{ minWidth: 100 }} align="right">
                                     {row.calories}
                                 </TableCell>
-                                <TableCell style={{ width: 100 }} align="right">
+                                <TableCell style={{ minWidth: 100 }} align="right">
                                     {row.fat}
                                 </TableCell>
-                                <TableCell style={{ width: 100 }} align="right">
+                                <TableCell style={{ minWidth: 100 }} align="right">
                                     {row.carbs}
                                 </TableCell>
-                                <TableCell style={{ width: 100 }} align="right">
+                                <TableCell style={{ minWidth: 100 }} align="right">
                                     {row.protein}
+                                </TableCell>
+                                <TableCell style={{ minWidth: 200 }} align="center">
+                                    <MuiButton color="oldPrimary"><InfoIcon /></MuiButton>
+                                    <MuiButton color="teal"><EditIcon /></MuiButton>
+                                    <MuiButton color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>
                             </TableRow>
                         ))}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={6} />
+                                <TableCell colSpan={7} />
                             </TableRow>
                         )}
                     </TableBody>
@@ -129,7 +137,7 @@ function ProductListPage() {
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                                colSpan={5}
+                                colSpan={6}
                                 count={rows.length}
                                 rowsPerPage={rowsPerPage}
                                 page={page}

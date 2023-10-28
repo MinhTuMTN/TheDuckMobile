@@ -47,22 +47,14 @@ function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
 
-const RootPageBrandList = styled(Box)(({ theme }) => ({
+const RootPageFeedbackList = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
     padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
-const AddButton = styled(MuiButton)(({ theme }) => ({
-    width: "25%",
-    marginBottom: theme.spacing(1),
-    "&:hover": {
-        backgroundColor: "#FF6969",
-      }
-}));
-
-function BrandListPage() {
+function FeedbackListPage() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -80,14 +72,9 @@ function BrandListPage() {
     };
 
     return (
-        <RootPageBrandList>
-            <Typography variant="h3">Danh sách thương hiệu</Typography>
-            <AddButton component={Link} variant="contained" color="color1" to="/admin/brand-management/add">
-                <Typography color={"white"}>
-                    Thêm Thương Hiệu Mới
-                </Typography>
-            </AddButton>
-            <TableContainer component={Paper} sx={{ maxHeight: 510, minWidth: 1035, maxWidth: 1035 }}>
+        <RootPageFeedbackList>
+            <Typography variant="h3">Danh sách phản hồi của người dùng</Typography>
+            <TableContainer component={Paper} sx={{ maxHeight: 562, minWidth: 1035, maxWidth: 1035 }}>
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
@@ -150,8 +137,8 @@ function BrandListPage() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </RootPageBrandList>
+        </RootPageFeedbackList>
     );
 }
 
-export default BrandListPage;
+export default FeedbackListPage;

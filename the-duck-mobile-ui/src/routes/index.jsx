@@ -11,11 +11,21 @@ import Profile from "../pages/Profile";
 import AdminLayout from "../layouts/AdminLayout";
 import CatalogListPage from "../pages/Admin/CatalogManagement/CatalogListPage";
 import ProductListPage from "../pages/Admin/ProductManagement/ProductListPage";
-import UserListPage from "../pages/Admin/UserManagement/UserListPage";
 import BrandListPage from "../pages/Admin/BrandManagement/BrandListPage";
 import AddProductPage from "../pages/Admin/ProductManagement/AddProductPage";
 import AddBrandPage from "../pages/Admin/BrandManagement/AddBrandPage";
 import AddCatalogPage from "../pages/Admin/CatalogManagement/AddCatalogPage";
+import AddOSPage from "../pages/Admin/OSManagement/AddOSPage";
+import OSListPage from "../pages/Admin/OSManagement/OSListPage";
+import CustomerListPage from "../pages/Admin/CustomerManagement/CustomerListPage";
+import StaffListPage from "../pages/Admin/StaffManagement/StaffListPage";
+import AccountListPage from "../pages/Admin/AccountManagement/AccountListPage";
+import OrderListPage from "../pages/Admin/OrderManagement/OrderListPage";
+import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
+import AddStorePage from "../pages/Admin/StoreManagement/AddStorePage";
+import PromotionListPage from "../pages/Admin/PromotionManagement/PromotionListPage";
+import AddPromotionPage from "../pages/Admin/PromotionManagement/AddPromotionPage";
+import FeedbackListPage from "../pages/Admin/FeedbackManagement/FeedbackListPage";
 
 function Router(props) {
   return useRoutes([
@@ -86,8 +96,16 @@ function Router(props) {
           element: <AddProductPage />,
         },
         {
-          path: "user-management/list",
-          element: <UserListPage />,
+          path: "account-management/list",
+          element: <AccountListPage />,
+        },
+        {
+          path: "customer-management/list",
+          element: <CustomerListPage />,
+        },
+        {
+          path: "staff-management/list",
+          element: <StaffListPage />,
         },
         {
           path: "brand-management/list",
@@ -96,7 +114,39 @@ function Router(props) {
         {
           path: "brand-management/add",
           element: <AddBrandPage />,
-        }
+        },
+        {
+          path: "store-management/list",
+          element: <StoreListPage />,
+        },
+        {
+          path: "store-management/add",
+          element: <AddStorePage />,
+        },
+        {
+          path: "os-management/list",
+          element: <OSListPage />,
+        },
+        {
+          path: "os-management/add",
+          element: <AddOSPage />,
+        },
+        {
+          path: "order-management/list",
+          element: <OrderListPage />,
+        },
+        {
+          path: "promotion-management/list",
+          element: <PromotionListPage />,
+        },
+        {
+          path: "promotion-management/add",
+          element: <AddPromotionPage />,
+        },
+        {
+          path: "feedback-management/list",
+          element: <FeedbackListPage />,
+        },
       ],
     },
   ]);
