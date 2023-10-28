@@ -29,7 +29,7 @@ const Container = styled(Box)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   padding: theme.spacing(2),
   textAlign: "center",
-  marginTop: "auto",
+  marginTop: "5rem",
 
   display: "flex",
   justifyContent: "space-between",

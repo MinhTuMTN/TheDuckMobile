@@ -47,7 +47,6 @@ const Container = styled.div`
 const PageContainer = styled.div`
   width: 100%;
   padding-right: 0;
-  margin-bottom: 5rem;
 `;
 
 const StyledButton = styled(Button)(({ theme }) => ({

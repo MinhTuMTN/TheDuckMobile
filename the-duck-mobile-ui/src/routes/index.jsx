@@ -10,6 +10,8 @@ import ContactUs from "../pages/ContactUs";
 import ProfileLayout from "../layouts/ProfileLayout";
 import Profile from "../pages/Profile";
 import Login from "../pages/Login";
+import OrderHistory from "../pages/OrderHistory";
+import OrderHistoryDetails from "../pages/OrderHistoryDetails";
 
 function Router(props) {
   return useRoutes([
@@ -53,7 +55,11 @@ function Router(props) {
         },
         {
           path: "order-history",
-          element: <div>Order History</div>,
+          element: <OrderHistory />,
+        },
+        {
+          path: "order-history-details",
+          element: <OrderHistoryDetails />,
         },
       ],
     },
