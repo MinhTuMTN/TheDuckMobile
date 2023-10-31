@@ -66,6 +66,7 @@ function ProductDetails(props) {
     "https://images.unsplash.com/photo-1505628346881-b72b27e84530?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fGFuaW1hbCUyMGN1dGV8ZW58MHwxfDB8fHww",
     "https://images.unsplash.com/photo-1547178270-177ae603f6e2?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fGFuaW1hbCUyMGN1dGV8ZW58MHwxfDB8fHww",
     "https://images.unsplash.com/photo-1530041539828-114de669390e?auto=format&fit=crop&q=80&w=1887&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://plus.unsplash.com/premium_photo-1681882526882-c2da94c47783?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   ];
 
   const [urlImage, setUrlImage] = React.useState(imagesURL[0]);
@@ -123,7 +124,6 @@ function ProductDetails(props) {
                     slidesToShow={4}
                     height={"12rem"}
                     onClick={(e) => {
-                      console.log(e.target.src);
                       setUrlImage(e.target.src);
                     }}
                   />

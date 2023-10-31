@@ -8,8 +8,7 @@ import MuiTextFeild from "../components/MuiTextFeild";
 import { login } from "../services/AuthService";
 
 const Wrapper = styled(Container)`
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 6rem;
   padding-left: 1rem;
   padding-right: 1rem;
 `;
@@ -40,7 +39,13 @@ function Login(props) {
     <Wrapper>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6} justifyContent={"center"} display={"flex"}>
-          <img src={pic} alt="Login" width={"60%"} />
+          <img
+            src={
+              "https://res.cloudinary.com/dccypeoxt/image/upload/v1698742461/%C4%91%E1%BB%95i_c%E1%BB%A1_thi%E1%BA%BFt_k%E1%BA%BF_cho_ph%C3%B9_h%E1%BB%A3p_v%E1%BB%9Bi_%E1%BA%A3nh_%C4%90%E1%BB%83_ph%C3%B9_h%E1%BB%A3p_v%E1%BB%9Bi_%E1%BA%A3nh_b%E1%BA%A1n_c%C3%B3_th%E1%BB%83_thay_%C4%91%E1%BB%95i_c%E1%BB%A1_thi%E1%BA%BFt_k%E1%BA%BF._feafzn.png"
+            }
+            alt="Login"
+            width={"60%"}
+          />
         </Grid>
         <Grid item xs={12} md={6} alignItems={"center"} display={"flex"}>
           <Paper
