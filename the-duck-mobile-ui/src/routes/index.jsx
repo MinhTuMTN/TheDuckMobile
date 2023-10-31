@@ -31,6 +31,9 @@ import EditOSPage from "../pages/Admin/OSManagement/EditOSPage";
 import EditStorePage from "../pages/Admin/StoreManagement/EditStorePage";
 import EditBrandPage from "../pages/Admin/BrandManagement/EditBrandPage";
 import EditCatalogPage from "../pages/Admin/CatalogManagement/EditCatalogPage";
+import SpecialFeatureListPage from "../pages/Admin/SpecialFeatureManagement/SpecialFeatureListPage";
+import AddSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/AddSpecialFeaturePage";
+import EditSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/EditSpecialFeaturePage";
 
 function Router(props) {
   return useRoutes([
@@ -171,6 +174,18 @@ function Router(props) {
         {
           path: "feedback-management/list",
           element: <FeedbackListPage />,
+        },
+        {
+          path: "special-feature-management/list",
+          element: <SpecialFeatureListPage />,
+        },
+        {
+          path: "special-feature-management/add",
+          element: <AddSpecialFeaturePage />,
+        },
+        {
+          path: "special-feature-management/edit",
+          element: <EditSpecialFeaturePage />,
         },
       ],
     },

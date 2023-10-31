@@ -66,6 +66,12 @@ const sidebarItems = [
     section: 'brand-management'
   },
   {
+    display: 'Tính Năng Đặc Biệt',
+    icon: null,
+    to: '/admin/special-feature-management/list',
+    section: 'special-feature-management'
+  },
+  {
     display: 'Chi Nhánh',
     icon: null,
     to: '/admin/store-management/list',
