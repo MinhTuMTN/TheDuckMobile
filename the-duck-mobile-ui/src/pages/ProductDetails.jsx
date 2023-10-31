@@ -16,6 +16,8 @@ import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import TabRelative from "../components/TabRelative";
 import ProductGrid from "../components/ProductGrid";
+import Sliders from "../components/Sliders";
+import FormatCurrency from "../components/FormatCurrency";
 
 const Wrapper = styled.div``;
 const ShopArea = styled.div`
@@ -57,9 +59,16 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 function ProductDetails(props) {
-  const urlImage =
-    "https://minhtumtn.github.io/Demo-Template/assets/img/product/fashion/1.jpg";
+  const imagesURL = [
+    "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YW5pbWFsJTIwY3V0ZXxlbnwwfDF8MHx8fDA%3D",
+    "https://images.unsplash.com/photo-1503595855261-9418f48a991a?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGFuaW1hbCUyMGN1dGV8ZW58MHwxfDB8fHww",
+    "https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fGFuaW1hbCUyMGN1dGV8ZW58MHwxfDB8fHww",
+    "https://images.unsplash.com/photo-1505628346881-b72b27e84530?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fGFuaW1hbCUyMGN1dGV8ZW58MHwxfDB8fHww",
+    "https://images.unsplash.com/photo-1547178270-177ae603f6e2?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fGFuaW1hbCUyMGN1dGV8ZW58MHwxfDB8fHww",
+    "https://images.unsplash.com/photo-1530041539828-114de669390e?auto=format&fit=crop&q=80&w=1887&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  ];
 
+  const [urlImage, setUrlImage] = React.useState(imagesURL[0]);
   const [value, setValue] = React.useState(2);
   return (
     <Wrapper>
@@ -106,17 +115,24 @@ function ProductDetails(props) {
                     ></Box>
                   </Card>
                 </Grid>
-                <Grid item xs={2} width={"100%"} overflow={"hidden"}>
-                  <div>Day la o bo slider</div>
+                <Grid item xs={4} width={"100%"} overflow={"hidden"}>
+                  <Sliders
+                    urls={imagesURL}
+                    arrows
+                    slidesToScroll={3}
+                    slidesToShow={4}
+                    height={"12rem"}
+                    onClick={(e) => {
+                      console.log(e.target.src);
+                      setUrlImage(e.target.src);
+                    }}
+                  />
                 </Grid>
               </Grid>
               <Grid
                 item
                 md={6}
                 xs={12}
-                direction={"column"}
-                //style={{ backgroundColor: "yellow" }}
-
                 paddingLeft={"15px"}
                 paddingRight={"15px"}
               >
@@ -141,7 +157,7 @@ function ProductDetails(props) {
                         marginRight: "20px",
                       }}
                     >
-                      $11.2{" "}
+                      <FormatCurrency amount={10000000} />
                     </span>
                     <span
                       style={{
@@ -150,7 +166,7 @@ function ProductDetails(props) {
                         textDecoration: "line-through",
                       }}
                     >
-                      $12.2
+                      <FormatCurrency amount={9000000} />
                     </span>
                   </Box>
                   <Box
@@ -306,7 +322,6 @@ function ProductDetails(props) {
                 item
                 md={12}
                 xs={12}
-                direction={"column"}
                 paddingLeft={"15px"}
                 paddingRight={"15px"}
               >

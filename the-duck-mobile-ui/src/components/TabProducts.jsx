@@ -46,13 +46,13 @@ const TabProducts = () => {
           </CustomTabList>
         </Box>
         <TabPanel value="1">
-          <ProductGrid numberColumn={3} />
+          <ProductGrid numberColumn={4} />
         </TabPanel>
         <TabPanel value="2">
-          <ProductGrid numberColumn={3} />
+          <ProductGrid numberColumn={4} />
         </TabPanel>
         <TabPanel value="3">
-          <ProductGrid numberColumn={3} />
+          <ProductGrid numberColumn={4} />
         </TabPanel>
       </TabContext>
       <FlexContainer justifyContent="center">

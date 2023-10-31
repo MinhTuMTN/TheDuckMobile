@@ -32,7 +32,7 @@ export default function CustomSeparator(props) {
               color="inherit"
               fontWeight={"none"}
               to={value.url}
-              colorHover={"#3e95dd"}
+              colorhover={"#3e95dd"}
             >
               {value.text}
             </CustomLink>

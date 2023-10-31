@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import { Link } from "react-router-dom";
 
 CustomLink.propTypes = {
@@ -10,6 +10,7 @@ CustomLink.propTypes = {
   children: PropTypes.node.isRequired,
   replace: PropTypes.bool,
   to: PropTypes.string,
+  colorhover: PropTypes.string,
   fontWeight: PropTypes.string,
 };
 
@@ -19,7 +20,7 @@ const StyledLink = styled(Link)`
 
   &:hover {
     text-decoration: none;
-    color: ${(props) => (props.colorHover ? props.colorHover : "")} !important;
+    color: ${(props) => (props.colorhover ? props.colorhover : "")} !important;
   }
 `;
 

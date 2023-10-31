@@ -3,22 +3,33 @@ import { TextField } from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
 
-const CustomTextField = styled(TextField)(({ theme }) => ({
-  input: {
-    height: "100%",
-  },
-}));
+const CustomTextField = styled(TextField)`
+  input {
+    height: 100%;
+  }
+
+  label {
+    ${(props) =>
+      !props.multiline &&
+      props.size === "small" &&
+      "font-size: 0.85rem !important;"}
+  }
+`;
 
 MuiTextFeild.propTypes = {
   style: PropTypes.object,
   label: PropTypes.string,
   name: PropTypes.string,
   size: PropTypes.string,
-  fontSize: PropTypes.string,
+  fontSize: PropTypes.string || PropTypes.number,
   value: PropTypes.string,
   onChange: PropTypes.func,
   error: PropTypes.string,
   children: PropTypes.node,
+};
+
+MuiTextFeild.defaultProps = {
+  multiline: false,
 };
 
 function MuiTextFeild(props) {
@@ -27,6 +38,7 @@ function MuiTextFeild(props) {
     name,
     value,
     size,
+    multiline,
     onChange,
     error = null,
     children,
@@ -39,6 +51,7 @@ function MuiTextFeild(props) {
       label={label}
       name={name}
       size={size}
+      multiline={multiline}
       value={value}
       onChange={onChange}
       style={props.style}

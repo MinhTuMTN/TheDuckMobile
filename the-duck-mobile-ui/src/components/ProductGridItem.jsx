@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import StarIcon from "@mui/icons-material/Star";
+import FormatCurrency from "./FormatCurrency";
 
 const CardContainer = styled(Box)(({ theme }) => ({
   backgroundColor: "white",
@@ -42,7 +43,7 @@ const ProductGridItem = ({ productInfo, styled }) => {
         }}
         style={{ margin: "5px" }}
       >
-        {productInfo.price}₫
+        <FormatCurrency amount={productInfo.price} />
       </Typography>
       <RatingContainer>
         <Typography

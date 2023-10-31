@@ -10,7 +10,7 @@ import {
 import React from "react";
 
 const StyledTableBody = styled(TableBody)`
-  & tr:nth-child(odd) {
+  & tr:nth-of-type(odd) {
     background-color: #f2f2f2;
   }
 `;
