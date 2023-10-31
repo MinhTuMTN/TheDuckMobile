@@ -1,9 +1,9 @@
 import { Box, Button, Card, Stack, Typography } from "@mui/material";
 import React from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import pic from "../assets/iphone.jpg";
 import styled from "@emotion/styled";
 import Unit from "./Unit";
+import ProductInformation from "./ProductInformation";
 
 const LeftText = styled(Typography)`
   flex-basis: 85%;
@@ -47,75 +47,7 @@ function AboutHistoryOrderDetails(props) {
             </Typography>
           </Stack>
 
-          <Stack direction={"row"} spacing={1}>
-            <Stack direction={"row"} flexBasis={"60%"}>
-              <img src={pic} alt="product" width={"15%"} />
-              <Stack
-                direction={"column"}
-                spacing={0.5}
-                justifyContent={"space-between"}
-              >
-                <Typography
-                  variant="body1"
-                  fontWeight={"500"}
-                  style={{
-                    fontSize: "16px",
-                    marginLeft: "0.5rem",
-                  }}
-                >
-                  Iphone 15 Pro Max
-                </Typography>
-                <Stack direction={"row"}>
-                  <Typography
-                    variant="body1"
-                    fontWeight={"500"}
-                    style={{
-                      fontSize: "12px",
-                      marginLeft: "0.5rem",
-                    }}
-                  >
-                    Số lượng:{" "}
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    fontWeight={"500"}
-                    style={{
-                      fontSize: "12px",
-                      marginLeft: "0.5rem",
-                    }}
-                  >
-                    1
-                  </Typography>
-                </Stack>
-              </Stack>
-            </Stack>
-            <Stack
-              direction={"row"}
-              spacing={1}
-              alignItems={"flex-start"}
-              flexBasis={"40%"}
-              justifyContent={"flex-end"}
-            >
-              <Typography
-                variant="body1"
-                fontWeight={"500"}
-                style={{
-                  fontSize: "16px",
-                }}
-              >
-                40.000.000
-              </Typography>
-              <Typography
-                variant="body1"
-                fontWeight={"500"}
-                style={{
-                  fontSize: "14px",
-                }}
-              >
-                ₫
-              </Typography>
-            </Stack>
-          </Stack>
+          <ProductInformation color={"#000"} fontWeight={"500"} />
         </Stack>
         <Box>
           <Stack direction={"column"} spacing={3}>

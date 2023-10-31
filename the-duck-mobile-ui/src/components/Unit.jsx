@@ -10,8 +10,7 @@ function Unit(props) {
   const { color } = props;
   return (
     <Typography
-      variant="body1"
-      fontWeight={"500"}
+      variant="textcustom"
       style={{
         fontSize: "14px",
         color: color,

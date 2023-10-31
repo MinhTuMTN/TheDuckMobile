@@ -13,7 +13,8 @@ MuiTextFeild.propTypes = {
   style: PropTypes.object,
   label: PropTypes.string,
   name: PropTypes.string,
-  fontSize: PropTypes.number,
+  size: PropTypes.string,
+  fontSize: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func,
   error: PropTypes.string,
@@ -25,6 +26,7 @@ function MuiTextFeild(props) {
     label,
     name,
     value,
+    size,
     onChange,
     error = null,
     children,
@@ -37,6 +39,7 @@ function MuiTextFeild(props) {
       InputProps={{ style: { fontSize: props.fontSize } }}
       label={label}
       name={name}
+      size={size}
       value={value}
       onChange={onChange}
       style={props.style}

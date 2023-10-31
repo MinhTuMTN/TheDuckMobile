@@ -12,6 +12,7 @@ import Profile from "../pages/Profile";
 import Login from "../pages/Login";
 import OrderHistory from "../pages/OrderHistory";
 import OrderHistoryDetails from "../pages/OrderHistoryDetails";
+import BuyProduct from "../pages/BuyProduct";
 
 function Router(props) {
   return useRoutes([
@@ -30,6 +31,10 @@ function Router(props) {
         {
           path: "/cart",
           element: <Cart />,
+        },
+        {
+          path: "/buy-product",
+          element: <BuyProduct />,
         },
         {
           path: "/category",
