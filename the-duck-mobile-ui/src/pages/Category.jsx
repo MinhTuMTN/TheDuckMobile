@@ -5,6 +5,7 @@ import React from "react";
 import ProductGrid from "../components/ProductGrid";
 import ProductFilter from "../components/ProductFilter";
 import ProductSorter from "../components/ProductSorter";
+import CustomBreadcrumb from "../components/CustomBreadcrumb";
 
 const CategoryName = styled(Box)(({ theme }) => ({
   background: `url('https://cdn2.slidemodel.com/wp-content/uploads/21511-03-transparent-materials-powerpoint-backgrounds-16x9-1.jpg')`,
@@ -33,22 +34,20 @@ function Category(props) {
   };
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-      }}
-      mt={10}
-      mb={10}
-    >
-      <Stack sx={{ width: "80%" }} mt={10}>
+    <Stack mt={10} mb={10} width={"100%"} alignItems={"center"}>
+      <CustomBreadcrumb
+        urls={[
+          { text: "Trang chủ", url: "/" },
+          { text: "Điện thoại", url: null },
+        ]}
+      />
+      <Stack sx={{ width: "80%" }} mt={2}>
         <CategoryName style={{ marginBottom: "1rem" }}>Điện thoại</CategoryName>
         <ProductFilter />
         <ProductSorter value={orderBy} onSort={handleOrderBy} />
         <ProductGrid margin={"1rem 0rem"} />
       </Stack>
-    </Box>
+    </Stack>
   );
 }
 

@@ -1,8 +1,11 @@
 import styled from "@emotion/styled";
 import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import pic from "../assets/login.jpg";
+import { useAuth } from "../auth/AuthProvider";
 import MuiTextFeild from "../components/MuiTextFeild";
+import { login } from "../services/AuthService";
 
 const Wrapper = styled(Container)`
   padding-top: 2rem;
@@ -17,6 +20,22 @@ const StyledInput = styled(MuiTextFeild)`
   }
 `;
 function Login(props) {
+  const { setToken } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    const response = await login({
+      email: "admin@gmail.com",
+      password: "12345",
+    });
+    console.log(response.data);
+
+    if (response.success) {
+      setToken(response.data.data);
+      navigate("/", { replace: true });
+    }
+  };
+
   return (
     <Wrapper>
       <Grid container spacing={2}>
@@ -54,6 +73,7 @@ function Login(props) {
                 color: "white",
                 borderRadius: "1rem",
               }}
+              onClick={handleLogin}
             >
               Tiếp tục
             </Button>

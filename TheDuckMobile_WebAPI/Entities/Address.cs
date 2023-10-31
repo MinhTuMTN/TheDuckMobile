@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TheDuckMobile_WebAPI.Entities
 {
@@ -8,7 +9,7 @@ namespace TheDuckMobile_WebAPI.Entities
         public Guid AddressId { get; set; }
 
         [Required]
-        public string StreetName { get; set; }
+        public string? StreetName { get; set; }
 
         //Tham chieu toi bang provine thông qua ProvineId
         public byte ProvineId { get; set; }
@@ -26,8 +27,9 @@ namespace TheDuckMobile_WebAPI.Entities
         public Guid StoreId { get; set; }
         public virtual Store? Store { get; set; }
 
-        //Tham chieu toi bang User
+        [JsonIgnore]
         public Guid UserId { get; set; }
+        [JsonIgnore]
         public virtual User? User { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();

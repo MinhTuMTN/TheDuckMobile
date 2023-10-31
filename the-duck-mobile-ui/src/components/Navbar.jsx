@@ -1,18 +1,12 @@
 import styled from "@emotion/styled/macro";
-import {
-  Box,
-  Card,
-  InputAdornment,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import { SearchOutlined } from "@mui/icons-material";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import { Box, Card, InputAdornment, Typography } from "@mui/material";
 import React, { memo } from "react";
+import MuiTextFeild from "../components/MuiTextFeild";
 import CustomLink from "./CustomLink";
 import Logo from "./Logo";
-import { Search } from "@mui/icons-material";
 
 const Wrapper = styled(Box)(({ theme }) => ({
   width: "100vw",
@@ -29,10 +23,9 @@ const Container = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  padding: theme.spacing(2),
-  width: "100%",
+  padding: theme.spacing(2) + " " + theme.spacing(0),
+  width: "80%",
   maxHeight: "80px",
-  maxWidth: "1200px",
   margin: "0 auto",
 }));
 
@@ -53,7 +46,7 @@ const Right = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  flex: 1,
+  flex: 2,
 }));
 
 const SubMenu = styled(Card)(({ theme }) => ({
@@ -102,22 +95,6 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
         </Left>
         <Center>
           <MenuItem>
-            <TextField
-              type="text"
-              variant="outlined"
-              component={Paper}
-              placeholder="Bạn muốn tìm gì ..."
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-                style: { fontSize: 15 },
-              }}
-            />
-          </MenuItem>
-          <MenuItem>
             <CustomLink to={"/"}>Trang chủ</CustomLink>
           </MenuItem>
           <MenuItem>
@@ -128,11 +105,33 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
               <CustomLink>Máy tính bảng</CustomLink>
             </SubMenu>
           </MenuItem>
+
           <MenuItem>
             <CustomLink to={"/contact"}>Liên hệ</CustomLink>
           </MenuItem>
         </Center>
         <Right>
+          <MuiTextFeild
+            id="search-box"
+            placeholder="Tìm kiếm"
+            variant="outlined"
+            className="search-box"
+            size="small"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <SearchOutlined />
+                </InputAdornment>
+              ),
+              style: {
+                fontSize: "1rem",
+              },
+            }}
+            sx={{
+              marginRight: "5px",
+            }}
+          />
+
           <CustomLink to={"/cart"}>
             <ShoppingCartOutlinedIcon
               sx={{

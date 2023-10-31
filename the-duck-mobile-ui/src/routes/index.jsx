@@ -1,18 +1,34 @@
 import React from "react";
 import { useRoutes } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
-import Home from "../pages/Home";
-import ProductDetails from "../pages/ProductDetails";
-import Cart from "../pages/Cart";
-import Category from "../pages/Category";
-import NotFound from "../pages/NotFound";
-import ContactUs from "../pages/ContactUs";
 import ProfileLayout from "../layouts/ProfileLayout";
+import { ProtectedLayout } from "../layouts/ProtectedLayout";
+import NotFound from "../pages/NotFound";
 import Profile from "../pages/Profile";
-import Login from "../pages/Login";
-import OrderHistory from "../pages/OrderHistory";
-import OrderHistoryDetails from "../pages/OrderHistoryDetails";
-import BuyProduct from "../pages/BuyProduct";
+
+const LazyLoad = (Component) => (props) =>
+  (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <Component {...props} />
+    </React.Suspense>
+  );
+
+const HomeLazy = LazyLoad(React.lazy(() => import("../pages/Home")));
+const ProductDetailsLazy = LazyLoad(
+  React.lazy(() => import("../pages/ProductDetails"))
+);
+const CartLazy = LazyLoad(React.lazy(() => import("../pages/Cart")));
+const CategoryLazy = LazyLoad(React.lazy(() => import("../pages/Category")));
+const ContactUsLazy = LazyLoad(React.lazy(() => import("../pages/ContactUs")));
+const ProfileLazy = LazyLoad(React.lazy(() => import("../pages/Profile")));
+const LoginLazy = LazyLoad(React.lazy(() => import("../pages/Login")));
+const BuyProduct = LazyLoad(React.lazy(() => import("../pages/BuyProduct")));
+const OrderHistory = LazyLoad(
+  React.lazy(() => import("../pages/OrderHistory"))
+);
+const OrderHistoryDetails = LazyLoad(
+  React.lazy(() => import("../pages/OrderHistoryDetails"))
+);
 
 function Router(props) {
   return useRoutes([
@@ -22,15 +38,15 @@ function Router(props) {
       children: [
         {
           path: "/",
-          element: <Home />,
+          element: <HomeLazy />,
         },
         {
           path: "/product",
-          element: <ProductDetails />,
+          element: <ProductDetailsLazy />,
         },
         {
           path: "/cart",
-          element: <Cart />,
+          element: <CartLazy />,
         },
         {
           path: "/buy-product",
@@ -38,24 +54,24 @@ function Router(props) {
         },
         {
           path: "/category",
-          element: <Category />,
+          element: <CategoryLazy />,
         },
         {
           path: "/contact",
-          element: <ContactUs />,
+          element: <ContactUsLazy />,
         },
         {
           path: "/login",
-          element: <Login />,
+          element: <LoginLazy />,
         },
       ],
     },
     {
-      path: "/profile",
-      element: <ProfileLayout />,
+      path: "/",
+      element: <ProtectedLayout />,
       children: [
         {
-          element: <Profile />,
+          element: <ProfileLazy />,
           index: true,
         },
         {

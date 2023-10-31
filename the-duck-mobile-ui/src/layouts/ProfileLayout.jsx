@@ -9,12 +9,14 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { createContext, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import CustomLink from "../components/CustomLink";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../auth/AuthProvider";
+import { getInfo } from "../services/UserService";
 
 const LogOutButton = styled(Button)(({ theme }) => ({
   "&:hover": {
@@ -23,9 +25,28 @@ const LogOutButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const UserInfoContext = createContext(null);
+
 function ProfileLayout(props) {
+  const { setToken } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setToken(null);
+    navigate("/", { replace: true });
+  };
+
+  const [info, setInfo] = React.useState(null);
+  const handleGetInfo = async () => {
+    const response = await getInfo();
+    console.log(response.data.data);
+    if (response.success) setInfo(response.data.data);
+  };
+  useEffect(() => {
+    handleGetInfo();
+  }, []);
   return (
-    <>
+    <UserInfoContext.Provider value={info}>
       <Helmet>
         <title>The Duck Mobile</title>
         <meta name="description" content="The Duck Mobile" />
@@ -61,7 +82,7 @@ function ProfileLayout(props) {
               component="h1"
               style={{ fontSize: "1rem" }}
             >
-              <b>Xin chào, Nguyễn Minh Tú</b>
+              <b>Xin chào, {info && info.fullName}</b>
             </Typography>
             <Divider
               sx={{ borderColor: "rgba(0,0,0,0.5)", margin: "0.5rem 0rem" }}
@@ -90,6 +111,7 @@ function ProfileLayout(props) {
               fullWidth
               color="color1"
               style={{ marginTop: "0.5rem" }}
+              onClick={handleLogout}
             >
               Đăng xuất
             </LogOutButton>
@@ -100,8 +122,10 @@ function ProfileLayout(props) {
         </Grid>
       </Box>
       <Footer />
-    </>
+    </UserInfoContext.Provider>
   );
 }
+
+export { UserInfoContext };
 
 export default ProfileLayout;

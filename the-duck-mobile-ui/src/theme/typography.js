@@ -117,6 +117,11 @@ const typography = {
     fontSize: pxToRem(14),
     textTransform: "capitalize",
   },
+  custom1: {
+    color: "#000",
+    fontWeight: 700,
+    lineHeight: 1.5,
+    fontSize: pxToRem(14),
+  },
 };
-
 export default typography;
