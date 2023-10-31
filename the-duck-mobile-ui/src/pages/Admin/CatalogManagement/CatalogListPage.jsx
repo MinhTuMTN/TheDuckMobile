@@ -161,9 +161,9 @@ function CatalogListPage() {
                                     {row.protein}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton color="oldPrimary"><InfoIcon /></MuiButton>
-                                    <MuiButton color="teal"><EditIcon /></MuiButton>
-                                    <MuiButton color="color1"><DeleteIcon /></MuiButton>
+                                    <MuiButton component={Link} color="oldPrimary"><InfoIcon /></MuiButton>
+                                    <MuiButton component={Link} color="teal" to="/admin/catalog-management/edit"><EditIcon /></MuiButton>
+                                    <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>
                             </TableRow>
                         ))}

@@ -26,6 +26,11 @@ import AddStorePage from "../pages/Admin/StoreManagement/AddStorePage";
 import PromotionListPage from "../pages/Admin/PromotionManagement/PromotionListPage";
 import AddPromotionPage from "../pages/Admin/PromotionManagement/AddPromotionPage";
 import FeedbackListPage from "../pages/Admin/FeedbackManagement/FeedbackListPage";
+import EditPromotionPage from "../pages/Admin/PromotionManagement/EditPromotionPage";
+import EditOSPage from "../pages/Admin/OSManagement/EditOSPage";
+import EditStorePage from "../pages/Admin/StoreManagement/EditStorePage";
+import EditBrandPage from "../pages/Admin/BrandManagement/EditBrandPage";
+import EditCatalogPage from "../pages/Admin/CatalogManagement/EditCatalogPage";
 
 function Router(props) {
   return useRoutes([
@@ -88,6 +93,10 @@ function Router(props) {
           element: <AddCatalogPage />,
         },
         {
+          path: "catalog-management/edit",
+          element: <EditCatalogPage />,
+        },
+        {
           path: "product-management/list",
           element: <ProductListPage />,
         },
@@ -116,6 +125,10 @@ function Router(props) {
           element: <AddBrandPage />,
         },
         {
+          path: "brand-management/edit",
+          element: <EditBrandPage />,
+        },
+        {
           path: "store-management/list",
           element: <StoreListPage />,
         },
@@ -124,12 +137,20 @@ function Router(props) {
           element: <AddStorePage />,
         },
         {
+          path: "store-management/edit",
+          element: <EditStorePage />,
+        },
+        {
           path: "os-management/list",
           element: <OSListPage />,
         },
         {
           path: "os-management/add",
           element: <AddOSPage />,
+        },
+        {
+          path: "os-management/edit",
+          element: <EditOSPage />,
         },
         {
           path: "order-management/list",
@@ -142,6 +163,10 @@ function Router(props) {
         {
           path: "promotion-management/add",
           element: <AddPromotionPage />,
+        },
+        {
+          path: "promotion-management/edit",
+          element: <EditPromotionPage />,
         },
         {
           path: "feedback-management/list",
