@@ -1,41 +1,17 @@
-import * as React from "react";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import PropTypes from "prop-types";
+import * as React from "react";
+import CustomLink from "./CustomLink";
 
-function handleClick(event) {
-  event.preventDefault();
-  console.info("You clicked a breadcrumb.");
-}
+CustomSeparator.propTypes = {
+  urls: PropTypes.array,
+};
 
-export default function CustomSeparator() {
-  const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      color="inherit"
-      sx={{ "&:hover": { color: "#3e95dd" } }}
-      href="/"
-      onClick={handleClick}
-    >
-      Home
-    </Link>,
-    <Link
-      underline="hover"
-      key="2"
-      color="inherit"
-      sx={{ "&:hover": { color: "#3e95dd" } }}
-      href="/material-ui/getting-started/installation/"
-      onClick={handleClick}
-    >
-      Điện thoại
-    </Link>,
-    <Typography key="3" color="text.primary">
-      Sound Intone I65 Earphone White Version
-    </Typography>,
-  ];
+export default function CustomSeparator(props) {
+  const { urls } = props;
 
   return (
     <Stack spacing={2}>
@@ -43,7 +19,25 @@ export default function CustomSeparator() {
         separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb"
       >
-        {breadcrumbs}
+        {urls.map((value, index) => {
+          if (value.url === null)
+            return (
+              <Typography key={index} color="text.primary">
+                {value.text}
+              </Typography>
+            );
+          return (
+            <CustomLink
+              key={index}
+              color="inherit"
+              fontWeight={"none"}
+              to={value.url}
+              colorHover={"#3e95dd"}
+            >
+              {value.text}
+            </CustomLink>
+          );
+        })}
       </Breadcrumbs>
     </Stack>
   );

@@ -9,7 +9,7 @@ namespace TheDuckMobile_WebAPI.Entities
         public byte CatalogId { get; set; }
 
         [Required]
-        public string CatalogName { get; set; }
+        public string? CatalogName { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -17,8 +17,8 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public Boolean IsDeleted { get; set; }
 
-        public virtual ICollection<Brand> Brands { get; set; }
+        public virtual ICollection<Brand>? Brands { get; set; }
 
-        public virtual ICollection<SpecialFeature> SpecialFeatures { get; set; }
+        public virtual ICollection<SpecialFeature>? SpecialFeatures { get; set; }
     }
 }

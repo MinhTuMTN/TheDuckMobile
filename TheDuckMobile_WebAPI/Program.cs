@@ -4,6 +4,7 @@ using TheDuckMobile_WebAPI.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 builder.Services.AddDbContext<DataContext>(
-    options => options.UseLazyLoadingProxies().UseSqlServer(
+    options => options.UseSqlServer(
         builder.Configuration.GetConnectionString("TheDuckMobile"))
     );
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

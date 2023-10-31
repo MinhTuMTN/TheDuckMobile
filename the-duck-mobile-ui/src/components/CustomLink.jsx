@@ -10,12 +10,18 @@ CustomLink.propTypes = {
   children: PropTypes.node.isRequired,
   replace: PropTypes.bool,
   to: PropTypes.string,
+  fontWeight: PropTypes.string,
 };
 
-const StyledLink = styled(Link)(({ theme }) => ({
-  textDecoration: "none",
-  fontWeight: "bold",
-}));
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  font-weight: ${(props) => (props.fontWeight ? props.fontWeight : "bold")};
+
+  &:hover {
+    text-decoration: none;
+    color: ${(props) => (props.colorHover ? props.colorHover : "")} !important;
+  }
+`;
 
 function CustomLink(props) {
   const { width, height, ...other } = props;

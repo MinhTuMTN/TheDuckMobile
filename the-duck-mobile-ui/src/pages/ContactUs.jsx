@@ -8,7 +8,6 @@ import {
   YouTube,
 } from "@mui/icons-material";
 import {
-  Box,
   Button,
   Divider,
   Grid,
@@ -19,42 +18,43 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Helmet } from "react-helmet-async";
+import CustomBreadcrumb from "../components/CustomBreadcrumb";
 import CustomLink from "../components/CustomLink";
 import MuiTextFeild from "../components/MuiTextFeild";
 
 function ContactUs(props) {
   return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-      }}
-      mt={10}
-      mb={10}
-    >
+    <Stack mt={10} mb={10} width={"100%"} alignItems={"center"}>
       <Helmet>
         <title>Liên hệ | The Duck Mobile</title>
         <meta name="description" content="Giỏ hàng của bạn" />
       </Helmet>
+
+      <CustomBreadcrumb
+        urls={[
+          { text: "Trang chủ", url: "/" },
+          { text: "Liên hệ", url: null },
+        ]}
+      />
+
       <Grid
         container
         sx={{
           width: "80%",
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "space-between",
           flexDirection: {
             xs: "column-reverse",
             md: "row",
           },
         }}
-        mt={10}
+        mt={7}
         mb={10}
       >
         <Grid
           item
           xs={12}
-          sm={4}
+          sm={4.8}
           component={Paper}
           elevation={3}
           p={2}
@@ -63,26 +63,26 @@ function ContactUs(props) {
           justifyContent={"space-evenly"}
         >
           <Stack spacing={2} direction={"row"} alignItems={"center"}>
-            <Icon style={{ transform: "scale(1.5)" }}>
+            <Icon style={{ textAlign: "end", flexBasis: "15%" }}>
               <PhoneOutlined />
             </Icon>
             <Stack>
-              <Typography variant="body2" component="h5">
+              <Typography variant="custom1" component="h5">
                 +84 123 456 789
               </Typography>
-              <Typography variant="body2" component="h5">
+              <Typography variant="custom1" component="h5">
                 +84 123 456 789
               </Typography>
             </Stack>
           </Stack>
 
           <Stack spacing={2} direction={"row"} alignItems={"center"}>
-            <Icon style={{ transform: "scale(1.5)" }}>
+            <Icon style={{ textAlign: "end", flexBasis: "15%" }}>
               <EmailOutlined />
             </Icon>
             <Stack>
               <CustomLink to={"mailto:theduckmobile@theduckmobile.com"}>
-                <Typography variant="body2" component="h5">
+                <Typography variant="custom1" component="h5">
                   theduckmobile@theduckmobile.com
                 </Typography>
               </CustomLink>
@@ -90,11 +90,11 @@ function ContactUs(props) {
           </Stack>
 
           <Stack spacing={2} direction={"row"} alignItems={"center"}>
-            <Icon style={{ transform: "scale(1.5)" }}>
+            <Icon style={{ textAlign: "end", flexBasis: "15%" }}>
               <BusinessOutlined />
             </Icon>
             <Stack>
-              <Typography variant="body2" component="h5">
+              <Typography variant="custom1" component="h5">
                 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, TP.HCM
               </Typography>
             </Stack>
@@ -174,7 +174,7 @@ function ContactUs(props) {
           </Stack>
         </Grid>
       </Grid>
-    </Box>
+    </Stack>
   );
 }
 

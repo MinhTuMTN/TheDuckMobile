@@ -60,7 +60,7 @@ namespace TheDuckMobile_WebAPI.Controllers
                 }
                 else throw new Exception();
             }
-            catch (Exception ex)
+            catch
             {
                 return BadRequest(new GenericResponse
                 {
@@ -101,7 +101,7 @@ namespace TheDuckMobile_WebAPI.Controllers
                 }
                 else throw new Exception();
             }
-            catch (Exception ex)
+            catch
             {
                 return BadRequest(new GenericResponse
                 {

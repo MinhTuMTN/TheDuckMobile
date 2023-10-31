@@ -1,8 +1,18 @@
 import { Delete, Edit } from "@mui/icons-material";
-import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Divider,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import PropTypes from "prop-types";
 import React from "react";
 import DialogConfirm from "./DialogConfirm";
+import DialogForm from "./DialogForm";
+import MuiTextFeild from "./MuiTextFeild";
 
 AddressList.propTypes = {
   margin: PropTypes.string,
@@ -11,6 +21,7 @@ AddressList.propTypes = {
 function AddressList(props) {
   const { margin } = props;
   const [deleteDialog, setDeleteDialog] = React.useState(false);
+  const [editDialog, setEditDialog] = React.useState(false);
 
   const address = [
     "1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, TP.HCM",
@@ -45,7 +56,14 @@ function AddressList(props) {
                 spacing={1}
                 justifyContent={"space-between"}
               >
-                <Button variant="outlined" color="primary" startIcon={<Edit />}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  startIcon={<Edit />}
+                  onClick={() => {
+                    setEditDialog(true);
+                  }}
+                >
                   Sửa
                 </Button>
                 <Button
@@ -72,13 +90,64 @@ function AddressList(props) {
         cancelText={"Hủy"}
         onOk={() => {
           console.log("Xóa địa chỉ");
-          setDeleteDialog(false);
         }}
         onCancel={() => {
           console.log("Hủy");
-          setDeleteDialog(false);
         }}
+        onClose={() => setDeleteDialog(false)}
       />
+
+      <DialogForm
+        open={editDialog}
+        title={"Chỉnh sửa địa chỉ"}
+        okText={"Cập nhật"}
+        cancelText={"Hủy bỏ"}
+        onOk={() => {
+          console.log("Xóa địa chỉ");
+        }}
+        onCancel={() => {
+          console.log("Hủy");
+        }}
+        onClose={() => setEditDialog(false)}
+      >
+        <Stack width={"30rem"} padding={".5rem 0 0 0"} spacing={2}>
+          <Stack spacing={2} direction={"row"} width={"100%"}>
+            <Autocomplete
+              fullWidth
+              options={["Tiền Giang", "Hồ Chí Minh"]}
+              renderInput={(params) => (
+                <MuiTextFeild
+                  {...params}
+                  style={{
+                    height: "100%",
+                  }}
+                  label="Tỉnh/Thành phố"
+                />
+              )}
+            />
+            <Autocomplete
+              fullWidth
+              options={[
+                "Tân Phú Đông",
+                "Gò Công Tây",
+                "Gò Công Đông",
+                "Cai Lậy",
+              ]}
+              renderInput={(params) => (
+                <MuiTextFeild {...params} label="Quận/Huyện" fontSize={14} />
+              )}
+            />
+          </Stack>
+          <Autocomplete
+            fullWidth
+            options={["Tân Thới", "Tân Phú", "Phú Thạnh", "Tân Hương"]}
+            renderInput={(params) => (
+              <MuiTextFeild {...params} label="Phường/Xã" />
+            )}
+          />
+          <MuiTextFeild fullWidth label="Số nhà, tên đường" />
+        </Stack>
+      </DialogForm>
     </Box>
   );
 }

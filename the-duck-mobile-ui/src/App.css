@@ -17,3 +17,7 @@ body,
 html {
   font-family: "Poppins", sans-serif;
 }
+
+.search-box div {
+  border-radius: 3rem !important;
+}

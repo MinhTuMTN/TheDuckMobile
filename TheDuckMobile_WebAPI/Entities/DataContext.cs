@@ -14,7 +14,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("TheDuckMobile"));
+            options.UseSqlServer(Configuration.GetConnectionString("TheDuckMobile"));
         }
 
 
@@ -200,6 +200,12 @@ namespace TheDuckMobile_WebAPI.Entities
                 .HasOne<Promotion>(productVersion => productVersion.Promotion)
                 .WithMany(promotion => promotion.ProductVersions)
                 .HasForeignKey(productVersion => productVersion.PromotionId);
+
+            modelBuilder.Entity<Address>()
+                .HasOne<User>(add => add.User)
+                .WithMany(user => user.Address)
+                .HasForeignKey(add => add.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             #endregion
 

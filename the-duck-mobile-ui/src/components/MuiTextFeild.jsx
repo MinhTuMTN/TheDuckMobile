@@ -34,13 +34,13 @@ function MuiTextFeild(props) {
   return (
     <CustomTextField
       variant="outlined"
-      InputProps={{ style: { fontSize: props.fontSize } }}
       label={label}
       name={name}
       value={value}
       onChange={onChange}
       style={props.style}
       {...(error && { error: true, helperText: error })}
+      InputProps={{ style: { fontSize: props.fontSize } }}
       {...others}
       fullWidth
     >

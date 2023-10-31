@@ -27,19 +27,23 @@ namespace TheDuckMobile_WebAPI.Config
             }
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
 
+            if (user.FullName == null || user.Account == null || user.Account.Email == null)
+            {
+                throw new ArgumentNullException("User is null");
+            }
             var tokenDescription = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
                     new Claim(ClaimTypes.Name, user.FullName),
                     new Claim(ClaimTypes.Email, user.Account.Email),
-                    new Claim("UserId", user.UserId.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                     //new Claim(ClaimTypes.Role, user is Teacher ? "Teacher" : "Student"),
 
                     //roles
 
                     new Claim("TokenId", Guid.NewGuid().ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(60),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
             };
 

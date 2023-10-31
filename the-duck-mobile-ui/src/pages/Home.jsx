@@ -1,11 +1,11 @@
-import React from "react";
-import Sliders from "../components/Sliders";
-import homeImg from "../assets/home-1.png";
-import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
-import HomeCatalogs from "../components/HomeCatalogs";
-import TabProducts from "../components/TabProducts";
+import { styled } from "@mui/material/styles";
+import React from "react";
 import { Helmet } from "react-helmet-async";
+import homeImg from "../assets/home-1.png";
+import HomeCatalogs from "../components/HomeCatalogs";
+import Sliders from "../components/Sliders";
+import TabProducts from "../components/TabProducts";
 
 const HomeImage = styled("div")(({ theme }) => ({
   backgroundSize: "cover",
@@ -20,7 +20,8 @@ const HomeImage = styled("div")(({ theme }) => ({
 }));
 
 const HomeContainer = styled(Box)(({ theme }) => ({
-  padding: "10px 120px 10px 120px",
+  width: "80%",
+  margin: "0 auto",
 }));
 
 function Home(props) {

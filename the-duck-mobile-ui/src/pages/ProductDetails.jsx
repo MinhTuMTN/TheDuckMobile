@@ -26,13 +26,13 @@ const ShopArea = styled.div`
 
 const Container = styled.div`
   display: block;
-  width: 100%;
+  width: 80%;
   padding-left: 15px;
   padding-right: 15px;
   margin: 0 auto;
   overflow: hidden;
 
-  @media (min-width: 960px) {
+  /* @media (min-width: 960px) {
     max-width: 1100px;
   }
 
@@ -42,7 +42,7 @@ const Container = styled.div`
 
   @media (max-width: 719px) and (min-width: 540px) {
     max-width: 540px;
-  }
+  } */
 `;
 const PageContainer = styled.div`
   width: 100%;
@@ -64,7 +64,22 @@ function ProductDetails(props) {
   const [value, setValue] = React.useState(2);
   return (
     <Wrapper>
-      <CustomBreadcrumb />
+      <CustomBreadcrumb
+        urls={[
+          {
+            url: "/",
+            text: "Trang chủ",
+          },
+          {
+            url: "/category",
+            text: "Điện thoại",
+          },
+          {
+            url: null,
+            text: "Sound Intone I65 Earphone White Version",
+          },
+        ]}
+      />
       <ShopArea>
         <Container>
           <PageContainer>

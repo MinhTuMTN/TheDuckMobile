@@ -3,14 +3,13 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Slide,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
 
-DialogConfirm.propTypes = {
+DialogForm.propTypes = {
   title: PropTypes.string,
   content: PropTypes.string,
   okText: PropTypes.string,
@@ -25,7 +24,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function DialogConfirm(props) {
+function DialogForm(props) {
   const [open, setOpen] = React.useState(props.open);
   useEffect(() => {
     setOpen(props.open); // Synchronize the open state with the prop
@@ -48,13 +47,12 @@ function DialogConfirm(props) {
       keepMounted
       onClose={props.onClose}
       aria-describedby="alert-dialog-slide-description"
+      maxWidth="md"
     >
       <DialogTitle>
         <span style={{ fontSize: "1.5rem" }}>{props.title}</span>
       </DialogTitle>
-      <DialogContent>
-        <DialogContentText>{props.content}</DialogContentText>
-      </DialogContent>
+      <DialogContent>{props.children}</DialogContent>
       <DialogActions style={{ padding: "16px 24px" }}>
         {props.cancelText && (
           <Button onClick={handleCancel} variant="outlined">
@@ -71,4 +69,4 @@ function DialogConfirm(props) {
   );
 }
 
-export default DialogConfirm;
+export default DialogForm;

@@ -1,36 +1,31 @@
 import styled from "@emotion/styled";
 import React from "react";
 import CustomSeparator from "../components/CustomSeparator";
+import PropTypes from "prop-types";
+CustomBreadcrumb.prototype = {
+  urls: PropTypes.array,
+};
+
+const BreadcrumbArea = styled("div")(({ theme }) => ({
+  background: "#e9e9e9",
+  paddingTop: "35px",
+  width: "100%",
+  paddingBottom: "35px",
+  display: "flex",
+  justifyContent: "center",
+}));
+
+const BreadcrumbContent = styled("div")(({ theme }) => ({
+  width: "80%",
+}));
 
 function CustomBreadcrumb(props) {
-  const BreadcrumbArea = styled("div")(({ theme }) => ({
-    background: theme.palette.breadcrumb_gray.main,
-    paddingTop: "35px",
-    paddingBottom: "35px",
-    display: "block",
-  }));
-
-  const Container = styled("div")(({ theme }) => ({
-    display: "block",
-    maxWidth: "720px",
-    width: "100%",
-    paddingRight: "15px",
-    paddingLeft: "15px",
-    marginRight: "auto",
-    marginLeft: theme.spacing(8),
-    textAlign: "left",
-  }));
-
-  const BreadcrumbContent = styled("div")(({ theme }) => ({
-    display: "block",
-  }));
+  const { urls, ...others } = props;
   return (
-    <BreadcrumbArea>
-      <Container>
-        <BreadcrumbContent>
-          <CustomSeparator />
-        </BreadcrumbContent>
-      </Container>
+    <BreadcrumbArea {...others}>
+      <BreadcrumbContent>
+        <CustomSeparator urls={urls} />
+      </BreadcrumbContent>
     </BreadcrumbArea>
   );
 }
