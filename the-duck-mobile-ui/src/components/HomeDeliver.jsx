@@ -70,7 +70,7 @@ function HomeDeliver(props) {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <MuiTextFeild label={"Địa chỉ"} size={"small"} />
+          <MuiTextFeild label={"Địa chỉ"} fontSize={"14px"} size={"small"} />
         </Grid>
       </Grid>
       {showShippingFee && (

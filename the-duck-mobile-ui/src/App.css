@@ -21,3 +21,11 @@ html {
 .search-box div {
   border-radius: 3rem !important;
 }
+
+.search-select {
+  font-size: 14px !important;
+}
+
+.search-select input {
+  font-size: 14px !important;
+}

@@ -39,7 +39,6 @@ function ProfileLayout(props) {
   const [info, setInfo] = React.useState(null);
   const handleGetInfo = async () => {
     const response = await getInfo();
-    console.log(response.data.data);
     if (response.success) setInfo(response.data.data);
   };
   useEffect(() => {

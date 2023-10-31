@@ -1,4 +1,4 @@
-import { Autocomplete } from "@mui/material";
+import { Autocomplete, Typography } from "@mui/material";
 import React from "react";
 import MuiTextFeild from "./MuiTextFeild";
 import PropTypes from "prop-types";
@@ -27,17 +27,18 @@ function SearchSelect(props) {
   const { label } = props;
   return (
     <Autocomplete
+      className="search-select"
       size="small"
       disabled={props.disabled}
-      style={{
-        fontSize: "14px",
-      }}
       onChange={props.onChange}
       options={options}
       getOptionLabel={(option) => option}
-      renderInput={(params) => (
-        <MuiTextFeild {...params} label={label} fontSize={"14px"} />
+      renderOption={(props, option) => (
+        <Typography {...props} style={{ fontSize: "14px" }}>
+          {option}
+        </Typography>
       )}
+      renderInput={(params) => <MuiTextFeild label={label} {...params} />}
     />
   );
 }

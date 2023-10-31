@@ -1,10 +1,9 @@
 import React from "react";
 import { useRoutes } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
-import ProfileLayout from "../layouts/ProfileLayout";
 import { ProtectedLayout } from "../layouts/ProtectedLayout";
 import NotFound from "../pages/NotFound";
-import Profile from "../pages/Profile";
+import ProfileLayout from "../layouts/ProfileLayout";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -71,16 +70,22 @@ function Router(props) {
       element: <ProtectedLayout />,
       children: [
         {
-          element: <ProfileLazy />,
-          index: true,
-        },
-        {
-          path: "order-history",
-          element: <OrderHistory />,
-        },
-        {
-          path: "order-history-details",
-          element: <OrderHistoryDetails />,
+          path: "profile",
+          element: <ProfileLayout />,
+          children: [
+            {
+              element: <ProfileLazy />,
+              index: true,
+            },
+            {
+              path: "order-history",
+              element: <OrderHistory />,
+            },
+            {
+              path: "order-history-details",
+              element: <OrderHistoryDetails />,
+            },
+          ],
         },
       ],
     },

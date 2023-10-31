@@ -43,7 +43,7 @@ function ProfileInformation(props) {
         </Typography>
         <Typography variant="body1">
           {info &&
-            (info.gender == 0 ? "Nam" : info.gender == 1 ? "Nữ" : "Khác")}
+            (info.gender === 0 ? "Nam" : info.gender === 1 ? "Nữ" : "Khác")}
         </Typography>
       </Stack>
     </Box>
