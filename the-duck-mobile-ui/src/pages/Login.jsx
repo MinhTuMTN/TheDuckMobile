@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import pic from "../assets/login.jpg";
 import { useAuth } from "../auth/AuthProvider";
 import MuiTextFeild from "../components/MuiTextFeild";
 import { login } from "../services/AuthService";
