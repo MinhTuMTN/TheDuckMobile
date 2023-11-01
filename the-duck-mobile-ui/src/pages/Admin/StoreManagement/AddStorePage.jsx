@@ -38,11 +38,16 @@ function AddStorePage(props) {
                     autoFocus
                     required
                 />
-                {/* <MuiTextFeild
-                    label="Mô tả"
+                <MuiTextFeild
+                    label="Thời gian mở cửa"
                     margin="normal"
                     required
-                /> */}
+                />
+                <MuiTextFeild
+                    label="Địa chỉ"
+                    margin="normal"
+                    required
+                />
                 <FlexContainer justifyContent="center">
                     <AddButton variant="contained" color="color1">
                         <Typography color={"white"}>Thêm Mới</Typography>

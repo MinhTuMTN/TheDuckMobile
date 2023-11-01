@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, MenuItem, Paper, Select, Typography, styled, useTheme } from "@mui/material";
+import { FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled, useTheme } from "@mui/material";
 import FlexContainer from "../../../../components/FlexContainer";
 import MuiTextFeild from "../../../../components/MuiTextFeild";
 import { useState } from "react";
@@ -37,6 +37,15 @@ const FormAddProduct = styled(Paper)(({ theme }) => ({
     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
 }));
 
+const CustomImage = styled('img')(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    border: "1px solid",
+    borderRadius: "5px",
+    height: "315px",
+    width: "auto",
+    maxWidth: "315px",
+}));
+
 function getStyles(name, personName, theme) {
     return {
         fontWeight:
@@ -51,6 +60,11 @@ function Step1({ value, onChange }) {
     const [brand, setBrand] = useState('');
     const [catalog, setCatalog] = useState([]);
     const [os, setOS] = useState('');
+    const [image, setImage] = useState();
+
+    const handleImageChange = (event) => {
+        setImage(URL.createObjectURL(event.target.files[0]));
+    };
 
     const handleChange = (event) => {
         onChange(1, event.target.value);
@@ -79,18 +93,46 @@ function Step1({ value, onChange }) {
         <FlexContainer justifyContent="center">
             <FormAddProduct>
                 <Typography variant="h3">Thêm sản phẩm mới</Typography>
-                <MuiTextFeild
-                    label="Tên sản phẩm"
-                    margin="normal"
-                    autoFocus
-                    required
-                    value={value.valueStep1}
-                    onChange={handleChange}
-                />
-                <MuiTextFeild
-                    label="Mô tả"
-                    margin="normal"
-                />
+                <Grid container spacing={1}>
+                    <Grid item xs={7}>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <MuiTextFeild
+                                    label="Tên sản phẩm"
+                                    margin="normal"
+                                    autoFocus
+                                    required
+                                    value={value.valueStep1}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <MuiTextFeild
+                                    label="Mô tả"
+                                    margin="normal"
+                                    required
+                                    multiline
+                                    rows={11}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={5}>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <CustomImage src={image} />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <MuiTextFeild
+                                    type="file"
+                                    required
+                                    onChange={handleImageChange}
+                                    sx={{ mt: 2 }}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
 
                 <FormControl sx={{ mt: 1 }}>
                     <FormLabel><Typography>Thương Hiệu</Typography></FormLabel>

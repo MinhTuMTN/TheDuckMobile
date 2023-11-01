@@ -38,11 +38,16 @@ function EditStorePage(props) {
                     autoFocus
                     required
                 />
-                {/* <MuiTextFeild
-                    label="Mô tả"
+                <MuiTextFeild
+                    label="Thời gian mở cửa"
                     margin="normal"
                     required
-                /> */}
+                />
+                <MuiTextFeild
+                    label="Địa chỉ"
+                    margin="normal"
+                    required
+                />
                 <FlexContainer justifyContent="center">
                     <EditButton variant="contained" color="color1">
                         <Typography color={"white"}>Chỉnh Sửa</Typography>
