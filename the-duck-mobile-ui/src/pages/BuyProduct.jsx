@@ -21,6 +21,7 @@ import NewCustomerInfomation from "../components/NewCustomerInfomation";
 import MuiTextFeild from "../components/MuiTextFeild";
 import UseCoupon from "../components/UseCoupon";
 import FormatCurrency from "../components/FormatCurrency";
+import ListCustomerAddress from "../components/ListCustomerAddress";
 const Wrapped = styled.div`
   color: rgba(0, 0, 0, 0.65);
   padding-top: 64px;
@@ -35,7 +36,7 @@ const Container = styled(Paper)`
 `;
 
 function BuyProduct(props) {
-  const [selectedOption, setSelectedOption] = useState("AtHome"); // Mặc định là 'Giao tận nơi'
+  const [selectedOption, setSelectedOption] = useState("AtHome");
   const [info, setInfo] = useState({
     name: "Nguyen Van A",
     gender: 0,
@@ -150,7 +151,6 @@ function BuyProduct(props) {
                 <NewCustomerInfomation
                   info={info}
                   onChange={(newInfo) => {
-                    console.log(newInfo);
                     setInfo(newInfo);
                   }}
                 />
@@ -197,7 +197,7 @@ function BuyProduct(props) {
               />
             </RadioGroup>
           </FormControl>
-          {selectedOption === "AtHome" && <HomeDeliver />}
+          {selectedOption === "AtHome" && <ListCustomerAddress />}
           {selectedOption === "AtStore" && <AtStoreDeliver />}
         </Stack>
         <Box
