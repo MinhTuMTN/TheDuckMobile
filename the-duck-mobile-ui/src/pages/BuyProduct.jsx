@@ -20,6 +20,7 @@ import AtStoreDeliver from "../components/AtStoreDeliver";
 import NewCustomerInfomation from "../components/NewCustomerInfomation";
 import MuiTextFeild from "../components/MuiTextFeild";
 import UseCoupon from "../components/UseCoupon";
+import FormatCurrency from "../components/FormatCurrency";
 const Wrapped = styled.div`
   color: rgba(0, 0, 0, 0.65);
   padding-top: 64px;
@@ -46,6 +47,14 @@ function BuyProduct(props) {
   const handleRadioChange = (event) => {
     setSelectedOption(event.target.value);
   };
+
+  const CustomButtom = styled(Button)`
+    background: ${(props) => props.theme.palette.color2.main};
+    &:hover {
+      background: ${(props) => props.theme.palette.color1.main};
+      color: #fff;
+    }
+  `;
   return (
     <Wrapped>
       <Container elevation={4}>
@@ -209,17 +218,41 @@ function BuyProduct(props) {
         </Box>
 
         <UseCoupon />
-      </Container>
-      <Stack direction={"column"}>
-        <Stack direction={"row"}>
-          <Typography variant="h6" fontWeight={"600"}>
-            Tổng tiền:{" "}
-          </Typography>
-          <Typography variant="h6" fontWeight={"600"}>
-            {" "}
-          </Typography>
+        <Stack direction={"column"} paddingX={4} paddingTop={2}>
+          <Stack
+            direction={"row"}
+            display={"flex"}
+            justifyContent={"space-between"}
+          >
+            <Typography
+              variant="h6"
+              fontWeight={"600"}
+              style={{
+                fontSize: "16px",
+              }}
+            >
+              Tổng tiền:{" "}
+            </Typography>
+            <Typography
+              variant="h6"
+              fontWeight={"550"}
+              color={"red"}
+              style={{
+                fontSize: "16px",
+              }}
+            >
+              <FormatCurrency amount={39000000} />
+            </Typography>
+          </Stack>
+          <CustomButtom
+            variant="contained"
+            fullWidth
+            sx={{ marginTop: "1rem" }}
+          >
+            Mua hàng
+          </CustomButtom>
         </Stack>
-      </Stack>
+      </Container>
     </Wrapped>
   );
 }

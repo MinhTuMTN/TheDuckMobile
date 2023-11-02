@@ -22,10 +22,7 @@ function AddressList(props) {
   const [deleteDialog, setDeleteDialog] = React.useState(false);
   const [editDialog, setEditDialog] = React.useState(false);
 
-  const address = [
-    "1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, TP.HCM",
-    "484 Lê Văn Việt, Linh Chiểu, Thủ Đức, TP.HCM",
-  ];
+  const address = [];
   return (
     <Box margin={margin}>
       <Typography variant="h5">Thông tin địa chỉ</Typography>
@@ -36,49 +33,53 @@ function AddressList(props) {
         }}
       />
       <Stack spacing={1}>
-        {address.map((item, index) => (
-          <Box key={index}>
-            <Stack
-              direction={"row"}
-              alignContent={"center"}
-              justifyContent={"space-between"}
-            >
-              <Typography
-                variant="body1"
-                display={"flex"}
-                alignItems={"center"}
-              >
-                {item}
-              </Typography>
+        {address.length > 0 ? (
+          address.map((item, index) => (
+            <Box key={index}>
               <Stack
                 direction={"row"}
-                spacing={1}
+                alignContent={"center"}
                 justifyContent={"space-between"}
               >
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  startIcon={<Edit />}
-                  onClick={() => {
-                    setEditDialog(true);
-                  }}
+                <Typography
+                  variant="body1"
+                  display={"flex"}
+                  alignItems={"center"}
                 >
-                  Sửa
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="color1"
-                  startIcon={<Delete />}
-                  onClick={() => {
-                    setDeleteDialog(true);
-                  }}
+                  {item}
+                </Typography>
+                <Stack
+                  direction={"row"}
+                  spacing={1}
+                  justifyContent={"space-between"}
                 >
-                  Xóa
-                </Button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<Edit />}
+                    onClick={() => {
+                      setEditDialog(true);
+                    }}
+                  >
+                    Sửa
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="color1"
+                    startIcon={<Delete />}
+                    onClick={() => {
+                      setDeleteDialog(true);
+                    }}
+                  >
+                    Xóa
+                  </Button>
+                </Stack>
               </Stack>
-            </Stack>
-          </Box>
-        ))}
+            </Box>
+          ))
+        ) : (
+          <Typography variant="body1">Bạn chưa có địa chỉ nào</Typography>
+        )}
       </Stack>
 
       <DialogConfirm
