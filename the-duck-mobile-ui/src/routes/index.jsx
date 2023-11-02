@@ -31,10 +31,11 @@ import StaffListPage from "../pages/Admin/StaffManagement/StaffListPage";
 import AddStorePage from "../pages/Admin/StoreManagement/AddStorePage";
 import EditStorePage from "../pages/Admin/StoreManagement/EditStorePage";
 import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
+import Loading from "../components/Loading";
 
 const LazyLoad = (Component) => (props) =>
   (
-    <React.Suspense fallback={<div>Loading...</div>}>
+    <React.Suspense fallback={<Loading />}>
       <Component {...props} />
     </React.Suspense>
   );
@@ -231,6 +232,10 @@ function Router(props) {
           element: <EditSpecialFeaturePage />,
         },
       ],
+    },
+    {
+      path: "loading",
+      element: <Loading />,
     },
   ]);
 }
