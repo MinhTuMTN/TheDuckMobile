@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, MenuItem, Paper, Select, Typography, styled } from "@mui/material";
+import { Checkbox, FormControl, FormControlLabel, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled } from "@mui/material";
 import FlexContainer from "../../../../components/FlexContainer";
 import MuiTextFeild from "../../../../components/MuiTextFeild";
 import { useState } from "react";
@@ -8,7 +8,7 @@ const FormAddProduct = styled(Paper)(({ theme }) => ({
     flexDirection: "column",
     justifyContent: "center",
     padding: theme.spacing(4),
-    width: "80%",
+    width: "90%",
     backgroundColor: "white",
     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
 }));
@@ -17,6 +17,8 @@ function Step2SmartWatch({ value, onChange }) {
     const [waterResistance, setWaterResistance] = useState('');
     const [watchFaceShape, setWatchFaceShape] = useState('');
     const [wireMaterial, setWireMaterial] = useState('');
+    const [wifiChecked, setWifiChecked] = useState(false);
+    const [gpsChecked, setGPSChecked] = useState(false);
 
     const handleChange = (event) => {
         onChange(3, event.target.value);
@@ -34,10 +36,18 @@ function Step2SmartWatch({ value, onChange }) {
         setWireMaterial(event.target.value);
     };
 
+    const handleWifiCheckedChange = (event) => {
+        setWifiChecked(event.target.checked);
+    };
+
+    const handleGPSCheckedChange = (event) => {
+        setGPSChecked(event.target.checked);
+    };
+
     return (
         <FlexContainer justifyContent="center">
             <FormAddProduct>
-            <Typography variant="h3">Thêm thông tin sản phẩm chi tiết</Typography>
+                <Typography variant="h3">Thêm thông tin sản phẩm chi tiết</Typography>
                 <MuiTextFeild
                     label="Bộ nhớ trong"
                     margin="normal"
@@ -76,6 +86,27 @@ function Step2SmartWatch({ value, onChange }) {
                         <MenuItem value={30}>Thirty</MenuItem>
                     </Select>
                 </FormControl>
+                <Grid container spacing={1} sx={{ mt: 2, ml: 0.5 }}>
+                    <Grid xs={6}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={wifiChecked}
+                                    onChange={handleWifiCheckedChange} />
+                            }
+                            label="Wifi" />
+                    </Grid>
+                    <Grid xs={6}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={gpsChecked}
+                                    onChange={handleGPSCheckedChange} />
+                            }
+                            label="GPS" />
+                    </Grid>
+
+                </Grid>
                 <FormControl sx={{ mt: 2, mb: 2 }}>
                     <FormLabel><Typography>Chất liệu dây</Typography></FormLabel>
                     <Select

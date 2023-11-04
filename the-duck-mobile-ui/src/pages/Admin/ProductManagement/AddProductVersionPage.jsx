@@ -2,7 +2,7 @@ import { Box, Button, Step, StepLabel, Stepper, Typography, styled } from "@mui/
 import { Fragment, useState } from "react";
 import Step1 from "./AddProductSteps/Step1";
 import Step2Laptop from "./AddProductSteps/Step2Laptop";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Step2Tablet from "./AddProductSteps/Step2Tablet";
 import Step2SmartWatch from "./AddProductSteps/Step2SmartWatch";
 import Step2MobilePhone from "./AddProductSteps/Step2MobilePhone";
@@ -26,7 +26,6 @@ function AddProductVersionPage(props) {
         valueStep1: '',
         valueStep2: '',
         valueStep3: '',
-        // Add other values as needed for different steps
     });
 
     const handleStepChange = (step, value) => {
@@ -75,13 +74,13 @@ function AddProductVersionPage(props) {
                         );
                     })}
                 </Stepper>
-                {activeStep === steps.length ? (
+                {/* {activeStep === steps.length ? (
                     <Fragment>
                         <Typography sx={{ mt: 2, mb: 1 }}>
                             All steps completed - you&apos;re finished
                         </Typography>
                     </Fragment>
-                ) : (
+                ) : ( */}
                     <Fragment>
                         <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
 
@@ -98,12 +97,12 @@ function AddProductVersionPage(props) {
                             </Button>
                             <Box sx={{ flex: '1 1 auto' }} />
 
-                            <Button onClick={handleNext}>
-                                {activeStep === steps.length - 1 ? 'Thêm mới' : 'Tiếp theo'}
+                            <Button component={Link} onClick={handleNext} to={activeStep === steps.length - 1 ? "/admin/product-management/list" : ""}>
+                                {activeStep === steps.length - 1 ? "Thêm mới" : "Tiếp theo"}
                             </Button>
                         </Box>
                     </Fragment>
-                )}
+                {/* )} */}
             </Box>
 
         </RootPageAddProduct>

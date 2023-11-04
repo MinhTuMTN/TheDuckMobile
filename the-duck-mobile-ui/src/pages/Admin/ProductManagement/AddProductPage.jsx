@@ -1,36 +1,28 @@
-import { FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled } from "@mui/material";
-import FlexContainer from "../../../components/FlexContainer";
+import { Box, FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { useState } from "react";
+
+const RootPageAddProduct = styled(Box)(({ theme }) => ({
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
+}));
 
 const FormAddProduct = styled(Paper)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     padding: theme.spacing(4),
-    width: "80%",
+    width: "90%",
     backgroundColor: "white",
     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
-}));
-
-const CustomImage = styled('img')(({ theme }) => ({
-    marginTop: theme.spacing(2),
-    border: "1px solid",
-    borderRadius: "5px",
-    height: "315px",
-    width: "auto",
-    maxWidth: "315px",
 }));
 
 function AddProductPage() {
     const [brand, setBrand] = useState('');
     const [catalog, setCatalog] = useState('');
     const [os, setOS] = useState('');
-    const [image, setImage] = useState();
-
-    const handleImageChange = (event) => {
-        setImage(URL.createObjectURL(event.target.files[0]));
-    };
 
     const handleBrandChange = (event) => {
         setBrand(event.target.value);
@@ -45,45 +37,32 @@ function AddProductPage() {
     };
 
     return (
-        <FlexContainer justifyContent="center">
+        <RootPageAddProduct>
             <FormAddProduct>
                 <Typography variant="h3">Thêm sản phẩm mới</Typography>
                 <Grid container spacing={1}>
-                    <Grid item xs={7}>
-
+                    <Grid item xs={8}>
                         <MuiTextFeild
                             label="Tên sản phẩm"
                             margin="normal"
                             autoFocus
                             required
                         />
-
+                    </Grid>
+                    <Grid item xs={4}>
                         <MuiTextFeild
                             label="Số lượng"
                             margin="normal"
                             required
                         />
-
-                        <MuiTextFeild
-                            label="Mô tả"
-                            margin="normal"
-                            required
-                            multiline
-                            rows={8}
-                        />
-
                     </Grid>
-                    <Grid item xs={5}>
-
-                        <CustomImage src={image} />
-
-                        <MuiTextFeild
-                            type="file"
-                            required
-                            onChange={handleImageChange}
-                            sx={{ mt: 2 }}
-                        />
-                    </Grid>
+                    <MuiTextFeild
+                        label="Mô tả"
+                        margin="normal"
+                        required
+                        multiline
+                        rows={3}
+                    />
                 </Grid>
 
                 <FormControl sx={{ mt: 1 }}>
@@ -134,7 +113,7 @@ function AddProductPage() {
                     </Select>
                 </FormControl>
             </FormAddProduct>
-        </FlexContainer>
+            </RootPageAddProduct>
     );
 }
 
