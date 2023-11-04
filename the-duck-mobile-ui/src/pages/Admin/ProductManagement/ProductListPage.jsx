@@ -63,7 +63,7 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
     marginBottom: theme.spacing(1),
     "&:hover": {
         backgroundColor: "#FF6969",
-      }
+    }
 }));
 
 const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
@@ -161,10 +161,34 @@ function ProductListPage() {
                                     {row.protein}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton component={Link} color="yellow"><InfoIcon /></MuiButton>
-                                    <MuiButton component={Link} color="oldPrimary" to="/admin/product-management/add-product-version" state={{ category: "smart-watch" }}  ><AddToQueueIcon /></MuiButton>
-                                    <MuiButton component={Link} color="teal"><EditIcon /></MuiButton>
-                                    <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
+                                    <MuiButton
+                                        component={Link}
+                                        color="yellow"
+                                        to="/admin/product-management/detail"
+                                    >
+                                        <InfoIcon />
+                                    </MuiButton>
+                                    <MuiButton
+                                        component={Link}
+                                        color="oldPrimary"
+                                        to="/admin/product-management/add-product-version"
+                                        state={{ category: "smart-watch" }}
+                                    >
+                                        <AddToQueueIcon />
+                                    </MuiButton>
+                                    <MuiButton
+                                        component={Link}
+                                        color="teal"
+                                        to="/admin/product-management/edit"
+                                    >
+                                        <EditIcon />
+                                    </MuiButton>
+                                    <MuiButton
+                                        component={Link}
+                                        color="color1"
+                                    >
+                                        <DeleteIcon />
+                                    </MuiButton>
                                 </TableCell>
                             </TableRow>
                         ))}

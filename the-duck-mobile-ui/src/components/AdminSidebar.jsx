@@ -167,6 +167,27 @@ function AdminSidebar(props) {
           </ListItem>
         ))}
       </List>
+      <Divider
+        textAlign="center"
+        sx={{
+          width: "100%",
+          height: "1px",
+          margin: "1rem 0 0.5rem 0",
+          borderColor: "black",
+        }}
+      >
+        <Typography
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+          }}
+        >
+          Thống Kê
+        </Typography>
+      </Divider>
     </Sidebar>
   );
 }

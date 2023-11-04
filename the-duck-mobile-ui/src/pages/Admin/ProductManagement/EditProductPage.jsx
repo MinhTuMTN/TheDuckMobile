@@ -1,8 +1,8 @@
 import { Box, FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { useState } from "react";
-import MuiButton from "../../../components/MuiButton";
 import FlexContainer from "../../../components/FlexContainer";
+import MuiButton from "../../../components/MuiButton";
 
 const RootPageAddProduct = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -21,14 +21,14 @@ const FormAddProduct = styled(Paper)(({ theme }) => ({
     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
 }));
 
-const AddButton = styled(MuiButton)(({ theme }) => ({
+const EditButton = styled(MuiButton)(({ theme }) => ({
     width: "30%",
     "&:hover": {
         backgroundColor: "#FF6969",
     }
 }));
 
-function AddProductPage() {
+function EditProductPage() {
     const [brand, setBrand] = useState('');
     const [catalog, setCatalog] = useState('');
     const [os, setOS] = useState('');
@@ -48,7 +48,7 @@ function AddProductPage() {
     return (
         <RootPageAddProduct>
             <FormAddProduct>
-                <Typography variant="h3">Thêm sản phẩm mới</Typography>
+                <Typography variant="h3">Chỉnh sửa thông tin sản phẩm "{}"</Typography>
                 <Grid container spacing={1}>
                     <Grid item xs={8}>
                         <MuiTextFeild
@@ -122,13 +122,13 @@ function AddProductPage() {
                     </Select>
                 </FormControl>
                 <FlexContainer justifyContent="center">
-                    <AddButton variant="contained" color="color1">
-                        <Typography color={"white"}>Thêm Mới</Typography>
-                    </AddButton>
+                    <EditButton variant="contained" color="color1">
+                        <Typography color={"white"}>Cập Nhật</Typography>
+                    </EditButton>
                 </FlexContainer>
             </FormAddProduct>
             </RootPageAddProduct>
     );
 }
 
-export default AddProductPage;
+export default EditProductPage;

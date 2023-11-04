@@ -1,22 +1,22 @@
 import { Box, Button, Step, StepLabel, Stepper, Typography, styled } from "@mui/material";
 import { Fragment, useState } from "react";
-import Step1 from "./AddProductVersionSteps/Step1";
-import Step2Laptop from "./AddProductVersionSteps/Step2Laptop";
+import Step1 from "./EditProductVersionSteps/Step1";
+import Step2Laptop from "./EditProductVersionSteps/Step2Laptop";
 import { Link, useLocation } from "react-router-dom";
-import Step2Tablet from "./AddProductVersionSteps/Step2Tablet";
-import Step2SmartWatch from "./AddProductVersionSteps/Step2SmartWatch";
-import Step2MobilePhone from "./AddProductVersionSteps/Step2MobilePhone";
+import Step2Tablet from "./EditProductVersionSteps/Step2Tablet";
+import Step2SmartWatch from "./EditProductVersionSteps/Step2SmartWatch";
+import Step2MobilePhone from "./EditProductVersionSteps/Step2MobilePhone";
 
 const steps = ['Phiên Bản Sản Phẩm', 'Tính Năng Theo Danh Mục'];
 
-const RootPageAddProductVersion = styled(Box)(({ theme }) => ({
+const RootPageEditProductVersion = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
     padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
-function AddProductVersionPage(props) {
+function EditProductVersionPage(props) {
     const location = useLocation();
     const data = location.state ? location.state : {};
 
@@ -60,7 +60,7 @@ function AddProductVersionPage(props) {
 
 
     return (
-        <RootPageAddProductVersion>
+        <RootPageEditProductVersion>
             <Box sx={{ width: '100%' }}>
                 <Stepper activeStep={activeStep} alternativeLabel>
                     {steps.map((label, index) => {
@@ -100,18 +100,18 @@ function AddProductVersionPage(props) {
                             <Button
                             component={Link}
                             onClick={handleNext}
-                            to={activeStep === steps.length - 1 ? "/admin/product-management/list" : ""}
+                            to={activeStep === steps.length - 1 ? "/admin/product-management/detail" : ""}
                             state={activeStep === steps.length - 2 ? data : {}}
                             >
-                                {activeStep === steps.length - 1 ? "Thêm mới" : "Tiếp theo"}
+                                {activeStep === steps.length - 1 ? "Cập nhật" : "Tiếp theo"}
                             </Button>
                         </Box>
                     </Fragment>
                 {/* )} */}
             </Box>
 
-        </RootPageAddProductVersion>
+        </RootPageEditProductVersion>
     );
 }
 
-export default AddProductVersionPage;
+export default EditProductVersionPage;
