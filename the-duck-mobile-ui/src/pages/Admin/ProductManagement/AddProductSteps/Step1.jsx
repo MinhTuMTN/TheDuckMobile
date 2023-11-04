@@ -1,31 +1,12 @@
-import { FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled, useTheme } from "@mui/material";
+import { FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled } from "@mui/material";
+import dayjs from 'dayjs';
+import 'dayjs/locale/en-gb';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import FlexContainer from "../../../../components/FlexContainer";
 import MuiTextFeild from "../../../../components/MuiTextFeild";
 import { useState } from "react";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-];
 
 const FormAddProduct = styled(Paper)(({ theme }) => ({
     display: "flex",
@@ -37,168 +18,120 @@ const FormAddProduct = styled(Paper)(({ theme }) => ({
     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
 }));
 
-const CustomImage = styled('img')(({ theme }) => ({
-    marginTop: theme.spacing(2),
-    border: "1px solid",
-    borderRadius: "5px",
-    height: "315px",
-    width: "auto",
-    maxWidth: "315px",
+const CustomDatePicker = styled(DatePicker)(({ theme }) => ({
+    width: "100%",
+    marginTop: theme.spacing(1),
+    '& input': {
+        height: '55px',
+    },
 }));
 
-function getStyles(name, personName, theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
-
-function Step1({ value, onChange }) {
-    const theme = useTheme();
-    const [brand, setBrand] = useState('');
-    const [catalog, setCatalog] = useState([]);
-    const [os, setOS] = useState('');
-    const [image, setImage] = useState();
-
-    const handleImageChange = (event) => {
-        setImage(URL.createObjectURL(event.target.files[0]));
-    };
+function Step2({ value, onChange }) {
+    const [screenResolution, setScreenResolution] = useState('');
+    const [color, setColor] = useState('');
+    const [date, setDate] = useState(dayjs());
 
     const handleChange = (event) => {
-        onChange(1, event.target.value);
+        onChange(2, event.target.value);
     };
 
-    const handleBrandChange = (event) => {
-        setBrand(event.target.value);
+    const handleScreenResolutionChange = (event) => {
+        setScreenResolution(event.target.value);
     };
 
-    const handleOSChange = (event) => {
-        setOS(event.target.value);
-    };
-
-    const handleCatalogChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-
-        setCatalog(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
+    const handleColorChange = (event) => {
+        setColor(event.target.value);
     };
 
     return (
         <FlexContainer justifyContent="center">
             <FormAddProduct>
-                <Typography variant="h3">Thêm sản phẩm mới</Typography>
+                <Typography variant="h3">Thêm thông tin sản phẩm chi tiết</Typography>
                 <Grid container spacing={1}>
-                    <Grid item xs={7}>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <MuiTextFeild
-                                    label="Tên sản phẩm"
-                                    margin="normal"
-                                    autoFocus
-                                    required
-                                    value={value.valueStep1}
-                                    onChange={handleChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <MuiTextFeild
-                                    label="Mô tả"
-                                    margin="normal"
-                                    required
-                                    multiline
-                                    rows={11}
-                                />
-                            </Grid>
-                        </Grid>
+                    <Grid item xs={6}>
+                        <MuiTextFeild
+                            label="Giá"
+                            margin="normal"
+                            autoFocus
+                            required
+                            value={value.valueStep2}
+                            onChange={handleChange}
+                        />
                     </Grid>
-                    <Grid item xs={5}>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <CustomImage src={image} />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <MuiTextFeild
-                                    type="file"
-                                    required
-                                    onChange={handleImageChange}
-                                    sx={{ mt: 2 }}
-                                />
-                            </Grid>
-                        </Grid>
+                    <Grid item xs={6}>
+                        <MuiTextFeild
+                            label="RAM"
+                            margin="normal"
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <MuiTextFeild
+                            label="Kích thước màn hình"
+                            margin="normal"
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <MuiTextFeild
+                            label="Pin"
+                            margin="normal"
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormControl fullWidth>
+                            <FormLabel><Typography>Màu sắc</Typography></FormLabel>
+                            <Select
+                                displayEmpty
+                                value={color}
+                                onChange={handleColorChange}
+                            >
+                                <MenuItem disabled value="">
+                                    <em>Lựa Chọn Màu Sắc</em>
+                                </MenuItem>
+                                <MenuItem value={10}>Ten</MenuItem>
+                                <MenuItem value={20}>Twenty</MenuItem>
+                                <MenuItem value={30}>Thirty</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormControl fullWidth>
+                            <FormLabel><Typography>Độ phân giải màn hình</Typography></FormLabel>
+                            <Select
+                                displayEmpty
+                                value={screenResolution}
+                                onChange={handleScreenResolutionChange}
+                            >
+                                <MenuItem disabled value="">
+                                    <em>Lựa Chọn Độ Phân Giải</em>
+                                </MenuItem>
+                                <MenuItem value={10}>Ten</MenuItem>
+                                <MenuItem value={20}>Twenty</MenuItem>
+                                <MenuItem value={30}>Thirty</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
                 </Grid>
-
-                <FormControl sx={{ mt: 1 }}>
-                    <FormLabel><Typography>Thương Hiệu</Typography></FormLabel>
-                    <Select
-                        displayEmpty
-                        value={brand}
-                        onChange={handleBrandChange}
-                    >
-                        <MenuItem disabled value="">
-                            <em>Lựa Chọn Thương Hiệu</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                </FormControl>
-
-                <FormControl sx={{ mt: 2 }}>
-                    <FormLabel><Typography>Danh Mục</Typography></FormLabel>
-                    <Select
-                        multiple
-                        displayEmpty
-                        value={catalog}
-                        onChange={handleCatalogChange}
-                        renderValue={(selected) => {
-                            if (selected.length === 0) {
-                                return <em>Lựa Chọn Danh Mục</em>;
-                            }
-
-                            return selected.join(', ');
-                        }}
-                        MenuProps={MenuProps}
-                    >
-                        <MenuItem disabled value="">
-                            <em>Lựa Chọn Danh Mục</em>
-                        </MenuItem>
-                        {names.map((name) => (
-                            <MenuItem
-                                key={name}
-                                value={name}
-                                style={getStyles(name, catalog, theme)}
-                            >
-                                {name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                <FormControl sx={{ mt: 2, mb: 2 }}>
-                    <FormLabel><Typography>Hệ Điều Hành</Typography></FormLabel>
-                    <Select
-                        displayEmpty
-                        value={os}
-                        onChange={handleOSChange}
-                    >
-                        <MenuItem disabled value="">
-                            <em>Lựa Chọn Hệ Điều Hành</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                </FormControl>
+                <MuiTextFeild
+                    label="Vật liệu"
+                    margin="normal"
+                />
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+                    <CustomDatePicker
+                        label="Ngày phát hành"
+                        value={date}
+                        onChange={(newDate) => setDate(newDate)}
+                    />
+                </LocalizationProvider>
+                <MuiTextFeild
+                    label="Mô tả"
+                    margin="normal"
+                />
             </FormAddProduct>
         </FlexContainer>
     );
 }
 
-export default Step1;
+export default Step2;

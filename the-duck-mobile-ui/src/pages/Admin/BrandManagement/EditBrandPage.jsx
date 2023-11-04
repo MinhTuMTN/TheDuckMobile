@@ -88,7 +88,7 @@ function EditBrandPage(props) {
                 </Grid>
                 <FlexContainer justifyContent="center">
                     <EditButton variant="contained" color="color1">
-                        <Typography color={"white"}>Chỉnh Sửa</Typography>
+                        <Typography color={"white"}>Cập Nhật</Typography>
                     </EditButton>
                 </FlexContainer>
 

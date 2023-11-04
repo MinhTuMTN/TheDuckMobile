@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Search } from "@mui/icons-material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
+import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -160,7 +161,8 @@ function ProductListPage() {
                                     {row.protein}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton component={Link} color="oldPrimary"><InfoIcon /></MuiButton>
+                                    <MuiButton component={Link} color="yellow"><InfoIcon /></MuiButton>
+                                    <MuiButton component={Link} color="oldPrimary" to="/admin/product-management/add-product-version" state={{ category: "smart-watch" }}  ><AddToQueueIcon /></MuiButton>
                                     <MuiButton component={Link} color="teal"><EditIcon /></MuiButton>
                                     <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>

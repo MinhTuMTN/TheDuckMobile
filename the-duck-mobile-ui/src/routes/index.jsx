@@ -32,6 +32,7 @@ import AddStorePage from "../pages/Admin/StoreManagement/AddStorePage";
 import EditStorePage from "../pages/Admin/StoreManagement/EditStorePage";
 import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
 import Loading from "../components/Loading";
+import AddProductVersionPage from "../pages/Admin/ProductManagement/AddProductVersionPage";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -150,6 +151,10 @@ function Router(props) {
         {
           path: "product-management/add",
           element: <AddProductPage />,
+        },
+        {
+          path: "product-management/add-product-version",
+          element: <AddProductVersionPage />,
         },
         {
           path: "account-management/list",
