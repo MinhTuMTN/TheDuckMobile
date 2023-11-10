@@ -36,6 +36,8 @@ import AddProductVersionPage from "../pages/Admin/ProductManagement/AddProductVe
 import EditProductPage from "../pages/Admin/ProductManagement/EditProductPage";
 import ProductDetailPage from "../pages/Admin/ProductManagement/ProductDetailPage";
 import EditProductVersionPage from "../pages/Admin/ProductManagement/EditProductVersionPage";
+import StoreDetailPage from "../pages/Admin/StoreManagement/StoreDetailPage";
+import OrderDetailPage from "../pages/Admin/OrderManagement/OrderDetailPage";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -208,6 +210,10 @@ function Router(props) {
           element: <EditStorePage />,
         },
         {
+          path: "store-management/detail",
+          element: <StoreDetailPage />,
+        },
+        {
           path: "os-management/list",
           element: <OSListPage />,
         },
@@ -222,6 +228,10 @@ function Router(props) {
         {
           path: "order-management/list",
           element: <OrderListPage />,
+        },
+        {
+          path: "order-management/detail",
+          element: <OrderDetailPage />,
         },
         {
           path: "promotion-management/list",

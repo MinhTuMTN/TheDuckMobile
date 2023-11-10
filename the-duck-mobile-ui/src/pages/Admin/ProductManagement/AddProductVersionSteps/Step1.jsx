@@ -32,7 +32,7 @@ const names = [
     'Kelly Snyder',
 ];
 
-const FormAddProduct = styled(Paper)(({ theme }) => ({
+const FormAddProductVersion = styled(Paper)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -49,7 +49,6 @@ const CustomDatePicker = styled(DatePicker)(({ theme }) => ({
         height: '55px',
     },
 }));
-
 
 const CustomImage = styled('img')(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -69,13 +68,13 @@ function getStyles(name, personName, theme) {
     };
 }
 
-function Step2({ value, onChange }) {
+function Step1({ value, onChange }) {
     const theme = useTheme();
 
     const [screenResolution, setScreenResolution] = useState('');
     const [color, setColor] = useState('');
     const [date, setDate] = useState(dayjs());
-    const [specialFeature, setSpecialFeature] = useState([]);
+    const [specialFeatures, setSpecialFeatures] = useState([]);
     const [image, setImage] = useState();
 
     const handleImageChange = (event) => {
@@ -94,12 +93,12 @@ function Step2({ value, onChange }) {
         setColor(event.target.value);
     };
 
-    const handleSpecialFeatureChange = (event) => {
+    const handleSpecialFeaturesChange = (event) => {
         const {
             target: { value },
         } = event;
 
-        setSpecialFeature(
+        setSpecialFeatures(
             // On autofill we get a stringified value.
             typeof value === 'string' ? value.split(',') : value,
         );
@@ -107,7 +106,7 @@ function Step2({ value, onChange }) {
 
     return (
         <FlexContainer justifyContent="center">
-            <FormAddProduct>
+            <FormAddProductVersion>
                 <Typography variant="h3">Thêm thông tin sản phẩm chi tiết</Typography>
                 <Grid container spacing={1}>
                     <Grid item xs={7}>
@@ -158,8 +157,8 @@ function Step2({ value, onChange }) {
                     <Select
                         multiple
                         displayEmpty
-                        value={specialFeature}
-                        onChange={handleSpecialFeatureChange}
+                        value={specialFeatures}
+                        onChange={handleSpecialFeaturesChange}
                         renderValue={(selected) => {
                             if (selected.length === 0) {
                                 return <em>Lựa Chọn Tính Năng Đặc Biệt</em>;
@@ -176,7 +175,7 @@ function Step2({ value, onChange }) {
                             <MenuItem
                                 key={name}
                                 value={name}
-                                style={getStyles(name, specialFeature, theme)}
+                                style={getStyles(name, specialFeatures, theme)}
                             >
                                 {name}
                             </MenuItem>
@@ -229,9 +228,9 @@ function Step2({ value, onChange }) {
                         sx={{ mt: 4 }}
                     />
                 </LocalizationProvider>
-            </FormAddProduct>
+            </FormAddProductVersion>
         </FlexContainer>
     );
 }
 
-export default Step2;
+export default Step1;

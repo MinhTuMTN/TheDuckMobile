@@ -1,6 +1,7 @@
 import {
     Box,
     Paper,
+    Stack,
     Table,
     TableBody,
     TableCell,
@@ -46,28 +47,11 @@ const rows = [
 function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
-const RootPageAddProduct = styled(Box)(({ theme }) => ({
+const RootPageProductDetail = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
     padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
-}));
-
-const FormAddProduct = styled(Paper)(({ theme }) => ({
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    width: "100%",
-    padding: theme.spacing(4),
-    backgroundColor: "white",
-    boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
-}));
-
-const AddButton = styled(MuiButton)(({ theme }) => ({
-    width: "30%",
-    "&:hover": {
-        backgroundColor: "#FF6969",
-    }
 }));
 
 function ProductDetailPage() {
@@ -88,135 +72,153 @@ function ProductDetailPage() {
     };
 
     return (
-        <RootPageAddProduct>
-            <FormAddProduct>
+        <RootPageProductDetail>
                 <Typography variant="h3" >Thông tin sản phẩm "{ }"</Typography>
-
-
-                {/* <MuiTextFeild
-                            label="Tên sản phẩm"
-                            margin="normal"
-                            autoFocus
-                            required
-                        /> */}
-                <Typography
-                    sx={{ mt: 2 }}
-                    style={{
-                        fontSize: "22px",
-                    }}
-                >
+                <Stack direction="row">
                     <Typography
-                        variant="h4"
+                        variant="h5"
                         style={{
-                            display: "inline-block"
+                            width: "17%",
+                        }}
+                    >
+                        Mã sản phẩm:
+                    </Typography>
+                    <Typography
+                        style={{
+                            fontSize: "18px",
+                            flexWrap: "wrap",
+                            width: "83%",
+                        }}
+                    >
+                        MaSanPham
+                    </Typography>
+                </Stack>
+                <Stack direction="row">
+                    <Typography
+                        variant="h5"
+                        style={{
+                            width: "17%",
                         }}
                     >
                         Tên sản phẩm:
-                    </Typography>  Đồng hồ thông minh BeFit Watch Ultra 52.6mm dây silicone
-                </Typography>
-                {/* <MuiTextFeild
-                            label="Số lượng"
-                            margin="normal"
-                            required
-                        /> */}
-
-                <Typography
-                    sx={{ mt: 1 }}
-                    style={{
-                        fontSize: "22px",
-                    }}
-                >
+                    </Typography>
                     <Typography
-                        variant="h4"
                         style={{
-                            display: "inline-block"
+                            fontSize: "18px",
+                            flexWrap: "wrap",
+                            width: "83%",
+                            textAlign: "justify",
+                        }}
+                    >
+                        Đồng hồ thông minh BeFit Watch Ultra 52.6mm dây silicone
+                    </Typography>
+                </Stack>
+                <Stack direction="row">
+                    <Typography
+                        variant="h5"
+                        style={{
+                            width: "17%",
                         }}
                     >
                         Số lượng:
-                    </Typography>  1000
-                </Typography>
-
-                {/* <MuiTextFeild
-                        label="Mô tả"
-                        margin="normal"
-                        required
-                        multiline
-                        rows={3}
-                    /> */}
-
-                <Typography
-                    sx={{ mt: 1 }}
-                    style={{
-                        fontSize: "22px",
-                    }}
-                >
+                    </Typography>
                     <Typography
-                        variant="h4"
                         style={{
-                            display: "inline-block"
+                            fontSize: "18px",
+                            flexWrap: "wrap",
+                            width: "83%",
+                        }}
+                    >
+                        10000
+                    </Typography>
+                </Stack>
+                <Stack direction="row">
+                    <Typography
+                        variant="h5"
+                        style={{
+                            width: "17%",
                         }}
                     >
                         Mô tả:
-                    </Typography> Đồng hồ thông minh BeFit có thiết kế mạnh mẽ,
-                    nam tính với hình dáng mặt hình chữ nhật thời thượng có kích thước 52.6 mm.
-                    Phần khung đồng hồ được hoàn thiện từ hợp kim kẽm có khả năng chống ăn mòn cao,
-                    giữ cho bề mặt luôn sáng bóng.
-                    Cạnh phải được trang bị một nút vật lý cho phép người dùng thao tác nhanh một số chức năng.
-                </Typography>
-
-                <Typography
-                    sx={{ mt: 1 }}
-                    style={{
-                        fontSize: "22px",
-                    }}
-                >
+                    </Typography>
                     <Typography
-                        variant="h4"
                         style={{
-                            display: "inline-block"
+                            fontSize: "18px",
+                            flexWrap: "wrap",
+                            width: "83%",
+                            textAlign: "justify",
                         }}
                     >
-                        Danh Mục:
-                    </Typography> Đồng hồ thông minh
-                </Typography>
-
-                <Typography
-                    sx={{ mt: 1 }}
-                    style={{
-                        fontSize: "22px",
-                    }}
-                >
+                        Đồng hồ thông minh BeFit có thiết kế mạnh mẽ,
+                        nam tính với hình dáng mặt hình chữ nhật thời thượng có kích thước 52.6 mm.
+                        Phần khung đồng hồ được hoàn thiện từ hợp kim kẽm có khả năng chống ăn mòn cao,
+                        giữ cho bề mặt luôn sáng bóng.
+                        Cạnh phải được trang bị một nút vật lý cho phép người dùng thao tác nhanh một số chức năng.
+                    </Typography>
+                </Stack>
+                <Stack direction="row">
                     <Typography
-                        variant="h4"
+                        variant="h5"
                         style={{
-                            display: "inline-block"
+                            width: "17%",
+                        }}
+                    >
+                        Danh mục:
+                    </Typography>
+                    <Typography
+                        style={{
+                            fontSize: "18px",
+                            flexWrap: "wrap",
+                            width: "83%",
+                        }}
+                    >
+                        Đồng hồ thông minh
+                    </Typography>
+                </Stack>
+                <Stack direction="row">
+                    <Typography
+                        variant="h5"
+                        style={{
+                            width: "17%",
                         }}
                     >
                         Thương hiệu:
-                    </Typography> BeFit
-                </Typography>
-
-                <Typography
-                    sx={{ mt: 1 }}
-                    style={{
-                        fontSize: "22px",
-                    }}
-                >
+                    </Typography>
                     <Typography
-                        variant="h4"
                         style={{
-                            display: "inline-block"
+                            fontSize: "18px",
+                            flexWrap: "wrap",
+                            width: "83%",
+                        }}
+                    >
+                        BeFit
+                    </Typography>
+                </Stack>
+                <Stack direction="row">
+                    <Typography
+                        variant="h5"
+                        style={{
+                            width: "17%",
                         }}
                     >
                         Hệ điều hành:
-                    </Typography> Android
-                </Typography>
+                    </Typography>
+                    <Typography
+                        style={{
+                            fontSize: "18px",
+                            flexWrap: "wrap",
+                            width: "83%",
+                        }}
+                    >
+                        Android
+                    </Typography>
+                </Stack>
 
                 <Typography
-                    variant="h4"
+                    variant="h5"
                     sx={{ mt: 1 }}
                     style={{
-                        fontSize: "22px",
+                        fontSize: "18px",
                     }}>
                     Danh sách phiên bản sản phẩm:
                 </Typography>
@@ -302,8 +304,7 @@ function ProductDetailPage() {
                         </TableFooter>
                     </Table>
                 </TableContainer>
-            </FormAddProduct>
-        </RootPageAddProduct>
+        </RootPageProductDetail>
     );
 }
 

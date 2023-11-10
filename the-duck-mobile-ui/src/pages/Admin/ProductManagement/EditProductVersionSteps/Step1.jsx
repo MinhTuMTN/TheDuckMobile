@@ -69,7 +69,7 @@ function getStyles(name, personName, theme) {
     };
 }
 
-function Step2({ value, onChange }) {
+function Step1({ value, onChange }) {
     const theme = useTheme();
 
     const [screenResolution, setScreenResolution] = useState('');
@@ -234,4 +234,4 @@ function Step2({ value, onChange }) {
     );
 }
 
-export default Step2;
+export default Step1;

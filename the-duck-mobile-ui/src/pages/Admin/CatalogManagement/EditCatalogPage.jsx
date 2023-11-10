@@ -39,11 +39,6 @@ function EditCatalogPage(props) {
                     autoFocus
                     required
                 />
-                <MuiTextFeild
-                    label="Mô tả"
-                    margin="normal"
-                    required
-                />
                 <FlexContainer justifyContent="center">
                     <EditButton variant="contained" color="color1">
                         <Typography color={"white"}>Cập Nhật</Typography>

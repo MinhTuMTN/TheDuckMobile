@@ -47,43 +47,24 @@ function EditBrandPage(props) {
     return (
         <RootPageEditBrand>
             <FormEditBrand>
-                <Typography variant="h3">Chỉnh sửa thông tin thương hiệu "{}"</Typography>
-                <Grid container spacing={1}>
-                    <Grid item xs={7}>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <MuiTextFeild
-                                    label="Tên thương hiệu"
-                                    margin="normal"
-                                    autoFocus
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <MuiTextFeild
-                                    label="Mô tả"
-                                    margin="normal"
-                                    required
-                                    multiline
-                                    rows={11}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Grid>
+                <Typography variant="h3">Chỉnh sửa thông tin thương hiệu "{ }"</Typography>
+                <MuiTextFeild
+                    label="Tên thương hiệu"
+                    margin="normal"
+                    autoFocus
+                    required
+                />
+                <Grid container>
                     <Grid item xs={5}>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <CustomImage src={image} />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <MuiTextFeild
-                                    type="file"
-                                    required
-                                    onChange={handleImageChange}
-                                    sx={{ mt: 2 }}
-                                />
-                            </Grid>
-                        </Grid>
+                        <CustomImage src={image} />
+                    </Grid>
+                    <Grid item xs={7}>
+                        <MuiTextFeild
+                            type="file"
+                            required
+                            onChange={handleImageChange}
+                            sx={{ mt: 2 }}
+                        />
                     </Grid>
                 </Grid>
                 <FlexContainer justifyContent="center">

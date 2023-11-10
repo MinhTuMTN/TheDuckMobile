@@ -39,11 +39,6 @@ function AddCatalogPage(props) {
                     autoFocus
                     required
                 />
-                <MuiTextFeild
-                    label="Mô tả"
-                    margin="normal"
-                    required
-                />
                 <FlexContainer justifyContent="center">
                     <AddButton variant="contained" color="color1">
                         <Typography color={"white"}>Thêm Mới</Typography>
