@@ -27,7 +27,7 @@ function TopNavbar(props) {
         component={"header"}
         sx={{
           backdropFilter: "blur(6px)", // Sử dụng filter cho phần header để làm mờ nền phía sau
-          backgroundColor: "coral", // Màu nền của header
+          backgroundColor: "#fff", // Màu nền của header
           position: "sticky", // Cho phần header luôn luôn ở trên cùng
           left: {
             lg: `${SIDE_NAV_WIDTH}px`, // Khi màn hình lớn hơn hoặc bằng lg thì left của header sẽ bằng với width của side nav
@@ -74,7 +74,13 @@ function TopNavbar(props) {
                 onClick={accountPopover.handleOpen}
                 ref={accountPopover.anchorRef}
               >
-                <SvgIcon fontSize="medium">
+                <SvgIcon
+                  fontSize="large"
+                  sx={{
+                    borderRadius: "50%",
+                    border: "1px solid #0d0d0d",
+                  }}
+                >
                   <HomeWork />
                 </SvgIcon>
               </IconButton>

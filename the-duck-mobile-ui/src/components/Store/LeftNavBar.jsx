@@ -25,7 +25,7 @@ function LeftNavBar(props) {
           height: "100%",
         }}
       >
-        <Box sx={{ paddingTop: 3, paddingX: 1.5 }}>
+        <Box sx={{ paddingTop: 3, paddingX: 1.5, paddingBottom: 2 }}>
           <Box
             sx={{
               height: "5rem",

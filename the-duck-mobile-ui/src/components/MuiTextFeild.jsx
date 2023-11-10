@@ -42,6 +42,7 @@ function MuiTextFeild(props) {
     onChange,
     error = null,
     children,
+    color,
     ...others
   } = props;
 
@@ -55,6 +56,7 @@ function MuiTextFeild(props) {
       value={value}
       onChange={onChange}
       style={props.style}
+      color={color}
       {...(error && { error: true, helperText: error })}
       InputProps={{ style: { fontSize: props.fontSize } }}
       {...others}

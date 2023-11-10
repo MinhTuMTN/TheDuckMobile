@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import React from "react";
 import TopNavbar from "../components/Store/TopNavbar";
 import LeftNavBar from "../components/Store/LeftNavBar";
+import { Outlet } from "react-router-dom";
 
 const SIDE_NAV_WIDTH = 280;
 
@@ -29,7 +30,9 @@ function StoreLayout(props) {
       <TopNavbar onNavOpen={() => setOpen(true)} />
       <LeftNavBar onClose={() => setOpen(false)} open={open} />
       <LayoutRoot>
-        <LayoutContainer>{props.children}</LayoutContainer>
+        <LayoutContainer>
+          <Outlet />
+        </LayoutContainer>
       </LayoutRoot>
     </>
   );
