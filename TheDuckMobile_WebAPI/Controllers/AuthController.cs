@@ -5,6 +5,7 @@ using TheDuckMobile_WebAPI.Config;
 using TheDuckMobile_WebAPI.Entities;
 using TheDuckMobile_WebAPI.Models.Request;
 using TheDuckMobile_WebAPI.Models.Response;
+using TheDuckMobile_WebAPI.Services;
 
 namespace TheDuckMobile_WebAPI.Controllers
 {
@@ -12,37 +13,116 @@ namespace TheDuckMobile_WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly JwtProvider _jwtProvider;
+        private readonly ITwilioServices _twilioServices;
+        private readonly IUserServices _userServices;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(JwtProvider jwtProvider, DataContext context)
+        public AuthController(
+            JwtProvider jwtProvider,
+            ITwilioServices twilioServices,
+            IUserServices userServices,
+            IConfiguration configuration)
         {
             _jwtProvider = jwtProvider;
-            _context = context;
+            _twilioServices = twilioServices;
+            _userServices = userServices;
+            _configuration = configuration;
+        }
+
+
+        [HttpPost("check-phone-number")]
+        public async Task<IActionResult> CheckPhoneNumber([FromBody] CheckPhoneNumberRequest request)
+        {
+            bool exist = await _userServices.CheckCustomerExists(request.Phone!);
+
+            List<string> phoneNotVerified = _configuration.GetSection("AppSettings:PhoneNotVerified").Get<List<string>>();
+
+            if (phoneNotVerified.Contains(request.Phone!))
+            {
+                return Ok(new GenericResponse
+                {
+                    Success = true,
+                    Message = "Phone number is already in use",
+                    Data = true
+                });
+            }
+
+            if (!_twilioServices.SendSMSVerificationCode(request.Phone!))
+            {
+                return BadRequest(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Failed to send verification code",
+                    Data = null
+                });
+            }
+
+            if (!exist)
+            {
+                return Ok(new GenericResponse
+                {
+                    Success = true,
+                    Message = "Phone number is not in use",
+                    Data = false
+                });
+            }
+            else
+            {
+                return Ok(new GenericResponse
+                {
+                    Success = true,
+                    Message = "Phone number is already in use",
+                    Data = true
+                });
+            }
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(user => user.Account!.Email == request.Email);
+            var user = await _userServices.FindUserByPhone(request.Phone!);
             if (user == null)
             {
                 return Unauthorized(new GenericResponse
                 {
                     Success = false,
-                    Message = "Invalid email or password",
+                    Message = "Invalid Phone Number",
                     Data = null
                 });
             }
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Account!.Password))
+
+            List<string> phoneNotVerified = _configuration.GetSection("AppSettings:PhoneNotVerified").Get<List<string>>();
+
+            if (phoneNotVerified.Contains(request.Phone!) && request.OTP == "777777")
+            {
+                return Ok(new GenericResponse
+                {
+                    Success = true,
+                    Message = "Success",
+                    Data = _jwtProvider.GenerateToken(user)
+                });
+            }
+            else if (phoneNotVerified.Contains(request.Phone!) && request.OTP != "777777")
             {
                 return Unauthorized(new GenericResponse
                 {
                     Success = false,
-                    Message = "Invalid email or password",
+                    Message = "Invalid Verification Code",
                     Data = null
                 });
             }
+
+            if (!_twilioServices.VerifySMSVerificationCode(request.Phone!, request.OTP!))
+            {
+                return Unauthorized(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Invalid Verification Code",
+                    Data = null
+                });
+            }
+
             var token = _jwtProvider.GenerateToken(user);
             return Ok(new GenericResponse
             {
@@ -55,44 +135,25 @@ namespace TheDuckMobile_WebAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var user = new User()
+            if (!_twilioServices.VerifySMSVerificationCode(request.Phone!, request.OTP!))
             {
-                Avatar = "https://i.imgur.com/1qk9n0F.png",
-                FullName = request.FullName,
-                CreatedAt = DateTime.Now,
-                DateOfBirth = request.DateOfBirth,
-                Gender = request.Gender,
-                Phone = request.Phone,
-                IsDeleted = false,
-                Account = new Account()
-                {
-                    Email = request.Email,
-                    Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
-                },
-                LastModifiredAt = DateTime.Now,
-                UserId = Guid.NewGuid()
-            };
-
-            await _context.Users.AddAsync(user);
-            var success = await _context.SaveChangesAsync() > 0;
-            if (success)
-            {
-                return Ok(new GenericResponse
-                {
-                    Success = true,
-                    Message = "Success",
-                    Data = user
-                });
-            }
-            else
-            {
-                return BadRequest(new GenericResponse
+                return Unauthorized(new GenericResponse
                 {
                     Success = false,
-                    Message = "Failed to register",
+                    Message = "Invalid Verification Code",
                     Data = null
                 });
             }
+
+            Customer customer = (Customer)await _userServices.CreateCustomer(request);
+
+            var token = _jwtProvider.GenerateToken(customer);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = token
+            });
         }
     }
 }

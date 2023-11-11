@@ -19,34 +19,44 @@ namespace TheDuckMobile_WebAPI.Entities
 
 
 
-        public override int SaveChanges()
-        {
-            TrackDate();
-            return base.SaveChanges();
-        }
+        //public override int SaveChanges()
+        //{
+        //    return base.SaveChanges();
+        //}
 
-        private void TrackDate()
-        {
-            foreach (var entityEntry in ChangeTracker.Entries())
-            {
-                if (entityEntry.Entity is User e
-                    && entityEntry.State != EntityState.Added)
-                {
-                    //e.UpdatedAt = DateTime.Now;
-                }
-            }
-        }
+        //private void TrackDate()
+        //{
+        //    foreach (var entityEntry in ChangeTracker.Entries())
+        //    {
+        //        if (entityEntry.Entity is User e
+        //            && entityEntry.State != EntityState.Added)
+        //        {
+        //            //e.UpdatedAt = DateTime.Now;
+        //        }
+        //    }
+        //}
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            #region One to One
-            // User - Account Relationship
-            modelBuilder.Entity<User>()
-                .HasOne<Account>(u => u.Account)
-                .WithOne(acc => acc.User)
-                .HasForeignKey<Account>(account => account.UserId);
+            #region List String Configuration
+            modelBuilder.Entity<ProductVersion>()
+                .Property(pv => pv.Images)
+                .HasConversion(
+                    v => string.Join(',', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                );
 
+            modelBuilder.Entity<Vote>()
+                .Property(v => v.Images)
+                .HasConversion(
+                    v => string.Join(',', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                );
+            #endregion
+
+
+            #region One to One
             modelBuilder.Entity<Store>()
                 .HasOne(store => store.Address)
                 .WithOne(address => address.Store)
@@ -61,6 +71,12 @@ namespace TheDuckMobile_WebAPI.Entities
 
 
             #region One to Many
+            // Quan hệ Product - Catalog
+            modelBuilder.Entity<Product>()
+                .HasOne<Catalog>(product => product.Catalog)
+                .WithMany(catalog => catalog.Products)
+                .HasForeignKey(product => product.CatalogId);
+
             //Quan hệ district - provine
             modelBuilder.Entity<District>()
                 .HasOne(district => district.Provine)
@@ -80,19 +96,14 @@ namespace TheDuckMobile_WebAPI.Entities
                 .HasForeignKey(address => address.WardId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //Quan hệ address - district
+            // Quan hệ User - Address
             modelBuilder.Entity<Address>()
-                .HasOne(address => address.District)
-                .WithMany(district => district.Addresses)
-                .HasForeignKey(address => address.DistrictId)
+                .HasOne<User>(add => add.User)
+                .WithMany(user => user.Addresses)
+                .HasForeignKey(add => add.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //Quan hệ address - provine
-            modelBuilder.Entity<Address>()
-                .HasOne(address => address.Provine)
-                .WithMany(provine => provine.Addresses)
-                .HasForeignKey(address => address.ProvineId)
-                .OnDelete(DeleteBehavior.Restrict);
+
 
             // Brand - Product Relationship
             modelBuilder.Entity<Product>()
@@ -157,19 +168,6 @@ namespace TheDuckMobile_WebAPI.Entities
                 .HasForeignKey(order => order.StoreId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Order - Address Relationship
-            modelBuilder.Entity<Order>()
-                .HasOne(order => order.Address)
-                .WithMany(address => address.Orders)
-                .HasForeignKey(order => order.AddressId);
-
-            // Color - Product Relationship
-            modelBuilder.Entity<Color>()
-                .HasOne(color => color.Product)
-                .WithMany(product => product.Colors)
-                .HasForeignKey(color => color.ProductId);
-
-
 
             //Quan hệ staff - store
             modelBuilder.Entity<Staff>()
@@ -189,6 +187,13 @@ namespace TheDuckMobile_WebAPI.Entities
                 .HasOne(sp => sp.ProductVersion)
                 .WithMany(pdv => pdv.StoreProducts)
                 .HasForeignKey(sp => sp.ProductVersionId);
+
+            // Quan hê ProductVersion - Color
+            modelBuilder.Entity<ProductVersion>()
+                .HasOne(pv => pv.Color)
+                .WithMany(color => color.ProductVersions)
+                .HasForeignKey(pv => pv.ColorId);
+
             // Vote - Customer Relationship
             modelBuilder.Entity<Vote>()
                 .HasOne<Customer>(vote => vote.Customer)
@@ -201,11 +206,7 @@ namespace TheDuckMobile_WebAPI.Entities
                 .WithMany(promotion => promotion.ProductVersions)
                 .HasForeignKey(productVersion => productVersion.PromotionId);
 
-            modelBuilder.Entity<Address>()
-                .HasOne<User>(add => add.User)
-                .WithMany(user => user.Address)
-                .HasForeignKey(add => add.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+
 
             #endregion
 
@@ -224,14 +225,20 @@ namespace TheDuckMobile_WebAPI.Entities
             modelBuilder.Entity<Product>()
                 .HasMany<SpecialFeature>(product => product.SpecialFeatures)
                 .WithMany(specialFeature => specialFeature.Products);
+
+            // Quan hệ Order - Coupon
+            modelBuilder.Entity<Order>()
+                .HasOne(order => order.Coupon)
+                .WithMany(coupon => coupon.Orders)
+                .HasForeignKey(order => order.CouponId);
             #endregion
         }
-        public DbSet<Account> Accounts { get; set; }
         public DbSet<Address> Addresss { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Catalog> Catalogs { get; set; }
         public DbSet<Color> Colors { get; set; }
+        public DbSet<Coupon> Coupons { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
@@ -253,6 +260,5 @@ namespace TheDuckMobile_WebAPI.Entities
         public DbSet<User> Users { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<Ward> Wards { get; set; }
-        public DbSet<ToDo> ToDos { get; set; }
     }
 }

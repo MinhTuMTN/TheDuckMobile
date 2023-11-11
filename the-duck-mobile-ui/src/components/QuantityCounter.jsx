@@ -7,14 +7,14 @@ function QuantityCounter() {
     border: none;
     width: 1rem;
   `;
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const incrementQuantity = () => {
     setQuantity(quantity + 1);
   };
 
   const decrementQuantity = () => {
-    if (quantity > 0) {
+    if (quantity > 1) {
       setQuantity(quantity - 1);
     }
   };

@@ -29,8 +29,8 @@ function CustomLink(props) {
   return (
     <StyledLink
       style={{
-        width: width ? width : "100%",
-        height: height ? height : "100%",
+        width: width ? width : "",
+        height: height ? height : "",
         color: props.color ? props.color : "#141E46",
       }}
       replace={props.replace}

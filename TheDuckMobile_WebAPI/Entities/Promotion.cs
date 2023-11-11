@@ -23,7 +23,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public Boolean IsDeleted { get; set; }
 
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
-        public virtual ICollection<ProductVersion> ProductVersions { get; set; }
+        public virtual ICollection<OrderItem>? OrderItems { get; set; }
+        public virtual ICollection<ProductVersion>? ProductVersions { get; set; }
     }
 }

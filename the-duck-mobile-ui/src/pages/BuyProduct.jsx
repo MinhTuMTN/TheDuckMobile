@@ -18,6 +18,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import MuiTextFeild from "../components/MuiTextFeild";
 import HomeDeliver from "../components/HomeDeliver";
 import AtStoreDeliver from "../components/AtStoreDeliver";
+import { Helmet } from "react-helmet-async";
 
 const Wrapped = styled.div`
   color: rgba(0, 0, 0, 0.65);
@@ -40,6 +41,10 @@ function BuyProduct(props) {
   };
   return (
     <Wrapped>
+      <Helmet>
+        <title>Thanh toán | The Duck Mobile</title>
+        <meta name="description" content="Thanh  | The Duck Mobile" />
+      </Helmet>
       <Container elevation={4}>
         <Box
           paddingLeft={4}

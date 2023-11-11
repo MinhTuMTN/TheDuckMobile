@@ -24,7 +24,7 @@ MuiTextFeild.propTypes = {
   fontSize: PropTypes.string || PropTypes.number,
   value: PropTypes.string,
   onChange: PropTypes.func,
-  error: PropTypes.string,
+  error: PropTypes.bool,
   children: PropTypes.node,
 };
 
@@ -55,7 +55,7 @@ function MuiTextFeild(props) {
       value={value}
       onChange={onChange}
       style={props.style}
-      {...(error && { error: true, helperText: error })}
+      {...(error && { error: true, helperText: props.helperText })}
       InputProps={{ style: { fontSize: props.fontSize } }}
       {...others}
       fullWidth
