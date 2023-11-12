@@ -49,12 +49,13 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public User()
         {
-
+            Addresses = new HashSet<Address>();
         }
 
         public User(ILazyLoader lazyLoader)
         {
             _lazyLoader = lazyLoader;
+            Addresses = new HashSet<Address>();
         }
     }
 }

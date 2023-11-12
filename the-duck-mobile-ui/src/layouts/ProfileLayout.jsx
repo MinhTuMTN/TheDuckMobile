@@ -45,7 +45,7 @@ function ProfileLayout(props) {
     handleGetInfo();
   }, []);
   return (
-    <UserInfoContext.Provider value={info}>
+    <UserInfoContext.Provider value={[info, setInfo]}>
       <Helmet>
         <title>The Duck Mobile</title>
         <meta name="description" content="The Duck Mobile" />

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace TheDuckMobile_WebAPI.Entities
@@ -7,13 +9,15 @@ namespace TheDuckMobile_WebAPI.Entities
     {
         private readonly ILazyLoader? _lazyLoader;
         [Key]
-        public Guid DistrictId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int DistrictId { get; set; }
         [Required]
         public string? DistrictName { get; set; }
 
         //Tham chieu toi bang provine qua ProvineId (1 district thuoc 1 provine)
-        public byte ProvineId { get; set; }
+        public int ProvineId { get; set; }
         private Provine? _provine;
+        [JsonIgnore]
         public virtual Provine? Provine
         {
             get => _lazyLoader.Load(this, ref _provine);
@@ -22,6 +26,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         //1 district chứa nhiều Ward
         private ICollection<Ward>? _wards;
+        [JsonIgnore]
         public virtual ICollection<Ward>? Wards
         {
             get => _lazyLoader.Load(this, ref _wards);

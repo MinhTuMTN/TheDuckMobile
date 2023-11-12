@@ -14,7 +14,7 @@ namespace TheDuckMobile_WebAPI.Entities
         public string? StreetName { get; set; }
 
         // Reference to Ward
-        public Guid WardId { get; set; }
+        public int WardId { get; set; }
         private Ward? _ward;
         [JsonIgnore]
         public virtual Ward? Ward
@@ -24,7 +24,7 @@ namespace TheDuckMobile_WebAPI.Entities
         }
 
         // Relationship to Store
-        public Guid StoreId { get; set; }
+        public Guid? StoreId { get; set; }
         private Store? _store;
         [JsonIgnore]
         public virtual Store? Store
@@ -34,7 +34,7 @@ namespace TheDuckMobile_WebAPI.Entities
         }
 
         // Relationship to User
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         private User? _user;
         [JsonIgnore]
         public virtual User? User
@@ -50,7 +50,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public Address(ILazyLoader lazyLoader)
         {
-
+            _lazyLoader = lazyLoader;
         }
 
     }

@@ -1,15 +1,18 @@
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { EditOutlined } from "@mui/icons-material";
+import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useContext } from "react";
 import { UserInfoContext } from "../layouts/ProfileLayout";
+import UserEditInfomation from "./UserEditInfomation";
 
 ProfileInformation.propTypes = {
   margin: PropTypes.string,
 };
 
 function ProfileInformation(props) {
+  const [openEditInfo, setOpenEditInfo] = React.useState(false);
   const { margin } = props;
-  const info = useContext(UserInfoContext);
+  const [info, setInfo] = useContext(UserInfoContext);
   return (
     <Box margin={margin}>
       <Typography variant="h5">Thông tin cá nhân</Typography>
@@ -46,6 +49,23 @@ function ProfileInformation(props) {
             (info.gender === 0 ? "Nam" : info.gender === 1 ? "Nữ" : "Khác")}
         </Typography>
       </Stack>
+      <Button
+        sx={{
+          marginTop: 1,
+        }}
+        startIcon={<EditOutlined />}
+        variant="outlined"
+        onClick={() => setOpenEditInfo(true)}
+      >
+        Chỉnh sửa thông tin
+      </Button>
+
+      <UserEditInfomation
+        open={openEditInfo}
+        setOpen={setOpenEditInfo}
+        initValue={info}
+        onChange={setInfo}
+      />
     </Box>
   );
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TheDuckMobile_WebAPI.Common;
 using TheDuckMobile_WebAPI.Entities;
 using TheDuckMobile_WebAPI.Models.Request;
 
@@ -24,7 +25,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             return await _context.Users.FirstOrDefaultAsync(user => user.Phone == phoneNumber && !user.IsDeleted);
         }
 
-        async Task<User> IUserServices.CreateCustomer(RegisterRequest request)
+        public async Task<User> CreateCustomer(RegisterRequest request)
         {
             var customer = new Customer
             {
@@ -40,6 +41,22 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             await _context.Customers.AddAsync(customer);
             await _context.SaveChangesAsync();
             return customer;
+        }
+
+        public async Task<User?> EditInformationUser(Guid userId, EditInformationUserRequest request)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(user => user.UserId == userId && !user.IsDeleted);
+
+            if (user == null)
+                return null;
+
+
+            user.FullName = request.FullName;
+            user.Gender = (Gender)request.Gender!;
+            user.DateOfBirth = request.DateOfBirth;
+            await _context.SaveChangesAsync();
+
+            return user;
         }
     }
 }
