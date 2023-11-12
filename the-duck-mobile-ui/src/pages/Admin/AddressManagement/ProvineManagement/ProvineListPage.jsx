@@ -13,14 +13,15 @@ import {
     Typography,
     styled
 } from "@mui/material";
-import TablePaginationActions from "../../../components/TablePaginationActions";
+import TablePaginationActions from "../../../../components/TablePaginationActions";
 import { useEffect, useState } from "react";
-import MuiButton from "../../../components/MuiButton";
+import MuiButton from "../../../../components/MuiButton";
+import { Link } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import MuiTextFeild from "../../../components/MuiTextFeild";
 import { Search } from "@mui/icons-material";
+import MuiTextFeild from "../../../../components/MuiTextFeild";
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -49,18 +50,26 @@ function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
 
-const RootPageAccountList = styled(Box)(({ theme }) => ({
+const RootPageProvineList = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
     padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
+const AddButton = styled(MuiButton)(({ theme }) => ({
+    width: "25%",
+    marginBottom: theme.spacing(1),
+    "&:hover": {
+        backgroundColor: "#FF6969",
+      }
+}));
+
 const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-function AccountListPage() {
+function ProvineListPage() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rowsSearched, setRowsSearched] = useState(rows);
@@ -94,8 +103,13 @@ function AccountListPage() {
     };
 
     return (
-        <RootPageAccountList>
-            <Typography variant="h3">Danh sách tài khoản</Typography>
+        <RootPageProvineList>
+            <Typography variant="h3">Danh sách tỉnh</Typography>
+            <AddButton component={Link} variant="contained" color="color1" to="/admin/address-management/provine/add">
+                <Typography color={"white"}>
+                    Thêm Tỉnh Mới
+                </Typography>
+            </AddButton>
             <SearchTextField
                 type="text"
                 variant="outlined"
@@ -112,7 +126,7 @@ function AccountListPage() {
                     style: { fontSize: 18 },
                 }}
             />
-            <TableContainer component={Paper} sx={{ maxHeight: 562, minWidth: 1035, maxWidth: 1035 }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
@@ -145,10 +159,10 @@ function AccountListPage() {
                                 <TableCell style={{ minWidth: 100 }} align="right">
                                     {row.protein}
                                 </TableCell>
-                                <TableCell style={{ minWidth: 230 }} align="center">
-                                    <MuiButton color="oldPrimary"><InfoIcon /></MuiButton>
-                                    <MuiButton color="teal"><EditIcon /></MuiButton>
-                                    <MuiButton color="color1"><DeleteIcon /></MuiButton>
+                                <TableCell style={{ minWidth: 200 }} align="center">
+                                    <MuiButton component={Link} color="oldPrimary" to="/admin/address-management/provine/detail"><InfoIcon /></MuiButton>
+                                    <MuiButton component={Link} color="teal" to="/admin/address-management/provine/edit"><EditIcon /></MuiButton>
+                                    <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -175,8 +189,8 @@ function AccountListPage() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </RootPageAccountList>
+        </RootPageProvineList>
     );
 }
 
-export default AccountListPage;
+export default ProvineListPage;

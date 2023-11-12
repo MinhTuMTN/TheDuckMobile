@@ -52,10 +52,10 @@ const sidebarItems = [
     section: "staff-management",
   },
   {
-    display: "Tài Khoản",
+    display: "Địa chỉ",
     icon: null,
-    to: "/admin/account-management/list",
-    section: "account-management",
+    to: "/admin/address-management/provine/list",
+    section: "address-management",
   },
   {
     display: "Sản Phẩm",

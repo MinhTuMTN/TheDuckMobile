@@ -45,7 +45,7 @@ function EditPromotionPage(props) {
     return (
         <RootPageEditPromotion>
             <FormEditPromotion>
-                <Typography variant="h3">Chỉnh sửa thông tin mã giảm giá "{}"</Typography>
+                <Typography variant="h3">Chỉnh sửa thông tin mã giảm giá "{ }"</Typography>
                 <MuiTextFeild
                     label="Tên mã giảm giá"
                     margin="normal"
@@ -78,7 +78,6 @@ function EditPromotionPage(props) {
                         <Typography color={"white"}>Cập Nhật</Typography>
                     </EditButton>
                 </FlexContainer>
-
             </FormEditPromotion>
         </RootPageEditPromotion>
     );

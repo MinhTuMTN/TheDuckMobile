@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 function BorderTextBox(props) {
-  const { children, label, width, ...others } = props;
+  const { children, label, width, marginTop, ...others } = props;
   return (
     <Box
       {...others}
@@ -14,6 +14,7 @@ function BorderTextBox(props) {
         borderRadius: "15px",
         width: {width},
         boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
+        mt: {marginTop},
       }}
     >
       <Typography

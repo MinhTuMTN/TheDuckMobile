@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import TablePaginationActions from "../../../components/TablePaginationActions";
+import { Link } from "react-router-dom";
 
 const rows = [
   createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
@@ -60,6 +61,14 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
 
+const AddButton = styled(MuiButton)(({ theme }) => ({
+  width: "25%",
+  marginBottom: theme.spacing(1),
+  "&:hover": {
+    backgroundColor: "#FF6969",
+  }
+}));
+
 function StaffListPage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -96,6 +105,16 @@ function StaffListPage() {
   return (
     <RootPageStaffList>
       <Typography variant="h3">Danh sách nhân viên</Typography>
+      <AddButton
+        component={Link}
+        variant="contained"
+        color="color1"
+        to="/admin/staff-management/add"
+      >
+        <Typography color={"white"}>
+          Thêm Nhân Viên Mới
+        </Typography>
+      </AddButton>
       <SearchTextField
         type="text"
         variant="outlined"
@@ -130,9 +149,9 @@ function StaffListPage() {
           <TableBody>
             {(rowsPerPage > 0
               ? rowsSearched.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
               : rowsSearched
             ).map((row) => (
               <TableRow key={row.name}>
@@ -150,10 +169,10 @@ function StaffListPage() {
                   {row.protein}
                 </TableCell>
                 <TableCell style={{ minWidth: 200 }} align="center">
-                  <MuiButton color="oldPrimary">
+                  <MuiButton component={Link} color="oldPrimary" to="/admin/staff-management/detail">
                     <InfoIcon />
                   </MuiButton>
-                  <MuiButton color="teal">
+                  <MuiButton component={Link} color="teal" to="/admin/staff-management/edit">
                     <EditIcon />
                   </MuiButton>
                   <MuiButton color="color1">

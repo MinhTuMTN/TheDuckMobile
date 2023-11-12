@@ -1,4 +1,4 @@
-import { Box, FormControl, FormLabel, MenuItem, Paper, Select, Typography, styled, useTheme } from "@mui/material";
+import { Box, FormControl, FormLabel, MenuItem, Paper, Select, Stack, Typography, styled, useTheme } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import MuiButton from "../../../components/MuiButton";
 import FlexContainer from "../../../components/FlexContainer";
@@ -76,7 +76,7 @@ function AddStorePage(props) {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
-    
+
     return (
         <RootPageAddStore>
             <FormAddStore>
@@ -87,11 +87,38 @@ function AddStorePage(props) {
                     autoFocus
                     required
                 />
-                <MuiTextFeild
-                    label="Thời gian mở cửa"
-                    margin="normal"
-                    required
-                />
+                <Stack direction="row" spacing={4}>
+                    <FormControl sx={{ mt: 1 }}>
+                        <FormLabel sx={{ mb: -2 }}><Typography>Thời gian mở cửa</Typography></FormLabel>
+                        <Stack direction="row" spacing={1}>
+                            <MuiTextFeild
+                                label="Giờ"
+                                margin="normal"
+                                required
+                            />
+                            <MuiTextFeild
+                                label="Phút"
+                                margin="normal"
+                                required
+                            />
+                        </Stack>
+                    </FormControl>
+                    <FormControl sx={{ mt: 1 }}>
+                        <FormLabel sx={{ mb: -2 }}><Typography>Thời gian đóng cửa</Typography></FormLabel>
+                        <Stack direction="row" spacing={1}>
+                            <MuiTextFeild
+                                label="Giờ"
+                                margin="normal"
+                                required
+                            />
+                            <MuiTextFeild
+                                label="Phút"
+                                margin="normal"
+                                required
+                            />
+                        </Stack>
+                    </FormControl>
+                </Stack>
                 <MuiTextFeild
                     label="Địa chỉ"
                     margin="normal"

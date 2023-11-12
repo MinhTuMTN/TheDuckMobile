@@ -141,9 +141,7 @@ function Step1({ value, onChange }) {
                         />
                     </Grid>
                     <Grid item xs={5}>
-
                         <CustomImage src={image} />
-
                         <MuiTextFeild
                             type="file"
                             required

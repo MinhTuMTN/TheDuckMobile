@@ -73,7 +73,6 @@ function AddProductPage() {
                         rows={3}
                     />
                 </Grid>
-
                 <FormControl sx={{ mt: 1 }}>
                     <FormLabel><Typography>Danh mục</Typography></FormLabel>
                     <Select

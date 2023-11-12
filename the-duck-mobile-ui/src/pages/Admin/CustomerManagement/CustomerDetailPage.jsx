@@ -22,7 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import BorderTextBox from "../../../components/BorderTextBox";
 
-const staffRows = [
+const orderRows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
     createData('Ice cream sandwich1', 237, 9.0, 37, 4.3),
     createData('Eclair2', 262, 16.0, 24, 6.0),
@@ -45,7 +45,7 @@ const staffRows = [
     createData('Gingerbread18', 356, 16.0, 49, 3.9),
 ];
 
-const storeProductRows = [
+const feedbackRows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
     createData('Ice cream sandwich1', 237, 9.0, 37, 4.3),
     createData('Eclair2', 262, 16.0, 24, 6.0),
@@ -71,135 +71,189 @@ const storeProductRows = [
 function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
-const RootPageStoreDetail = styled(Box)(({ theme }) => ({
+const RootPageCustomerDetail = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
     padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
-function StoreDetailPage() {
-    const [staffPage, setStaffPage] = useState(0);
-    const [storeProductPage, setStoreProductPage] = useState(0);
-    const [staffRowsPerPage, setStaffRowsPerPage] = useState(5);
-    const [storeProductRowsPerPage, setStoreProductRowsPerPage] = useState(5);
+const CustomImage = styled('img')(({ theme }) => ({
+    border: "2px solid",
+    borderRadius: "15px",
+    height: "315px",
+    width: "auto",
+    maxWidth: "315px",
+    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
+}));
+
+function CustomerDetailPage() {
+    const image = "https://i.pinimg.com/736x/d4/15/95/d415956c03d9ca8783bfb3c5cc984dde.jpg"
+
+    const [orderPage, setOrderPage] = useState(0);
+    const [orderRowsPerPage, setOrderRowsPerPage] = useState(5);
+    const [feedbackPage, setFeedbackPage] = useState(0);
+    const [feedbackRowsPerPage, setFeedbackRowsPerPage] = useState(5);
 
     // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyStoreProductRows =
-        storeProductPage > 0 ?
-            Math.max(0, (1 + storeProductPage) * storeProductRowsPerPage - storeProductRows.length) : 0;
+    const emptyOrderRows =
+        orderPage > 0 ?
+            Math.max(0, (1 + orderPage) * orderRowsPerPage - orderRows.length) : 0;
 
-    const emptyStaffRows =
-        staffPage > 0 ?
-            Math.max(0, (1 + staffPage) * staffRowsPerPage - staffRows.length) : 0;
+    const emptyFeedbackRows =
+        feedbackPage > 0 ?
+            Math.max(0, (1 + feedbackPage) * feedbackRowsPerPage - feedbackRows.length) : 0;
 
-    const handleChangeStoreProductPage = (event, newPage) => {
-        setStoreProductPage(newPage);
+    const handleChangeOrderPage = (event, newPage) => {
+        setOrderPage(newPage);
     };
 
-    const handleChangeStaffPage = (event, newPage) => {
-        setStaffPage(newPage);
+    const handleChangeFeedbackPage = (event, newPage) => {
+        setFeedbackPage(newPage);
     };
 
-    const handleChangeStaffRowsPerPage = (event) => {
-        setStaffRowsPerPage(parseInt(event.target.value, 10));
-        setStaffPage(0);
+    const handleChangeOrderRowsPerPage = (event) => {
+        setOrderRowsPerPage(parseInt(event.target.value, 10));
+        setOrderPage(0);
     };
 
-    const handleChangeStoreProductRowsPerPage = (event) => {
-        setStoreProductRowsPerPage(parseInt(event.target.value, 10));
-        setStoreProductPage(0);
+    const handleChangeFeedbackRowsPerPage = (event) => {
+        setFeedbackRowsPerPage(parseInt(event.target.value, 10));
+        setFeedbackPage(0);
     };
 
     return (
-        <RootPageStoreDetail>
-            <Typography variant="h3" >Thông tin chi nhánh "{ }"</Typography>
-            <BorderTextBox marginTop="15px" label="Thông tin chi nhánh">
-            <Stack direction="row">
-                <Typography
-                    variant="h5"
-                    style={{
-                        width: "20%",
-                    }}
-                >
-                    Mã chi nhánh:
-                </Typography>
-                <Typography
-                    style={{
-                        fontSize: "18px",
-                        flexWrap: "wrap",
-                        width: "80%",
-                    }}
-                >
-                    MaChiNhanh
-                </Typography>
+        <RootPageCustomerDetail>
+            <Typography variant="h3" >Thông tin khách hàng "{ }"</Typography>
+            <Stack direction="row" spacing={3} sx={{ mt: 2 }}>
+                <CustomImage src={image} style={{ width: "38%" }} />
+                <BorderTextBox style={{ width: "72%" }} label="Thông tin khách hàng">
+                    <Stack direction="column" spacing={2}>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "35%",
+                                }}
+                            >
+                                Mã khách hàng:
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "65%",
+                                }}
+                            >
+                                MaKhachHang
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "35%",
+                                }}
+                            >
+                                Họ tên khách hàng:
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "65%",
+                                }}
+                            >
+                                Nguyễn Văn A
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "35%",
+                                }}
+                            >
+                                Giới tính:
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "65%",
+                                }}
+                            >
+                                Nam
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "35%",
+                                }}
+                            >
+                                Số điện thoại:
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "65%",
+                                }}
+                            >
+                                0123456789
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "35%",
+                                }}
+                            >
+                                Email:
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "65%",
+                                }}
+                            >
+                                anv@theduckmobile.com
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "35%",
+                                }}
+                            >
+                                Địa chỉ:
+                            </Typography>
+                            <Typography
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "65%",
+                                    textAlign: "justify",
+                                }}
+                            >
+                                Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí Minh
+                            </Typography>
+                        </Stack>
+                    </Stack>
+                </BorderTextBox>
             </Stack>
-            <Stack direction="row">
-                <Typography
-                    variant="h5"
-                    style={{
-                        width: "20%",
-                    }}
-                >
-                    Tên chi nhánh:
-                </Typography>
-                <Typography
-                    style={{
-                        fontSize: "18px",
-                        flexWrap: "wrap",
-                        width: "80%",
-                    }}
-                >
-                    Chi nhánh Hồ Chí Minh
-                </Typography>
-            </Stack>
-            <Stack direction="row">
-                <Typography
-                    variant="h5"
-                    style={{
-                        width: "20%",
-                    }}
-                >
-                    Thời gian mở cửa:
-                </Typography>
-                <Typography
-                    style={{
-                        fontSize: "18px",
-                        flexWrap: "wrap",
-                        width: "80%",
-                    }}
-                >
-                    Mỗi ngày từ 7h15 sáng tới 21h15 tối
-                </Typography>
-            </Stack>
-            <Stack direction="row">
-                <Typography
-                    variant="h5"
-                    style={{
-                        width: "20%",
-                    }}
-                >
-                    Địa chỉ:
-                </Typography>
-                <Typography
-                    style={{
-                        fontSize: "18px",
-                        flexWrap: "wrap",
-                        width: "80%",
-                        textAlign: "justify",
-                    }}
-                >
-                    Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí Minh
-                </Typography>
-            </Stack>
-            </BorderTextBox>
             <Typography
                 variant="h5"
                 sx={{ mt: 3 }}
                 style={{
                     fontSize: "18px",
                 }}>
-                Danh sách nhân viên:
+                Danh sách đơn hàng:
             </Typography>
             <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
@@ -214,9 +268,9 @@ function StoreDetailPage() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(staffRowsPerPage > 0
-                            ? staffRows.slice(staffPage * staffRowsPerPage, staffPage * staffRowsPerPage + staffRowsPerPage)
-                            : staffRows
+                        {(orderRowsPerPage > 0
+                            ? orderRows.slice(orderPage * orderRowsPerPage, orderPage * orderRowsPerPage + orderRowsPerPage)
+                            : orderRows
                         ).map((row) => (
                             <TableRow key={row.name}>
                                 <TableCell style={{ minWidth: 100 }}>
@@ -238,14 +292,14 @@ function StoreDetailPage() {
                                     <MuiButton
                                         component={Link}
                                         color="yellow"
-                                        to="/admin/staff-management/detail"
+                                        to=""
                                     >
                                         <InfoIcon />
                                     </MuiButton>
                                     <MuiButton
                                         component={Link}
                                         color="teal"
-                                        to="/admin/staff-management/edit"
+                                        to=""
                                     >
                                         <EditIcon />
                                     </MuiButton>
@@ -258,8 +312,8 @@ function StoreDetailPage() {
                                 </TableCell>
                             </TableRow>
                         ))}
-                        {emptyStaffRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyStaffRows }}>
+                        {emptyOrderRows > 0 && (
+                            <TableRow style={{ height: 53 * emptyOrderRows }}>
                                 <TableCell colSpan={7} />
                             </TableRow>
                         )}
@@ -269,11 +323,11 @@ function StoreDetailPage() {
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                 colSpan={6}
-                                count={staffRows.length}
-                                rowsPerPage={staffRowsPerPage}
-                                page={staffPage}
-                                onPageChange={handleChangeStaffPage}
-                                onRowsPerPageChange={handleChangeStaffRowsPerPage}
+                                count={orderRows.length}
+                                rowsPerPage={orderRowsPerPage}
+                                page={orderPage}
+                                onPageChange={handleChangeOrderPage}
+                                onRowsPerPageChange={handleChangeOrderRowsPerPage}
                                 ActionsComponent={TablePaginationActions}
                                 sx={{ fontSize: 10 }}
                             />
@@ -281,14 +335,13 @@ function StoreDetailPage() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-
             <Typography
                 variant="h5"
                 sx={{ mt: 3 }}
                 style={{
                     fontSize: "18px",
                 }}>
-                Danh sách sản phẩm của chi nhánh:
+                Danh sách phản hồi:
             </Typography>
             <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
@@ -303,9 +356,9 @@ function StoreDetailPage() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(storeProductRowsPerPage > 0
-                            ? storeProductRows.slice(storeProductPage * storeProductRowsPerPage, storeProductPage * storeProductRowsPerPage + storeProductRowsPerPage)
-                            : storeProductRows
+                        {(feedbackRowsPerPage > 0
+                            ? feedbackRows.slice(feedbackPage * feedbackRowsPerPage, feedbackPage * feedbackRowsPerPage + feedbackRowsPerPage)
+                            : feedbackRows
                         ).map((row) => (
                             <TableRow key={row.name}>
                                 <TableCell style={{ minWidth: 100 }}>
@@ -327,14 +380,14 @@ function StoreDetailPage() {
                                     <MuiButton
                                         component={Link}
                                         color="yellow"
-                                        to="/admin/product-management/detail"
+                                        to=""
                                     >
                                         <InfoIcon />
                                     </MuiButton>
                                     <MuiButton
                                         component={Link}
                                         color="teal"
-                                        to="/admin/product-management/edit"
+                                        to=""
                                     >
                                         <EditIcon />
                                     </MuiButton>
@@ -347,8 +400,8 @@ function StoreDetailPage() {
                                 </TableCell>
                             </TableRow>
                         ))}
-                        {emptyStoreProductRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyStoreProductRows }}>
+                        {emptyFeedbackRows > 0 && (
+                            <TableRow style={{ height: 53 * emptyFeedbackRows }}>
                                 <TableCell colSpan={7} />
                             </TableRow>
                         )}
@@ -358,11 +411,11 @@ function StoreDetailPage() {
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                 colSpan={6}
-                                count={storeProductRows.length}
-                                rowsPerPage={storeProductRowsPerPage}
-                                page={storeProductPage}
-                                onPageChange={handleChangeStoreProductPage}
-                                onRowsPerPageChange={handleChangeStoreProductRowsPerPage}
+                                count={feedbackRows.length}
+                                rowsPerPage={feedbackRowsPerPage}
+                                page={feedbackPage}
+                                onPageChange={handleChangeFeedbackPage}
+                                onRowsPerPageChange={handleChangeFeedbackRowsPerPage}
                                 ActionsComponent={TablePaginationActions}
                                 sx={{ fontSize: 10 }}
                             />
@@ -370,8 +423,8 @@ function StoreDetailPage() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </RootPageStoreDetail>
+        </RootPageCustomerDetail>
     );
 }
 
-export default StoreDetailPage;
+export default CustomerDetailPage;

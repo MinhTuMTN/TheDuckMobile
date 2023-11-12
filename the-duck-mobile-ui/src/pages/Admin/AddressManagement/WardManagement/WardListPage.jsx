@@ -13,15 +13,15 @@ import {
     Typography,
     styled
 } from "@mui/material";
-import TablePaginationActions from "../../../components/TablePaginationActions";
+import TablePaginationActions from "../../../../components/TablePaginationActions";
 import { useEffect, useState } from "react";
+import MuiButton from "../../../../components/MuiButton";
+import { Link } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from '@mui/icons-material/Delete';
-import MuiButton from "../../../components/MuiButton";
 import EditIcon from '@mui/icons-material/Edit';
-import MuiTextFeild from "../../../components/MuiTextFeild";
 import { Search } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import MuiTextFeild from "../../../../components/MuiTextFeild";
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -50,18 +50,26 @@ function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
 
-const RootPageCustomerList = styled(Box)(({ theme }) => ({
+const RootPageWardList = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
     padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
+const AddButton = styled(MuiButton)(({ theme }) => ({
+    width: "25%",
+    marginBottom: theme.spacing(1),
+    "&:hover": {
+        backgroundColor: "#FF6969",
+      }
+}));
+
 const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-function CustomerListPage() {
+function WardListPage() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rowsSearched, setRowsSearched] = useState(rows);
@@ -95,8 +103,13 @@ function CustomerListPage() {
     };
 
     return (
-        <RootPageCustomerList>
-            <Typography variant="h3">Danh sách khách hàng</Typography>
+        <RootPageWardList>
+            <Typography variant="h3">Danh sách phường</Typography>
+            <AddButton component={Link} variant="contained" color="color1" to="/admin/address-management/provine/district/ward/add">
+                <Typography color={"white"}>
+                    Thêm Phường Mới
+                </Typography>
+            </AddButton>
             <SearchTextField
                 type="text"
                 variant="outlined"
@@ -113,7 +126,7 @@ function CustomerListPage() {
                     style: { fontSize: 18 },
                 }}
             />
-            <TableContainer component={Paper} sx={{ maxHeight: 562, minWidth: 1035, maxWidth: 1035 }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
@@ -147,15 +160,9 @@ function CustomerListPage() {
                                     {row.protein}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton
-                                    component={Link}
-                                    color="oldPrimary"
-                                    to="/admin/customer-management/detail"
-                                    ><InfoIcon /></MuiButton>
-                                    <MuiButton color="teal"><EditIcon /></MuiButton>
-                                    <MuiButton color="color1"><DeleteIcon /></MuiButton>
+                                    <MuiButton component={Link} color="teal" to="/admin/address-management/provine/district/ward/edit"><EditIcon /></MuiButton>
+                                    <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>
-                                
                             </TableRow>
                         ))}
                         {emptyRows > 0 && (
@@ -181,8 +188,8 @@ function CustomerListPage() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </RootPageCustomerList>
+        </RootPageWardList>
     );
 }
 
-export default CustomerListPage;
+export default WardListPage;
