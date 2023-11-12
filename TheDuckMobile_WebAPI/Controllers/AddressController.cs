@@ -126,5 +126,29 @@ namespace TheDuckMobile_WebAPI.Controllers
                 Data = result
             });
         }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> EditAddress([FromQuery] Guid addressId, [FromBody] UserAddAddressRequest request)
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _addressServices.EditUserAddress(Guid.Parse(id!), addressId, request);
+            if (result == null)
+            {
+                return BadRequest(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Edit address failed"
+                });
+            }
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = result
+            });
+        }
     }
 }

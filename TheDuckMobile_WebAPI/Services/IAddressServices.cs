@@ -12,5 +12,6 @@ namespace TheDuckMobile_WebAPI.Services
         public Task<ICollection<UserAddressResponse>?> DeleteUserAddress(Guid userId, Guid addressId);
         public Task<ICollection<UserAddressResponse>> GetUserAddresses(Guid userId);
         public Task<ICollection<UserAddressResponse>?> AddUserAddress(Guid userId, UserAddAddressRequest request);
+        public Task<ICollection<UserAddressResponse>?> EditUserAddress(Guid userId, Guid addressId, UserAddAddressRequest request);
     }
 }

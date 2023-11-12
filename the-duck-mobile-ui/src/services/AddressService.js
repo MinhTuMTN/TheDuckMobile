@@ -1,4 +1,4 @@
-import { del, get, post } from "./AxiosInstance";
+import { del, get, post, put } from "./AxiosInstance";
 
 export const getProvines = () => {
   return get("address/provinces");
@@ -20,6 +20,10 @@ export const addAddress = (data) => {
   return post("address", data);
 };
 
-export const deleteAddress = (id) => {
-  return del(`address?addressId=${id}`);
+export const deleteAddress = (addressId) => {
+  return del(`address?addressId=${addressId}`);
+};
+
+export const updateAddress = (addressId, data) => {
+  return put(`address?addressId=${addressId}`, data);
 };

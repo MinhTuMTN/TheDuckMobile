@@ -1,5 +1,3 @@
-import React, { memo } from "react";
-import DialogForm from "./DialogForm";
 import {
   FormControl,
   FormControlLabel,
@@ -8,14 +6,14 @@ import {
   RadioGroup,
   Stack,
 } from "@mui/material";
-import MuiTextFeild from "./MuiTextFeild";
-import { editInfo } from "../services/UserService";
 import { useSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
+import React, { memo } from "react";
+import { editInfo } from "../services/UserService";
+import DialogForm from "./DialogForm";
+import MuiTextFeild from "./MuiTextFeild";
 
 function UserEditInfomation(props) {
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
   const { open, setOpen, initValue, onChange } = props;
   const [editInfomation, setEditInfomation] = React.useState({
     fullName: initValue && initValue.fullName,

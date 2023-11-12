@@ -7,6 +7,7 @@ import {
   getDistricts,
   getProvines,
   getWards,
+  updateAddress,
 } from "../services/AddressService";
 import DialogForm from "./DialogForm";
 import MuiTextFeild from "./MuiTextFeild";
@@ -31,6 +32,19 @@ function UserAddAddress(props) {
   const [province, setProvince] = React.useState([]);
   const [district, setDistrict] = React.useState([]);
   const [ward, setWard] = React.useState([]);
+
+  useEffect(() => {
+    if (!editAddress) return;
+    setAddress((prev) => {
+      return {
+        ...prev,
+        province: editAddress.provinceId,
+        district: editAddress.districtId,
+        ward: editAddress.wardId,
+        street: editAddress.street,
+      };
+    });
+  }, [editAddress]);
 
   useEffect(() => {
     const handleGetProvince = async () => {
@@ -63,7 +77,6 @@ function UserAddAddress(props) {
   }, [address.district, enqueueSnackbar]);
 
   const handleAddAddress = async () => {
-    console.log("Thêm địa chỉ");
     const response = await addAddress({
       street: address.street,
       wardId: address.ward,
@@ -71,6 +84,18 @@ function UserAddAddress(props) {
 
     if (response.success) {
       enqueueSnackbar("Thêm địa chỉ thành công", { variant: "success" });
+      onChangeAddress(response.data.data);
+    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+  };
+
+  const handleUpdateAddress = async () => {
+    const response = await updateAddress(editAddress.addressId, {
+      street: address.street,
+      wardId: address.ward,
+    });
+
+    if (response.success) {
+      enqueueSnackbar("Chỉnh sửa địa chỉ thành công", { variant: "success" });
       onChangeAddress(response.data.data);
     } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
   };
@@ -83,6 +108,7 @@ function UserAddAddress(props) {
       cancelText={"Hủy bỏ"}
       onOk={() => {
         if (editAddress == null) handleAddAddress();
+        else handleUpdateAddress();
       }}
       onCancel={() => {
         setAddress({
@@ -100,6 +126,12 @@ function UserAddAddress(props) {
           <Autocomplete
             fullWidth={true}
             options={province}
+            defaultValue={
+              editAddress && {
+                provineId: editAddress.provinceId,
+                provineName: editAddress.provinceName,
+              }
+            }
             value={province.find((item) => item.provineId === address.province)}
             onChange={(event, newValue) => {
               setAddress((prev) => ({
@@ -132,6 +164,12 @@ function UserAddAddress(props) {
           <Autocomplete
             fullWidth={true}
             disabled={address.province === ""}
+            defaultValue={
+              editAddress && {
+                districtId: editAddress.districtId,
+                districtName: editAddress.districtName,
+              }
+            }
             value={district.find(
               (item) => item.districtId === address.district
             )}
@@ -168,6 +206,12 @@ function UserAddAddress(props) {
         <Autocomplete
           fullWidth={true}
           options={ward}
+          defaultValue={
+            editAddress && {
+              wardId: editAddress.wardId,
+              wardName: editAddress.wardName,
+            }
+          }
           value={ward.find((item) => item.wardId === address.ward)}
           disabled={address.district === ""}
           onChange={(event, newValue) => {

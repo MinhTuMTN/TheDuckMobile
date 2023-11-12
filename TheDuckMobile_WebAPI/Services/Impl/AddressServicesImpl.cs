@@ -50,6 +50,24 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             return addresses.Select(a => new UserAddressResponse(a)).ToList();
         }
 
+        public async Task<ICollection<UserAddressResponse>?> EditUserAddress(Guid userId, Guid addressId, UserAddAddressRequest request)
+        {
+            var address = await _dataContext.Addresss.FindAsync(addressId);
+            if (address == null)
+                return null;
+
+            var ward = await _dataContext.Wards.FindAsync(request.WardId);
+            if (ward == null)
+                return null;
+
+            address.StreetName = request.Street;
+            address.Ward = ward;
+            await _dataContext.SaveChangesAsync();
+
+            var addresses = await _dataContext.Addresss.Where(a => a.UserId == userId).ToListAsync();
+            return addresses.Select(a => new UserAddressResponse(a)).ToList();
+        }
+
         public async Task<ICollection<District>> GetDistricts(int provineId)
         {
             var districts = await _dataContext.Districts.Where(d => d.ProvineId == provineId).ToListAsync();
