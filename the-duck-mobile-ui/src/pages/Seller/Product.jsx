@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   Container,
   Paper,
   Stack,
@@ -85,6 +86,39 @@ function Product(props) {
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(event.target.value);
   };
+
+  const [selectedCategory, setSelectedCategory] = React.useState([]);
+  const handleChangeCategoryFilter = (event) => {
+    if (event.target.checked) {
+      setSelectedCategory((prev) => [...prev, event.target.value]);
+    } else {
+      setSelectedCategory((prev) =>
+        prev.filter((item) => item !== event.target.value)
+      );
+    }
+  };
+
+  const [selectedStatus, setSelectedStatus] = React.useState([]);
+  const handleChangeStatusFilter = (event) => {
+    if (event.target.checked) {
+      setSelectedStatus((prev) => [...prev, event.target.value]);
+    } else {
+      setSelectedStatus((prev) =>
+        prev.filter((item) => item !== event.target.value)
+      );
+    }
+  };
+
+  const [selectedQuantity, setSelectedQuantity] = React.useState([]);
+  const handleChangeQuantityFilter = (event) => {
+    if (event.target.checked) {
+      setSelectedQuantity((prev) => [...prev, event.target.value]);
+    } else {
+      setSelectedQuantity((prev) =>
+        prev.filter((item) => item !== event.target.value)
+      );
+    }
+  };
   return (
     <Box component={"main"} sx={{ flexGrow: 1, py: 8 }}>
       <Container maxWidth={"lg"}>
@@ -110,23 +144,55 @@ function Product(props) {
             spacing={"2px"}
           >
             <SearchSeller />
-            <Box>
-              <TextField
-                sx={{
-                  paddingY: 2,
-                  paddingX: 3,
-                  borderBottom: "1px solid #e0e0e0",
-                }}
-                disabled
-                variant="standard"
-                fullWidth
-                size="medium"
-                InputProps={{
-                  disableUnderline: true,
-                  fontSize: "14px",
-                }}
-                placeholder="Không có bộ lọc nào được chọn"
-              />
+            <Box py={2} px={3}>
+              {selectedCategory.length === 0 &&
+                selectedQuantity.length === 0 &&
+                selectedStatus.length === 0 && (
+                  <TextField
+                    disabled
+                    variant="standard"
+                    fullWidth
+                    size="medium"
+                    InputProps={{
+                      disableUnderline: true,
+                      fontSize: "14px",
+                    }}
+                    placeholder="Không có bộ lọc nào được chọn"
+                  />
+                )}
+              {selectedCategory.map((item) => (
+                <Chip
+                  color="primary"
+                  label={item}
+                  onDelete={() =>
+                    setSelectedCategory((prev) =>
+                      prev.filter((i) => i !== item)
+                    )
+                  }
+                />
+              ))}
+
+              {selectedStatus.map((item) => (
+                <Chip
+                  color="secondary"
+                  label={item}
+                  onDelete={() =>
+                    setSelectedStatus((prev) => prev.filter((i) => i !== item))
+                  }
+                />
+              ))}
+
+              {selectedQuantity.map((item) => (
+                <Chip
+                  color="warning"
+                  label={item}
+                  onDelete={() =>
+                    setSelectedQuantity((prev) =>
+                      prev.filter((i) => i !== item)
+                    )
+                  }
+                />
+              ))}
             </Box>
             <Stack
               direction={"row"}
@@ -139,14 +205,20 @@ function Product(props) {
               <Filter
                 label={"Category"}
                 options={["Điện thoại", "Laptop", "Máy tính bảng", "Phụ kiện"]}
+                value={selectedCategory}
+                onChange={handleChangeCategoryFilter}
               />
               <Filter
                 label={"Trạng thái"}
                 options={["Đang bán", "Ngưng bán"]}
+                value={selectedStatus}
+                onChange={handleChangeStatusFilter}
               />
               <Filter
                 label={"Số lượng"}
                 options={["Còn hàng", "Sắp hết", "Hết hàng"]}
+                value={selectedQuantity}
+                onChange={handleChangeQuantityFilter}
               />
             </Stack>
             <ProductsTable

@@ -10,6 +10,13 @@ import PropTypes from "prop-types";
 BasicPopover.propTypes = {
   options: PropTypes.array,
   label: PropTypes.string,
+  value: PropTypes.array,
+  onChange: PropTypes.func,
+};
+
+BasicPopover.defaultProps = {
+  value: [],
+  onChange: () => {},
 };
 
 export default function BasicPopover(props) {
@@ -65,6 +72,7 @@ export default function BasicPopover(props) {
                 control={
                   <Checkbox
                     icon={icon}
+                    checked={props.value.includes(option)}
                     checkedIcon={checkedIcon}
                     name={option}
                     sx={{
@@ -73,6 +81,8 @@ export default function BasicPopover(props) {
                         color: "#D80032",
                       },
                     }}
+                    onChange={props.onChange}
+                    value={option}
                   />
                 }
                 label={option}
