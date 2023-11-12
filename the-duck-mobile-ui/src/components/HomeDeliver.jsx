@@ -5,6 +5,7 @@ import SearchSelect from "./SearchSelect";
 import MuiTextFeild from "./MuiTextFeild";
 import ProductInformation from "./ProductInformation";
 import Unit from "./Unit";
+import ElectricBoltIcon from "@mui/icons-material/ElectricBolt";
 
 const Wrapped = styled(Paper)`
   color: rgba(0, 0, 0, 0.65);
@@ -84,6 +85,28 @@ function HomeDeliver(props) {
             paddingTop: "1rem",
           }}
         >
+          <Stack
+            direction={"row"}
+            alignItems={"center"}
+            sx={{
+              bgcolor: "#dcf5e5",
+              padding: "0.2rem",
+              borderRadius: "4px",
+              width: "fit-content",
+            }}
+          >
+            <ElectricBoltIcon sx={{ color: "primary.main" }} />
+            <Typography
+              variant="body1"
+              fontWeight={"600"}
+              style={{
+                fontSize: "15px",
+                color: "#096732",
+              }}
+            >
+              Nhận hàng trong hôm nay (01/10)
+            </Typography>
+          </Stack>
           <ProductInformation />
           <Stack direction={"row"} alignItems={"center"}>
             <Typography

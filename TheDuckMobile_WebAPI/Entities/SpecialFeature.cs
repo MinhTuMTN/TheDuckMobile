@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TheDuckMobile_WebAPI.Entities
 {
@@ -6,7 +7,10 @@ namespace TheDuckMobile_WebAPI.Entities
     public class SpecialFeature
     {
         [Key]
-        public Guid SpecialFeatureId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int SpecialFeatureId { get; set; }
+
+        public string? SpecialFeatureName { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -14,8 +18,8 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public Boolean IsDeleted { get; set; }
 
-        public virtual ICollection<Catalog> Catalogs { get; set; }
+        public virtual ICollection<Catalog>? Catalogs { get; set; }
 
-        public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<Product>? Products { get; set; }
     }
 }

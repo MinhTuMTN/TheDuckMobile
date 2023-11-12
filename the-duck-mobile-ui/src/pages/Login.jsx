@@ -1,11 +1,25 @@
 import styled from "@emotion/styled";
-import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Paper,
+  Radio,
+  RadioGroup,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import pic from "../assets/login.jpg";
 import { useAuth } from "../auth/AuthProvider";
 import MuiTextFeild from "../components/MuiTextFeild";
-import { login } from "../services/AuthService";
+import { checkPhoneExists, login, register } from "../services/AuthService";
 
 const Wrapper = styled(Container)`
   padding-top: 6rem;
@@ -18,20 +32,57 @@ const StyledInput = styled(MuiTextFeild)`
     border-radius: 1rem;
   }
 `;
+
+const StyledDatePicker = styled(DatePicker)`
+  input {
+    font-size: 14px;
+    height: 100%;
+  }
+`;
+
 function Login(props) {
   const { setToken } = useAuth();
+  const { enqueueSnackbar } = useSnackbar();
+  const [step, setStep] = React.useState(1); // 1: Nhập số điện thoại, 2: Nhập mã OTP
+  const [phone, setPhone] = React.useState("");
+  const [name, setName] = React.useState(""); // Chỉ dùng khi step = 2 && phoneExist = false
+  const [gender, setGender] = React.useState(0); // Chỉ dùng khi step = 2 && phoneExist = false | 0: Nam, 1: Nữ
+  const [dateOfBirth, setDateOfBirth] = React.useState(""); // Chỉ dùng khi step = 2 && phoneExist = false | yyyy-mm-dd
+  const [phoneExist, setPhoneExist] = React.useState(false); // true: Số điện thoại đã tồn tại, false: Số điện thoại chưa tồn tại
+  const [otp, setOtp] = React.useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    const response = await login({
-      email: "admin@gmail.com",
-      password: "12345",
-    });
-    console.log(response.data);
+  const handleEnterPhoneNumber = async () => {
+    if (phone.trim().length !== 10) {
+      enqueueSnackbar("Số điện thoại không hợp lệ", { variant: "error" });
+      return;
+    }
+    const phoneNumber = "+84" + phone.slice(1);
+
+    enqueueSnackbar("Đang kiểm tra số điện thoại", { variant: "info" });
+    const response = await checkPhoneExists(phoneNumber);
 
     if (response.success) {
+      setPhoneExist(response.data.data);
+      setStep(2);
+    }
+  };
+
+  const handleLogin = async () => {
+    const phoneNumber = "+84" + phone.slice(1);
+
+    var response;
+    if (phoneExist) {
+      response = await login(phoneNumber, otp);
+    } else {
+      response = await register(phoneNumber, name, dateOfBirth, gender, otp);
+    }
+    if (!response.success) {
+      enqueueSnackbar("OTP không hợp lệ", { variant: "error" });
+    } else {
       setToken(response.data.data);
-      navigate("/", { replace: true });
+      enqueueSnackbar("Đăng nhập thành công", { variant: "success" });
+      navigate("/profile", { replace: true });
     }
   };
 
@@ -51,7 +102,6 @@ function Login(props) {
           <Paper
             style={{
               width: "80%",
-              height: "80%",
               padding: "2rem",
               display: "flex",
               flexDirection: "column",
@@ -63,25 +113,111 @@ function Login(props) {
             <Typography variant="h3" align="center">
               Đăng nhập
             </Typography>
-            <Box
-              sx={{
-                width: "100%",
-              }}
-            >
-              <StyledInput label="Số điện thoại" required />
-            </Box>
-            <Button
-              variant="contained"
-              color="color2"
-              size="large"
-              sx={{
-                color: "white",
-                borderRadius: "1rem",
-              }}
-              onClick={handleLogin}
-            >
-              Tiếp tục
-            </Button>
+            {step === 1 && (
+              <>
+                <StyledInput
+                  label="Số điện thoại"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                  error={
+                    (phone.length > 0 && phone.length < 10) ||
+                    phone.length >= 11
+                  }
+                  style={{ with: "100%" }}
+                />
+                <Button
+                  variant="contained"
+                  color="color2"
+                  size="large"
+                  sx={{
+                    color: "white",
+                    borderRadius: "1rem",
+                  }}
+                  onClick={handleEnterPhoneNumber}
+                >
+                  Tiếp tục
+                </Button>
+              </>
+            )}
+
+            {step === 2 && (
+              <Stack spacing={3}>
+                {!phoneExist && (
+                  <>
+                    <FormControl>
+                      <FormLabel>
+                        <Typography style={{ fontSize: "14px" }}>
+                          Giới tính
+                        </Typography>
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="0"
+                          control={<Radio />}
+                          label={
+                            <Typography style={{ fontSize: "14px" }}>
+                              Nam
+                            </Typography>
+                          }
+                        />
+                        <FormControlLabel
+                          value="1"
+                          control={<Radio />}
+                          label={
+                            <Typography style={{ fontSize: "14px" }}>
+                              Nữ
+                            </Typography>
+                          }
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    <MuiTextFeild
+                      label="Họ và tên"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      fullWidth
+                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <StyledDatePicker
+                        label="Ngày sinh"
+                        value={dateOfBirth}
+                        format="DD/MM/YYYY"
+                        onChange={(newValue) => {
+                          setDateOfBirth(newValue);
+                        }}
+                        slotProps={{ textField: { size: "medium" } }}
+                      />
+                    </LocalizationProvider>
+                  </>
+                )}
+
+                <MuiTextFeild
+                  label="Mã OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  required
+                  fullWidth
+                />
+                <Button
+                  variant="contained"
+                  color="color2"
+                  size="large"
+                  sx={{
+                    color: "white",
+                    borderRadius: "1rem",
+                  }}
+                  onClick={handleLogin}
+                >
+                  Đăng nhập
+                </Button>
+              </Stack>
+            )}
           </Paper>
         </Grid>
       </Grid>

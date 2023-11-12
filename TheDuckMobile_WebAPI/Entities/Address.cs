@@ -1,37 +1,57 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace TheDuckMobile_WebAPI.Entities
 {
     public class Address
     {
+        private readonly ILazyLoader? _lazyLoader;
         [Key]
         public Guid AddressId { get; set; }
 
         [Required]
         public string? StreetName { get; set; }
 
-        //Tham chieu toi bang provine thông qua ProvineId
-        public byte ProvineId { get; set; }
-        public virtual Provine? Provine { get; set; }
-
-        //Tham chieu toi bang district thông qua DistrictId
-        public Guid DistrictId { get; set; }
-        public virtual District? District { get; set; }
-
-        //Tham chiếu tới bảng Ward thông qua WardId
+        // Reference to Ward
         public Guid WardId { get; set; }
-        public virtual Ward? Ward { get; set; }
+        private Ward? _ward;
+        [JsonIgnore]
+        public virtual Ward? Ward
+        {
+            get => _lazyLoader.Load(this, ref _ward);
+            set => _ward = value;
+        }
 
-        //Quan hệ 1-1 với bảng Store
+        // Relationship to Store
         public Guid StoreId { get; set; }
-        public virtual Store? Store { get; set; }
-
+        private Store? _store;
         [JsonIgnore]
+        public virtual Store? Store
+        {
+            get => _lazyLoader.Load(this, ref _store);
+            set => _store = value;
+        }
+
+        // Relationship to User
         public Guid UserId { get; set; }
+        private User? _user;
         [JsonIgnore]
-        public virtual User? User { get; set; }
+        public virtual User? User
+        {
+            get => _lazyLoader.Load(this, ref _user);
+            set => _user = value;
+        }
 
-        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+        public Address()
+        {
+
+        }
+
+        public Address(ILazyLoader lazyLoader)
+        {
+
+        }
+
     }
 }

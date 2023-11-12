@@ -3,6 +3,7 @@ import React from "react";
 import pic from "../assets/iphone.jpg";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import Unit from "./Unit";
+import CustomLink from "./CustomLink";
 function OrderHistoryItem(props) {
   return (
     <Paper
@@ -95,20 +96,39 @@ function OrderHistoryItem(props) {
           sx={{
             display: "flex",
             justifyContent: "flex-end",
+            gap: ".5rem",
           }}
         >
-          <Button
-            variant="outlined"
-            sx={{
-              color: "#141E46",
-              ":hover": {
-                backgroundColor: "#141E46",
-                color: "#fff",
-              },
-            }}
-          >
-            Chi tiết
-          </Button>
+          <CustomLink to={"/profile/order-history-details"}>
+            <Button
+              variant="outlined"
+              color="color1"
+              sx={{
+                display: "none",
+                color: "color1.main",
+                ":hover": {
+                  backgroundColor: "color1.main",
+                  color: "#fff",
+                },
+              }}
+            >
+              Hủy
+            </Button>
+          </CustomLink>
+          <CustomLink to={"/profile/order-history-details"}>
+            <Button
+              variant="outlined"
+              sx={{
+                color: "#141E46",
+                ":hover": {
+                  backgroundColor: "#141E46",
+                  color: "#fff",
+                },
+              }}
+            >
+              Chi tiết
+            </Button>
+          </CustomLink>
         </Box>
       </Stack>
     </Paper>

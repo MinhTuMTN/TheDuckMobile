@@ -10,6 +10,10 @@ const axiosInstance = axios.create({
   },
 });
 
+export const updateToken = (token) => {
+  axiosInstance.defaults.headers["Authorization"] = "Bearer " + token;
+};
+
 const handleRequest = async (requestMethod, url, data, headers, params) => {
   const result = {
     success: false,
@@ -26,7 +30,10 @@ const handleRequest = async (requestMethod, url, data, headers, params) => {
     result.success = true;
     result.data = response.data;
   } catch (error) {
-    result.error = error;
+    result.error = error.message;
+    if (error.response) {
+      result.error = error.response.data.message;
+    }
   }
 
   return result;

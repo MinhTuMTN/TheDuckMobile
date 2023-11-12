@@ -27,7 +27,7 @@ namespace TheDuckMobile_WebAPI.Config
             }
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
 
-            if (user.FullName == null || user.Account == null || user.Account.Email == null)
+            if (user.FullName == null)
             {
                 throw new ArgumentNullException("User is null");
             }
@@ -35,9 +35,9 @@ namespace TheDuckMobile_WebAPI.Config
             {
                 Subject = new ClaimsIdentity(new[] {
                     new Claim(ClaimTypes.Name, user.FullName),
-                    new Claim(ClaimTypes.Email, user.Account.Email),
+                    new Claim("Phone", user.Phone!),
                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                    //new Claim(ClaimTypes.Role, user is Teacher ? "Teacher" : "Student"),
+                    new Claim(ClaimTypes.Role, user is Customer ? "Customer" : (user is Staff ? "Staff" : "Admin")),
 
                     //roles
 
