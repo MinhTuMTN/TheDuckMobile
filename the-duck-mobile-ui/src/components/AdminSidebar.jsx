@@ -9,7 +9,7 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import CustomLink from "./CustomLink";
 import PersonIcon from '@mui/icons-material/Person';
@@ -134,8 +134,6 @@ const sidebarItems = [
 ];
 
 function AdminSidebar(props) {
-  // const [section, setSection] = useState('')
-
   const location = useLocation();
   const currentSection = location.pathname
     .split("/")
@@ -143,14 +141,6 @@ function AdminSidebar(props) {
   const activeSection = sidebarItems.find(
     (item) => item.section === currentSection
   ).section;
-  console.log(currentSection);
-  console.log(activeSection);
-
-  // useEffect(() => {
-  //   setSection(activeSection);
-  //   console.log(currentSection);
-  //   console.log(section);
-  // }, [])
 
   return (
     <Sidebar>

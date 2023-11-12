@@ -1,8 +1,10 @@
 import { Box, FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled, useTheme } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FlexContainer from "../../../components/FlexContainer";
 import MuiButton from "../../../components/MuiButton";
+import { useLocation } from "react-router-dom";
+import { getProductById } from "../../../services/Admin/ProductService";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -61,11 +63,13 @@ function getStyles(name, personName, theme) {
     };
 }
 function EditProductPage() {
+    const { state } = useLocation();
     const theme = useTheme();
+    const [specialFeatures, setSpecialFeatures] = useState([]);
+    const [product, setProduct] = useState({});
     const [brand, setBrand] = useState('');
     const [catalog, setCatalog] = useState('');
     const [os, setOS] = useState('');
-    const [specialFeatures, setSpecialFeatures] = useState([]);
 
     const handleBrandChange = (event) => {
         setBrand(event.target.value);
@@ -90,32 +94,83 @@ function EditProductPage() {
         );
     };
 
+
+    const handleProductNameChange = (event) => {
+        const newName = event.target.value;
+        setProduct({
+            ...product,
+            productName: newName,
+        });
+    };
+
+    const handleProductDescriptionChange = (event) => {
+        const newDescription = event.target.value;
+        setProduct({
+            ...product,
+            productDescription: newDescription,
+        });
+    };
+
+    const handleQuantityChange = (event) => {
+        const newQuantity = event.target.value;
+        setProduct({
+            ...product,
+            quantity: newQuantity,
+        });
+    };
+
+    const handleGetProduct = async () => {
+        const productResponse = await getProductById(state.id);
+        if (productResponse.success) {
+            setProduct(productResponse.data.data);
+        }
+    };
+
+    useEffect(() => {
+        handleGetProduct();
+    }, []);
+
     return (
         <RootPageAddProduct>
             <FormAddProduct>
-                <Typography variant="h3">Chỉnh sửa thông tin sản phẩm "{}"</Typography>
+                <Typography variant="h3">Chỉnh sửa thông tin sản phẩm "{product.productName}"</Typography>
                 <Grid container spacing={1}>
                     <Grid item xs={8}>
                         <MuiTextFeild
                             label="Tên sản phẩm"
                             margin="normal"
+                            value={product.productName}
                             autoFocus
                             required
+                            onChange={handleProductNameChange}
+                            InputLabelProps={{
+                                shrink: true, // Keep the label always on the outline
+                            }}
                         />
                     </Grid>
                     <Grid item xs={4}>
                         <MuiTextFeild
-                            label="Số lượng"
+                            label="Số lượng tồn kho"
                             margin="normal"
+                            value={product.quantity}
                             required
+                            onChange={handleQuantityChange}
+                            InputLabelProps={{
+                                shrink: true, // Keep the label always on the outline
+                            }}
                         />
                     </Grid>
                     <MuiTextFeild
                         label="Mô tả"
                         margin="normal"
+                        value={product.productDescription}
                         required
                         multiline
-                        rows={3}
+                        rows={5}
+                        onChange={handleProductDescriptionChange}
+                        InputLabelProps={{
+                            shrink: true, // Keep the label always on the outline
+                        }}
                     />
                 </Grid>
 
@@ -202,7 +257,7 @@ function EditProductPage() {
                     </EditButton>
                 </FlexContainer>
             </FormAddProduct>
-            </RootPageAddProduct>
+        </RootPageAddProduct>
     );
 }
 

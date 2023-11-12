@@ -13,14 +13,16 @@ import {
     Typography,
     styled
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import BorderTextBox from "../../../components/BorderTextBox";
+import { getProductById } from "../../../services/Admin/ProductService";
+import FormatDateTime from "../../../components/FormatDateTime";
 
 const productVersionRows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -79,15 +81,17 @@ const RootPageProductDetail = styled(Box)(({ theme }) => ({
 }));
 
 function ProductDetailPage() {
+    const { state } = useLocation();
     const [productVersionPage, setProductVersionPage] = useState(0);
     const [productVersionRowsPerPage, setProductVersionRowsPerPage] = useState(5);
     const [ratePage, setRatePage] = useState(0);
     const [rateRowsPerPage, setRateRowsPerPage] = useState(5);
+    const [product, setProduct] = useState({});
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyProductVersionRows =
-    productVersionPage > 0 ? Math.max(0, (1 + productVersionPage) * productVersionRowsPerPage - productVersionRows.length) : 0;
-    
+        productVersionPage > 0 ? Math.max(0, (1 + productVersionPage) * productVersionRowsPerPage - productVersionRows.length) : 0;
+
     const emptyRateRows =
         ratePage > 0 ? Math.max(0, (1 + ratePage) * rateRowsPerPage - rateRows.length) : 0;
 
@@ -109,9 +113,19 @@ function ProductDetailPage() {
         setRatePage(0);
     };
 
+    const handleGetProduct = async () => {
+        const productResponse = await getProductById(state.id);
+        if (productResponse.success) {
+            setProduct(productResponse.data.data);
+        }
+    };
+
+    useEffect(() => {
+        handleGetProduct();
+    }, []);
     return (
         <RootPageProductDetail>
-            <Typography variant="h3" >Thông tin sản phẩm "{ }"</Typography>
+            <Typography variant="h3" >Thông tin sản phẩm "{product.productName}"</Typography>
             <BorderTextBox marginTop="15px" label="Thông tin sản phẩm">
                 <Stack spacing={1}>
                     <Stack direction="row">
@@ -131,7 +145,7 @@ function ProductDetailPage() {
                                 width: "78%",
                             }}
                         >
-                            MaSanPham
+                            {product.productId}
                         </Typography>
                     </Stack>
                     <Stack direction="row">
@@ -152,7 +166,7 @@ function ProductDetailPage() {
                                 textAlign: "justify",
                             }}
                         >
-                            Đồng hồ thông minh BeFit Watch Ultra 52.6mm dây silicone
+                            {product.productName}
                         </Typography>
                     </Stack>
                     <Stack direction="row">
@@ -172,7 +186,7 @@ function ProductDetailPage() {
                                 width: "78%",
                             }}
                         >
-                            10000
+                            {product.quantity}
                         </Typography>
                     </Stack>
                     <Stack direction="row">
@@ -192,7 +206,7 @@ function ProductDetailPage() {
                                 width: "78%",
                             }}
                         >
-                            100
+                            {product.sold}
                         </Typography>
                     </Stack>
                     <Stack direction="row">
@@ -213,11 +227,7 @@ function ProductDetailPage() {
                                 textAlign: "justify",
                             }}
                         >
-                            Đồng hồ thông minh BeFit có thiết kế mạnh mẽ,
-                            nam tính với hình dáng mặt hình chữ nhật thời thượng có kích thước 52.6 mm.
-                            Phần khung đồng hồ được hoàn thiện từ hợp kim kẽm có khả năng chống ăn mòn cao,
-                            giữ cho bề mặt luôn sáng bóng.
-                            Cạnh phải được trang bị một nút vật lý cho phép người dùng thao tác nhanh một số chức năng.
+                           {product.productDescription}
                         </Typography>
                     </Stack>
                     <Stack direction="row">
@@ -237,7 +247,7 @@ function ProductDetailPage() {
                                 width: "78%",
                             }}
                         >
-                            Đồng hồ thông minh
+                            {product.catalogName}
                         </Typography>
                     </Stack>
                     <Stack direction="row">
@@ -257,7 +267,7 @@ function ProductDetailPage() {
                                 width: "78%",
                             }}
                         >
-                            BeFit
+                            {product.brandName}
                         </Typography>
                     </Stack>
                     <Stack direction="row">
@@ -277,7 +287,7 @@ function ProductDetailPage() {
                                 width: "78%",
                             }}
                         >
-                            Android
+                            {product.osName}
                         </Typography>
                     </Stack>
                     <Stack direction="row">
@@ -297,7 +307,7 @@ function ProductDetailPage() {
                                 width: "78%",
                             }}
                         >
-                            Chống nước, chống đất, chống lửa, chống khí
+                            {product.specialFeatures}
                         </Typography>
                     </Stack>
                     <Stack direction="row">
@@ -317,7 +327,47 @@ function ProductDetailPage() {
                                 width: "78%",
                             }}
                         >
-                            4.5
+                            {product.rate}
+                        </Typography>
+                    </Stack>
+                    <Stack direction="row">
+                        <Typography
+                            variant="h5"
+                            style={{
+                                width: "22%",
+                            }}
+                        >
+                            Thời gian tạo:
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            style={{
+                                fontSize: "18px",
+                                flexWrap: "wrap",
+                                width: "78%",
+                            }}
+                        >
+                            <FormatDateTime dateTime={product.createdAt} />
+                        </Typography>
+                    </Stack>
+                    <Stack direction="row">
+                        <Typography
+                            variant="h5"
+                            style={{
+                                width: "22%",
+                            }}
+                        >
+                            Thời gian chỉnh sửa:
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            style={{
+                                fontSize: "18px",
+                                flexWrap: "wrap",
+                                width: "78%",
+                            }}
+                        >
+                            <FormatDateTime dateTime={product.lastModifiedAt} />
                         </Typography>
                     </Stack>
                 </Stack>
@@ -332,7 +382,7 @@ function ProductDetailPage() {
             </Typography>
 
             <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
-                <Table stickyHeader sx={{ maxWidth: 1200 }}>
+                <Table sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
                             <TableCell>Dessert (100g serving)</TableCell>
@@ -423,7 +473,7 @@ function ProductDetailPage() {
             </Typography>
 
             <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
-                <Table stickyHeader sx={{ maxWidth: 1200 }}>
+                <Table sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
                             <TableCell>Dessert (100g serving)</TableCell>

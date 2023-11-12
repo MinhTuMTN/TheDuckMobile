@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using TheDuckMobile_WebAPI.Services;
 using TheDuckMobile_WebAPI.Services.Impl;
+using TheDuckMobile_WebAPI.Services.Admin;
+using TheDuckMobile_WebAPI.Services.Impl.Admin;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +47,9 @@ builder.Services.AddScoped<JwtProvider>();
 builder.Services.AddScoped<ITwilioServices, TwilioServicesImpl>();
 builder.Services.AddScoped<IUserServices, UserServicesImpl>();
 builder.Services.AddScoped<IProductServices, ProductServicesImpl>();
+
+// Admin
+builder.Services.AddScoped<IProductAdminServices, ProductAdminServicesImpl>();
 #endregion
 
 var app = builder.Build();
