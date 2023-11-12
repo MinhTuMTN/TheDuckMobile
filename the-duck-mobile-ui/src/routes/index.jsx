@@ -34,6 +34,7 @@ import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
 import Loading from "../components/Loading";
 import StoreLayout from "../layouts/StoreLayout";
 import Product from "../pages/Seller/Product";
+import Orders from "../pages/Seller/Orders";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -246,6 +247,10 @@ function Router(props) {
         {
           path: "products/list",
           element: <Product />,
+        },
+        {
+          path: "orders",
+          element: <Orders />,
         },
       ],
     },
