@@ -12,9 +12,9 @@ function BorderTextBox(props) {
         border: "2px solid",
         padding: 2,
         borderRadius: "15px",
-        width: {width},
+        width: { width },
         boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
-        mt: {marginTop},
+        mt: { marginTop },
       }}
     >
       <Typography
@@ -27,7 +27,7 @@ function BorderTextBox(props) {
         }}
         style={{
           fontSize: "14px",
-      }}
+        }}
       >
         {label}
       </Typography>

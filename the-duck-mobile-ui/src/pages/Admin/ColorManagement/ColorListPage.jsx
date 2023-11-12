@@ -22,7 +22,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Search } from "@mui/icons-material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
-import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -51,7 +50,7 @@ function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
 }
 
-const RootPageProductList = styled(Box)(({ theme }) => ({
+const RootPageColorList = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
@@ -63,14 +62,15 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
     marginBottom: theme.spacing(1),
     "&:hover": {
         backgroundColor: "#FF6969",
-    }
+      }
 }));
 
 const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-function ProductListPage() {
+function ColorListPage() {
+
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rowsSearched, setRowsSearched] = useState(rows);
@@ -104,11 +104,11 @@ function ProductListPage() {
     };
 
     return (
-        <RootPageProductList>
-            <Typography variant="h3">Danh sách sản phẩm</Typography>
-            <AddButton component={Link} variant="contained" color="color1" to="/admin/product-management/add">
+        <RootPageColorList>
+            <Typography variant="h3">Danh sách màu sắc</Typography>
+            <AddButton component={Link} variant="contained" color="color1" to="/admin/color-management/add">
                 <Typography color={"white"}>
-                    Thêm Sản Phẩm Mới
+                    Thêm Màu Sắc Mới
                 </Typography>
             </AddButton>
             <SearchTextField
@@ -161,34 +161,9 @@ function ProductListPage() {
                                     {row.protein}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton
-                                        component={Link}
-                                        color="oldPrimary"
-                                        to="/admin/product-management/detail"
-                                    >
-                                        <InfoIcon />
-                                    </MuiButton>
-                                    <MuiButton
-                                        component={Link}
-                                        color="peach"
-                                        to="/admin/product-management/add-product-version"
-                                        state={{ category: "smart-watch" }}
-                                    >
-                                        <AddToQueueIcon />
-                                    </MuiButton>
-                                    <MuiButton
-                                        component={Link}
-                                        color="teal"
-                                        to="/admin/product-management/edit"
-                                    >
-                                        <EditIcon />
-                                    </MuiButton>
-                                    <MuiButton
-                                        component={Link}
-                                        color="color1"
-                                    >
-                                        <DeleteIcon />
-                                    </MuiButton>
+                                    <MuiButton component={Link} color="oldPrimary"><InfoIcon /></MuiButton>
+                                    <MuiButton component={Link} color="teal" to="/admin/color-management/edit"><EditIcon /></MuiButton>
+                                    <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -215,8 +190,8 @@ function ProductListPage() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </RootPageProductList>
+        </RootPageColorList>
     );
 }
 
-export default ProductListPage;
+export default ColorListPage;

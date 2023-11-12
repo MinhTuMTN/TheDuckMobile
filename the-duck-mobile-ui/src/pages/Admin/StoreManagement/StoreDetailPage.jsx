@@ -115,83 +115,89 @@ function StoreDetailPage() {
         <RootPageStoreDetail>
             <Typography variant="h3" >Thông tin chi nhánh "{ }"</Typography>
             <BorderTextBox marginTop="15px" label="Thông tin chi nhánh">
-            <Stack direction="row">
-                <Typography
-                    variant="h5"
-                    style={{
-                        width: "20%",
-                    }}
-                >
-                    Mã chi nhánh:
-                </Typography>
-                <Typography
-                    style={{
-                        fontSize: "18px",
-                        flexWrap: "wrap",
-                        width: "80%",
-                    }}
-                >
-                    MaChiNhanh
-                </Typography>
-            </Stack>
-            <Stack direction="row">
-                <Typography
-                    variant="h5"
-                    style={{
-                        width: "20%",
-                    }}
-                >
-                    Tên chi nhánh:
-                </Typography>
-                <Typography
-                    style={{
-                        fontSize: "18px",
-                        flexWrap: "wrap",
-                        width: "80%",
-                    }}
-                >
-                    Chi nhánh Hồ Chí Minh
-                </Typography>
-            </Stack>
-            <Stack direction="row">
-                <Typography
-                    variant="h5"
-                    style={{
-                        width: "20%",
-                    }}
-                >
-                    Thời gian mở cửa:
-                </Typography>
-                <Typography
-                    style={{
-                        fontSize: "18px",
-                        flexWrap: "wrap",
-                        width: "80%",
-                    }}
-                >
-                    Mỗi ngày từ 7h15 sáng tới 21h15 tối
-                </Typography>
-            </Stack>
-            <Stack direction="row">
-                <Typography
-                    variant="h5"
-                    style={{
-                        width: "20%",
-                    }}
-                >
-                    Địa chỉ:
-                </Typography>
-                <Typography
-                    style={{
-                        fontSize: "18px",
-                        flexWrap: "wrap",
-                        width: "80%",
-                        textAlign: "justify",
-                    }}
-                >
-                    Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí Minh
-                </Typography>
-            </Stack>
+                <Stack spacing={1}>
+                    <Stack direction="row">
+                        <Typography
+                            variant="h5"
+                            style={{
+                                width: "20%",
+                            }}
+                        >
+                            Mã chi nhánh:
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            style={{
+                                fontSize: "18px",
+                                flexWrap: "wrap",
+                                width: "80%",
+                            }}
+                        >
+                            MaChiNhanh
+                        </Typography>
+                    </Stack>
+                    <Stack direction="row">
+                        <Typography
+                            variant="h5"
+                            style={{
+                                width: "20%",
+                            }}
+                        >
+                            Tên chi nhánh:
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            style={{
+                                fontSize: "18px",
+                                flexWrap: "wrap",
+                                width: "80%",
+                            }}
+                        >
+                            Chi nhánh Hồ Chí Minh
+                        </Typography>
+                    </Stack>
+                    <Stack direction="row">
+                        <Typography
+                            variant="h5"
+                            style={{
+                                width: "20%",
+                            }}
+                        >
+                            Thời gian mở cửa:
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            style={{
+                                fontSize: "18px",
+                                flexWrap: "wrap",
+                                width: "80%",
+                            }}
+                        >
+                            Mỗi ngày từ 7h15 sáng tới 21h15 tối
+                        </Typography>
+                    </Stack>
+                    <Stack direction="row">
+                        <Typography
+                            variant="h5"
+                            style={{
+                                width: "20%",
+                            }}
+                        >
+                            Địa chỉ:
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            style={{
+                                fontSize: "18px",
+                                flexWrap: "wrap",
+                                width: "80%",
+                                textAlign: "justify",
+                            }}
+                        >
+                            Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí Minh
+                        </Typography>
+                    </Stack>
+                </Stack>
             </BorderTextBox>
             <Typography
                 variant="h5"

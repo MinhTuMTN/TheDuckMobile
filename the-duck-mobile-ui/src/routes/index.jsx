@@ -50,6 +50,9 @@ import EditDistrictPage from "../pages/Admin/AddressManagement/DistrictManagemen
 import WardListPage from "../pages/Admin/AddressManagement/WardManagement/WardListPage";
 import AddWardPage from "../pages/Admin/AddressManagement/WardManagement/AddWardPage";
 import EditWardPage from "../pages/Admin/AddressManagement/WardManagement/EditWardPage";
+import ColorListPage from "../pages/Admin/ColorManagement/ColorListPage";
+import AddColorPage from "../pages/Admin/ColorManagement/AddColorPage";
+import EditColorPage from "../pages/Admin/ColorManagement/EditColorPage";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -184,6 +187,18 @@ function Router(props) {
         {
           path: "address-management/provine/district/ward/edit",
           element: <EditWardPage />,
+        },
+        {
+          path: "color-management/list",
+          element: <ColorListPage />,
+        },
+        {
+          path: "color-management/add",
+          element: <AddColorPage />,
+        },
+        {
+          path: "color-management/edit",
+          element: <EditColorPage />,
         },
         {
           path: "catalog-management/list",

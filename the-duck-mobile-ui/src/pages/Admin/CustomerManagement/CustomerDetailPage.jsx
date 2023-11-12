@@ -139,6 +139,7 @@ function CustomerDetailPage() {
                                 Mã khách hàng:
                             </Typography>
                             <Typography
+                                variant="body2"
                                 style={{
                                     fontSize: "18px",
                                     flexWrap: "wrap",
@@ -158,6 +159,7 @@ function CustomerDetailPage() {
                                 Họ tên khách hàng:
                             </Typography>
                             <Typography
+                                variant="body2"
                                 style={{
                                     fontSize: "18px",
                                     flexWrap: "wrap",
@@ -177,6 +179,7 @@ function CustomerDetailPage() {
                                 Giới tính:
                             </Typography>
                             <Typography
+                                variant="body2"
                                 style={{
                                     fontSize: "18px",
                                     flexWrap: "wrap",
@@ -196,6 +199,7 @@ function CustomerDetailPage() {
                                 Số điện thoại:
                             </Typography>
                             <Typography
+                                variant="body2"
                                 style={{
                                     fontSize: "18px",
                                     flexWrap: "wrap",
@@ -215,6 +219,7 @@ function CustomerDetailPage() {
                                 Email:
                             </Typography>
                             <Typography
+                                variant="body2"
                                 style={{
                                     fontSize: "18px",
                                     flexWrap: "wrap",
@@ -234,6 +239,7 @@ function CustomerDetailPage() {
                                 Địa chỉ:
                             </Typography>
                             <Typography
+                                variant="body2"
                                 style={{
                                     fontSize: "18px",
                                     flexWrap: "wrap",

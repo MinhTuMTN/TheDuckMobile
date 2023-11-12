@@ -90,123 +90,129 @@ function StaffDetailPage() {
             <Stack direction="row" spacing={3} sx={{ mt: 2 }}>
                 <CustomImage src={image} style={{ width: "38%" }} />
                 <BorderTextBox style={{ width: "72%" }} label="Thông tin nhân viên">
-                <Stack direction="column" spacing={2}>
-                    <Stack direction="row">
-                        <Typography
-                            variant="h5"
-                            style={{
-                                width: "30%",
-                            }}
-                        >
-                            Mã nhân viên:
-                        </Typography>
-                        <Typography
-                            style={{
-                                fontSize: "18px",
-                                flexWrap: "wrap",
-                                width: "70%",
-                            }}
-                        >
-                            MaNhanVien
-                        </Typography>
+                    <Stack direction="column" spacing={2}>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "30%",
+                                }}
+                            >
+                                Mã nhân viên:
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "70%",
+                                }}
+                            >
+                                MaNhanVien
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "30%",
+                                }}
+                            >
+                                Họ tên nhân viên:
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "70%",
+                                }}
+                            >
+                                Nguyễn Văn C
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "30%",
+                                }}
+                            >
+                                Giới tính:
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "70%",
+                                }}
+                            >
+                                Nam
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "30%",
+                                }}
+                            >
+                                Số điện thoại:
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "70%",
+                                }}
+                            >
+                                0123456987
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "30%",
+                                }}
+                            >
+                                Email:
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "70%",
+                                }}
+                            >
+                                cnv@theduckmobile.com
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row">
+                            <Typography
+                                variant="h5"
+                                style={{
+                                    width: "30%",
+                                }}
+                            >
+                                Địa chỉ:
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                style={{
+                                    fontSize: "18px",
+                                    flexWrap: "wrap",
+                                    width: "70%",
+                                    textAlign: "justify",
+                                }}
+                            >
+                                Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí Minh
+                            </Typography>
+                        </Stack>
                     </Stack>
-                    <Stack direction="row">
-                        <Typography
-                            variant="h5"
-                            style={{
-                                width: "30%",
-                            }}
-                        >
-                            Họ tên nhân viên:
-                        </Typography>
-                        <Typography
-                            style={{
-                                fontSize: "18px",
-                                flexWrap: "wrap",
-                                width: "70%",
-                            }}
-                        >
-                            Nguyễn Văn C
-                        </Typography>
-                    </Stack>
-                    <Stack direction="row">
-                        <Typography
-                            variant="h5"
-                            style={{
-                                width: "30%",
-                            }}
-                        >
-                            Giới tính:
-                        </Typography>
-                        <Typography
-                            style={{
-                                fontSize: "18px",
-                                flexWrap: "wrap",
-                                width: "70%",
-                            }}
-                        >
-                            Nam
-                        </Typography>
-                    </Stack>
-                    <Stack direction="row">
-                        <Typography
-                            variant="h5"
-                            style={{
-                                width: "30%",
-                            }}
-                        >
-                            Số điện thoại:
-                        </Typography>
-                        <Typography
-                            style={{
-                                fontSize: "18px",
-                                flexWrap: "wrap",
-                                width: "70%",
-                            }}
-                        >
-                            0123456987
-                        </Typography>
-                    </Stack>
-                    <Stack direction="row">
-                        <Typography
-                            variant="h5"
-                            style={{
-                                width: "30%",
-                            }}
-                        >
-                            Email:
-                        </Typography>
-                        <Typography
-                            style={{
-                                fontSize: "18px",
-                                flexWrap: "wrap",
-                                width: "70%",
-                            }}
-                        >
-                            cnv@theduckmobile.com
-                        </Typography>
-                    </Stack>
-                    <Stack direction="row">
-                        <Typography
-                            variant="h5"
-                            style={{
-                                width: "30%",
-                            }}
-                        >
-                            Địa chỉ:
-                        </Typography>
-                        <Typography
-                            style={{
-                                fontSize: "18px",
-                                flexWrap: "wrap",
-                                width: "70%",
-                                textAlign: "justify",
-                            }}
-                        >
-                            Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí Minh
-                        </Typography>
-                    </Stack>
-                </Stack>
                 </BorderTextBox>
             </Stack>
             <Typography

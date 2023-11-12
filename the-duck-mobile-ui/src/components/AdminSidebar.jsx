@@ -10,9 +10,23 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-// import { useEffect, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import CustomLink from "./CustomLink";
+import PersonIcon from '@mui/icons-material/Person';
+import BadgeIcon from '@mui/icons-material/Badge';
+import HomeIcon from '@mui/icons-material/Home';
+import RedeemIcon from '@mui/icons-material/Redeem';
+import CategoryIcon from '@mui/icons-material/Category';
+import BrandingWatermarkIcon from '@mui/icons-material/BrandingWatermark';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
+import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
+import StoreIcon from '@mui/icons-material/Store';
+import DevicesIcon from '@mui/icons-material/Devices';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import DiscountIcon from '@mui/icons-material/Discount';
+import FeedbackIcon from '@mui/icons-material/Feedback';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 const Sidebar = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -41,73 +55,79 @@ const CustomListItemIcon = styled(ListItemIcon)(({ theme }) => ({
 const sidebarItems = [
   {
     display: "Khách Hàng",
-    icon: null,
+    icon: <PersonIcon />,
     to: "/admin/customer-management/list",
     section: "customer-management",
   },
   {
     display: "Nhân Viên",
-    icon: null,
+    icon: <BadgeIcon />,
     to: "/admin/staff-management/list",
     section: "staff-management",
   },
   {
     display: "Địa chỉ",
-    icon: null,
+    icon: <HomeIcon />,
     to: "/admin/address-management/provine/list",
     section: "address-management",
   },
   {
     display: "Sản Phẩm",
-    icon: null,
+    icon: <RedeemIcon />,
     to: "/admin/product-management/list",
     section: "product-management",
   },
   {
     display: "Danh Mục",
-    icon: null,
+    icon: <CategoryIcon />,
     to: "/admin/catalog-management/list",
     section: "catalog-management",
   },
   {
     display: "Thương Hiệu",
-    icon: null,
+    icon: <BrandingWatermarkIcon />,
     to: "/admin/brand-management/list",
     section: "brand-management",
   },
   {
+    display: "Màu Sắc",
+    icon: <ColorLensIcon />,
+    to: "/admin/color-management/list",
+    section: "color-management",
+  },
+  {
     display: "Tính Năng Đặc Biệt",
-    icon: null,
+    icon: <SettingsSuggestIcon />,
     to: "/admin/special-feature-management/list",
     section: "special-feature-management",
   },
   {
     display: "Chi Nhánh",
-    icon: null,
+    icon: <StoreIcon />,
     to: "/admin/store-management/list",
     section: "store-management",
   },
   {
     display: "Hệ Điều Hành",
-    icon: null,
+    icon: <DevicesIcon />,
     to: "/admin/os-management/list",
     section: "os-management",
   },
   {
     display: "Đơn Hàng",
-    icon: null,
+    icon: <ShoppingBagIcon />,
     to: "/admin/order-management/list",
     section: "order-management",
   },
   {
     display: "Mã Giảm Giá",
-    icon: null,
+    icon: <DiscountIcon />,
     to: "/admin/promotion-management/list",
     section: "promotion-management",
   },
   {
     display: "Phản Hồi",
-    icon: null,
+    icon: <FeedbackIcon />,
     to: "/admin/feedback-management/list",
     section: "feedback-management",
   },
@@ -151,8 +171,11 @@ function AdminSidebar(props) {
             height: "100%",
             alignItems: "center",
           }}
+          style={{
+            fontSize: "16px",
+          }}
         >
-          Quản Lý
+          <ManageAccountsIcon /> Quản Lý
         </Typography>
       </Divider>
       <List>
@@ -184,8 +207,11 @@ function AdminSidebar(props) {
             height: "100%",
             alignItems: "center",
           }}
+          style={{
+            fontSize: "16px"
+          }}
         >
-          Thống Kê
+          <AnalyticsIcon /> Thống Kê
         </Typography>
       </Divider>
     </Sidebar>

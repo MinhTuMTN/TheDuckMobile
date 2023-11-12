@@ -1,8 +1,32 @@
-import { Box, FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled } from "@mui/material";
+import { Box, FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled, useTheme } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import FlexContainer from "../../../components/FlexContainer";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
+];
 
 const RootPageAddProduct = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -28,10 +52,21 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
     }
 }));
 
+function getStyles(name, personName, theme) {
+    return {
+        fontWeight:
+            personName.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    };
+}
+
 function AddProductPage() {
+    const theme = useTheme();
     const [brand, setBrand] = useState('');
     const [catalog, setCatalog] = useState('');
     const [os, setOS] = useState('');
+    const [specialFeatures, setSpecialFeatures] = useState([]);
 
     const handleBrandChange = (event) => {
         setBrand(event.target.value);
@@ -43,6 +78,17 @@ function AddProductPage() {
 
     const handleCatalogChange = (event) => {
         setCatalog(event.target.value);
+    };
+
+    const handleSpecialFeaturesChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+
+        setSpecialFeatures(
+            // On autofill we get a stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
     };
 
     return (
@@ -105,7 +151,7 @@ function AddProductPage() {
                     </Select>
                 </FormControl>
 
-                <FormControl sx={{ mt: 2, mb: 2 }}>
+                <FormControl sx={{ mt: 2 }}>
                     <FormLabel><Typography>Hệ điều hành</Typography></FormLabel>
                     <Select
                         displayEmpty
@@ -118,6 +164,36 @@ function AddProductPage() {
                         <MenuItem value={10}>Ten</MenuItem>
                         <MenuItem value={20}>Twenty</MenuItem>
                         <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ mt: 2, mb: 2 }}>
+                    <FormLabel><Typography>Tính Năng Đặc Biệt</Typography></FormLabel>
+                    <Select
+                        multiple
+                        displayEmpty
+                        value={specialFeatures}
+                        onChange={handleSpecialFeaturesChange}
+                        renderValue={(selected) => {
+                            if (selected.length === 0) {
+                                return <em>Lựa Chọn Tính Năng Đặc Biệt</em>;
+                            }
+
+                            return selected.join(', ');
+                        }}
+                        MenuProps={MenuProps}
+                    >
+                        <MenuItem disabled value="">
+                            <em>Lựa Chọn Tính Năng Đặc Biệt</em>
+                        </MenuItem>
+                        {names.map((name) => (
+                            <MenuItem
+                                key={name}
+                                value={name}
+                                style={getStyles(name, specialFeatures, theme)}
+                            >
+                                {name}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
                 <FlexContainer justifyContent="center">

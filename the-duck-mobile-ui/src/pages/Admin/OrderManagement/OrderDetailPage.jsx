@@ -77,301 +77,324 @@ function OrderDetailPage() {
             <Stack direction="column" spacing={4} sx={{ mt: 3 }}>
                 <Stack direction="row" spacing={2}>
                     <BorderTextBox label="Thông tin khách hàng" width="60%">
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "35%",
-                                }}
-                            >
-                                Mã khách hàng:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "65%",
-                                }}
-                            >
-                                MaKhachHang
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "35%",
-                                }}
-                            >
-                                Tên khách hàng:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "65%",
-                                }}
-                            >
-                                Nguyễn Văn A
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "35%",
-                                }}
-                            >
-                                Số điện thoại:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "65%",
-                                }}
-                            >
-                                0123456789
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "35%",
-                                }}
-                            >
-                                Địa chỉ giao hàng:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "65%",
-                                    textAlign: "justify",
-                                }}
-                            >
-                                Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí Minh
-                            </Typography>
+                        <Stack spacing={1}>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "35%",
+                                    }}
+                                >
+                                    Mã khách hàng:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "65%",
+                                    }}
+                                >
+                                    MaKhachHang
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "35%",
+                                    }}
+                                >
+                                    Tên khách hàng:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "65%",
+                                    }}
+                                >
+                                    Nguyễn Văn A
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "35%",
+                                    }}
+                                >
+                                    Số điện thoại:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "65%",
+                                    }}
+                                >
+                                    0123456789
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "35%",
+                                    }}
+                                >
+                                    Địa chỉ giao hàng:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "65%",
+                                        textAlign: "justify",
+                                    }}
+                                >
+                                    Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí Minh
+                                </Typography>
+                            </Stack>
                         </Stack>
                     </BorderTextBox>
 
                     <BorderTextBox label="Thông tin đơn hàng" width="40%">
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "40%",
-                                }}
-                            >
-                                Mã đơn hàng:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "60%",
-                                }}
-                            >
-                                MaDonHang
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "40%",
-                                }}
-                            >
-                                Tạm tính:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "60%",
-                                }}
-                            >
-                                <FormatCurrency amount="220000" />
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "40%",
-                                }}
-                            >
-                                Đã giảm:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "60%",
-                                }}
-                            >
-                                <FormatCurrency amount="20000" />
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "40%",
-                                }}
-                            >
-                                Thanh toán:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "60%",
-                                }}
-                            >
-                                <FormatCurrency amount="200000" />
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "40%",
-                                }}
-                            >
-                                Trạng thái:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "60%",
-                                }}
-                            >
-                                Đã nhận hàng
-                            </Typography>
+                        <Stack spacing={1}>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "40%",
+                                    }}
+                                >
+                                    Mã đơn hàng:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "60%",
+                                    }}
+                                >
+                                    MaDonHang
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "40%",
+                                    }}
+                                >
+                                    Tạm tính:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "60%",
+                                    }}
+                                >
+                                    <FormatCurrency amount="220000" />
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "40%",
+                                    }}
+                                >
+                                    Đã giảm:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "60%",
+                                    }}
+                                >
+                                    <FormatCurrency amount="20000" />
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "40%",
+                                    }}
+                                >
+                                    Thanh toán:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "60%",
+                                    }}
+                                >
+                                    <FormatCurrency amount="200000" />
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "40%",
+                                    }}
+                                >
+                                    Trạng thái:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "60%",
+                                    }}
+                                >
+                                    Đã nhận hàng
+                                </Typography>
+                            </Stack>
                         </Stack>
                     </BorderTextBox>
                 </Stack>
                 <Stack direction="row" spacing={2}>
                     <BorderTextBox label="Thông tin chi nhánh" width="60%">
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "30%",
-                                }}
-                            >
-                                Mã chi nhánh:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "70%",
-                                }}
-                            >
-                                MaChiNhanh
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "30%",
-                                }}
-                            >
-                                Tên chi nhánh:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "70%",
-                                }}
-                            >
-                                Chi nhánh Hồ Chí Minh
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "30%",
-                                }}
-                            >
-                                Địa chỉ:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "70%",
-                                    textAlign: "justify",
-                                }}
-                            >
-                                Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí Minh
-                            </Typography>
+                        <Stack spacing={1}>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "30%",
+                                    }}
+                                >
+                                    Mã chi nhánh:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "70%",
+                                    }}
+                                >
+                                    MaChiNhanh
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "30%",
+                                    }}
+                                >
+                                    Tên chi nhánh:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "70%",
+                                    }}
+                                >
+                                    Chi nhánh Hồ Chí Minh
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "30%",
+                                    }}
+                                >
+                                    Địa chỉ:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "70%",
+                                        textAlign: "justify",
+                                    }}
+                                >
+                                    Số 1 Võ Văn Ngân, Linh Chiểu, Thủ Đức, Thành phố Hồ Chí Minh
+                                </Typography>
+                            </Stack>
                         </Stack>
                     </BorderTextBox>
                     <BorderTextBox label="Thông tin nhân viên" width="40%">
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "45%",
-                                }}
-                            >
-                                Mã nhân viên:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "55%",
-                                }}
-                            >
-                                MaNhanVien
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "45%",
-                                }}
-                            >
-                                Tên nhân viên:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "55%",
-                                }}
-                            >
-                                Nguyễn Văn A
-                            </Typography>
-                        </Stack>
-                        <Stack direction="row">
-                            <Typography
-                                variant="h5"
-                                style={{
-                                    width: "45%",
-                                }}
-                            >
-                                Số điện thoại:
-                            </Typography>
-                            <Typography
-                                style={{
-                                    fontSize: "18px",
-                                    flexWrap: "wrap",
-                                    width: "55%",
-                                }}
-                            >
-                                0987654321
-                            </Typography>
+                        <Stack spacing={1}>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "45%",
+                                    }}
+                                >
+                                    Mã nhân viên:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "55%",
+                                    }}
+                                >
+                                    MaNhanVien
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "45%",
+                                    }}
+                                >
+                                    Tên nhân viên:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "55%",
+                                    }}
+                                >
+                                    Nguyễn Văn A
+                                </Typography>
+                            </Stack>
+                            <Stack direction="row">
+                                <Typography
+                                    variant="h5"
+                                    style={{
+                                        width: "45%",
+                                    }}
+                                >
+                                    Số điện thoại:
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    style={{
+                                        fontSize: "18px",
+                                        flexWrap: "wrap",
+                                        width: "55%",
+                                    }}
+                                >
+                                    0987654321
+                                </Typography>
+                            </Stack>
                         </Stack>
                     </BorderTextBox>
                 </Stack>
@@ -379,7 +402,7 @@ function OrderDetailPage() {
 
             <Typography
                 variant="h5"
-                sx={{ mt: 1 }}
+                sx={{ mt: 3 }}
                 style={{
                     fontSize: "18px",
                 }}

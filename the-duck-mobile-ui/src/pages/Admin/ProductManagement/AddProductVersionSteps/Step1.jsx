@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled, useTheme } from "@mui/material";
+import { FormControl, FormLabel, Grid, MenuItem, Paper, Select, Typography, styled } from "@mui/material";
 import dayjs from 'dayjs';
 import 'dayjs/locale/en-gb';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -7,30 +7,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import FlexContainer from "../../../../components/FlexContainer";
 import MuiTextFeild from "../../../../components/MuiTextFeild";
 import { useState } from "react";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-];
 
 const FormAddProductVersion = styled(Paper)(({ theme }) => ({
     display: "flex",
@@ -59,22 +35,10 @@ const CustomImage = styled('img')(({ theme }) => ({
     maxWidth: "315px",
 }));
 
-function getStyles(name, personName, theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
-
 function Step1({ value, onChange }) {
-    const theme = useTheme();
-
     const [screenResolution, setScreenResolution] = useState('');
     const [color, setColor] = useState('');
     const [date, setDate] = useState(dayjs());
-    const [specialFeatures, setSpecialFeatures] = useState([]);
     const [image, setImage] = useState();
 
     const handleImageChange = (event) => {
@@ -91,17 +55,6 @@ function Step1({ value, onChange }) {
 
     const handleColorChange = (event) => {
         setColor(event.target.value);
-    };
-
-    const handleSpecialFeaturesChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-
-        setSpecialFeatures(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
     };
 
     return (
@@ -150,36 +103,6 @@ function Step1({ value, onChange }) {
                         />
                     </Grid>
                 </Grid>
-                <FormControl sx={{ mt: 2 }}>
-                    <FormLabel><Typography>Tính Năng Đặc Biệt</Typography></FormLabel>
-                    <Select
-                        multiple
-                        displayEmpty
-                        value={specialFeatures}
-                        onChange={handleSpecialFeaturesChange}
-                        renderValue={(selected) => {
-                            if (selected.length === 0) {
-                                return <em>Lựa Chọn Tính Năng Đặc Biệt</em>;
-                            }
-
-                            return selected.join(', ');
-                        }}
-                        MenuProps={MenuProps}
-                    >
-                        <MenuItem disabled value="">
-                            <em>Lựa Chọn Tính Năng Đặc Biệt</em>
-                        </MenuItem>
-                        {names.map((name) => (
-                            <MenuItem
-                                key={name}
-                                value={name}
-                                style={getStyles(name, specialFeatures, theme)}
-                            >
-                                {name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
                 <Grid container spacing={1}>
 
                     <Grid item xs={6}>
