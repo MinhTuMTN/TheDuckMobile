@@ -88,3 +88,7 @@ html {
   display: flex !important;
   flex-direction: column !important;
 }
+
+.custom-select div {
+  font-size: 14px !important;
+}

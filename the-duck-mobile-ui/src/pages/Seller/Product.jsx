@@ -198,6 +198,7 @@ function Product(props) {
               direction={"row"}
               spacing={1}
               paddingLeft={2}
+              paddingBottom={1}
               sx={{
                 borderBottom: "1px solid #e0e0e0",
               }}
