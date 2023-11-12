@@ -17,7 +17,6 @@ import TablePaginationActions from "../../../../components/TablePaginationAction
 import { useEffect, useState } from "react";
 import MuiButton from "../../../../components/MuiButton";
 import { Link } from "react-router-dom";
-import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Search } from "@mui/icons-material";
