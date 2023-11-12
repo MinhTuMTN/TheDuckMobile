@@ -40,16 +40,12 @@ function ProfileLayout(props) {
   const handleGetInfo = async () => {
     const response = await getInfo();
     if (response.success) setInfo(response.data.data);
-    else {
-      setToken(null);
-      navigate("/login", { replace: true });
-    }
   };
   useEffect(() => {
     handleGetInfo();
   }, []);
   return (
-    <UserInfoContext.Provider value={info}>
+    <UserInfoContext.Provider value={[info, setInfo]}>
       <Helmet>
         <title>The Duck Mobile</title>
         <meta name="description" content="The Duck Mobile" />

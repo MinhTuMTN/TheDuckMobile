@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import DialogForm from "./DialogForm";
 import {
   FormControl,
@@ -16,21 +16,17 @@ import { useNavigate } from "react-router-dom";
 function UserEditInfomation(props) {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { open, setOpen, initValue } = props;
+  const { open, setOpen, initValue, onChange } = props;
   const [editInfomation, setEditInfomation] = React.useState({
-    fullName: initValue.fullName,
-    gender: initValue.gender,
+    fullName: initValue && initValue.fullName,
+    gender: initValue && initValue.gender,
   });
 
   const handleEditInfomation = async () => {
     const response = await editInfo(editInfomation);
     if (response.success) {
       enqueueSnackbar("Chỉnh sửa thông tin thành công", { variant: "success" });
-
-      setTimeout(() => {
-        setOpen(false);
-        navigate(0);
-      }, 500);
+      onChange(response.data.data);
     } else {
       enqueueSnackbar("Chỉnh sửa thông tin thất bại", { variant: "error" });
     }
@@ -95,7 +91,6 @@ function UserEditInfomation(props) {
         <FormControl>
           <FormLabel>Họ tên</FormLabel>
           <MuiTextFeild
-            fullwidth
             value={editInfomation.fullName}
             onChange={(e) =>
               setEditInfomation((prev) => {
@@ -110,15 +105,11 @@ function UserEditInfomation(props) {
 
         <FormControl>
           <FormLabel>Số điện thoại</FormLabel>
-          <MuiTextFeild
-            fullwidth
-            value={initValue && initValue.phone}
-            disabled
-          />
+          <MuiTextFeild value={initValue && initValue.phone} disabled />
         </FormControl>
       </Stack>
     </DialogForm>
   );
 }
 
-export default UserEditInfomation;
+export default memo(UserEditInfomation);

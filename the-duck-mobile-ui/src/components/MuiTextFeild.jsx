@@ -21,15 +21,17 @@ MuiTextFeild.propTypes = {
   label: PropTypes.string,
   name: PropTypes.string,
   size: PropTypes.string,
-  fontSize: PropTypes.string || PropTypes.number,
+  fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   value: PropTypes.string,
   onChange: PropTypes.func,
   error: PropTypes.bool,
   children: PropTypes.node,
+  fullWidth: PropTypes.bool,
 };
 
 MuiTextFeild.defaultProps = {
   multiline: false,
+  fullWidth: false,
 };
 
 function MuiTextFeild(props) {
@@ -43,6 +45,7 @@ function MuiTextFeild(props) {
     error = null,
     children,
     color,
+    fullWidth,
     ...others
   } = props;
 
@@ -59,8 +62,8 @@ function MuiTextFeild(props) {
       color={color}
       {...(error && { error: true, helperText: error })}
       InputProps={{ style: { fontSize: props.fontSize } }}
+      fullWidth={fullWidth}
       {...others}
-      fullWidth
     >
       {children}
     </CustomTextField>

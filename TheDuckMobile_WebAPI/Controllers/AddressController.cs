@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TheDuckMobile_WebAPI.Models.Request;
 using TheDuckMobile_WebAPI.Models.Response;
 using TheDuckMobile_WebAPI.Services;
 
@@ -16,7 +19,7 @@ namespace TheDuckMobile_WebAPI.Controllers
             _addressServices = addressServices;
         }
 
-        [HttpGet("provines")]
+        [HttpGet("provinces")]
         public async Task<IActionResult> GetProvines()
         {
             var provines = await _addressServices.GetProvines();
@@ -49,6 +52,78 @@ namespace TheDuckMobile_WebAPI.Controllers
                 Success = true,
                 Message = "Success",
                 Data = wards
+            });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddAddress([FromBody] UserAddAddressRequest request)
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _addressServices.AddUserAddress(Guid.Parse(id!), request);
+            if (result == null)
+            {
+                return BadRequest(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Add address failed"
+                });
+            }
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = result
+            });
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUserAddresses()
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _addressServices.GetUserAddresses(Guid.Parse(id!));
+            if (result == null)
+            {
+                return BadRequest(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Get user addresses failed"
+                });
+            }
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = result
+            });
+        }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> DeleteAddress([FromQuery] Guid addressId)
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _addressServices.DeleteUserAddress(Guid.Parse(id!), addressId);
+            if (result == null)
+            {
+                return BadRequest(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Delete address failed"
+                });
+            }
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = result
             });
         }
     }
