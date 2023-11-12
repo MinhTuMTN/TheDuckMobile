@@ -6,11 +6,15 @@ import {
   RadioGroup,
   Stack,
 } from "@mui/material";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { useSnackbar } from "notistack";
 import React, { memo } from "react";
 import { editInfo } from "../services/UserService";
 import DialogForm from "./DialogForm";
 import MuiTextFeild from "./MuiTextFeild";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 function UserEditInfomation(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -18,6 +22,7 @@ function UserEditInfomation(props) {
   const [editInfomation, setEditInfomation] = React.useState({
     fullName: initValue && initValue.fullName,
     gender: initValue && initValue.gender,
+    dateOfBirth: initValue && initValue.dateOfBirth,
   });
 
   const handleEditInfomation = async () => {
@@ -99,6 +104,26 @@ function UserEditInfomation(props) {
               })
             }
           />
+        </FormControl>
+
+        <FormControl sx={{ paddingY: 1 }}>
+          <FormLabel>Ngày sinh</FormLabel>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              format="DD/MM/YYYY"
+              defaultValue={dayjs(initValue && initValue.dateOfBirth)}
+              value={dayjs(editInfomation.dateOfBirth)}
+              onChange={(newValue) => {
+                setEditInfomation((prev) => ({
+                  ...prev,
+                  dateOfBirth: newValue.toDate(),
+                }));
+              }}
+              sx={{
+                width: "fit-content",
+              }}
+            />
+          </LocalizationProvider>
         </FormControl>
 
         <FormControl>
