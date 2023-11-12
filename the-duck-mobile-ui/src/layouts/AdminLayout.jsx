@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import React, { Fragment, createContext, useEffect, useState } from 'react'
+import React, { Fragment, createContext, useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 import { getAllProducts } from "../services/Admin/ProductService";
 
 const RootPageUser = styled(Box)(({ theme }) => ({
@@ -26,7 +26,7 @@ function AdminLayout(props) {
 
   const handleGetProducts = async () => {
     const productsResponse = await getAllProducts();
-    if (productsResponse.success){
+    if (productsResponse.success) {
       setAllProducts(productsResponse.data.data);
     }
   };

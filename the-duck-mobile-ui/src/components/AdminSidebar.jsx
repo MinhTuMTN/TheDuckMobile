@@ -1,32 +1,32 @@
 import styled from "@emotion/styled";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
+import BadgeIcon from "@mui/icons-material/Badge";
+import BrandingWatermarkIcon from "@mui/icons-material/BrandingWatermark";
+import CategoryIcon from "@mui/icons-material/Category";
+import ColorLensIcon from "@mui/icons-material/ColorLens";
+import DevicesIcon from "@mui/icons-material/Devices";
+import DiscountIcon from "@mui/icons-material/Discount";
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import HomeIcon from "@mui/icons-material/Home";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import PersonIcon from "@mui/icons-material/Person";
+import RedeemIcon from "@mui/icons-material/Redeem";
+import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import StoreIcon from "@mui/icons-material/Store";
 import {
-  Paper,
+  Divider,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Divider,
+  Paper,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 import CustomLink from "./CustomLink";
-import PersonIcon from '@mui/icons-material/Person';
-import BadgeIcon from '@mui/icons-material/Badge';
-import HomeIcon from '@mui/icons-material/Home';
-import RedeemIcon from '@mui/icons-material/Redeem';
-import CategoryIcon from '@mui/icons-material/Category';
-import BrandingWatermarkIcon from '@mui/icons-material/BrandingWatermark';
-import ColorLensIcon from '@mui/icons-material/ColorLens';
-import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
-import StoreIcon from '@mui/icons-material/Store';
-import DevicesIcon from '@mui/icons-material/Devices';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import DiscountIcon from '@mui/icons-material/Discount';
-import FeedbackIcon from '@mui/icons-material/Feedback';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 const Sidebar = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -198,7 +198,7 @@ function AdminSidebar(props) {
             alignItems: "center",
           }}
           style={{
-            fontSize: "16px"
+            fontSize: "16px",
           }}
         >
           <AnalyticsIcon /> Thống Kê
