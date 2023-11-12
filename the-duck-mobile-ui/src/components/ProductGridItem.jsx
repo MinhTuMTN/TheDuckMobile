@@ -25,10 +25,10 @@ const ProductGridItem = ({ productInfo, styled }) => {
           height: "auto",
         }}
         alt="dien-thoai"
-        src={productInfo.image}
+        src={productInfo.thumbnail}
       />
       <Typography variant="h5" align="left" style={{ margin: "0 5px 0 5px" }}>
-        {productInfo.name}
+        {productInfo.productName}
       </Typography>
       {/* <Typography
                 variant="body2"
@@ -43,7 +43,7 @@ const ProductGridItem = ({ productInfo, styled }) => {
         }}
         style={{ margin: "5px" }}
       >
-        <FormatCurrency amount={productInfo.price} />
+        <FormatCurrency amount={productInfo.productPrice} />
       </Typography>
       <RatingContainer>
         <Typography
@@ -62,7 +62,7 @@ const ProductGridItem = ({ productInfo, styled }) => {
             color: "grey",
           }}
         >
-          ({productInfo.voteList.length})
+          ({productInfo.numberOfVotes})
         </Typography>
       </RatingContainer>
     </CardContainer>

@@ -18,7 +18,7 @@ namespace TheDuckMobile_WebAPI.Controllers
 
         [HttpGet("best-selling")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetBestSellingProducts([FromQuery] int numberOfProducts = 5)
+        public async Task<IActionResult> GetBestSellingProducts([FromQuery] int numberOfProducts = 8)
         {
             var bestSellingProducts = await _productServices.GetBestSellingProducts(numberOfProducts);
             return Ok(new GenericResponse
@@ -31,7 +31,7 @@ namespace TheDuckMobile_WebAPI.Controllers
 
         [HttpGet("newest")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetNewestProducts([FromQuery] int numberOfProducts = 5)
+        public async Task<IActionResult> GetNewestProducts([FromQuery] int numberOfProducts = 8)
         {
             var newestProducts = await _productServices.GetNewestProducts(numberOfProducts);
             return Ok(new GenericResponse
@@ -44,7 +44,7 @@ namespace TheDuckMobile_WebAPI.Controllers
 
         [HttpGet("highly-rated")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetHighlyRatedProducts([FromQuery] int numberOfProducts = 5)
+        public async Task<IActionResult> GetHighlyRatedProducts([FromQuery] int numberOfProducts = 8)
         {
             var highlyRatedProducts = await _productServices.GetHighlyRatedProducts(numberOfProducts);
             return Ok(new GenericResponse
