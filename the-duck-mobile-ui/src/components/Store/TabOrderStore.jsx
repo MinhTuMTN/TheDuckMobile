@@ -2,16 +2,16 @@ import styled from "@emotion/styled";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Tab } from "@mui/material";
 import React, { useState } from "react";
+import ListOrder from "./ListOrder";
 
 const CustomTabList = styled(TabList)(({ theme }) => ({
-  margin: "25px 0 0 0",
-  textAlign: "left",
+  borderBottom: "1px solid #e0e0e0",
 }));
 
 const CustomTab = styled(Tab)(({ theme }) => ({
   width: "auto",
   fontSize: "14px",
-  color: "#e03e3e",
+  color: "#6c737f",
 }));
 function TabOrderStore(props) {
   const [tab, setTab] = useState("1");
@@ -23,7 +23,7 @@ function TabOrderStore(props) {
     <>
       <TabContext value={tab}>
         <Box>
-          <CustomTabList onChange={handleChangeTab} centered>
+          <CustomTabList onChange={handleChangeTab}>
             <CustomTab label="Tất cả" value="1" />
             <CustomTab label="Chờ xác nhận" value="2" />
             <CustomTab label="Chuẩn bị hàng" value="3" />
@@ -32,8 +32,15 @@ function TabOrderStore(props) {
             <CustomTab label="Đã huỷ" value="6" />
           </CustomTabList>
         </Box>
-        <TabPanel value="1"></TabPanel>
-        <TabPanel value="2"></TabPanel>
+        <TabPanel
+          value="1"
+          sx={{
+            paddingX: "0px",
+          }}
+        >
+          <ListOrder />
+        </TabPanel>
+        <TabPanel value="2">Hello 2</TabPanel>
         <TabPanel value="3"></TabPanel>
         <TabPanel value="4"></TabPanel>
         <TabPanel value="5"></TabPanel>

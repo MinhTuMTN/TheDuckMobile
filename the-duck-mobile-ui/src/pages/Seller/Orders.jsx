@@ -1,4 +1,4 @@
-import { Box, Container, Paper, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import TabOrderStore from "../../components/Store/TabOrderStore";
 
@@ -19,8 +19,7 @@ function Orders(props) {
             elevation={3}
             sx={{
               paddingBottom: 2,
-              paddingLeft: 8,
-              paddingTop: 2,
+              //paddingX: 8,
               borderTop: "1px solid #e0e0e0",
             }}
           >

@@ -1,13 +1,25 @@
 import React from "react";
 import { Box, InputAdornment, TextField } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import PropTypes from "prop-types";
+
+SearchSeller.prototype = {
+  borderRadius: PropTypes.number,
+  borderTopLeftRadius: PropTypes.number,
+  borderTopRightRadius: PropTypes.number,
+  borderBottomLeftRadius: PropTypes.number,
+  borderBottomRightRadius: PropTypes.number,
+};
+
 function SearchSeller(props) {
+  const { borderRadius, borderTopLeftRadius, borderTopRightRadius } = props;
   return (
     <Box
       sx={{
         padding: 2,
-        borderTopLeftRadius: "25px",
-        borderTopRightRadius: "25px",
+        borderTopLeftRadius: { borderTopLeftRadius },
+        borderTopRightRadius: { borderTopRightRadius },
+        borderRadius: { borderRadius },
         borderBottom: "1px solid #e0e0e0",
       }}
     >
