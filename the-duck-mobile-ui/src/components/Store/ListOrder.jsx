@@ -2,8 +2,14 @@ import { Box } from "@mui/material";
 import React from "react";
 import SearchSeller from "./SearchSeller";
 import OrderItem from "./OrderItem";
+import PropTypes from "prop-types";
+
+ListOrder.propTypes = {
+  items: PropTypes.array,
+};
 
 function ListOrder(props) {
+  const { items } = props;
   return (
     <>
       <Box
@@ -17,9 +23,7 @@ function ListOrder(props) {
         <SearchSeller borderRadius="15px" />
       </Box>
 
-      <OrderItem status={"Chờ xác nhận"} />
-      <OrderItem status={"Chuẩn bị hàng"} />
-      <OrderItem status={"Đang giao hàng"} />
+      {items && items.map((item) => <OrderItem order={item} key={item.id} />)}
     </>
   );
 }

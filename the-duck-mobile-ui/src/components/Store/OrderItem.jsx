@@ -3,19 +3,25 @@ import React from "react";
 import PropTypes from "prop-types";
 import FormatCurrency from "../FormatCurrency";
 OrderItem.propTypes = {
-  status: PropTypes.string,
+  order: PropTypes.object,
 };
 function OrderItem(props) {
+  const { order } = props;
   const statusColors = {
     "Chờ xác nhận": "primary",
     "Chuẩn bị hàng": "info",
     "Đang giao hàng": "warning",
     "Đã hoàn thành": "success",
-    "Đã hủy": "error",
+    "Đã huỷ": "error",
   };
+  const options = { month: "short", day: "numeric" };
+  const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+    new Date(order.date)
+  );
 
   // Màu sắc của Chip dựa trên giá trị status
-  const chipColor = statusColors[props.status] || "default";
+  const chipColor = statusColors[order.status] || "default";
+
   return (
     <Stack
       direction={"row"}
@@ -40,8 +46,12 @@ function OrderItem(props) {
             alignItems: "center",
           }}
         >
-          <Typography variant="body1" fontWeight={"500"}>
-            12/11
+          <Typography
+            variant="body1"
+            fontWeight={"600"}
+            style={{ fontSize: "15px", color: "#374151" }}
+          >
+            {formattedDate}
           </Typography>
         </Box>
         <Stack direction={"column"} spacing={0.2}>
@@ -54,7 +64,7 @@ function OrderItem(props) {
               textTransform: "uppercase",
             }}
           >
-            Đơn hàng 1
+            Đơn hàng {order.id}
           </Typography>
           <Typography
             variant="body1"
@@ -64,12 +74,12 @@ function OrderItem(props) {
               color: "#6b7280",
             }}
           >
-            Tổng đơn hàng: <FormatCurrency amount={1000000} />
+            Tổng đơn hàng: <FormatCurrency amount={order.total} />
           </Typography>
         </Stack>
       </Stack>
       <Box width={"auto"}>
-        <Chip color={chipColor} label={props.status} />
+        <Chip color={chipColor} label={order.status} />
       </Box>
     </Stack>
   );

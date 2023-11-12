@@ -83,3 +83,7 @@ html {
     transform: rotate(360deg);
   }
 }
+
+.custom-select div {
+  font-size: 14px !important;
+}
