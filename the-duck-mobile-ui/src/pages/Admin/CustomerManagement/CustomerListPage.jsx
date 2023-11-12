@@ -21,6 +21,7 @@ import MuiButton from "../../../components/MuiButton";
 import EditIcon from '@mui/icons-material/Edit';
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { Search } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -146,7 +147,11 @@ function CustomerListPage() {
                                     {row.protein}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton color="oldPrimary"><InfoIcon /></MuiButton>
+                                    <MuiButton
+                                    component={Link}
+                                    color="oldPrimary"
+                                    to="/admin/customer-management/detail"
+                                    ><InfoIcon /></MuiButton>
                                     <MuiButton color="teal"><EditIcon /></MuiButton>
                                     <MuiButton color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>

@@ -6,7 +6,6 @@ import { ProtectedLayout } from "../layouts/ProtectedLayout";
 import NotFound from "../pages/NotFound";
 
 import AdminLayout from "../layouts/AdminLayout";
-import AccountListPage from "../pages/Admin/AccountManagement/AccountListPage";
 import AddBrandPage from "../pages/Admin/BrandManagement/AddBrandPage";
 import BrandListPage from "../pages/Admin/BrandManagement/BrandListPage";
 import EditBrandPage from "../pages/Admin/BrandManagement/EditBrandPage";
@@ -36,6 +35,28 @@ import StoreLayout from "../layouts/StoreLayout";
 import Product from "../pages/Seller/Product";
 import Orders from "../pages/Seller/Orders";
 import OrderDetails from "../pages/Seller/OrderDetails";
+import AddProductVersionPage from "../pages/Admin/ProductManagement/AddProductVersionPage";
+import EditProductPage from "../pages/Admin/ProductManagement/EditProductPage";
+import ProductDetailPage from "../pages/Admin/ProductManagement/ProductDetailPage";
+import EditProductVersionPage from "../pages/Admin/ProductManagement/EditProductVersionPage";
+import StoreDetailPage from "../pages/Admin/StoreManagement/StoreDetailPage";
+import OrderDetailPage from "../pages/Admin/OrderManagement/OrderDetailPage";
+import AddStaffPage from "../pages/Admin/StaffManagement/AddStaffPage";
+import EditStaffPage from "../pages/Admin/StaffManagement/EditStaffPage";
+import StaffDetailPage from "../pages/Admin/StaffManagement/StaffDetailPage";
+import CustomerDetailPage from "../pages/Admin/CustomerManagement/CustomerDetailPage";
+import ProvineListPage from "../pages/Admin/AddressManagement/ProvineManagement/ProvineListPage";
+import AddProvinePage from "../pages/Admin/AddressManagement/ProvineManagement/AddProvinePage";
+import EditProvinePage from "../pages/Admin/AddressManagement/ProvineManagement/EditProvinePage";
+import AddDistrictPage from "../pages/Admin/AddressManagement/DistrictManagement/AddDistrictPage";
+import DistrictListPage from "../pages/Admin/AddressManagement/DistrictManagement/DistrictListPage";
+import EditDistrictPage from "../pages/Admin/AddressManagement/DistrictManagement/EditDistrictPage";
+import WardListPage from "../pages/Admin/AddressManagement/WardManagement/WardListPage";
+import AddWardPage from "../pages/Admin/AddressManagement/WardManagement/AddWardPage";
+import EditWardPage from "../pages/Admin/AddressManagement/WardManagement/EditWardPage";
+import ColorListPage from "../pages/Admin/ColorManagement/ColorListPage";
+import AddColorPage from "../pages/Admin/ColorManagement/AddColorPage";
+import EditColorPage from "../pages/Admin/ColorManagement/EditColorPage";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -136,6 +157,54 @@ function Router(props) {
       element: <AdminLayout />,
       children: [
         {
+          path: "address-management/provine/list",
+          element: <ProvineListPage />,
+        },
+        {
+          path: "address-management/provine/add",
+          element: <AddProvinePage />,
+        },
+        {
+          path: "address-management/provine/edit",
+          element: <EditProvinePage />,
+        },
+        {
+          path: "address-management/provine/detail",
+          element: <DistrictListPage />,
+        },
+        {
+          path: "address-management/provine/district/add",
+          element: <AddDistrictPage />,
+        },
+        {
+          path: "address-management/provine/district/edit",
+          element: <EditDistrictPage />,
+        },
+        {
+          path: "address-management/provine/district/detail",
+          element: <WardListPage />,
+        },
+        {
+          path: "address-management/provine/district/ward/add",
+          element: <AddWardPage />,
+        },
+        {
+          path: "address-management/provine/district/ward/edit",
+          element: <EditWardPage />,
+        },
+        {
+          path: "color-management/list",
+          element: <ColorListPage />,
+        },
+        {
+          path: "color-management/add",
+          element: <AddColorPage />,
+        },
+        {
+          path: "color-management/edit",
+          element: <EditColorPage />,
+        },
+        {
           path: "catalog-management/list",
           element: <CatalogListPage />,
         },
@@ -156,16 +225,46 @@ function Router(props) {
           element: <AddProductPage />,
         },
         {
-          path: "account-management/list",
-          element: <AccountListPage />,
+          path: "product-management/add-product-version",
+          element: <AddProductVersionPage />,
+        },
+        {
+          path: "product-management/edit",
+          element: <EditProductPage />,
+        },
+        {
+          path: "product-management/detail",
+          element: <ProductDetailPage />,
+        },
+        {
+          path: "product-management/edit/product-version",
+          element: <EditProductVersionPage />,
         },
         {
           path: "customer-management/list",
           element: <CustomerListPage />,
         },
+
+        {
+          path: "customer-management/detail",
+          element: <CustomerDetailPage />,
+        },
         {
           path: "staff-management/list",
           element: <StaffListPage />,
+        },
+        {
+          path: "staff-management/add",
+          element: <AddStaffPage />,
+        },
+        {
+          path: "staff-management/edit",
+          element: <EditStaffPage />,
+        },
+
+        {
+          path: "staff-management/detail",
+          element: <StaffDetailPage />,
         },
         {
           path: "brand-management/list",
@@ -192,6 +291,10 @@ function Router(props) {
           element: <EditStorePage />,
         },
         {
+          path: "store-management/detail",
+          element: <StoreDetailPage />,
+        },
+        {
           path: "os-management/list",
           element: <OSListPage />,
         },
@@ -206,6 +309,10 @@ function Router(props) {
         {
           path: "order-management/list",
           element: <OrderListPage />,
+        },
+        {
+          path: "order-management/detail",
+          element: <OrderDetailPage />,
         },
         {
           path: "promotion-management/list",

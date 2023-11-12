@@ -32,7 +32,7 @@ const FormAddProduct = styled(Paper)(({ theme }) => ({
     flexDirection: "column",
     justifyContent: "center",
     padding: theme.spacing(4),
-    width: "80%",
+    width: "90%",
     backgroundColor: "white",
     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
 }));
@@ -57,10 +57,12 @@ function getStyles(name, personName, theme) {
 
 function Step1({ value, onChange }) {
     const theme = useTheme();
+
     const [brand, setBrand] = useState('');
-    const [catalog, setCatalog] = useState([]);
+    const [catalog, setCatalog] = useState('');
     const [os, setOS] = useState('');
     const [image, setImage] = useState();
+    const [specialFeature, setSpecialFeature] = useState([]);
 
     const handleImageChange = (event) => {
         setImage(URL.createObjectURL(event.target.files[0]));
@@ -79,60 +81,78 @@ function Step1({ value, onChange }) {
     };
 
     const handleCatalogChange = (event) => {
+        setCatalog(event.target.value);
+    };
+
+    const handleSpecialFeatureChange = (event) => {
         const {
             target: { value },
         } = event;
 
-        setCatalog(
+        setSpecialFeature(
             // On autofill we get a stringified value.
             typeof value === 'string' ? value.split(',') : value,
         );
     };
-
     return (
         <FlexContainer justifyContent="center">
             <FormAddProduct>
                 <Typography variant="h3">Thêm sản phẩm mới</Typography>
                 <Grid container spacing={1}>
                     <Grid item xs={7}>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <MuiTextFeild
-                                    label="Tên sản phẩm"
-                                    margin="normal"
-                                    autoFocus
-                                    required
-                                    value={value.valueStep1}
-                                    onChange={handleChange}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <MuiTextFeild
-                                    label="Mô tả"
-                                    margin="normal"
-                                    required
-                                    multiline
-                                    rows={11}
-                                />
-                            </Grid>
-                        </Grid>
+
+                        <MuiTextFeild
+                            label="Tên sản phẩm"
+                            margin="normal"
+                            autoFocus
+                            required
+                            value={value.valueStep1}
+                            onChange={handleChange}
+                        />
+
+                        <MuiTextFeild
+                            label="Số lượng"
+                            margin="normal"
+                            required
+                        />
+
+                        <MuiTextFeild
+                            label="Mô tả"
+                            margin="normal"
+                            required
+                            multiline
+                            rows={8}
+                        />
+
                     </Grid>
                     <Grid item xs={5}>
-                        <Grid container>
-                            <Grid item xs={12}>
-                                <CustomImage src={image} />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <MuiTextFeild
-                                    type="file"
-                                    required
-                                    onChange={handleImageChange}
-                                    sx={{ mt: 2 }}
-                                />
-                            </Grid>
-                        </Grid>
+
+                        <CustomImage src={image} />
+
+                        <MuiTextFeild
+                            type="file"
+                            required
+                            onChange={handleImageChange}
+                            sx={{ mt: 2 }}
+                        />
                     </Grid>
                 </Grid>
+
+                <FormControl sx={{ mt: 1 }}>
+                    <FormLabel><Typography>Danh Mục</Typography></FormLabel>
+                    <Select
+                        displayEmpty
+                        value={catalog}
+                        onChange={handleCatalogChange}
+                    >
+                        <MenuItem disabled value="">
+                            <em>Lựa Chọn Danh Mục</em>
+                        </MenuItem>
+                        <MenuItem value={10}>Ten</MenuItem>
+                        <MenuItem value={20}>Twenty</MenuItem>
+                        <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                </FormControl>
 
                 <FormControl sx={{ mt: 1 }}>
                     <FormLabel><Typography>Thương Hiệu</Typography></FormLabel>
@@ -150,37 +170,6 @@ function Step1({ value, onChange }) {
                     </Select>
                 </FormControl>
 
-                <FormControl sx={{ mt: 2 }}>
-                    <FormLabel><Typography>Danh Mục</Typography></FormLabel>
-                    <Select
-                        multiple
-                        displayEmpty
-                        value={catalog}
-                        onChange={handleCatalogChange}
-                        renderValue={(selected) => {
-                            if (selected.length === 0) {
-                                return <em>Lựa Chọn Danh Mục</em>;
-                            }
-
-                            return selected.join(', ');
-                        }}
-                        MenuProps={MenuProps}
-                    >
-                        <MenuItem disabled value="">
-                            <em>Lựa Chọn Danh Mục</em>
-                        </MenuItem>
-                        {names.map((name) => (
-                            <MenuItem
-                                key={name}
-                                value={name}
-                                style={getStyles(name, catalog, theme)}
-                            >
-                                {name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
                 <FormControl sx={{ mt: 2, mb: 2 }}>
                     <FormLabel><Typography>Hệ Điều Hành</Typography></FormLabel>
                     <Select
@@ -194,6 +183,36 @@ function Step1({ value, onChange }) {
                         <MenuItem value={10}>Ten</MenuItem>
                         <MenuItem value={20}>Twenty</MenuItem>
                         <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ mt: 2 }}>
+                    <FormLabel><Typography>Tính Năng Đặc Biệt</Typography></FormLabel>
+                    <Select
+                        multiple
+                        displayEmpty
+                        value={specialFeature}
+                        onChange={handleSpecialFeatureChange}
+                        renderValue={(selected) => {
+                            if (selected.length === 0) {
+                                return <em>Lựa Chọn Tính Năng Đặc Biệt</em>;
+                            }
+
+                            return selected.join(', ');
+                        }}
+                        MenuProps={MenuProps}
+                    >
+                        <MenuItem disabled value="">
+                            <em>Lựa Chọn Tính Năng Đặc Biệt</em>
+                        </MenuItem>
+                        {names.map((name) => (
+                            <MenuItem
+                                key={name}
+                                value={name}
+                                style={getStyles(name, specialFeature, theme)}
+                            >
+                                {name}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
             </FormAddProduct>

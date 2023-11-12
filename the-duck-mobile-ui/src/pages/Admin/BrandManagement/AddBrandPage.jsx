@@ -16,7 +16,7 @@ const FormAddBrand = styled(Paper)(({ theme }) => ({
   flexDirection: "column",
   justifyContent: "center",
   padding: theme.spacing(4),
-  width: "80%",
+  width: "90%",
   backgroundColor: "white",
   boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
 }));
@@ -49,42 +49,23 @@ function AddBrandPage(props) {
     <RootPageAddBrand>
       <FormAddBrand>
         <Typography variant="h3">Thêm thương hiệu mới</Typography>
-        <Grid container spacing={1}>
-          <Grid item xs={7}>
-            <Grid container>
-              <Grid item xs={12}>
-                <MuiTextFeild
-                  label="Tên thương hiệu"
-                  margin="normal"
-                  autoFocus
-                  required
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <MuiTextFeild
-                  label="Mô tả"
-                  margin="normal"
-                  required
-                  multiline
-                  rows={11}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
+        <MuiTextFeild
+          label="Tên thương hiệu"
+          margin="normal"
+          autoFocus
+          required
+        />
+        <Grid container>
           <Grid item xs={5}>
-            <Grid container>
-              <Grid item xs={12}>
-                <CustomImage src={image} />
-              </Grid>
-              <Grid item xs={12}>
-                <MuiTextFeild
-                  type="file"
-                  required
-                  onChange={handleImageChange}
-                  sx={{ mt: 2 }}
-                />
-              </Grid>
-            </Grid>
+            <CustomImage src={image} />
+          </Grid>
+          <Grid item xs={7}>
+            <MuiTextFeild
+              type="file"
+              required
+              onChange={handleImageChange}
+              sx={{ mt: 2 }}
+            />
           </Grid>
         </Grid>
         <FlexContainer justifyContent="center">

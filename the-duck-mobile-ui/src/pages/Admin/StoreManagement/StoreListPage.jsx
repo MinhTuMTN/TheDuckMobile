@@ -160,7 +160,7 @@ function StoreListPage() {
                                     {row.protein}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton component={Link} color="oldPrimary"><InfoIcon /></MuiButton>
+                                    <MuiButton component={Link} color="oldPrimary" to="/admin/store-management/detail"><InfoIcon /></MuiButton>
                                     <MuiButton component={Link} color="teal" to="/admin/store-management/edit"><EditIcon /></MuiButton>
                                     <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>

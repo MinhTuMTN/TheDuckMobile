@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
-import { Outlet } from "react-router-dom";
-import React, { Fragment } from 'react'
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import React, { Fragment, createContext, useEffect, useState } from 'react'
 import AdminSidebar from "../components/AdminSidebar";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { getAllProducts } from "../services/Admin/ProductService";
 
 const RootPageUser = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -17,19 +18,39 @@ const Right = styled(Box)(({ theme }) => ({
   display: "flex",
 }));
 
+const ProductsContext = createContext();
+
 function AdminLayout(props) {
+  const pathname = useLocation().pathname;
+  const [allProducts, setAllProducts] = useState([]);
+
+  const handleGetProducts = async () => {
+    const productsResponse = await getAllProducts();
+    if (productsResponse.success){
+      setAllProducts(productsResponse.data.data);
+    }
+  };
+
+  useEffect(() => {
+    if (pathname === "/admin/product-management/list") {
+      handleGetProducts();
+    }
+  }, [pathname]);
   return (
-    <Fragment>
-      <Navbar />
-      <RootPageUser>
-        <AdminSidebar />
-        <Right>
-          <Outlet />
-        </Right>
-      </RootPageUser>
-      <Footer />
-    </Fragment>
+    <ProductsContext.Provider value={{ allProducts }}>
+      <Fragment>
+        <Navbar />
+        <RootPageUser>
+          <AdminSidebar />
+          <Right>
+            <Outlet />
+          </Right>
+        </RootPageUser>
+        <Footer />
+      </Fragment>
+    </ProductsContext.Provider>
   );
 }
 
+export { ProductsContext };
 export default AdminLayout;

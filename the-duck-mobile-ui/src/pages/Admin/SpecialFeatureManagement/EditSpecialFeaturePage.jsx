@@ -16,7 +16,7 @@ const FormEditSpecialFeature = styled(Paper)(({ theme }) => ({
     flexDirection: "column",
     justifyContent: "center",
     padding: theme.spacing(4),
-    width: "80%",
+    width: "90%",
     backgroundColor: "white",
     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.1)",
 }));
@@ -67,7 +67,7 @@ function EditSpecialFeaturePage(props) {
                 </FormControl>
                 <FlexContainer justifyContent="center">
                     <EditButton variant="contained" color="color1">
-                        <Typography color={"white"}>Chỉnh Sửa</Typography>
+                        <Typography color={"white"}>Cập Nhật</Typography>
                     </EditButton>
                 </FlexContainer>
 
