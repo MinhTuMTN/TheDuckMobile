@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace TheDuckMobile_WebAPI.Entities
@@ -7,7 +8,8 @@ namespace TheDuckMobile_WebAPI.Entities
     {
         private readonly ILazyLoader? _lazyLoader;
         [Key]
-        public byte ProvinceId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ProvinceId { get; set; }
         [Required]
         public string? ProvineName { get; set; }
 

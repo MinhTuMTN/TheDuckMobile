@@ -83,8 +83,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("WardId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("WardId")
+                        .HasColumnType("int");
 
                     b.HasKey("AddressId");
 
@@ -229,16 +229,18 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.District", b =>
                 {
-                    b.Property<Guid>("DistrictId")
+                    b.Property<int>("DistrictId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DistrictId"));
 
                     b.Property<string>("DistrictName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte>("ProvineId")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("ProvineId")
+                        .HasColumnType("int");
 
                     b.HasKey("DistrictId");
 
@@ -556,8 +558,11 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Provine", b =>
                 {
-                    b.Property<byte>("ProvinceId")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("ProvinceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProvinceId"));
 
                     b.Property<string>("ProvineName")
                         .IsRequired()
@@ -751,12 +756,14 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Ward", b =>
                 {
-                    b.Property<Guid>("WardId")
+                    b.Property<int>("WardId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("DistrictId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WardId"));
+
+                    b.Property<int>("DistrictId")
+                        .HasColumnType("int");
 
                     b.Property<string>("WardName")
                         .HasColumnType("nvarchar(max)");

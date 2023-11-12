@@ -14,7 +14,7 @@ namespace TheDuckMobile_WebAPI.Entities
         public string? StreetName { get; set; }
 
         // Reference to Ward
-        public Guid WardId { get; set; }
+        public int WardId { get; set; }
         private Ward? _ward;
         [JsonIgnore]
         public virtual Ward? Ward

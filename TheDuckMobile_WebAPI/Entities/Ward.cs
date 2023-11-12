@@ -1,15 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TheDuckMobile_WebAPI.Entities
 {
     public class Ward
     {
         [Key]
-        public Guid WardId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int WardId { get; set; }
         public string? WardName { get; set; }
 
         //Tham chiếu tới bảng district
-        public Guid DistrictId { get; set; }
+        public int DistrictId { get; set; }
         public virtual District? District { get; set; }
 
         //Chứa danh sách các address

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TheDuckMobile_WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDatabase : Migration
+    public partial class UpdateDatabase12111641 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -137,7 +137,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                 name: "Provines",
                 columns: table => new
                 {
-                    ProvinceId = table.Column<byte>(type: "tinyint", nullable: false),
+                    ProvinceId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ProvineName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -210,6 +211,9 @@ namespace TheDuckMobile_WebAPI.Migrations
                 {
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductPrice = table.Column<double>(type: "float", nullable: true),
+                    PromotionPrice = table.Column<double>(type: "float", nullable: true),
+                    Thumbnail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProductDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Rate = table.Column<float>(type: "real", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
@@ -248,9 +252,10 @@ namespace TheDuckMobile_WebAPI.Migrations
                 name: "Districts",
                 columns: table => new
                 {
-                    DistrictId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DistrictId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     DistrictName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProvineId = table.Column<byte>(type: "tinyint", nullable: false)
+                    ProvineId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -421,9 +426,10 @@ namespace TheDuckMobile_WebAPI.Migrations
                 name: "Wards",
                 columns: table => new
                 {
-                    WardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WardId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     WardName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DistrictId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    DistrictId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -501,7 +507,7 @@ namespace TheDuckMobile_WebAPI.Migrations
                 {
                     AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StreetName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    WardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WardId = table.Column<int>(type: "int", nullable: false),
                     StoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },

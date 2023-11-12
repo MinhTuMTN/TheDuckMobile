@@ -40,6 +40,10 @@ function ProfileLayout(props) {
   const handleGetInfo = async () => {
     const response = await getInfo();
     if (response.success) setInfo(response.data.data);
+    else {
+      setToken(null);
+      navigate("/login", { replace: true });
+    }
   };
   useEffect(() => {
     handleGetInfo();
