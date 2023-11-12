@@ -12,8 +12,8 @@ using TheDuckMobile_WebAPI.Entities;
 namespace TheDuckMobile_WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230923153002_Add-To-Do-For-Learn-Primary-Key")]
-    partial class AddToDoForLearnPrimaryKey
+    [Migration("20231110070331_Init-Database")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,9 +21,6 @@ namespace TheDuckMobile_WebAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.10")
-                .HasAnnotation("Proxies:ChangeTracking", false)
-                .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -33,8 +30,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<int>("BrandsBrandId")
                         .HasColumnType("int");
 
-                    b.Property<byte>("CatalogsCatalogId")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("CatalogsCatalogId")
+                        .HasColumnType("int");
 
                     b.HasKey("BrandsBrandId", "CatalogsCatalogId");
 
@@ -45,11 +42,11 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("CatalogSpecialFeature", b =>
                 {
-                    b.Property<byte>("CatalogsCatalogId")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("CatalogsCatalogId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("SpecialFeaturesSpecialFeatureId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("SpecialFeaturesSpecialFeatureId")
+                        .HasColumnType("int");
 
                     b.HasKey("CatalogsCatalogId", "SpecialFeaturesSpecialFeatureId");
 
@@ -63,8 +60,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<Guid>("ProductsProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SpecialFeaturesSpecialFeatureId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("SpecialFeaturesSpecialFeatureId")
+                        .HasColumnType("int");
 
                     b.HasKey("ProductsProductId", "SpecialFeaturesSpecialFeatureId");
 
@@ -73,37 +70,11 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.ToTable("ProductSpecialFeature");
                 });
 
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Account", b =>
-                {
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Email");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Accounts");
-                });
-
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Address", b =>
                 {
                     b.Property<Guid>("AddressId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DistrictId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte>("ProvineId")
-                        .HasColumnType("tinyint");
 
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
@@ -112,17 +83,18 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("WardId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("AddressId");
 
-                    b.HasIndex("DistrictId");
-
-                    b.HasIndex("ProvineId");
-
                     b.HasIndex("StoreId")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("WardId");
 
@@ -141,8 +113,11 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -157,11 +132,17 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Catalog", b =>
                 {
-                    b.Property<byte>("CatalogId")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("CatalogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CatalogId"));
 
                     b.Property<string>("CatalogName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CatalogURL")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -184,8 +165,7 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ColorIcon")
-                        .IsRequired()
+                    b.Property<string>("ColorCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ColorName")
@@ -195,24 +175,59 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ImagesJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastModifiredAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("ColorId");
 
-                    b.HasIndex("ProductId");
-
                     b.ToTable("Colors");
+                });
+
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Coupon", b =>
+                {
+                    b.Property<Guid>("CouponId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CouponCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CurrentUse")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("MaxDiscount")
+                        .HasColumnType("float");
+
+                    b.Property<int>("MaxUse")
+                        .HasColumnType("int");
+
+                    b.Property<double>("MinPrice")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CouponId");
+
+                    b.ToTable("Coupons");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.District", b =>
@@ -260,7 +275,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FeedbackPersonPhone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FeedbackId");
@@ -270,8 +284,11 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.OS", b =>
                 {
-                    b.Property<byte>("OSId")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("OSId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OSId"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -300,6 +317,9 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<Guid>("AddressId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CouponId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -324,6 +344,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.HasKey("OrderId");
 
                     b.HasIndex("AddressId");
+
+                    b.HasIndex("CouponId");
 
                     b.HasIndex("CustomerId");
 
@@ -378,6 +400,9 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
+                    b.Property<int>("CatalogId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -387,23 +412,30 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte>("OSId")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("OSId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProductDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.Property<float>("Rate")
                         .HasColumnType("real");
+
+                    b.Property<int>("Sold")
+                        .HasColumnType("int");
 
                     b.HasKey("ProductId");
 
                     b.HasIndex("BrandId");
+
+                    b.HasIndex("CatalogId");
 
                     b.HasIndex("OSId");
 
@@ -417,7 +449,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Battery")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ColorId")
@@ -430,6 +461,10 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Images")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -437,48 +472,43 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Material")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberOfSim")
+                        .HasColumnType("int");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<string>("Processor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PromotionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RAM")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RAM")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ReleaseTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ScanningFrequency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ScreenResolution")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("ScreenSize")
                         .HasColumnType("real");
 
-                    b.Property<string>("ScreenTechnology")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SizeAndMass")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Sold")
+                        .HasColumnType("int");
 
                     b.HasKey("ProductVersionId");
 
                     b.HasIndex("ColorId");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("PromotionId");
 
@@ -534,9 +564,11 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.SpecialFeature", b =>
                 {
-                    b.Property<Guid>("SpecialFeatureId")
+                    b.Property<int>("SpecialFeatureId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SpecialFeatureId"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -546,6 +578,9 @@ namespace TheDuckMobile_WebAPI.Migrations
 
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("SpecialFeatureName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SpecialFeatureId");
 
@@ -558,7 +593,13 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatAt")
+                    b.Property<int>("CloseHours")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CloseMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
@@ -567,11 +608,13 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("OpenHours")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("OpenHours")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OpenMinutes")
+                        .HasColumnType("int");
 
                     b.Property<string>("StoreName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StoreId");
@@ -585,7 +628,7 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDelete")
@@ -615,30 +658,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.ToTable("StoreProducts");
                 });
 
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.ToDo", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Task")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ToDos");
-                });
-
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -646,7 +665,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Avatar")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -657,6 +675,9 @@ namespace TheDuckMobile_WebAPI.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
@@ -674,8 +695,10 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Point")
+                        .HasColumnType("int");
 
                     b.HasKey("UserId");
 
@@ -693,7 +716,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -702,7 +724,7 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ImagesJson")
+                    b.Property<string>("Images")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -731,7 +753,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("WardName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("WardId");
@@ -749,26 +770,15 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("GraphicCard")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("HardDrive")
                         .HasColumnType("int");
 
-                    b.Property<string>("MaximumRAM")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("TypeOfRAM")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Webcam")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("WifiStandard")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("Laptop");
@@ -779,19 +789,15 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.HasBaseType("TheDuckMobile_WebAPI.Entities.ProductVersion");
 
                     b.Property<string>("BackCamera")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Bluetooth")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Buetooth")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ChargingPort")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FrontCamera")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("GPS")
@@ -803,19 +809,13 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<int>("InternalMemory")
                         .HasColumnType("int");
 
-                    b.Property<string>("NetworkTypesJson")
-                        .IsRequired()
+                    b.Property<string>("NetworkType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SecurityFeature")
                         .HasColumnType("int");
 
-                    b.Property<string>("Sim")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("WaterResistance")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Wifi")
@@ -828,9 +828,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                 {
                     b.HasBaseType("TheDuckMobile_WebAPI.Entities.ProductVersion");
 
-                    b.Property<string>("Bluetooth")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Bluetooth")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("GPS")
                         .HasColumnType("bit");
@@ -841,12 +840,7 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<int>("WatchFaceShape")
                         .HasColumnType("int");
 
-                    b.Property<string>("WatchFaceSize")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("WaterResistance")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("WireMaterial")
@@ -854,9 +848,6 @@ namespace TheDuckMobile_WebAPI.Migrations
 
                     b.ToTable("ProductVersions", t =>
                         {
-                            t.Property("Bluetooth")
-                                .HasColumnName("SmartWatch_Bluetooth");
-
                             t.Property("GPS")
                                 .HasColumnName("SmartWatch_GPS");
 
@@ -875,18 +866,15 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.HasBaseType("TheDuckMobile_WebAPI.Entities.ProductVersion");
 
                     b.Property<string>("BackCamera")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Bluetooth")
                         .HasColumnType("bit");
 
                     b.Property<string>("ChargingPort")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FrontCamera")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("GPS")
@@ -899,15 +887,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NetworkType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NumberOfSim")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Sim")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Wifi")
@@ -936,8 +915,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                             t.Property("InternalMemory")
                                 .HasColumnName("Tablet_InternalMemory");
 
-                            t.Property("Sim")
-                                .HasColumnName("Tablet_Sim");
+                            t.Property("NetworkType")
+                                .HasColumnName("Tablet_NetworkType");
 
                             t.Property("Wifi")
                                 .HasColumnName("Tablet_Wifi");
@@ -1017,35 +996,18 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Account", b =>
-                {
-                    b.HasOne("TheDuckMobile_WebAPI.Entities.User", "User")
-                        .WithOne("Account")
-                        .HasForeignKey("TheDuckMobile_WebAPI.Entities.Account", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Address", b =>
                 {
-                    b.HasOne("TheDuckMobile_WebAPI.Entities.District", "District")
-                        .WithMany("Addresses")
-                        .HasForeignKey("DistrictId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TheDuckMobile_WebAPI.Entities.Provine", "Provine")
-                        .WithMany("Addresses")
-                        .HasForeignKey("ProvineId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("TheDuckMobile_WebAPI.Entities.Store", "Store")
                         .WithOne("Address")
                         .HasForeignKey("TheDuckMobile_WebAPI.Entities.Address", "StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.User", "User")
+                        .WithMany("Addresses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("TheDuckMobile_WebAPI.Entities.Ward", "Ward")
@@ -1054,24 +1016,11 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("District");
-
-                    b.Navigation("Provine");
-
                     b.Navigation("Store");
 
+                    b.Navigation("User");
+
                     b.Navigation("Ward");
-                });
-
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Color", b =>
-                {
-                    b.HasOne("TheDuckMobile_WebAPI.Entities.Product", "Product")
-                        .WithMany("Colors")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.District", b =>
@@ -1088,8 +1037,14 @@ namespace TheDuckMobile_WebAPI.Migrations
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Order", b =>
                 {
                     b.HasOne("TheDuckMobile_WebAPI.Entities.Address", "Address")
-                        .WithMany("Orders")
+                        .WithMany()
                         .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.Coupon", "Coupon")
+                        .WithMany("Orders")
+                        .HasForeignKey("CouponId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1112,6 +1067,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Address");
+
+                    b.Navigation("Coupon");
 
                     b.Navigation("Customer");
 
@@ -1155,6 +1112,12 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.Catalog", "Catalog")
+                        .WithMany("Products")
+                        .HasForeignKey("CatalogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TheDuckMobile_WebAPI.Entities.OS", "OS")
                         .WithMany("Products")
                         .HasForeignKey("OSId")
@@ -1162,6 +1125,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Brand");
+
+                    b.Navigation("Catalog");
 
                     b.Navigation("OS");
                 });
@@ -1173,6 +1138,10 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasForeignKey("ColorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.Product", null)
+                        .WithMany("ProductVersions")
+                        .HasForeignKey("ProductId");
 
                     b.HasOne("TheDuckMobile_WebAPI.Entities.Promotion", "Promotion")
                         .WithMany("ProductVersions")
@@ -1245,12 +1214,12 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("Store");
                 });
 
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Address", b =>
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Brand", b =>
                 {
-                    b.Navigation("Orders");
+                    b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Brand", b =>
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Catalog", b =>
                 {
                     b.Navigation("Products");
                 });
@@ -1260,10 +1229,13 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("ProductVersions");
                 });
 
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Coupon", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.District", b =>
                 {
-                    b.Navigation("Addresses");
-
                     b.Navigation("Wards");
                 });
 
@@ -1279,7 +1251,7 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Product", b =>
                 {
-                    b.Navigation("Colors");
+                    b.Navigation("ProductVersions");
 
                     b.Navigation("Votes");
                 });
@@ -1298,15 +1270,12 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Provine", b =>
                 {
-                    b.Navigation("Addresses");
-
                     b.Navigation("Districts");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Store", b =>
                 {
-                    b.Navigation("Address")
-                        .IsRequired();
+                    b.Navigation("Address");
 
                     b.Navigation("Orders");
 
@@ -1322,8 +1291,7 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.User", b =>
                 {
-                    b.Navigation("Account")
-                        .IsRequired();
+                    b.Navigation("Addresses");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Ward", b =>

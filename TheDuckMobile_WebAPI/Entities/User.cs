@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -24,6 +25,11 @@ namespace TheDuckMobile_WebAPI.Entities
         [RegularExpression(@"^(\+84|0)\d{9}$")]
         public string? Phone { get; set; }
 
+        [EmailAddress]
+        public string? Email { get; set; }
+
+        public int? Point { get; set; }
+
         public DateTime? DateOfBirth { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -32,15 +38,14 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public bool IsDeleted { get; set; }
 
-        private Account? _account;
-        public virtual Account? Account
-        {
-            get => _lazyLoader.Load(this, ref _account);
-            set => _account = value;
-        }
-
+        // Relationship to Address
+        private ICollection<Address>? _addresses;
         [JsonIgnore]
-        public virtual ICollection<Address>? Address { get; set; }
+        public virtual ICollection<Address>? Addresses
+        {
+            get => _lazyLoader.Load(this, ref _addresses);
+            set => _addresses = value;
+        }
 
         public User()
         {

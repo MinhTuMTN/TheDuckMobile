@@ -4,6 +4,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import styled from "@emotion/styled";
 import Unit from "./Unit";
 import ProductInformation from "./ProductInformation";
+import CustomLink from "./CustomLink";
 
 const LeftText = styled(Typography)`
   flex-basis: 85%;
@@ -117,23 +118,27 @@ function AboutHistoryOrderDetails(props) {
                 <Unit color={"#f44336"} />
               </Stack>
             </Stack>
-            <Button
-              variant={"outlined"}
-              color="color2"
-              sx={{
-                width: "35%",
-                padding: "0.5rem 1rem",
-                justifyContent: "center",
-                margin: "0 auto",
-                borderRadius: "0.75rem",
-                ":hover": {
-                  backgroundColor: "#FF4469",
-                  color: "#ffffff",
-                },
-              }}
+            <CustomLink
+              to={"/profile/order-history"}
+              style={{ display: "flex", justifyContent: "center" }}
             >
-              VỀ DANH SÁCH ĐƠN HÀNG
-            </Button>
+              <Button
+                variant={"outlined"}
+                color="color2"
+                sx={{
+                  width: "35%",
+                  padding: "0.5rem 1rem",
+                  justifyContent: "center",
+                  borderRadius: "0.75rem",
+                  ":hover": {
+                    backgroundColor: "#FF4469",
+                    color: "#ffffff",
+                  },
+                }}
+              >
+                VỀ DANH SÁCH ĐƠN HÀNG
+              </Button>
+            </CustomLink>
           </Stack>
         </Box>
       </Stack>

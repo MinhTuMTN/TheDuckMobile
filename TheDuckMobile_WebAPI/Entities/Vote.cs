@@ -13,29 +13,21 @@ namespace TheDuckMobile_WebAPI.Entities
         [Required]
         public int VoteRate { get; set; }
 
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
-        public string ImagesJson
-        {
-            get
-            {
-                return JsonSerializer.Serialize(Images);
-            }
-            set
-            {
-                Images = JsonSerializer.Deserialize<List<string>>(value);
-            }
-        }
-
-        [NotMapped]
-        public List<string> Images { get; set; }
+        public string[] Images { get; set; }
 
         public Guid ProductId { get; set; }
-        public virtual Product Product { get; set;}
+        public virtual Product? Product { get; set; }
 
         public Guid CustomerId { get; set; }
-        public virtual Customer Customer { get; set; }
+        public virtual Customer? Customer { get; set; }
+
+        public Vote()
+        {
+            this.Images = new string[0];
+        }
     }
 }

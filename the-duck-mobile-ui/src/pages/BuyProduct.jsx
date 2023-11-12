@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {
   Box,
   Button,
@@ -12,16 +13,15 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
-import ProductInformation from "../components/ProductInformation";
-import Unit from "../components/Unit";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import HomeDeliver from "../components/HomeDeliver";
+import { Helmet } from "react-helmet-async";
 import AtStoreDeliver from "../components/AtStoreDeliver";
-import NewCustomerInfomation from "../components/NewCustomerInfomation";
-import MuiTextFeild from "../components/MuiTextFeild";
-import UseCoupon from "../components/UseCoupon";
 import FormatCurrency from "../components/FormatCurrency";
 import ListCustomerAddress from "../components/ListCustomerAddress";
+import MuiTextFeild from "../components/MuiTextFeild";
+import NewCustomerInfomation from "../components/NewCustomerInfomation";
+import ProductInformation from "../components/ProductInformation";
+import Unit from "../components/Unit";
+import UseCoupon from "../components/UseCoupon";
 const Wrapped = styled.div`
   color: rgba(0, 0, 0, 0.65);
   padding-top: 64px;
@@ -58,6 +58,10 @@ function BuyProduct(props) {
   `;
   return (
     <Wrapped>
+      <Helmet>
+        <title>Thanh toán | The Duck Mobile</title>
+        <meta name="description" content="Thanh  | The Duck Mobile" />
+      </Helmet>
       <Container elevation={4}>
         <Box
           paddingLeft={4}

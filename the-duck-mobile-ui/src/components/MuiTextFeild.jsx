@@ -24,7 +24,7 @@ MuiTextFeild.propTypes = {
   fontSize: PropTypes.string || PropTypes.number,
   value: PropTypes.string,
   onChange: PropTypes.func,
-  error: PropTypes.string,
+  error: PropTypes.bool,
   children: PropTypes.node,
 };
 
