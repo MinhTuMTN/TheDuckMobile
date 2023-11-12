@@ -83,3 +83,8 @@ html {
     transform: rotate(360deg);
   }
 }
+
+.menu-dropdown ul {
+  display: flex !important;
+  flex-direction: column !important;
+}

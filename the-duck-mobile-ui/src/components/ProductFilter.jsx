@@ -1,26 +1,31 @@
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import SmartButtonIcon from "@mui/icons-material/SmartButton";
 import StoreIcon from "@mui/icons-material/Store";
-import { Box, Button, Divider, Slider, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Slider,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import FilterItem from "./FilterItem";
+import PropTypes from "prop-types";
 
-ProductFilter.propTypes = {};
+ProductFilter.propTypes = {
+  brands: PropTypes.array,
+  specialFeatures: PropTypes.array,
+};
 
 function ProductFilter(props) {
   const [price, setPrice] = React.useState([0, 100]);
   const maxPrice = 70000000;
 
-  const brands = ["Apple", "Samsung", "Xiaomi", "Oppo", "Sony", "Vsmart"];
+  const { brands, specialFeatures } = props;
   const [selectedBrands, setSelectedBrands] = React.useState([]);
 
-  const specialFeatures = [
-    "Chống nước",
-    "Chống bụi",
-    "Chống sốc",
-    "Chống rung",
-    "Có thể gập lại",
-  ];
   const [selectedSpecialFeatures, setSelectedSpecialFeatures] = React.useState(
     []
   );
@@ -69,26 +74,34 @@ function ProductFilter(props) {
             {brands.map((brand) => (
               <Button
                 key={brand}
-                variant={
-                  selectedBrands.includes(brand) ? "contained" : "outlined"
+                startIcon={
+                  <Typography
+                    component={"img"}
+                    src={brand.brandLogo}
+                    height={"100%"}
+                    width={"4rem"}
+                  />
                 }
-                color={selectedBrands.includes(brand) ? "color1" : "color4"}
                 style={{
-                  color: selectedBrands.includes(brand) ? "white" : "black",
+                  border:
+                    selectedBrands.includes(brand.brandId) &&
+                    "1px solid #f50057",
+                  color: "black",
                 }}
+                variant="outlined"
                 onClick={() => {
-                  if (selectedBrands.includes(brand)) {
+                  if (selectedBrands.includes(brand.brandId)) {
                     setSelectedBrands(
                       selectedBrands.filter(
-                        (selectedBrand) => selectedBrand !== brand
+                        (selectedBrand) => selectedBrand !== brand.brandId
                       )
                     );
                   } else {
-                    setSelectedBrands([...selectedBrands, brand]);
+                    setSelectedBrands([...selectedBrands, brand.brandId]);
                   }
                 }}
               >
-                {brand}
+                {brand.brandName}
               </Button>
             ))}
           </Stack>
@@ -106,36 +119,41 @@ function ProductFilter(props) {
               <Button
                 key={feature}
                 variant={
-                  selectedSpecialFeatures.includes(feature)
+                  selectedSpecialFeatures.includes(feature.specialFeatureId)
                     ? "contained"
                     : "outlined"
                 }
                 color={
-                  selectedSpecialFeatures.includes(feature)
+                  selectedSpecialFeatures.includes(feature.specialFeatureId)
                     ? "color1"
                     : "color4"
                 }
                 style={{
-                  color: selectedSpecialFeatures.includes(feature)
+                  color: selectedSpecialFeatures.includes(
+                    feature.specialFeatureId
+                  )
                     ? "white"
                     : "black",
                 }}
                 onClick={() => {
-                  if (selectedSpecialFeatures.includes(feature)) {
+                  if (
+                    selectedSpecialFeatures.includes(feature.specialFeatureId)
+                  ) {
                     setSelectedSpecialFeatures(
                       selectedSpecialFeatures.filter(
-                        (selectedBrand) => selectedBrand !== feature
+                        (selectedBrand) =>
+                          selectedBrand !== feature.specialFeatureId
                       )
                     );
                   } else {
                     setSelectedSpecialFeatures([
                       ...selectedSpecialFeatures,
-                      feature,
+                      feature.specialFeatureId,
                     ]);
                   }
                 }}
               >
-                {feature}
+                {feature.specialFeatureName}
               </Button>
             ))}
           </Stack>

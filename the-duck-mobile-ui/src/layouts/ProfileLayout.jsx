@@ -33,13 +33,17 @@ function ProfileLayout(props) {
 
   const handleLogout = () => {
     setToken(null);
-    navigate("/", { replace: true });
+    window.location.href = "/";
   };
 
   const [info, setInfo] = React.useState(null);
   const handleGetInfo = async () => {
     const response = await getInfo();
     if (response.success) setInfo(response.data.data);
+    else {
+      setInfo(null);
+      handleLogout();
+    }
   };
   useEffect(() => {
     handleGetInfo();

@@ -46,6 +46,7 @@ builder.Services.AddScoped<ITwilioServices, TwilioServicesImpl>();
 builder.Services.AddScoped<IUserServices, UserServicesImpl>();
 builder.Services.AddScoped<IProductServices, ProductServicesImpl>();
 builder.Services.AddScoped<IAddressServices, AddressServicesImpl>();
+builder.Services.AddScoped<ICatalogServices, CatalogServicesImpl>();
 #endregion
 
 var app = builder.Build();

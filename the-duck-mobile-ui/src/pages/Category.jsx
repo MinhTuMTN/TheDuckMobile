@@ -1,11 +1,14 @@
 import styled from "@emotion/styled";
 import { Stack } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useEffect } from "react";
 import ProductGrid from "../components/ProductGrid";
 import ProductFilter from "../components/ProductFilter";
 import ProductSorter from "../components/ProductSorter";
 import CustomBreadcrumb from "../components/CustomBreadcrumb";
+import { useParams } from "react-router-dom";
+import { getCatalogByCatalogURL } from "../services/CatalogService";
+import { useSnackbar } from "notistack";
 
 const CategoryName = styled(Box)(({ theme }) => ({
   background: `url('https://cdn2.slidemodel.com/wp-content/uploads/21511-03-transparent-materials-powerpoint-backgrounds-16x9-1.jpg')`,
@@ -25,6 +28,14 @@ const CategoryName = styled(Box)(({ theme }) => ({
 }));
 
 function Category(props) {
+  const { catalogURL } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
+  const [catalog, setCatalog] = React.useState({
+    catalogId: "",
+    catalogName: "",
+    brands: [],
+    specialFeatures: [],
+  });
   const [orderBy, setOrderBy] = React.useState(0);
 
   const handleOrderBy = (value) => {
@@ -33,17 +44,32 @@ function Category(props) {
     } else setOrderBy(value);
   };
 
+  useEffect(() => {
+    const handleGetCatalogDetail = async () => {
+      const response = await getCatalogByCatalogURL(catalogURL);
+      if (response.success) {
+        setCatalog(response.data.data);
+      } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    };
+    handleGetCatalogDetail();
+  }, [catalogURL, enqueueSnackbar]);
+
   return (
     <Stack mt={10} mb={10} width={"100%"} alignItems={"center"}>
       <CustomBreadcrumb
         urls={[
           { text: "Trang chủ", url: "/" },
-          { text: "Điện thoại", url: null },
+          { text: `${catalog.catalogName}`, url: null },
         ]}
       />
       <Stack sx={{ width: "80%" }} mt={2}>
-        <CategoryName style={{ marginBottom: "1rem" }}>Điện thoại</CategoryName>
-        <ProductFilter />
+        <CategoryName style={{ marginBottom: "1rem" }}>
+          {catalog.catalogName}
+        </CategoryName>
+        <ProductFilter
+          brands={catalog.brands}
+          specialFeatures={catalog.specialFeatures}
+        />
         <ProductSorter value={orderBy} onSort={handleOrderBy} />
         <ProductGrid margin={"1rem 0rem"} />
       </Stack>

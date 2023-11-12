@@ -82,7 +82,7 @@ function Router(props) {
           element: <BuyProduct />,
         },
         {
-          path: "/category",
+          path: "/catalog/:catalogURL",
           element: <CategoryLazy />,
         },
         {
