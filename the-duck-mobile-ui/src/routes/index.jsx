@@ -32,6 +32,8 @@ import AddStorePage from "../pages/Admin/StoreManagement/AddStorePage";
 import EditStorePage from "../pages/Admin/StoreManagement/EditStorePage";
 import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
 import Loading from "../components/Loading";
+import StoreLayout from "../layouts/StoreLayout";
+import Product from "../pages/Seller/Product";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -236,6 +238,16 @@ function Router(props) {
     {
       path: "loading",
       element: <Loading />,
+    },
+    {
+      path: "/store",
+      element: <StoreLayout />,
+      children: [
+        {
+          path: "products/list",
+          element: <Product />,
+        },
+      ],
     },
   ]);
 }

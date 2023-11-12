@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {
   Box,
+  Button,
   FormControl,
   FormControlLabel,
-  Grid,
   IconButton,
   Paper,
   Radio,
@@ -11,15 +12,16 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import AtStoreDeliver from "../components/AtStoreDeliver";
+import FormatCurrency from "../components/FormatCurrency";
+import ListCustomerAddress from "../components/ListCustomerAddress";
+import MuiTextFeild from "../components/MuiTextFeild";
+import NewCustomerInfomation from "../components/NewCustomerInfomation";
 import ProductInformation from "../components/ProductInformation";
 import Unit from "../components/Unit";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import MuiTextFeild from "../components/MuiTextFeild";
-import HomeDeliver from "../components/HomeDeliver";
-import AtStoreDeliver from "../components/AtStoreDeliver";
-import { Helmet } from "react-helmet-async";
-
+import UseCoupon from "../components/UseCoupon";
 const Wrapped = styled.div`
   color: rgba(0, 0, 0, 0.65);
   padding-top: 64px;
@@ -34,11 +36,26 @@ const Container = styled(Paper)`
 `;
 
 function BuyProduct(props) {
-  const [selectedOption, setSelectedOption] = useState("AtHome"); // Mặc định là 'Giao tận nơi'
+  const [selectedOption, setSelectedOption] = useState("AtHome");
+  const [info, setInfo] = useState({
+    name: "Nguyen Van A",
+    gender: 0,
+    phone: "0123456789",
+  });
+  const [edit, setEdit] = React.useState(false);
+  const oldInfoForm = useRef(null);
 
   const handleRadioChange = (event) => {
     setSelectedOption(event.target.value);
   };
+
+  const CustomButtom = styled(Button)`
+    background: ${(props) => props.theme.palette.color2.main};
+    &:hover {
+      background: ${(props) => props.theme.palette.color1.main};
+      color: #fff;
+    }
+  `;
   return (
     <Wrapped>
       <Helmet>
@@ -103,50 +120,55 @@ function BuyProduct(props) {
           >
             THÔNG TIN KHÁCH HÀNG
           </Typography>
-          <FormControl>
-            <RadioGroup row name="row-radio-buttons-group">
-              <FormControlLabel
-                value="female"
-                className="custom-radio"
-                control={<Radio size="small" />}
-                label={<span style={{ fontSize: "14px" }}>Anh</span>}
-              />
-              <FormControlLabel
-                value="male"
-                control={<Radio size="small" />}
-                label={<span style={{ fontSize: "14px" }}>Chị</span>}
-              />
-            </RadioGroup>
-          </FormControl>
-          <Grid container direction={"row"} spacing={2}>
-            <Grid item xs={7}>
-              <MuiTextFeild
-                required
-                variant="outlined"
-                fullWidth
-                label="Họ tên"
-                size="medium"
-                fontSize={"14px"}
-              />
-            </Grid>
-            <Grid item xs={5}>
-              <MuiTextFeild
-                required
-                variant="outlined"
-                fullWidth
-                label="Số điện thoại"
-                size="medium"
-                fontSize={"14px"}
-              />
-            </Grid>
-          </Grid>
+          {info !== null ? (
+            <>
+              <Stack
+                ref={oldInfoForm}
+                direction={"row"}
+                spacing={2}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+              >
+                <Typography
+                  variant="h6"
+                  fontWeight={"400"}
+                  style={{
+                    fontSize: "14px",
+                  }}
+                >
+                  Xin chào, anh <b>Nguyen Van A</b> - 8391231271298{" "}
+                </Typography>
+                <Button
+                  variant="text"
+                  sx={{
+                    color: "#484B5B",
+                  }}
+                  onClick={(e) => {
+                    setEdit(true);
+                    oldInfoForm.current.style.display = "none";
+                  }}
+                >
+                  Sửa
+                </Button>
+              </Stack>
+              {edit && (
+                <NewCustomerInfomation
+                  info={info}
+                  onChange={(newInfo) => {
+                    setInfo(newInfo);
+                  }}
+                />
+              )}
+            </>
+          ) : (
+            <NewCustomerInfomation />
+          )}
         </Stack>
         <Stack
           direction={"column"}
           paddingLeft={4}
           paddingRight={4}
-          paddingTop={3}
-          spacing={0}
+          paddingTop={2}
         >
           <Typography
             variant={"h6"}
@@ -179,8 +201,60 @@ function BuyProduct(props) {
               />
             </RadioGroup>
           </FormControl>
-          {selectedOption === "AtHome" && <HomeDeliver />}
+          {selectedOption === "AtHome" && <ListCustomerAddress />}
           {selectedOption === "AtStore" && <AtStoreDeliver />}
+        </Stack>
+        <Box
+          paddingLeft={4}
+          paddingRight={4}
+          paddingTop={2}
+          sx={{
+            paddingBottom: "1.5rem",
+            borderBottom: "1px solid #838080",
+          }}
+        >
+          <MuiTextFeild
+            variant="outlined"
+            size={"medium"}
+            fullWidth
+            label="Yêu cầu khác"
+          />
+        </Box>
+
+        <UseCoupon />
+        <Stack direction={"column"} paddingX={4} paddingTop={2}>
+          <Stack
+            direction={"row"}
+            display={"flex"}
+            justifyContent={"space-between"}
+          >
+            <Typography
+              variant="h6"
+              fontWeight={"600"}
+              style={{
+                fontSize: "16px",
+              }}
+            >
+              Tổng tiền:{" "}
+            </Typography>
+            <Typography
+              variant="h6"
+              fontWeight={"550"}
+              color={"red"}
+              style={{
+                fontSize: "16px",
+              }}
+            >
+              <FormatCurrency amount={39000000} />
+            </Typography>
+          </Stack>
+          <CustomButtom
+            variant="contained"
+            fullWidth
+            sx={{ marginTop: "1rem" }}
+          >
+            Mua hàng
+          </CustomButtom>
         </Stack>
       </Container>
     </Wrapped>
