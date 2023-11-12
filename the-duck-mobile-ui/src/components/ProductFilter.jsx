@@ -1,18 +1,10 @@
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import SmartButtonIcon from "@mui/icons-material/SmartButton";
 import StoreIcon from "@mui/icons-material/Store";
-import {
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  Slider,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Divider, Slider, Stack, Typography } from "@mui/material";
+import PropTypes from "prop-types";
 import React from "react";
 import FilterItem from "./FilterItem";
-import PropTypes from "prop-types";
 
 ProductFilter.propTypes = {
   brands: PropTypes.array,
