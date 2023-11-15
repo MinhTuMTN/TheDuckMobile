@@ -4,7 +4,7 @@ import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 
 ProductSorter.propTypes = {
   onSort: PropTypes.func,
-  value: PropTypes.number,
+  value: PropTypes.string,
 };
 
 function ProductSorter(props) {
@@ -18,22 +18,22 @@ function ProductSorter(props) {
       <Stack direction={"row"} spacing={1} mt={1}>
         <Button
           variant="outlined"
-          color={value === 1 ? "color1" : "color4"}
-          onClick={(e) => onSort(1)}
+          color={value === "price_asc" ? "color1" : "color4"}
+          onClick={(e) => onSort("price_asc")}
         >
           Giá tăng dần
         </Button>
         <Button
           variant="outlined"
-          color={value === 2 ? "color1" : "color4"}
-          onClick={(e) => onSort(2)}
+          color={value === "price_desc" ? "color1" : "color4"}
+          onClick={(e) => onSort("price_desc")}
         >
           Giá giảm dần
         </Button>
         <Button
           variant="outlined"
-          color={value === 3 ? "color1" : "color4"}
-          onClick={(e) => onSort(3)}
+          color={value === "best_seller" ? "color1" : "color4"}
+          onClick={(e) => onSort("best_seller")}
         >
           Bán chạy
         </Button>

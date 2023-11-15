@@ -1,5 +1,5 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { Box, Button, Menu, Stack } from "@mui/material";
+import { Box, Button, Menu } from "@mui/material";
 import React from "react";
 
 FilterItem.propTypes = {};
@@ -73,19 +73,6 @@ function FilterItem(props) {
         }}
       >
         {children}
-        <Stack margin={2}>
-          <Stack
-            display={"flex"}
-            justifyContent={"end"}
-            direction={"row"}
-            spacing={1}
-          >
-            <Button variant="outlined" color="color1">
-              Hủy
-            </Button>
-            <Button variant="outlined">Xác nhận</Button>
-          </Stack>
-        </Stack>
       </Menu>
     </Box>
   );

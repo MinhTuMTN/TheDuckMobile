@@ -7,3 +7,7 @@ export const getAllCatalog = () => {
 export const getCatalogByCatalogURL = (catalogURL) => {
   return get(`catalog/${catalogURL}`);
 };
+
+export const getCatalogProductFilter = (catalogURL, filter) => {
+  return get(`catalog/${catalogURL}/products`, filter);
+};
