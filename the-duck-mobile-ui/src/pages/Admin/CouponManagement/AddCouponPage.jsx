@@ -7,14 +7,14 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-const RootPageAddPromotion = styled(Box)(({ theme }) => ({
+const RootPageAddCoupon = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
     padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
-const FormAddPromotion = styled(Paper)(({ theme }) => ({
+const FormAddCoupon = styled(Paper)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -39,12 +39,12 @@ const CustomDatePicker = styled(DatePicker)(({ theme }) => ({
     },
 }));
 
-function AddPromotionPage(props) {
+function AddCouponPage(props) {
     const [date, setDate] = useState(dayjs());
     
     return (
-        <RootPageAddPromotion>
-            <FormAddPromotion>
+        <RootPageAddCoupon>
+            <FormAddCoupon>
                 <Typography variant="h3">Thêm mã giảm giá mới</Typography>
                 <MuiTextFeild
                     label="Mã giảm giá"
@@ -78,9 +78,9 @@ function AddPromotionPage(props) {
                         <Typography color={"white"}>Thêm Mới</Typography>
                     </AddButton>
                 </FlexContainer>
-            </FormAddPromotion>
-        </RootPageAddPromotion>
+            </FormAddCoupon>
+        </RootPageAddCoupon>
     );
 }
 
-export default AddPromotionPage;
+export default AddCouponPage;

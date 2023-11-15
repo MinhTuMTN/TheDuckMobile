@@ -57,6 +57,13 @@ builder.Services.AddScoped<IStaffAdminServices, StaffAdminServicesImpl>();
 builder.Services.AddScoped<IAddressAdminServices, AddressAdminServicesImpl>();
 builder.Services.AddScoped<ICatalogAdminServices, CatalogAdminServicesImpl>();
 builder.Services.AddScoped<IBrandAdminServices, BrandAdminServicesImpl>();
+builder.Services.AddScoped<IColorAdminServices, ColorAdminServicesImpl>();
+builder.Services.AddScoped<ISpecialFeatureAdminServices, SpecialFeatureAdminServicesImpl>();
+builder.Services.AddScoped<IStoreAdminServices, StoreAdminServicesImpl>();
+builder.Services.AddScoped<IOSAdminServices, OSAdminServicesImpl>();
+builder.Services.AddScoped<IOrderAdminServices, OrderAdminServicesImpl>();
+builder.Services.AddScoped<ICouponAdminServices, CouponAdminServicesImpl>();
+builder.Services.AddScoped<IFeedbackAdminServices, FeedbackAdminServicesImpl>();
 #endregion
 
 var app = builder.Build();

@@ -11,6 +11,12 @@ import { getAllStaffs } from "../services/Admin/StaffService";
 import { getAllProvinces } from "../services/Admin/AddressService";
 import { getAllCatalogs } from "../services/Admin/CatalogService";
 import { getAllBrands } from "../services/Admin/BrandService";
+import { getAllColors } from "../services/Admin/ColorService";
+import { getAllSpecialFeatures } from "../services/Admin/SpecialFeatureService";
+import { getAllStores } from "../services/Admin/StoreService";
+import { getAllOSs } from "../services/Admin/OSService";
+import { getAllCoupons } from "../services/Admin/CouponService";
+import { getAllFeedbacks } from "../services/Admin/FeedbackService";
 import { enqueueSnackbar } from "notistack";
 
 const RootPageUser = styled(Box)(({ theme }) => ({
@@ -75,7 +81,6 @@ function AdminLayout(props) {
       }
     } else if (pathname === "/admin/catalog-management/list") {
       response = await getAllCatalogs();
-      console.log(response);
       if (response.success) {
         setDataFected(response.data.data);
       } else {
@@ -83,7 +88,48 @@ function AdminLayout(props) {
       }
     } else if (pathname === "/admin/brand-management/list") {
       response = await getAllBrands();
-      console.log(response);
+      if (response.success) {
+        setDataFected(response.data.data);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      }
+    } else if (pathname === "/admin/color-management/list") {
+      response = await getAllColors();
+      if (response.success) {
+        setDataFected(response.data.data);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      }
+    } else if (pathname === "/admin/special-feature-management/list") {
+      response = await getAllSpecialFeatures();
+      if (response.success) {
+        setDataFected(response.data.data);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      }
+    } else if (pathname === "/admin/store-management/list") {
+      response = await getAllStores();
+      if (response.success) {
+        setDataFected(response.data.data);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      }
+    } else if (pathname === "/admin/os-management/list") {
+      response = await getAllOSs();
+      if (response.success) {
+        setDataFected(response.data.data);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      }
+    } else if (pathname === "/admin/coupon-management/list") {
+      response = await getAllCoupons();
+      if (response.success) {
+        setDataFected(response.data.data);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      }
+    } else if (pathname === "/admin/feedback-management/list") {
+      response = await getAllFeedbacks();
       if (response.success) {
         setDataFected(response.data.data);
       } else {
@@ -94,7 +140,8 @@ function AdminLayout(props) {
 
   useEffect(() => {
     fetchData();
-  }, [pathname]);
+  }, []);
+
   return (
     <DataContext.Provider value={{ dataFetched }}>
       <Fragment>

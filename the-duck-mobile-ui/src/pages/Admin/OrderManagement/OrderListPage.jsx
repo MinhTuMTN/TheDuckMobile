@@ -17,38 +17,12 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { Link } from "react-router-dom";
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich1", 237, 9.0, 37, 4.3),
-  createData("Eclair2", 262, 16.0, 24, 6.0),
-  createData("Cupcake3", 305, 3.7, 67, 4.3),
-  createData("Gingerbread3", 356, 16.0, 49, 3.9),
-  createData("Frozen yoghurt4", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich5", 237, 9.0, 37, 4.3),
-  createData("Eclair6", 262, 16.0, 24, 6.0),
-  createData("Cupcake7", 305, 3.7, 67, 4.3),
-  createData("Gingerbread8", 356, 16.0, 49, 3.9),
-  createData("Frozen yoghurt9", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich0", 237, 9.0, 37, 4.3),
-  createData("Eclair11", 262, 16.0, 24, 6.0),
-  createData("Cupcake12", 305, 3.7, 67, 4.3),
-  createData("Gingerbread13", 356, 16.0, 49, 3.9),
-  createData("Frozen yoghurt14", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich15", 237, 9.0, 37, 4.3),
-  createData("Eclair16", 262, 16.0, 24, 6.0),
-  createData("Cupcake17", 305, 3.7, 67, 4.3),
-  createData("Gingerbread18", 356, 16.0, 49, 3.9),
-];
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+import { DataContext } from "../../../layouts/AdminLayout";
 
 const RootPageOrderList = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -62,24 +36,28 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function OrderListPage() {
+  const { dataFetched } = useContext(DataContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [rowsSearched, setRowsSearched] = useState(rows);
+  const [rowsSearched, setRowsSearched] = useState([]);
   const [searchString, setSearchString] = useState("");
 
-  const filterRows = (searchString) => {
-    if (searchString === "") {
-      return rows;
-    }
-    return rows.filter((row) =>
-      row.name.toLowerCase().includes(searchString.toLowerCase())
-    );
-  };
+  const filterRows = useCallback(
+    (searchString) => {
+      if (searchString === "") {
+        return dataFetched;
+      }
+      return dataFetched.filter((row) =>
+        row.orderId.toLowerCase().includes(searchString.toLowerCase())
+      );
+    },
+    [dataFetched]
+  );
 
   useEffect(() => {
     const filtered = filterRows(searchString);
     setRowsSearched(filtered);
-  }, [searchString]);
+  }, [searchString, filterRows]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -115,40 +93,42 @@ function OrderListPage() {
       />
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: 562, minWidth: 1035, maxWidth: 1035 }}
+        sx={{ maxHeight: 1070, minWidth: 1035, maxWidth: 1035 }}
       >
         <Table stickyHeader sx={{ maxWidth: 1200 }}>
           <TableHead>
             <TableRow>
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Calories</TableCell>
-              <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right">Protein&nbsp;(g)</TableCell>
-              <TableCell align="center">Lựa Chọn</TableCell>
+              <TableCell align="center">Mã đơn hàng</TableCell>
+              <TableCell align="center">Tổng tiền</TableCell>
+              <TableCell align="center">Khách hàng</TableCell>
+              <TableCell align="center">Nhân Viên</TableCell>
+              <TableCell align="center">Mã giảm giá</TableCell>
+              <TableCell align="center">Lựa chọn</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
               ? rowsSearched.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
               : rowsSearched
             ).map((row) => (
-              <TableRow key={row.name}>
-                <TableCell style={{ minWidth: 100 }}>{row.name}</TableCell>
-                <TableCell style={{ minWidth: 100 }} align="right">
-                  {row.calories}
+              <TableRow key={row.ordereId}>
+                <TableCell style={{ minWidth: 200 }} align="center">
+                  {row.ordereId}
                 </TableCell>
-                <TableCell style={{ minWidth: 100 }} align="right">
-                  {row.fat}
+                <TableCell style={{ minWidth: 150 }} align="center">
+                  {row.total}
                 </TableCell>
-                <TableCell style={{ minWidth: 100 }} align="right">
-                  {row.carbs}
+                <TableCell style={{ minWidth: 200 }} align="center">
+                  {row.customerName}
                 </TableCell>
-                <TableCell style={{ minWidth: 100 }} align="right">
-                  {row.protein}
+                <TableCell style={{ minWidth: 200 }} align="center">
+                  {row.staffName}
+                </TableCell>
+                <TableCell style={{ minWidth: 100 }} align="center">
+                  {row.couponCode}
                 </TableCell>
                 <TableCell style={{ minWidth: 200 }} align="center">
                   <MuiButton component={Link} color="oldPrimary" to="/admin/order-management/detail">

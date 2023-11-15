@@ -14,7 +14,7 @@ import {
     styled
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import { Link } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
@@ -54,19 +54,22 @@ function CatalogListPage() {
         setRowsSearched(dataFetched);
     }, [dataFetched]);
 
-    const filterRows = (searchString) => {
-        if (searchString === "") {
-            return dataFetched;
-        }
-        return dataFetched.filter((row) =>
-            row.catalogName.toLowerCase().includes(searchString.toLowerCase())
-        );
-    };
+    const filterRows = useCallback(
+        (searchString) => {
+            if (searchString === "") {
+                return dataFetched;
+            }
+            return dataFetched.filter((row) =>
+                row.catalogName.toLowerCase().includes(searchString.toLowerCase())
+            );
+        },
+        [dataFetched]
+    );
 
     useEffect(() => {
         const filtered = filterRows(searchString);
         setRowsSearched(filtered);
-    }, [searchString]);
+    }, [searchString, filterRows]);
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -105,7 +108,10 @@ function CatalogListPage() {
                     style: { fontSize: 18 },
                 }}
             />
-            <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
+            <TableContainer
+                component={Paper}
+                sx={{ maxHeight: 1070, minWidth: 1035, maxWidth: 1035 }}
+            >
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>

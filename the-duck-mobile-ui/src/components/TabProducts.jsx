@@ -47,21 +47,30 @@ const TabProducts = () => {
   };
 
   const handleGetProducts = useCallback(async () => {
+    var error = false;
     // get newest products
     const newestProductsResponse = await getNewestProducts();
     if (newestProductsResponse.success)
       setNewestProducts(newestProductsResponse.data.data);
-    else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    else
+      error = true;
 
     // get best seller products
     const bestSellerProductsResponse = await getBestSellingProducts();
     if (bestSellerProductsResponse.success)
       setBestSellerProducts(bestSellerProductsResponse.data.data);
+    else
+      error = true;
 
     // get top rated products
     const topRatedProductsResponse = await getHighlyRatedProducts();
     if (topRatedProductsResponse.success)
       setTopRatedProducts(topRatedProductsResponse.data.data);
+    else
+      error = true;
+
+    if (error)
+      enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
   }, [enqueueSnackbar]);
 
   useEffect(() => {

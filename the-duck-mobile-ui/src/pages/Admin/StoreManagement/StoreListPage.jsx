@@ -14,7 +14,7 @@ import {
     styled
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import { Link } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Search } from "@mui/icons-material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
+import { DataContext } from "../../../layouts/AdminLayout";
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -70,24 +71,32 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function StoreListPage() {
+    const { dataFetched } = useContext(DataContext);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rowsSearched, setRowsSearched] = useState(rows);
     const [searchString, setSearchString] = useState("");
 
-    const filterArticles = (searchString) => {
-        if (searchString === "") {
-            return rows;
-        }
-        return rows.filter((row) =>
-            row.name.toLowerCase().includes(searchString.toLowerCase())
-        );
-    };
+    useEffect(() => {
+        setRowsSearched(dataFetched);
+    }, [dataFetched]);
+
+    const filterRows = useCallback(
+        (searchString) => {
+            if (searchString === "") {
+                return dataFetched;
+            }
+            return dataFetched.filter((row) =>
+                row.storeName.toLowerCase().includes(searchString.toLowerCase())
+            );
+        },
+        [dataFetched]
+    );
 
     useEffect(() => {
-        const filtered = filterArticles(searchString);
+        const filtered = filterRows(searchString);
         setRowsSearched(filtered);
-    }, [searchString]);
+    }, [searchString, filterRows]);
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -126,16 +135,18 @@ function StoreListPage() {
                     style: { fontSize: 18 },
                 }}
             />
-            <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
+            <TableContainer
+                component={Paper}
+                sx={{ maxHeight: 1070, minWidth: 1035, maxWidth: 1035 }}
+            >
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Dessert (100g serving)</TableCell>
-                            <TableCell align="right">Calories</TableCell>
-                            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                            <TableCell align="center">Lựa Chọn</TableCell>
+                            <TableCell align="center">Mã chi nhánh</TableCell>
+                            <TableCell align="center">Tên chi nhánh</TableCell>
+                            <TableCell align="center">Số lượng nhân viên</TableCell>
+                            <TableCell align="center">Số lượng đơn hàng</TableCell>
+                            <TableCell align="center">Lựa chọn</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -143,21 +154,21 @@ function StoreListPage() {
                             ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
                         ).map((row) => (
-                            <TableRow key={row.name}>
-                                <TableCell style={{ minWidth: 100 }}>
-                                    {row.name}
+                            <TableRow key={row.storeId}>
+                                <TableCell style={{ minWidth: 200 }} align="center">
+                                    {row.storeId}
                                 </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.calories}
+                                <TableCell style={{ minWidth: 150 }} align="center">
+                                    {row.storeName}
                                 </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.fat}
+                                <TableCell style={{ minWidth: 100 }} align="center">
+                                    {row.numberOfStaffs}
                                 </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.carbs}
+                                <TableCell style={{ minWidth: 100 }} align="center">
+                                    {row.numberOfOrders}
                                 </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.protein}
+                                <TableCell style={{ minWidth: 250 }} align="center">
+                                    {row.isDeleted ? "Ngừng hoạt động" : "Còn hoạt động"}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
                                     <MuiButton component={Link} color="oldPrimary" to="/admin/store-management/detail"><InfoIcon /></MuiButton>
@@ -168,7 +179,7 @@ function StoreListPage() {
                         ))}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={7} />
+                                <TableCell colSpan={6} />
                             </TableRow>
                         )}
                     </TableBody>
@@ -176,7 +187,7 @@ function StoreListPage() {
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                                colSpan={6}
+                                colSpan={5}
                                 count={rowsSearched.length}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
