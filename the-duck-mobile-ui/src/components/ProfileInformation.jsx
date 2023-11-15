@@ -10,9 +10,9 @@ ProfileInformation.propTypes = {
 };
 
 function ProfileInformation(props) {
-  const [open, setOpen] = React.useState(false);
+  const [openEditInfo, setOpenEditInfo] = React.useState(false);
   const { margin } = props;
-  const info = useContext(UserInfoContext);
+  const [info, setInfo] = useContext(UserInfoContext);
   return (
     <Box margin={margin}>
       <Typography variant="h5">Thông tin cá nhân</Typography>
@@ -55,12 +55,17 @@ function ProfileInformation(props) {
         }}
         startIcon={<EditOutlined />}
         variant="outlined"
-        onClick={() => setOpen(true)}
+        onClick={() => setOpenEditInfo(true)}
       >
         Chỉnh sửa thông tin
       </Button>
 
-      <UserEditInfomation open={open} setOpen={setOpen} initValue={info} />
+      <UserEditInfomation
+        open={openEditInfo}
+        setOpen={setOpenEditInfo}
+        initValue={info}
+        onChange={setInfo}
+      />
     </Box>
   );
 }

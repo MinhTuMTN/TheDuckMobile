@@ -57,7 +57,12 @@ namespace TheDuckMobile_WebAPI.Entities
         public int CatalogId { get; set; }
         public virtual Catalog? Catalog { get; set; }
 
-        public virtual ICollection<SpecialFeature>? SpecialFeatures { get; set; }
+        private ICollection<SpecialFeature>? _specialFeatures;
+        public virtual ICollection<SpecialFeature>? SpecialFeatures
+        {
+            get => _lazyLoader.Load(this, ref _specialFeatures);
+            set => _specialFeatures = value;
+        }
 
         public Product(ILazyLoader lazyLoader)
         {

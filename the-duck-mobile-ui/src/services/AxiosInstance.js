@@ -1,5 +1,6 @@
 import axios from "axios";
 
+var qs = require("qs");
 const axiosInstance = axios.create({
   baseURL: "https://localhost:7008/api",
   timeout: 1000,
@@ -22,10 +23,20 @@ const handleRequest = async (requestMethod, url, data, headers, params) => {
   };
 
   try {
-    const response = await requestMethod(url, data, {
-      headers: headers,
-      params: params,
-    });
+    let response = null;
+    if (requestMethod === axiosInstance.get)
+      response = await requestMethod(url, {
+        headers: headers,
+        params: params,
+        paramsSerializer: (params) => {
+          return qs.stringify(params, { arrayFormat: "repeat" });
+        },
+      });
+    else
+      response = await requestMethod(url, data, {
+        headers: headers,
+        params: params,
+      });
 
     result.success = true;
     result.data = response.data;

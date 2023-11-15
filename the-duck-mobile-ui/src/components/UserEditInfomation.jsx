@@ -1,5 +1,3 @@
-import React from "react";
-import DialogForm from "./DialogForm";
 import {
   FormControl,
   FormControlLabel,
@@ -8,29 +6,29 @@ import {
   RadioGroup,
   Stack,
 } from "@mui/material";
-import MuiTextFeild from "./MuiTextFeild";
-import { editInfo } from "../services/UserService";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { useSnackbar } from "notistack";
-import { useNavigate } from "react-router-dom";
+import React, { memo } from "react";
+import { editInfo } from "../services/UserService";
+import DialogForm from "./DialogForm";
+import MuiTextFeild from "./MuiTextFeild";
 
 function UserEditInfomation(props) {
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-  const { open, setOpen, initValue } = props;
+  const { open, setOpen, initValue, onChange } = props;
   const [editInfomation, setEditInfomation] = React.useState({
-    fullName: initValue.fullName,
-    gender: initValue.gender,
+    fullName: initValue && initValue.fullName,
+    gender: initValue && initValue.gender,
+    dateOfBirth: initValue && initValue.dateOfBirth,
   });
 
   const handleEditInfomation = async () => {
     const response = await editInfo(editInfomation);
     if (response.success) {
       enqueueSnackbar("Chỉnh sửa thông tin thành công", { variant: "success" });
-
-      setTimeout(() => {
-        setOpen(false);
-        navigate(0);
-      }, 500);
+      onChange(response.data.data);
     } else {
       enqueueSnackbar("Chỉnh sửa thông tin thất bại", { variant: "error" });
     }
@@ -95,7 +93,6 @@ function UserEditInfomation(props) {
         <FormControl>
           <FormLabel>Họ tên</FormLabel>
           <MuiTextFeild
-            fullwidth
             value={editInfomation.fullName}
             onChange={(e) =>
               setEditInfomation((prev) => {
@@ -108,17 +105,33 @@ function UserEditInfomation(props) {
           />
         </FormControl>
 
+        <FormControl sx={{ paddingY: 1 }}>
+          <FormLabel>Ngày sinh</FormLabel>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              format="DD/MM/YYYY"
+              defaultValue={dayjs(initValue && initValue.dateOfBirth)}
+              value={dayjs(editInfomation.dateOfBirth)}
+              onChange={(newValue) => {
+                setEditInfomation((prev) => ({
+                  ...prev,
+                  dateOfBirth: newValue.toDate(),
+                }));
+              }}
+              sx={{
+                width: "fit-content",
+              }}
+            />
+          </LocalizationProvider>
+        </FormControl>
+
         <FormControl>
           <FormLabel>Số điện thoại</FormLabel>
-          <MuiTextFeild
-            fullwidth
-            value={initValue && initValue.phone}
-            disabled
-          />
+          <MuiTextFeild value={initValue && initValue.phone} disabled />
         </FormControl>
       </Stack>
     </DialogForm>
   );
 }
 
-export default UserEditInfomation;
+export default memo(UserEditInfomation);

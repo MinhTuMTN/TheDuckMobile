@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -15,6 +15,7 @@ import {
   getHighlyRatedProducts,
   getNewestProducts,
 } from "../services/ProductService";
+import { useSnackbar } from "notistack";
 
 const CustomTabList = styled(TabList)(({ theme }) => ({
   margin: "25px 0 0 0",
@@ -39,16 +40,18 @@ const TabProducts = () => {
   const [newestProducts, setNewestProducts] = useState([]);
   const [bestSellerProducts, setBestSellerProducts] = useState([]);
   const [topRatedProducts, setTopRatedProducts] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleChangeTab = (event, newTab) => {
     setTab(newTab);
   };
 
-  const handleGetProducts = async () => {
+  const handleGetProducts = useCallback(async () => {
     // get newest products
     const newestProductsResponse = await getNewestProducts();
     if (newestProductsResponse.success)
       setNewestProducts(newestProductsResponse.data.data);
+    else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
 
     // get best seller products
     const bestSellerProductsResponse = await getBestSellingProducts();
@@ -59,11 +62,11 @@ const TabProducts = () => {
     const topRatedProductsResponse = await getHighlyRatedProducts();
     if (topRatedProductsResponse.success)
       setTopRatedProducts(topRatedProductsResponse.data.data);
-  };
+  }, [enqueueSnackbar]);
 
   useEffect(() => {
     handleGetProducts();
-  }, []);
+  }, [handleGetProducts]);
 
   return (
     <Fragment>

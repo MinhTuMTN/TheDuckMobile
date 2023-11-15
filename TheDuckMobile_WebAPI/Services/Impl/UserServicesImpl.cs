@@ -53,6 +53,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
             user.FullName = request.FullName;
             user.Gender = (Gender)request.Gender!;
+            user.DateOfBirth = request.DateOfBirth;
+            user.LastModifiredAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return user;

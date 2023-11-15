@@ -8,5 +8,7 @@ namespace TheDuckMobile_WebAPI.Models.Request
         public string? FullName { get; set; }
         [Required(ErrorMessage = "Gender is required")]
         public int? Gender { get; set; }
+        [Required(ErrorMessage = "Date of birth is required")]
+        public DateTime? DateOfBirth { get; set; }
     }
 }

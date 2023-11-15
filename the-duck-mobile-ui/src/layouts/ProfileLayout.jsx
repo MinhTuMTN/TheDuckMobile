@@ -9,13 +9,13 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { createContext, useEffect } from "react";
+import React, { createContext, useCallback, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { useAuth } from "../auth/AuthProvider";
 import CustomLink from "../components/CustomLink";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import { useAuth } from "../auth/AuthProvider";
 import { getInfo } from "../services/UserService";
 
 const LogOutButton = styled(Button)(({ theme }) => ({
@@ -29,27 +29,27 @@ const UserInfoContext = createContext(null);
 
 function ProfileLayout(props) {
   const { setToken } = useAuth();
-  const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     setToken(null);
-    navigate("/", { replace: true });
-  };
+    window.location.href = "/";
+  }, [setToken]);
 
   const [info, setInfo] = React.useState(null);
-  const handleGetInfo = async () => {
+  const handleGetInfo = useCallback(async () => {
     const response = await getInfo();
     if (response.success) setInfo(response.data.data);
     else {
-      setToken(null);
-      navigate("/login", { replace: true });
+      setInfo(null);
+      handleLogout();
     }
-  };
+  }, [handleLogout]);
+
   useEffect(() => {
     handleGetInfo();
-  }, []);
+  }, [handleGetInfo]);
   return (
-    <UserInfoContext.Provider value={info}>
+    <UserInfoContext.Provider value={[info, setInfo]}>
       <Helmet>
         <title>The Duck Mobile</title>
         <meta name="description" content="The Duck Mobile" />

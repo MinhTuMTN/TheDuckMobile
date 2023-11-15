@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TheDuckMobile_WebAPI.Entities;
@@ -22,6 +23,7 @@ namespace TheDuckMobile_WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetUser()
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;

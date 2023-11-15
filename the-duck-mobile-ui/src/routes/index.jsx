@@ -33,6 +33,8 @@ import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
 import Loading from "../components/Loading";
 import StoreLayout from "../layouts/StoreLayout";
 import Product from "../pages/Seller/Product";
+import Orders from "../pages/Seller/Orders";
+import OrderDetails from "../pages/Seller/OrderDetails";
 import AddProductVersionPage from "../pages/Admin/ProductManagement/AddProductVersionPage";
 import EditProductPage from "../pages/Admin/ProductManagement/EditProductPage";
 import ProductDetailPage from "../pages/Admin/ProductManagement/ProductDetailPage";
@@ -103,7 +105,7 @@ function Router(props) {
           element: <BuyProduct />,
         },
         {
-          path: "/category",
+          path: "/catalog/:catalogURL",
           element: <CategoryLazy />,
         },
         {
@@ -242,7 +244,7 @@ function Router(props) {
           path: "customer-management/list",
           element: <CustomerListPage />,
         },
-        
+
         {
           path: "customer-management/detail",
           element: <CustomerDetailPage />,
@@ -259,7 +261,7 @@ function Router(props) {
           path: "staff-management/edit",
           element: <EditStaffPage />,
         },
-        
+
         {
           path: "staff-management/detail",
           element: <StaffDetailPage />,
@@ -351,8 +353,16 @@ function Router(props) {
       element: <StoreLayout />,
       children: [
         {
-          path: "products/list",
+          path: "products",
           element: <Product />,
+        },
+        {
+          path: "orders",
+          element: <Orders />,
+        },
+        {
+          path: "orderdetails",
+          element: <OrderDetails />,
         },
       ],
     },

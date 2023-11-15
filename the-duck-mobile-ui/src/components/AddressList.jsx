@@ -1,28 +1,44 @@
-import { Delete, Edit } from "@mui/icons-material";
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Divider,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { AddOutlined, Delete, Edit } from "@mui/icons-material";
+import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { memo, useEffect } from "react";
 import DialogConfirm from "./DialogConfirm";
-import DialogForm from "./DialogForm";
-import MuiTextFeild from "./MuiTextFeild";
+import UserAddAddress from "./UserAddAddress";
+import { useSnackbar } from "notistack";
+import { deleteAddress, getAddresses } from "../services/AddressService";
 
 AddressList.propTypes = {
   margin: PropTypes.string,
 };
 
 function AddressList(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const { margin } = props;
   const [deleteDialog, setDeleteDialog] = React.useState(false);
-  const [editDialog, setEditDialog] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [editAddress, setEditAddress] = React.useState(null);
+  const [address, setAddress] = React.useState([]);
 
-  const address = [];
+  const handleDeleteAddress = async () => {
+    const response = await deleteAddress(editAddress.addressId);
+    if (response.success) {
+      enqueueSnackbar("Xóa địa chỉ thành công", { variant: "success" });
+      setDeleteDialog(false);
+      setEditAddress(null);
+      setAddress(response.data.data);
+    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+  };
+
+  useEffect(() => {
+    const handleGetAddress = async () => {
+      const response = await getAddresses();
+      if (response.success) {
+        setAddress(response.data.data);
+      } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    };
+    if (address.length === 0) handleGetAddress();
+  }, [address.length, enqueueSnackbar]);
+
   return (
     <Box margin={margin}>
       <Typography variant="h5">Thông tin địa chỉ</Typography>
@@ -35,7 +51,7 @@ function AddressList(props) {
       <Stack spacing={1}>
         {address.length > 0 ? (
           address.map((item, index) => (
-            <Box key={index}>
+            <Box key={item.addressId}>
               <Stack
                 direction={"row"}
                 alignContent={"center"}
@@ -46,7 +62,8 @@ function AddressList(props) {
                   display={"flex"}
                   alignItems={"center"}
                 >
-                  {item}
+                  {item.street}, {item.wardName}, {item.districtName},
+                  {item.provinceName}
                 </Typography>
                 <Stack
                   direction={"row"}
@@ -58,7 +75,8 @@ function AddressList(props) {
                     color="primary"
                     startIcon={<Edit />}
                     onClick={() => {
-                      setEditDialog(true);
+                      setOpen(true);
+                      setEditAddress(item);
                     }}
                   >
                     Sửa
@@ -69,6 +87,7 @@ function AddressList(props) {
                     startIcon={<Delete />}
                     onClick={() => {
                       setDeleteDialog(true);
+                      setEditAddress(item);
                     }}
                   >
                     Xóa
@@ -81,6 +100,16 @@ function AddressList(props) {
           <Typography variant="body1">Bạn chưa có địa chỉ nào</Typography>
         )}
       </Stack>
+      <Button
+        variant="outlined"
+        startIcon={<AddOutlined />}
+        sx={{ marginTop: 1 }}
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        Thêm địa chỉ mới
+      </Button>
 
       <DialogConfirm
         open={deleteDialog}
@@ -89,67 +118,25 @@ function AddressList(props) {
         okText={"Xóa"}
         cancelText={"Hủy"}
         onOk={() => {
-          console.log("Xóa địa chỉ");
+          handleDeleteAddress();
         }}
         onCancel={() => {
-          console.log("Hủy");
+          setEditAddress(null);
         }}
         onClose={() => setDeleteDialog(false)}
       />
 
-      <DialogForm
-        open={editDialog}
-        title={"Chỉnh sửa địa chỉ"}
-        okText={"Cập nhật"}
-        cancelText={"Hủy bỏ"}
-        onOk={() => {
-          console.log("Xóa địa chỉ");
-        }}
-        onCancel={() => {
-          console.log("Hủy");
-        }}
-        onClose={() => setEditDialog(false)}
-      >
-        <Stack width={"30rem"} padding={".5rem 0 0 0"} spacing={2}>
-          <Stack spacing={2} direction={"row"} width={"100%"}>
-            <Autocomplete
-              fullWidth
-              options={["Tiền Giang", "Hồ Chí Minh"]}
-              renderInput={(params) => (
-                <MuiTextFeild
-                  {...params}
-                  style={{
-                    height: "100%",
-                  }}
-                  label="Tỉnh/Thành phố"
-                />
-              )}
-            />
-            <Autocomplete
-              fullWidth
-              options={[
-                "Tân Phú Đông",
-                "Gò Công Tây",
-                "Gò Công Đông",
-                "Cai Lậy",
-              ]}
-              renderInput={(params) => (
-                <MuiTextFeild {...params} label="Quận/Huyện" fontSize={14} />
-              )}
-            />
-          </Stack>
-          <Autocomplete
-            fullWidth
-            options={["Tân Thới", "Tân Phú", "Phú Thạnh", "Tân Hương"]}
-            renderInput={(params) => (
-              <MuiTextFeild {...params} label="Phường/Xã" />
-            )}
-          />
-          <MuiTextFeild fullWidth label="Số nhà, tên đường" />
-        </Stack>
-      </DialogForm>
+      {open && (
+        <UserAddAddress
+          open={open}
+          setOpen={setOpen}
+          onChangeAddress={setAddress}
+          editAddress={editAddress}
+          setEditAddress={setEditAddress}
+        />
+      )}
     </Box>
   );
 }
 
-export default AddressList;
+export default memo(AddressList);

@@ -54,5 +54,6 @@ namespace TheDuckMobile_WebAPI.Controllers
                 Message = "Successfully retrieved highly rated products"
             });
         }
+
     }
 }

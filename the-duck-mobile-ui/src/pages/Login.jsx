@@ -16,7 +16,6 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSnackbar } from "notistack";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import MuiTextFeild from "../components/MuiTextFeild";
 import { checkPhoneExists, login, register } from "../services/AuthService";
@@ -50,7 +49,6 @@ function Login(props) {
   const [dateOfBirth, setDateOfBirth] = React.useState(""); // Chỉ dùng khi step = 2 && phoneExist = false | yyyy-mm-dd
   const [phoneExist, setPhoneExist] = React.useState(false); // true: Số điện thoại đã tồn tại, false: Số điện thoại chưa tồn tại
   const [otp, setOtp] = React.useState("");
-  const navigate = useNavigate();
 
   const handleEnterPhoneNumber = async () => {
     if (phone.trim().length !== 10) {
@@ -84,7 +82,8 @@ function Login(props) {
     } else {
       setToken(response.data.data);
       enqueueSnackbar("Đăng nhập thành công", { variant: "success" });
-      navigate("/profile", { replace: true });
+      // navigate("/profile", { replace: true });
+      window.location.href = "/profile";
     }
   };
 

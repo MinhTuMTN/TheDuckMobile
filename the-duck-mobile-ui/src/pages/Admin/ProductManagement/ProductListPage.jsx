@@ -1,25 +1,26 @@
 import {
-    Box,
-    InputAdornment,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableFooter,
-    TableHead,
-    TablePagination,
-    TableRow,
-    Typography,
-    styled
+  Box,
+  InputAdornment,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+  styled,
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import { Link, useNavigate } from "react-router-dom";
-import InfoIcon from '@mui/icons-material/Info';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from "@mui/icons-material/Info";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { Search } from "@mui/icons-material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import AddToQueueIcon from "@mui/icons-material/AddToQueue";
@@ -33,22 +34,22 @@ import DialogConfirm from "../../../components/DialogConfirm";
 import { useSnackbar } from "notistack";
 
 const RootPageProductList = styled(Box)(({ theme }) => ({
-    display: "flex",
-    width: "100%",
-    flexDirection: "column",
-    padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
+  display: "flex",
+  width: "100%",
+  flexDirection: "column",
+  padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
 const AddButton = styled(MuiButton)(({ theme }) => ({
-    width: "25%",
-    marginBottom: theme.spacing(1),
-    "&:hover": {
-        backgroundColor: "#FF6969",
-    }
+  width: "25%",
+  marginBottom: theme.spacing(1),
+  "&:hover": {
+    backgroundColor: "#FF6969",
+  },
 }));
 
 const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
-    marginBottom: theme.spacing(1),
+  marginBottom: theme.spacing(1),
 }));
 
 function ProductListPage(props) {
@@ -82,18 +83,18 @@ function ProductListPage(props) {
     setRowsSearched(filtered);
   }, [searchString]);
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const handleClick = async () => {
     if (isDeleted) {
