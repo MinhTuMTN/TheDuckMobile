@@ -14,8 +14,7 @@ import {
   styled,
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import { Link, useNavigate } from "react-router-dom";
 import InfoIcon from "@mui/icons-material/Info";
