@@ -43,9 +43,9 @@ import AddStaffPage from "../pages/Admin/StaffManagement/AddStaffPage";
 import EditStaffPage from "../pages/Admin/StaffManagement/EditStaffPage";
 import StaffDetailPage from "../pages/Admin/StaffManagement/StaffDetailPage";
 import CustomerDetailPage from "../pages/Admin/CustomerManagement/CustomerDetailPage";
-import ProvineListPage from "../pages/Admin/AddressManagement/ProvineManagement/ProvineListPage";
-import AddProvinePage from "../pages/Admin/AddressManagement/ProvineManagement/AddProvinePage";
-import EditProvinePage from "../pages/Admin/AddressManagement/ProvineManagement/EditProvinePage";
+import ProvinceListPage from "../pages/Admin/AddressManagement/ProvinceManagement/ProvinceListPage";
+import AddProvincePage from "../pages/Admin/AddressManagement/ProvinceManagement/AddProvincePage";
+import EditProvincePage from "../pages/Admin/AddressManagement/ProvinceManagement/EditProvincePage";
 import AddDistrictPage from "../pages/Admin/AddressManagement/DistrictManagement/AddDistrictPage";
 import DistrictListPage from "../pages/Admin/AddressManagement/DistrictManagement/DistrictListPage";
 import EditDistrictPage from "../pages/Admin/AddressManagement/DistrictManagement/EditDistrictPage";
@@ -155,39 +155,39 @@ function Router(props) {
       element: <AdminLayout />,
       children: [
         {
-          path: "address-management/provine/list",
-          element: <ProvineListPage />,
+          path: "address-management/province/list",
+          element: <ProvinceListPage />,
         },
         {
-          path: "address-management/provine/add",
-          element: <AddProvinePage />,
+          path: "address-management/province/add",
+          element: <AddProvincePage />,
         },
         {
-          path: "address-management/provine/edit",
-          element: <EditProvinePage />,
+          path: "address-management/province/edit",
+          element: <EditProvincePage />,
         },
         {
-          path: "address-management/provine/detail",
+          path: "address-management/province/detail",
           element: <DistrictListPage />,
         },
         {
-          path: "address-management/provine/district/add",
+          path: "address-management/province/district/add",
           element: <AddDistrictPage />,
         },
         {
-          path: "address-management/provine/district/edit",
+          path: "address-management/province/district/edit",
           element: <EditDistrictPage />,
         },
         {
-          path: "address-management/provine/district/detail",
+          path: "address-management/province/district/detail",
           element: <WardListPage />,
         },
         {
-          path: "address-management/provine/district/ward/add",
+          path: "address-management/province/district/ward/add",
           element: <AddWardPage />,
         },
         {
-          path: "address-management/provine/district/ward/edit",
+          path: "address-management/province/district/ward/edit",
           element: <EditWardPage />,
         },
         {

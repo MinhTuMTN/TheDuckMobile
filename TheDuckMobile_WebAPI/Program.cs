@@ -50,6 +50,11 @@ builder.Services.AddScoped<IProductServices, ProductServicesImpl>();
 
 // Admin
 builder.Services.AddScoped<IProductAdminServices, ProductAdminServicesImpl>();
+builder.Services.AddScoped<ICustomerAdminServices, CustomerAdminServicesImpl>();
+builder.Services.AddScoped<IStaffAdminServices, StaffAdminServicesImpl>();
+builder.Services.AddScoped<IAddressAdminServices, AddressAdminServicesImpl>();
+builder.Services.AddScoped<ICatalogAdminServices, CatalogAdminServicesImpl>();
+builder.Services.AddScoped<IBrandAdminServices, BrandAdminServicesImpl>();
 #endregion
 
 var app = builder.Build();

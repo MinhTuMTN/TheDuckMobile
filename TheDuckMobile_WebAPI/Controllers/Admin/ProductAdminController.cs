@@ -53,7 +53,12 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         {
             var product = await _productServices.DeleteProduct(productId);
             if (product == null)
-                return NotFound();
+                return NotFound(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Product not found",
+                    Data = null
+                });
             return Ok(new GenericResponse
             {
                 Success = true,

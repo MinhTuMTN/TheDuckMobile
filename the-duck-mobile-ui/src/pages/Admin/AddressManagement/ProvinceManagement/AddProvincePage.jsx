@@ -3,14 +3,14 @@ import FlexContainer from "../../../../components/FlexContainer";
 import MuiButton from "../../../../components/MuiButton";
 import MuiTextFeild from "../../../../components/MuiTextFeild";
 
-const RootPageAddProvine = styled(Box)(({ theme }) => ({
+const RootPageAddProvince = styled(Box)(({ theme }) => ({
   display: "flex",
   width: "100%",
   flexDirection: "column",
   padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
-const FormAddProvine = styled(Paper)(({ theme }) => ({
+const FormAddProvince = styled(Paper)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
@@ -28,10 +28,10 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
   },
 }));
 
-function AddProvinePage(props) {
+function AddProvincePage(props) {
   return (
-    <RootPageAddProvine>
-      <FormAddProvine>
+    <RootPageAddProvince>
+      <FormAddProvince>
         <Typography variant="h3">Thêm tỉnh mới</Typography>
         <MuiTextFeild
           label="Tên tỉnh"
@@ -44,9 +44,9 @@ function AddProvinePage(props) {
             <Typography color={"white"}>Thêm Mới</Typography>
           </AddButton>
         </FlexContainer>
-      </FormAddProvine>
-    </RootPageAddProvine>
+      </FormAddProvince>
+    </RootPageAddProvince>
   );
 }
 
-export default AddProvinePage;
+export default AddProvincePage;

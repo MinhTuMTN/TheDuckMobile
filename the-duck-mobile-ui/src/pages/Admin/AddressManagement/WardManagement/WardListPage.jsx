@@ -104,7 +104,7 @@ function WardListPage() {
     return (
         <RootPageWardList>
             <Typography variant="h3">Danh sách phường</Typography>
-            <AddButton component={Link} variant="contained" color="color1" to="/admin/address-management/provine/district/ward/add">
+            <AddButton component={Link} variant="contained" color="color1" to="/admin/address-management/province/district/ward/add">
                 <Typography color={"white"}>
                     Thêm Phường Mới
                 </Typography>
@@ -159,7 +159,7 @@ function WardListPage() {
                                     {row.protein}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton component={Link} color="teal" to="/admin/address-management/provine/district/ward/edit"><EditIcon /></MuiButton>
+                                    <MuiButton component={Link} color="teal" to="/admin/address-management/province/district/ward/edit"><EditIcon /></MuiButton>
                                     <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>
                             </TableRow>

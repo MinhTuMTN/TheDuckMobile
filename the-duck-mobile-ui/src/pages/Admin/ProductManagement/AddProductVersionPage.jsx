@@ -41,7 +41,7 @@ function AddProductVersionPage(props) {
                     return <Step2Laptop value={formValues} onChange={handleStepChange} />;
                 else if (data.category === "tablet")
                     return <Step2Tablet value={formValues} onChange={handleStepChange} />;
-                else if (data.category === "smart-watch")
+                else if (data.category === "smartwatch")
                     return <Step2SmartWatch value={formValues} onChange={handleStepChange} />;
                 else
                     return <Step2MobilePhone value={formValues} onChange={handleStepChange} />;

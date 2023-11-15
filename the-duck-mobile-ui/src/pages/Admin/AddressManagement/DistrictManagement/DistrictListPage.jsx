@@ -105,7 +105,7 @@ function DistrictListPage() {
     return (
         <RootPageDistrictList>
             <Typography variant="h3">Danh sách huyện</Typography>
-            <AddButton component={Link} variant="contained" color="color1" to="/admin/address-management/provine/district/add">
+            <AddButton component={Link} variant="contained" color="color1" to="/admin/address-management/province/district/add">
                 <Typography color={"white"}>
                     Thêm Huyện Mới
                 </Typography>
@@ -160,8 +160,8 @@ function DistrictListPage() {
                                     {row.protein}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton component={Link} color="oldPrimary" to="/admin/address-management/provine/district/detail"><InfoIcon /></MuiButton>
-                                    <MuiButton component={Link} color="teal" to="/admin/address-management/provine/district/edit"><EditIcon /></MuiButton>
+                                    <MuiButton component={Link} color="oldPrimary" to="/admin/address-management/province/district/detail"><InfoIcon /></MuiButton>
+                                    <MuiButton component={Link} color="teal" to="/admin/address-management/province/district/edit"><EditIcon /></MuiButton>
                                     <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
                                 </TableCell>
                             </TableRow>

@@ -3,14 +3,14 @@ import MuiTextFeild from "../../../../components/MuiTextFeild";
 import MuiButton from "../../../../components/MuiButton";
 import FlexContainer from "../../../../components/FlexContainer";
 
-const RootPageEditProvine = styled(Box)(({ theme }) => ({
+const RootPageEditProvince = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
     padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
-const FormEditProvine = styled(Paper)(({ theme }) => ({
+const FormEditProvince = styled(Paper)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -27,11 +27,11 @@ const EditButton = styled(MuiButton)(({ theme }) => ({
     }
 }));
 
-function EditProvinePage(props) {
+function EditProvincePage(props) {
 
     return (
-        <RootPageEditProvine>
-            <FormEditProvine>
+        <RootPageEditProvince>
+            <FormEditProvince>
                 <Typography variant="h3">Chỉnh sửa thông tin tỉnh "{ }"</Typography>
                 <MuiTextFeild
                     label="Tên tỉnh"
@@ -45,9 +45,9 @@ function EditProvinePage(props) {
                     </EditButton>
                 </FlexContainer>
 
-            </FormEditProvine>
-        </RootPageEditProvine>
+            </FormEditProvince>
+        </RootPageEditProvince>
     );
 }
 
-export default EditProvinePage;
+export default EditProvincePage;
