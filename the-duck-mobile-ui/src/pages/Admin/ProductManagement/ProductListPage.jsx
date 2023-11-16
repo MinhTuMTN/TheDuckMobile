@@ -14,7 +14,7 @@ import {
   styled,
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import { Link, useNavigate } from "react-router-dom";
 import InfoIcon from "@mui/icons-material/Info";
@@ -68,19 +68,22 @@ function ProductListPage(props) {
     setRowsSearched(dataFetched);
   }, [dataFetched]);
 
-  const filterRows = (searchString) => {
-    if (searchString === "") {
+  const filterRows = useCallback(
+    (searchString) => {
+      if (searchString === "") {
         return dataFetched;
-    }
-    return dataFetched.filter((row) =>
+      }
+      return dataFetched.filter((row) =>
         row.productName.toLowerCase().includes(searchString.toLowerCase())
-    );
-};
+      );
+    },
+    [dataFetched]
+  );
 
   useEffect(() => {
     const filtered = filterRows(searchString);
     setRowsSearched(filtered);
-  }, [searchString]);
+  }, [searchString, filterRows]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -99,7 +102,9 @@ function ProductListPage(props) {
     if (isDeleted) {
       const productResponse = await restoreProduct(id);
       if (productResponse.success) {
-        enqueueSnackbar("Khôi phục sản phẩm thành công!", { variant: "success" });
+        enqueueSnackbar("Khôi phục sản phẩm thành công!", {
+          variant: "success",
+        });
         const products = [...dataFetched];
         products[index].isDeleted = !isDeleted;
         setRowsSearched(products);

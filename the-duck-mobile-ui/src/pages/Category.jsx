@@ -77,19 +77,20 @@ function Category(props) {
 
   useEffect(() => {
     const handleGetProductFilter = async () => {
+      console.log(pagination.page);
       const response = await getCatalogProductFilter(catalogURL, {
         minPrice: parseInt((filter.price[0] / 100) * 100000000),
         maxPrice: parseInt((filter.price[1] / 100) * 100000000),
         brands: filter.brands,
         specialFeatures: filter.specialFeatures,
         orderBy: filter.orderBy,
-        page: pagination.page,
+        page: pagination.page - 1,
       });
 
       if (response.success) {
         setProducts(response.data.data.objects);
         setPagination({
-          page: response.data.data.page,
+          page: response.data.data.page + 1,
           totalPages: response.data.data.totalPages,
         });
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });

@@ -17,7 +17,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import TablePaginationActions from "../../../components/TablePaginationActions";
@@ -40,7 +40,7 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   "&:hover": {
     backgroundColor: "#FF6969",
-  }
+  },
 }));
 
 function StaffListPage() {
@@ -55,19 +55,22 @@ function StaffListPage() {
     setRowsSearched(dataFetched);
   }, [dataFetched]);
 
-  const filterRows = (searchString) => {
-    if (searchString === "") {
-      return dataFetched;
-    }
-    return dataFetched.filter((row) =>
-      row.fullName.toLowerCase().includes(searchString.toLowerCase())
-    );
-  };
+  const filterRows = useCallback(
+    (searchString) => {
+      if (searchString === "") {
+        return dataFetched;
+      }
+      return dataFetched.filter((row) =>
+        row.fullName.toLowerCase().includes(searchString.toLowerCase())
+      );
+    },
+    [dataFetched]
+  );
 
   useEffect(() => {
     const filtered = filterRows(searchString);
     setRowsSearched(filtered);
-  }, [searchString]);
+  }, [searchString, filterRows]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -91,9 +94,7 @@ function StaffListPage() {
         color="color1"
         to="/admin/staff-management/add"
       >
-        <Typography color={"white"}>
-          Thêm Nhân Viên Mới
-        </Typography>
+        <Typography color={"white"}>Thêm Nhân Viên Mới</Typography>
       </AddButton>
       <SearchTextField
         type="text"
@@ -132,9 +133,9 @@ function StaffListPage() {
           <TableBody>
             {(rowsPerPage > 0
               ? rowsSearched.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
               : rowsSearched
             ).map((row, i) => (
               <TableRow key={row.userId}>
