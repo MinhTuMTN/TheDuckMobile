@@ -59,6 +59,7 @@ builder.Services.AddScoped<IAddressAdminServices, AddressAdminServicesImpl>();
 builder.Services.AddScoped<ICatalogAdminServices, CatalogAdminServicesImpl>();
 builder.Services.AddScoped<IBrandAdminServices, BrandAdminServicesImpl>();
 builder.Services.AddScoped<ISpecialFeatureServices, SpecialFeatureServicesImpl>();
+builder.Services.AddScoped<ICatalogAttributeServices, CatalogAttributeServicesImpl>();
 #endregion
 
 var app = builder.Build();

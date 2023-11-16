@@ -18,6 +18,9 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public virtual ICollection<SelectionValue>? SelectionValues { get; set; }
 
-        public CatalogAttribute() { }
+        public CatalogAttribute()
+        {
+            this.SelectionValues = new HashSet<SelectionValue>();
+        }
     }
 }

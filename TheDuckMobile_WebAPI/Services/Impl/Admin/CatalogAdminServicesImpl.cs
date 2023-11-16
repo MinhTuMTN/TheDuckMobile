@@ -83,5 +83,17 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 .ToListAsync();
             return catalogs.Select(c => new CatalogListResponse(c)).ToList();
         }
+
+        public async Task<ICollection<CatalogAttribute>> GetCatalogAttributes(int catalogId)
+        {
+            var catalog = await _context.Catalogs
+                .Include(c => c.CatalogAttributes)
+                .FirstOrDefaultAsync(c => c.CatalogId == catalogId && c.IsDeleted == false);
+
+            if (catalog == null)
+                throw new CustomNotFoundException("Can't found catalog");
+
+            return catalog.CatalogAttributes!;
+        }
     }
 }

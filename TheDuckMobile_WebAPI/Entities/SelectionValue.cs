@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TheDuckMobile_WebAPI.Entities
 {
@@ -11,6 +12,7 @@ namespace TheDuckMobile_WebAPI.Entities
         public string? Value { get; set; }
 
         public string? Key { get; set; }
+        [JsonIgnore]
         public CatalogAttribute? CatalogAttribute { get; set; }
 
         public bool IsDeleted { get; set; }

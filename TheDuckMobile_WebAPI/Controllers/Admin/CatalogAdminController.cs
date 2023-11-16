@@ -66,5 +66,17 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Message = "Successfully added special feature to catalog"
             });
         }
+
+        [HttpGet("{catalogId}/attributes")]
+        public async Task<IActionResult> GetCatalogAttributes([FromRoute] int catalogId)
+        {
+            var catalogAttributes = await _catalogServices.GetCatalogAttributes(catalogId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = catalogAttributes,
+                Message = "Successfully retrieved catalog attributes"
+            });
+        }
     }
 }
