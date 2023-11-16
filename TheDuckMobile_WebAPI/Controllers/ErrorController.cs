@@ -20,7 +20,6 @@ namespace TheDuckMobile_WebAPI.Controllers
         {
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
 
-            // check type of error
             if (context?.Error is CustomNotFoundException)
             {
                 return HandleNotFoundError(context);

@@ -60,6 +60,7 @@ builder.Services.AddScoped<ICatalogAdminServices, CatalogAdminServicesImpl>();
 builder.Services.AddScoped<IBrandAdminServices, BrandAdminServicesImpl>();
 builder.Services.AddScoped<ISpecialFeatureServices, SpecialFeatureServicesImpl>();
 builder.Services.AddScoped<ICatalogAttributeServices, CatalogAttributeServicesImpl>();
+builder.Services.AddScoped<IOSAdminServices, OSServicesImpl>();
 #endregion
 
 var app = builder.Build();
