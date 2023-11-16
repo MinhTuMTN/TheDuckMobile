@@ -1,48 +1,101 @@
 import styled from "@emotion/styled";
-import { Box, Divider, Drawer, Typography, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
 import SimpleBar from "simplebar-react";
 import pic from "../../assets/logo-removebg-preview.jpg";
-const Scrollbar = styled(SimpleBar)(({ theme }) => ({
-  height: "100%",
-  "& .simplebar-content": {
-    height: "100%",
-  },
-  "& .simplebar-scrollbar:before": {
-    background: "red",
-  },
-}));
+
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
 function LeftNavBar(props) {
   const { open, onClose } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const content = (
-    <Scrollbar>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
       <Box
         sx={{
+          paddingTop: 3,
+          paddingX: 1,
+          alignItems: "center",
           display: "flex",
-          flexDirection: "column",
-          height: "100%",
         }}
       >
-        <Box sx={{ paddingTop: 3, paddingX: 1.5, paddingBottom: 2 }}>
-          <Box
-            sx={{
-              height: "5rem",
-              width: "2rem",
-              display: "inline-flex",
-              direction: "row",
-            }}
-          >
-            <img alt="logo" src={pic} />
-            <Typography variant="h6" sx={{ color: "white" }}>
-              The Duck Mobile
-            </Typography>
-          </Box>
+        <Box
+          sx={{
+            height: "4.5rem",
+            width: "4.5rem",
+            display: "flex",
+            direction: "row",
+          }}
+        >
+          <img alt="logo" src={pic} />
         </Box>
-        <Divider sx={{ borderColor: "#4e4846" }} />
+        <Typography variant="h5" sx={{ color: "white" }}>
+          The Duck Mobile
+        </Typography>
       </Box>
-    </Scrollbar>
+      <List
+        sx={{
+          paddingTop: 0,
+          paddingLeft: 1,
+        }}
+      >
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Thống kê"} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Thống kê"} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Thống kê"} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton color="white">
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText
+              secondary={"Thống kê"}
+              sx={{
+                color: "white",
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
+      </List>
+    </Box>
   );
   if (lgUp) {
     return (
