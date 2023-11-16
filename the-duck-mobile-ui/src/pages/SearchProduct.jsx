@@ -7,6 +7,7 @@ import ProductGrid from "../components/ProductGrid";
 import ProductSorter from "../components/ProductSorter";
 import { searchProducts } from "../services/ProductService";
 import usePrevious from "../hooks/usePrevious";
+import { Helmet } from "react-helmet-async";
 
 function SearchProduct(props) {
   const [searchParams] = useSearchParams();
@@ -53,6 +54,10 @@ function SearchProduct(props) {
 
   return (
     <Stack mt={10} mb={10} width={"100%"} alignItems={"center"}>
+      <Helmet>
+        <title>Kết quả tìm kiếm cho {query} | The Duck Mobile</title>
+      </Helmet>
+
       <CustomBreadcrumb
         urls={[
           { text: "Trang chủ", url: "/" },

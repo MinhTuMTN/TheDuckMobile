@@ -172,6 +172,7 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
             onChange={(e) => setSearchText(e.target.value)}
             onKeyPress={(e) => {
               if (e.key === "Enter") {
+                setSearchText("");
                 navigate(`/search?q=${searchText}`);
               }
             }}
