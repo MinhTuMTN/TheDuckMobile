@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Entities;
+using TheDuckMobile_WebAPI.ErrorHandler;
 using TheDuckMobile_WebAPI.Models.Request.Admin;
 using TheDuckMobile_WebAPI.Models.Response;
 using TheDuckMobile_WebAPI.Models.Response.Admin;
@@ -55,7 +56,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 .FirstOrDefaultAsync();
 
             if (brand == null)
-                throw new Exception("Brand can't be found");
+                throw new CustomNotFoundException("Brand can't be found");
 
             if (request.Image != null)
             {
@@ -71,6 +72,21 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             await _context.SaveChangesAsync();
 
             return new BrandResponse(brand);
+        }
+
+        public async Task<bool> DeleteBrand(int brandId)
+        {
+            var brand = await _context.Brands
+                .Where(b => b.BrandId == brandId && b.IsDeleted == false)
+                .FirstOrDefaultAsync();
+
+            if (brand == null)
+                throw new CustomNotFoundException("Brand can't be found");
+
+            brand.IsDeleted = true;
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -76,6 +76,8 @@ app.UseCors(x => x
           .AllowAnyHeader());
 #endregion
 
+app.UseExceptionHandler("/error-handler");
+
 //app.UseHttpsRedirection();
 
 app.UseAuthentication();

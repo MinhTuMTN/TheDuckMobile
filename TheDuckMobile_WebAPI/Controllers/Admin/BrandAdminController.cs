@@ -54,5 +54,21 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Message = "Successfully edited brand"
             });
         }
+
+        [HttpDelete("{brandId}")]
+        public async Task<IActionResult> DeleteBrand([FromRoute] int brandId)
+        {
+            var result = await _brandServices.DeleteBrand(brandId);
+
+            if (!result)
+                throw new Exception("Failed to delete brand");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = null,
+                Message = "Successfully deleted brand"
+            });
+        }
     }
 }
