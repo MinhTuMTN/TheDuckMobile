@@ -63,6 +63,8 @@ function Login(props) {
     if (response.success) {
       setPhoneExist(response.data.data);
       setStep(2);
+    } else {
+      enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
     }
   };
 

@@ -14,7 +14,7 @@ import {
     styled
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import { Link } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Search } from "@mui/icons-material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
+import { DataContext } from "../../../layouts/AdminLayout";
 
 const rows = [
     createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -62,7 +63,7 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
     marginBottom: theme.spacing(1),
     "&:hover": {
         backgroundColor: "#FF6969",
-      }
+    }
 }));
 
 const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
@@ -70,17 +71,22 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function BrandListPage() {
+    const { dataFetched } = useContext(DataContext);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [rowsSearched, setRowsSearched] = useState(rows);
+    const [rowsSearched, setRowsSearched] = useState([]);
     const [searchString, setSearchString] = useState("");
+
+    useEffect(() => {
+        setRowsSearched(dataFetched);
+    }, [dataFetched]);
 
     const filterRows = (searchString) => {
         if (searchString === "") {
-            return rows;
+            return dataFetched;
         }
-        return rows.filter((row) =>
-            row.name.toLowerCase().includes(searchString.toLowerCase())
+        return dataFetched.filter((row) =>
+            row.brandName.toLowerCase().includes(searchString.toLowerCase())
         );
     };
 
@@ -130,12 +136,12 @@ function BrandListPage() {
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Dessert (100g serving)</TableCell>
-                            <TableCell align="right">Calories</TableCell>
-                            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                            <TableCell align="center">Lựa Chọn</TableCell>
+                            <TableCell align="center">Mã thương hiệu</TableCell>
+                            <TableCell align="center">Tên thương hiệu</TableCell>
+                            <TableCell align="center">Hình ảnh</TableCell>
+                            <TableCell align="center">Số lượng sản phẩm</TableCell>
+                            <TableCell align="center">Trạng thái</TableCell>
+                            <TableCell align="center">Lựa chọn</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -143,23 +149,30 @@ function BrandListPage() {
                             ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
                         ).map((row) => (
-                            <TableRow key={row.name}>
-                                <TableCell style={{ minWidth: 100 }}>
-                                    {row.name}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.calories}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.fat}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.carbs}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.protein}
+                            <TableRow key={row.brandId}>
+                                <TableCell style={{ minWidth: 50 }} align="center">
+                                    {row.brandId}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
+                                    {row.brandName}
+                                </TableCell>
+                                <TableCell style={{ minWidth: 250 }} align="center">
+                                    <img
+                                        style={{
+                                            maxWidth: "100%",
+                                            height: "auto",
+                                        }}
+                                        alt="avatar"
+                                        src={row.image}
+                                    />
+                                </TableCell>
+                                <TableCell style={{ minWidth: 50 }} align="center">
+                                    {row.numberOfProducts}
+                                </TableCell>
+                                <TableCell style={{ minWidth: 250 }} align="center">
+                                    {row.isDeleted ? "Ngừng hoạt động" : "Còn hoạt động"}
+                                </TableCell>
+                                <TableCell style={{ minWidth: 230 }} align="center">
                                     <MuiButton component={Link} color="oldPrimary"><InfoIcon /></MuiButton>
                                     <MuiButton component={Link} color="teal" to="/admin/brand-management/edit"><EditIcon /></MuiButton>
                                     <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>

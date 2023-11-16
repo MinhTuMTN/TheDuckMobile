@@ -94,6 +94,7 @@ function UserAddAddress(props) {
       wardId: address.ward,
     });
 
+    setEditAddress(null);
     if (response.success) {
       enqueueSnackbar("Chỉnh sửa địa chỉ thành công", { variant: "success" });
       onChangeAddress(response.data.data);

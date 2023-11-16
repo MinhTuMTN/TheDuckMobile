@@ -39,14 +39,7 @@ namespace TheDuckMobile_WebAPI.Entities
             get => _lazyLoader.Load(this, ref _brand);
             set => _brand = value;
         }
-
-        private ICollection<Vote>? _votes;
-        [JsonIgnore]
-        public virtual ICollection<Vote>? Votes
-        {
-            get => _lazyLoader.Load(this, ref _votes);
-            set => _votes = value;
-        }
+        public virtual ICollection<Vote>? Votes { get; set; }
 
         public virtual ICollection<ProductVersion>? ProductVersions { get; set; }
 
@@ -57,7 +50,12 @@ namespace TheDuckMobile_WebAPI.Entities
         public int CatalogId { get; set; }
         public virtual Catalog? Catalog { get; set; }
 
-        public virtual ICollection<SpecialFeature>? SpecialFeatures { get; set; }
+        private ICollection<SpecialFeature>? _specialFeatures;
+        public virtual ICollection<SpecialFeature>? SpecialFeatures
+        {
+            get => _lazyLoader.Load(this, ref _specialFeatures);
+            set => _specialFeatures = value;
+        }
 
         public Product(ILazyLoader lazyLoader)
         {

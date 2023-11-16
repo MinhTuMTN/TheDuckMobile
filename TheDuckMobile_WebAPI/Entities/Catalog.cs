@@ -52,7 +52,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public Catalog()
         {
-
+            Products = new HashSet<Product>();
         }
 
         public Catalog(ILazyLoader lazyLoader)

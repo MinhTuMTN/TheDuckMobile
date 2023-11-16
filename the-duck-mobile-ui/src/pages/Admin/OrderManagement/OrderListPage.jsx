@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import TablePaginationActions from "../../../components/TablePaginationActions";
+import { Link } from "react-router-dom";
 
 const rows = [
   createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
@@ -150,7 +151,7 @@ function OrderListPage() {
                   {row.protein}
                 </TableCell>
                 <TableCell style={{ minWidth: 200 }} align="center">
-                  <MuiButton color="oldPrimary">
+                  <MuiButton component={Link} color="oldPrimary" to="/admin/order-management/detail">
                     <InfoIcon />
                   </MuiButton>
                   <MuiButton color="teal">

@@ -54,5 +54,23 @@ namespace TheDuckMobile_WebAPI.Controllers
                 Message = "Successfully retrieved highly rated products"
             });
         }
+
+        [HttpGet("search")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchProducts(
+            [FromQuery] string q,
+            [FromQuery] string? orderBy = null,
+            [FromQuery] int page = 0,
+            [FromQuery] int limit = 8)
+        {
+            var result = await _productServices.SearchProduct(q, orderBy, page, limit);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = result,
+                Message = "Successfully retrieved products"
+            });
+        }
+
     }
 }

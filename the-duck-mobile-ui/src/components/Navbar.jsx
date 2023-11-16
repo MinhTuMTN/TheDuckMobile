@@ -2,11 +2,13 @@ import styled from "@emotion/styled/macro";
 import { SearchOutlined } from "@mui/icons-material";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import { Box, Card, InputAdornment, Typography } from "@mui/material";
-import React, { memo } from "react";
+import { Box, Card, InputAdornment, Menu, Typography } from "@mui/material";
+import React, { memo, useEffect } from "react";
 import MuiTextFeild from "../components/MuiTextFeild";
 import CustomLink from "./CustomLink";
 import Logo from "./Logo";
+import { getAllCatalog } from "../services/CatalogService";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled(Box)(({ theme }) => ({
   width: "100vw",
@@ -82,6 +84,28 @@ const MenuItem = styled("span")(({ theme }) => ({
 }));
 
 const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
+  const [catalogs, setCatalogs] = React.useState([]);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [searchText, setSearchText] = React.useState("");
+  const navigate = useNavigate();
+  function handleClick(event) {
+    if (anchorEl !== event.currentTarget) {
+      setAnchorEl(event.currentTarget);
+    }
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  useEffect(() => {
+    const handleGetCatalogs = async () => {
+      const response = await getAllCatalog();
+      if (response.success) setCatalogs(response.data.data);
+    };
+    handleGetCatalogs();
+  }, []);
+
   return (
     <Wrapper>
       <Container>
@@ -98,12 +122,26 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
             <CustomLink to={"/"}>Trang chủ</CustomLink>
           </MenuItem>
           <MenuItem>
-            <CustomLink to={"/category"}>Danh mục</CustomLink>
-            <SubMenu sx={{ width: "150px" }}>
-              <CustomLink>Điện thoại</CustomLink>
-              <CustomLink>Laptop</CustomLink>
-              <CustomLink>Máy tính bảng</CustomLink>
-            </SubMenu>
+            <CustomLink onMouseOver={handleClick}>Danh mục</CustomLink>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              MenuListProps={{ onMouseLeave: handleClose }}
+              className="menu-dropdown"
+            >
+              {catalogs.map((item, index) => (
+                <MenuItem style={{ padding: ".5rem" }} key={`catalog-${index}`}>
+                  <CustomLink
+                    to={`/catalog/${item.catalogURL}`}
+                    fontWeight={"none"}
+                  >
+                    {item.catalogName}
+                  </CustomLink>
+                </MenuItem>
+              ))}
+            </Menu>
           </MenuItem>
 
           <MenuItem>
@@ -129,6 +167,14 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
             }}
             sx={{
               marginRight: "5px",
+            }}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                setSearchText("");
+                navigate(`/search?q=${searchText}`);
+              }
             }}
           />
 

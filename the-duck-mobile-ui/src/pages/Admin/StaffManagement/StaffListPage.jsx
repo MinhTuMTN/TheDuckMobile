@@ -17,37 +17,12 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich1", 237, 9.0, 37, 4.3),
-  createData("Eclair2", 262, 16.0, 24, 6.0),
-  createData("Cupcake3", 305, 3.7, 67, 4.3),
-  createData("Gingerbread3", 356, 16.0, 49, 3.9),
-  createData("Frozen yoghurt4", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich5", 237, 9.0, 37, 4.3),
-  createData("Eclair6", 262, 16.0, 24, 6.0),
-  createData("Cupcake7", 305, 3.7, 67, 4.3),
-  createData("Gingerbread8", 356, 16.0, 49, 3.9),
-  createData("Frozen yoghurt9", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich0", 237, 9.0, 37, 4.3),
-  createData("Eclair11", 262, 16.0, 24, 6.0),
-  createData("Cupcake12", 305, 3.7, 67, 4.3),
-  createData("Gingerbread13", 356, 16.0, 49, 3.9),
-  createData("Frozen yoghurt14", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich15", 237, 9.0, 37, 4.3),
-  createData("Eclair16", 262, 16.0, 24, 6.0),
-  createData("Cupcake17", 305, 3.7, 67, 4.3),
-  createData("Gingerbread18", 356, 16.0, 49, 3.9),
-];
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+import { Link, useNavigate } from "react-router-dom";
+import { DataContext } from "../../../layouts/AdminLayout";
 
 const RootPageStaffList = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -60,25 +35,42 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
 
+const AddButton = styled(MuiButton)(({ theme }) => ({
+  width: "25%",
+  marginBottom: theme.spacing(1),
+  "&:hover": {
+    backgroundColor: "#FF6969",
+  },
+}));
+
 function StaffListPage() {
+  const { dataFetched } = useContext(DataContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [rowsSearched, setRowsSearched] = useState(rows);
+  const [rowsSearched, setRowsSearched] = useState([]);
   const [searchString, setSearchString] = useState("");
+  const navigate = useNavigate();
 
-  const filterRows = (searchString) => {
-    if (searchString === "") {
-      return rows;
-    }
-    return rows.filter((row) =>
-      row.name.toLowerCase().includes(searchString.toLowerCase())
-    );
-  };
+  useEffect(() => {
+    setRowsSearched(dataFetched);
+  }, [dataFetched]);
+
+  const filterRows = useCallback(
+    (searchString) => {
+      if (searchString === "") {
+        return dataFetched;
+      }
+      return dataFetched.filter((row) =>
+        row.fullName.toLowerCase().includes(searchString.toLowerCase())
+      );
+    },
+    [dataFetched]
+  );
 
   useEffect(() => {
     const filtered = filterRows(searchString);
     setRowsSearched(filtered);
-  }, [searchString]);
+  }, [searchString, filterRows]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -96,6 +88,14 @@ function StaffListPage() {
   return (
     <RootPageStaffList>
       <Typography variant="h3">Danh sách nhân viên</Typography>
+      <AddButton
+        component={Link}
+        variant="contained"
+        color="color1"
+        to="/admin/staff-management/add"
+      >
+        <Typography color={"white"}>Thêm Nhân Viên Mới</Typography>
+      </AddButton>
       <SearchTextField
         type="text"
         variant="outlined"
@@ -114,16 +114,19 @@ function StaffListPage() {
       />
       <TableContainer
         component={Paper}
-        sx={{ maxHeight: 562, minWidth: 1035, maxWidth: 1035 }}
+        sx={{ maxHeight: 1070, minWidth: 1035, maxWidth: 1035 }}
       >
         <Table stickyHeader sx={{ maxWidth: 1200 }}>
           <TableHead>
             <TableRow>
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Calories</TableCell>
-              <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right">Protein&nbsp;(g)</TableCell>
+              <TableCell align="center">Mã nhân viên</TableCell>
+              <TableCell align="center">Họ tên</TableCell>
+              <TableCell align="center">Ảnh đại diện</TableCell>
+              <TableCell align="center">Số điện thoại</TableCell>
+              <TableCell align="center">Email</TableCell>
+              <TableCell align="center">Tên chi nhánh làm việc</TableCell>
+              <TableCell align="center">Số lượng đơn hàng đã nhận</TableCell>
+              <TableCell align="center">Trạng thái</TableCell>
               <TableCell align="center">Lựa Chọn</TableCell>
             </TableRow>
           </TableHead>
@@ -134,26 +137,62 @@ function StaffListPage() {
                   page * rowsPerPage + rowsPerPage
                 )
               : rowsSearched
-            ).map((row) => (
-              <TableRow key={row.name}>
-                <TableCell style={{ minWidth: 100 }}>{row.name}</TableCell>
-                <TableCell style={{ minWidth: 100 }} align="right">
-                  {row.calories}
+            ).map((row, i) => (
+              <TableRow key={row.userId}>
+                <TableCell style={{ minWidth: 200 }} align="center">
+                  {row.userId}
                 </TableCell>
-                <TableCell style={{ minWidth: 100 }} align="right">
-                  {row.fat}
+                <TableCell style={{ minWidth: 150 }} align="center">
+                  {row.fullName}
                 </TableCell>
-                <TableCell style={{ minWidth: 100 }} align="right">
-                  {row.carbs}
+                <TableCell style={{ minWidth: 250 }} align="center">
+                  <img
+                    style={{
+                      maxWidth: "100%",
+                      height: "auto",
+                    }}
+                    alt="avatar"
+                    src={row.avatar}
+                  />
                 </TableCell>
-                <TableCell style={{ minWidth: 100 }} align="right">
-                  {row.protein}
+                <TableCell style={{ minWidth: 150 }} align="center">
+                  {row.phone}
                 </TableCell>
                 <TableCell style={{ minWidth: 200 }} align="center">
-                  <MuiButton color="oldPrimary">
+                  {row.email}
+                </TableCell>
+                <TableCell style={{ minWidth: 150 }} align="center">
+                  {row.storeName}
+                </TableCell>
+                <TableCell style={{ minWidth: 50 }} align="center">
+                  {row.numberOfOrder}
+                </TableCell>
+                <TableCell style={{ minWidth: 170 }} align="center">
+                  {row.isDeleted ? "Ngừng hoạt động" : "Còn hoạt động"}
+                </TableCell>
+                <TableCell style={{ minWidth: 225 }} align="center">
+                  <MuiButton
+                    color="oldPrimary"
+                    onClick={(e) => {
+                      navigate("/admin/staff-management/detail", {
+                        state: {
+                          id: row.customerId,
+                        },
+                      });
+                    }}
+                  >
                     <InfoIcon />
                   </MuiButton>
-                  <MuiButton color="teal">
+                  <MuiButton
+                    color="teal"
+                    onClick={(e) => {
+                      navigate("/admin/staff-management/edit", {
+                        state: {
+                          id: row.customerId,
+                        },
+                      });
+                    }}
+                  >
                     <EditIcon />
                   </MuiButton>
                   <MuiButton color="color1">
