@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TheDuckMobile_WebAPI.Models.Request.Admin;
 using TheDuckMobile_WebAPI.Models.Response;
 using TheDuckMobile_WebAPI.Services.Admin;
 
@@ -16,7 +17,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             _brandServices = brandServices;
         }
 
-        [HttpGet("list")]
+        [HttpGet]
         [AllowAnonymous]
         /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllBrands()
@@ -27,6 +28,30 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Success = true,
                 Data = brands,
                 Message = "Successfully retrieved all brands"
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddBrand([FromForm] BrandRequest request)
+        {
+            var result = await _brandServices.AddBrand(request);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = result,
+                Message = "Successfully added brand"
+            });
+        }
+
+        [HttpPut("{brandId}")]
+        public async Task<IActionResult> EditBrand([FromRoute] int brandId, [FromForm] BrandRequest request)
+        {
+            var result = await _brandServices.EditBrand(brandId, request);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = result,
+                Message = "Successfully edited brand"
             });
         }
     }

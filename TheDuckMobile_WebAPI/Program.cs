@@ -49,6 +49,7 @@ builder.Services.AddScoped<IUserServices, UserServicesImpl>();
 builder.Services.AddScoped<IProductServices, ProductServicesImpl>();
 builder.Services.AddScoped<IAddressServices, AddressServicesImpl>();
 builder.Services.AddScoped<ICatalogServices, CatalogServicesImpl>();
+builder.Services.AddScoped<ICloudinaryServices, CloudinaryServicesImpl>();
 
 // Admin
 builder.Services.AddScoped<IProductAdminServices, ProductAdminServicesImpl>();

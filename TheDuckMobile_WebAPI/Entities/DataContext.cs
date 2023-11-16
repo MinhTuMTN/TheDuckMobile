@@ -71,6 +71,19 @@ namespace TheDuckMobile_WebAPI.Entities
 
 
             #region One to Many
+            // Quan hệ Catalog - CatalogAttribute
+            modelBuilder.Entity<CatalogAttribute>()
+                .HasOne(catalogAttribute => catalogAttribute.Catalog)
+                .WithMany(catalog => catalog.CatalogAttributes)
+                .HasForeignKey(catalogAttribute => catalogAttribute.CatalogId);
+
+            // Quan hệ CatalogAttribute - SelectionValue
+            modelBuilder.Entity<SelectionValue>()
+                .HasOne(selectionValue => selectionValue.CatalogAttribute)
+                .WithMany(catalogAttribute => catalogAttribute.SelectionValues)
+                .HasForeignKey(selectionValue => selectionValue.Key);
+
+
             // Quan hệ Product - Catalog
             modelBuilder.Entity<Product>()
                 .HasOne<Catalog>(product => product.Catalog)
@@ -237,26 +250,24 @@ namespace TheDuckMobile_WebAPI.Entities
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Catalog> Catalogs { get; set; }
+        public DbSet<CatalogAttribute> CatalogAttributes { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
-        public DbSet<Laptop> Laptops { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<OS> OSs { get; set; }
-        public DbSet<Phone> Phones { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductVersion> ProductVersions { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<Provine> Provines { get; set; }
-        public DbSet<SmartWatch> SmartWatches { get; set; }
+        public DbSet<SelectionValue> SelectionValues { get; set; }
         public DbSet<SpecialFeature> SpecialFeatures { get; set; }
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<StoreProduct> StoreProducts { get; set; }
-        public DbSet<Tablet> Tablets { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<Ward> Wards { get; set; }

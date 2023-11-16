@@ -20,17 +20,11 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public string FeedbackImagesJson
         {
-            get
-            {
-                return JsonSerializer.Serialize(FeedbackImages);
-            }
-            set
-            {
-                FeedbackImages = JsonSerializer.Deserialize<List<string>>(value);
-            }
+            get => JsonSerializer.Serialize(FeedbackImages);
+            set => FeedbackImages = JsonSerializer.Deserialize<List<string>>(value);
         }
 
         [NotMapped]
-        public List<string> FeedbackImages { get; set; } = new List<string>();
+        public List<string>? FeedbackImages { get; set; } = new List<string>();
     }
 }

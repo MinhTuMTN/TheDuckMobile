@@ -10,15 +10,12 @@ namespace TheDuckMobile_WebAPI.Entities
         [Key]
         public Guid ProductVersionId { get; set; }
         public double Price { get; set; }
-        public int RAM { get; set; }
-        public float ScreenSize { get; set; }
-        public int NumberOfSim { get; set; }
-        public string? ScreenResolution { get; set; }
-        public string? Material { get; set; }
-        public int Quantity { get; set; }
-        public int Sold { get; set; }
-        public string? Battery { get; set; }
         public DateTime ReleaseTime { get; set; }
+
+        // Store Specification in JSON
+        public string? Specification { get; set; }
+
+
         public DateTime CreatedAt { get; set; }
         public DateTime LastModifiredAt { get; set; }
         public bool IsDeleted { get; set; }

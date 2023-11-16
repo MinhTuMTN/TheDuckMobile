@@ -50,6 +50,14 @@ namespace TheDuckMobile_WebAPI.Entities
             set => _products = value;
         }
 
+        private ICollection<CatalogAttribute>? _catalogAttributes;
+        [JsonIgnore]
+        public virtual ICollection<CatalogAttribute>? CatalogAttributes
+        {
+            get => _lazyLoader.Load(this, ref _catalogAttributes);
+            set => _catalogAttributes = value;
+        }
+
         public Catalog()
         {
             Products = new HashSet<Product>();
