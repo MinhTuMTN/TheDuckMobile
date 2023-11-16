@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using TheDuckMobile_WebAPI.ErrorHandler;
 using TheDuckMobile_WebAPI.Models.Response;
 
@@ -9,6 +10,11 @@ namespace TheDuckMobile_WebAPI.Controllers
 {
     public class ErrorController : ControllerBase
     {
+        [HttpGet]
+        [HttpPost]
+        [HttpPut]
+        [HttpDelete]
+        [HttpPatch]
         [Route("/error-handler")]
         public IActionResult ErrorHandler()
         {
@@ -29,6 +35,7 @@ namespace TheDuckMobile_WebAPI.Controllers
             }
         }
 
+        [NonAction]
         private IActionResult HandleInternalServerError(IExceptionHandlerFeature? context)
         {
             return StatusCode(500, new GenericResponse
@@ -39,6 +46,7 @@ namespace TheDuckMobile_WebAPI.Controllers
             });
         }
 
+        [NonAction]
         private IActionResult HandleNotFoundError(IExceptionHandlerFeature context)
         {
             return NotFound(new GenericResponse
@@ -49,6 +57,7 @@ namespace TheDuckMobile_WebAPI.Controllers
             });
         }
 
+        [NonAction]
         private IActionResult HandleBadRequestError(IExceptionHandlerFeature context)
         {
             return BadRequest(new GenericResponse

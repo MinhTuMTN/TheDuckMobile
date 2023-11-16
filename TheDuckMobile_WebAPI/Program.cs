@@ -58,9 +58,12 @@ builder.Services.AddScoped<IStaffAdminServices, StaffAdminServicesImpl>();
 builder.Services.AddScoped<IAddressAdminServices, AddressAdminServicesImpl>();
 builder.Services.AddScoped<ICatalogAdminServices, CatalogAdminServicesImpl>();
 builder.Services.AddScoped<IBrandAdminServices, BrandAdminServicesImpl>();
+builder.Services.AddScoped<ISpecialFeatureServices, SpecialFeatureServicesImpl>();
 #endregion
 
 var app = builder.Build();
+
+app.UseExceptionHandler("/error-handler");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -76,7 +79,7 @@ app.UseCors(x => x
           .AllowAnyHeader());
 #endregion
 
-app.UseExceptionHandler("/error-handler");
+
 
 //app.UseHttpsRedirection();
 
