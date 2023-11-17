@@ -101,7 +101,9 @@ function ProductListPage(props) {
   const handleButtonClick = async () => {
     if (isDeleted) {
       const productResponse = await restoreProduct(id);
+      console.log(productResponse);
       if (productResponse.success) {
+        console.log(productResponse);
         enqueueSnackbar("Khôi phục sản phẩm thành công!", {
           variant: "success",
         });
@@ -113,7 +115,9 @@ function ProductListPage(props) {
       }
     } else {
       const productResponse = await deleteProduct(id);
+      console.log(productResponse);
       if (productResponse.success) {
+        console.log(productResponse);
         enqueueSnackbar("Xóa sản phẩm thành công!", { variant: "success" });
         const products = [...dataFetched];
         products[index].isDeleted = !isDeleted;

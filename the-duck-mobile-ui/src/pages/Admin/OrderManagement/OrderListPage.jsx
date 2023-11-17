@@ -114,9 +114,9 @@ function OrderListPage() {
               )
               : rowsSearched
             ).map((row) => (
-              <TableRow key={row.ordereId}>
+              <TableRow key={row.orderId}>
                 <TableCell style={{ minWidth: 200 }} align="center">
-                  {row.ordereId}
+                  {row.orderId}
                 </TableCell>
                 <TableCell style={{ minWidth: 150 }} align="center">
                   {row.total}
