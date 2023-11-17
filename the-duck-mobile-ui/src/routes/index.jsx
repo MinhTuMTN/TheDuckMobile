@@ -5,20 +5,40 @@ import ProfileLayout from "../layouts/ProfileLayout";
 import { ProtectedLayout } from "../layouts/ProtectedLayout";
 import NotFound from "../pages/NotFound";
 
+import Loading from "../components/Loading";
 import AdminLayout from "../layouts/AdminLayout";
+import StoreLayout from "../layouts/StoreLayout";
+import AddDistrictPage from "../pages/Admin/AddressManagement/DistrictManagement/AddDistrictPage";
+import DistrictListPage from "../pages/Admin/AddressManagement/DistrictManagement/DistrictListPage";
+import EditDistrictPage from "../pages/Admin/AddressManagement/DistrictManagement/EditDistrictPage";
+import AddProvincePage from "../pages/Admin/AddressManagement/ProvinceManagement/AddProvincePage";
+import EditProvincePage from "../pages/Admin/AddressManagement/ProvinceManagement/EditProvincePage";
+import ProvinceListPage from "../pages/Admin/AddressManagement/ProvinceManagement/ProvinceListPage";
+import AddWardPage from "../pages/Admin/AddressManagement/WardManagement/AddWardPage";
+import EditWardPage from "../pages/Admin/AddressManagement/WardManagement/EditWardPage";
+import WardListPage from "../pages/Admin/AddressManagement/WardManagement/WardListPage";
 import AddBrandPage from "../pages/Admin/BrandManagement/AddBrandPage";
 import BrandListPage from "../pages/Admin/BrandManagement/BrandListPage";
 import EditBrandPage from "../pages/Admin/BrandManagement/EditBrandPage";
 import AddCatalogPage from "../pages/Admin/CatalogManagement/AddCatalogPage";
 import CatalogListPage from "../pages/Admin/CatalogManagement/CatalogListPage";
 import EditCatalogPage from "../pages/Admin/CatalogManagement/EditCatalogPage";
+import AddColorPage from "../pages/Admin/ColorManagement/AddColorPage";
+import ColorListPage from "../pages/Admin/ColorManagement/ColorListPage";
+import EditColorPage from "../pages/Admin/ColorManagement/EditColorPage";
+import CustomerDetailPage from "../pages/Admin/CustomerManagement/CustomerDetailPage";
 import CustomerListPage from "../pages/Admin/CustomerManagement/CustomerListPage";
 import FeedbackListPage from "../pages/Admin/FeedbackManagement/FeedbackListPage";
 import AddOSPage from "../pages/Admin/OSManagement/AddOSPage";
 import EditOSPage from "../pages/Admin/OSManagement/EditOSPage";
 import OSListPage from "../pages/Admin/OSManagement/OSListPage";
+import OrderDetailPage from "../pages/Admin/OrderManagement/OrderDetailPage";
 import OrderListPage from "../pages/Admin/OrderManagement/OrderListPage";
 import AddProductPage from "../pages/Admin/ProductManagement/AddProductPage";
+import AddProductVersionPage from "../pages/Admin/ProductManagement/AddProductVersionPage";
+import EditProductPage from "../pages/Admin/ProductManagement/EditProductPage";
+import EditProductVersionPage from "../pages/Admin/ProductManagement/EditProductVersionPage";
+import ProductDetailPage from "../pages/Admin/ProductManagement/ProductDetailPage";
 import ProductListPage from "../pages/Admin/ProductManagement/ProductListPage";
 import AddCouponPage from "../pages/Admin/CouponManagement/AddCouponPage";
 import EditCouponPage from "../pages/Admin/CouponManagement/EditCouponPage";
@@ -26,37 +46,17 @@ import CouponListPage from "../pages/Admin/CouponManagement/CouponListPage";
 import AddSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/AddSpecialFeaturePage";
 import EditSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/EditSpecialFeaturePage";
 import SpecialFeatureListPage from "../pages/Admin/SpecialFeatureManagement/SpecialFeatureListPage";
-import StaffListPage from "../pages/Admin/StaffManagement/StaffListPage";
-import AddStorePage from "../pages/Admin/StoreManagement/AddStorePage";
-import EditStorePage from "../pages/Admin/StoreManagement/EditStorePage";
-import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
-import Loading from "../components/Loading";
-import StoreLayout from "../layouts/StoreLayout";
-import Product from "../pages/Seller/Product";
-import Orders from "../pages/Seller/Orders";
-import OrderDetails from "../pages/Seller/OrderDetails";
-import AddProductVersionPage from "../pages/Admin/ProductManagement/AddProductVersionPage";
-import EditProductPage from "../pages/Admin/ProductManagement/EditProductPage";
-import ProductDetailPage from "../pages/Admin/ProductManagement/ProductDetailPage";
-import EditProductVersionPage from "../pages/Admin/ProductManagement/EditProductVersionPage";
-import StoreDetailPage from "../pages/Admin/StoreManagement/StoreDetailPage";
-import OrderDetailPage from "../pages/Admin/OrderManagement/OrderDetailPage";
 import AddStaffPage from "../pages/Admin/StaffManagement/AddStaffPage";
 import EditStaffPage from "../pages/Admin/StaffManagement/EditStaffPage";
 import StaffDetailPage from "../pages/Admin/StaffManagement/StaffDetailPage";
-import CustomerDetailPage from "../pages/Admin/CustomerManagement/CustomerDetailPage";
-import ProvinceListPage from "../pages/Admin/AddressManagement/ProvinceManagement/ProvinceListPage";
-import AddProvincePage from "../pages/Admin/AddressManagement/ProvinceManagement/AddProvincePage";
-import EditProvincePage from "../pages/Admin/AddressManagement/ProvinceManagement/EditProvincePage";
-import AddDistrictPage from "../pages/Admin/AddressManagement/DistrictManagement/AddDistrictPage";
-import DistrictListPage from "../pages/Admin/AddressManagement/DistrictManagement/DistrictListPage";
-import EditDistrictPage from "../pages/Admin/AddressManagement/DistrictManagement/EditDistrictPage";
-import WardListPage from "../pages/Admin/AddressManagement/WardManagement/WardListPage";
-import AddWardPage from "../pages/Admin/AddressManagement/WardManagement/AddWardPage";
-import EditWardPage from "../pages/Admin/AddressManagement/WardManagement/EditWardPage";
-import ColorListPage from "../pages/Admin/ColorManagement/ColorListPage";
-import AddColorPage from "../pages/Admin/ColorManagement/AddColorPage";
-import EditColorPage from "../pages/Admin/ColorManagement/EditColorPage";
+import StaffListPage from "../pages/Admin/StaffManagement/StaffListPage";
+import AddStorePage from "../pages/Admin/StoreManagement/AddStorePage";
+import EditStorePage from "../pages/Admin/StoreManagement/EditStorePage";
+import StoreDetailPage from "../pages/Admin/StoreManagement/StoreDetailPage";
+import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
+import OrderDetails from "../pages/Seller/OrderDetails";
+import Orders from "../pages/Seller/Orders";
+import Product from "../pages/Seller/Product";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -66,6 +66,9 @@ const LazyLoad = (Component) => (props) =>
   );
 
 const HomeLazy = LazyLoad(React.lazy(() => import("../pages/Home")));
+const SearchProductLazy = LazyLoad(
+  React.lazy(() => import("../pages/SearchProduct"))
+);
 const ProductDetailsLazy = LazyLoad(
   React.lazy(() => import("../pages/ProductDetails"))
 );
@@ -107,6 +110,10 @@ function Router(props) {
         {
           path: "/catalog/:catalogURL",
           element: <CategoryLazy />,
+        },
+        {
+          path: "/search",
+          element: <SearchProductLazy />,
         },
         {
           path: "/contact",

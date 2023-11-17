@@ -59,29 +59,26 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
             if (specialFeatures != null && specialFeatures.Count > 0)
                 products = products.Where(p => p.SpecialFeatures!.Any(sf => specialFeatures.Contains(sf.SpecialFeatureId)));
-            
-            if (orderBy != null)
+
+            switch (orderBy)
             {
-                switch (orderBy)
-                {
-                    case "price_asc":
-                        products = products.OrderBy(p => p.ProductPrice);
-                        break;
-                    case "price_desc":
-                        products = products.OrderByDescending(p => p.ProductPrice);
-                        break;
-                    case "best_seller":
-                        products = products.OrderByDescending(p => p.Sold);
-                        break;
-                    default:
-                        break;
-                }
+                case "price_asc":
+                    products = products.OrderBy(p => p.ProductPrice);
+                    break;
+                case "price_desc":
+                    products = products.OrderByDescending(p => p.ProductPrice);
+                    break;
+                case "best_seller":
+                    products = products.OrderByDescending(p => p.Sold);
+                    break;
+                default:
+                    break;
             }
 ;
             var totalProduct = products.Count();
             var totalPages = (int)Math.Ceiling((double)totalProduct / limit);
 
-            products = products.Skip((page - 1) * limit).Take(limit);
+            products = products.Skip(page * limit).Take(limit);
 
             var productsResponse = products.Select(p => new ProductHomeResponse(p)).ToList();
             return new PaginationResponse

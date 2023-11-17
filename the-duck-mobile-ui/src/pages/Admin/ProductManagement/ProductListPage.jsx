@@ -102,7 +102,9 @@ function ProductListPage(props) {
     if (isDeleted) {
       const productResponse = await restoreProduct(id);
       if (productResponse.success) {
-        enqueueSnackbar("Khôi phục sản phẩm thành công!", { variant: "success" });
+        enqueueSnackbar("Khôi phục sản phẩm thành công!", {
+          variant: "success",
+        });
         const products = [...dataFetched];
         products[index].isDeleted = !isDeleted;
         setRowsSearched(products);

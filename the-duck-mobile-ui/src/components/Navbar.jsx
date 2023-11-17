@@ -8,6 +8,7 @@ import MuiTextFeild from "../components/MuiTextFeild";
 import CustomLink from "./CustomLink";
 import Logo from "./Logo";
 import { getAllCatalog } from "../services/CatalogService";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled(Box)(({ theme }) => ({
   width: "100vw",
@@ -85,6 +86,8 @@ const MenuItem = styled("span")(({ theme }) => ({
 const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
   const [catalogs, setCatalogs] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [searchText, setSearchText] = React.useState("");
+  const navigate = useNavigate();
   function handleClick(event) {
     if (anchorEl !== event.currentTarget) {
       setAnchorEl(event.currentTarget);
@@ -164,6 +167,14 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
             }}
             sx={{
               marginRight: "5px",
+            }}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                setSearchText("");
+                navigate(`/search?q=${searchText}`);
+              }
             }}
           />
 

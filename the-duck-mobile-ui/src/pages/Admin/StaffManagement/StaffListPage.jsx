@@ -40,7 +40,7 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   "&:hover": {
     backgroundColor: "#FF6969",
-  }
+  },
 }));
 
 function StaffListPage() {
@@ -94,9 +94,7 @@ function StaffListPage() {
         color="color1"
         to="/admin/staff-management/add"
       >
-        <Typography color={"white"}>
-          Thêm Nhân Viên Mới
-        </Typography>
+        <Typography color={"white"}>Thêm Nhân Viên Mới</Typography>
       </AddButton>
       <SearchTextField
         type="text"
@@ -135,9 +133,9 @@ function StaffListPage() {
           <TableBody>
             {(rowsPerPage > 0
               ? rowsSearched.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
               : rowsSearched
             ).map((row, i) => (
               <TableRow key={row.userId}>

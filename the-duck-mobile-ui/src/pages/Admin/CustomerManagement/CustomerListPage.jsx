@@ -1,17 +1,17 @@
 import {
-    Box,
-    InputAdornment,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableFooter,
-    TableHead,
-    TablePagination,
-    TableRow,
-    Typography,
-    styled
+  Box,
+  InputAdornment,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+  styled,
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -23,27 +23,27 @@ import { useNavigate } from "react-router-dom";
 import { DataContext } from "../../../layouts/AdminLayout";
 
 const RootPageCustomerList = styled(Box)(({ theme }) => ({
-    display: "flex",
-    width: "100%",
-    flexDirection: "column",
-    padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
+  display: "flex",
+  width: "100%",
+  flexDirection: "column",
+  padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
 }));
 
 const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
-    marginBottom: theme.spacing(1),
+  marginBottom: theme.spacing(1),
 }));
 
 function CustomerListPage() {
-    const { dataFetched } = useContext(DataContext);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [rowsSearched, setRowsSearched] = useState([]);
-    const [searchString, setSearchString] = useState("");
-    const navigate = useNavigate();
+  const { dataFetched } = useContext(DataContext);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsSearched, setRowsSearched] = useState([]);
+  const [searchString, setSearchString] = useState("");
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        setRowsSearched(dataFetched);
-    }, [dataFetched]);
+  useEffect(() => {
+    setRowsSearched(dataFetched);
+  }, [dataFetched]);
 
     const filterRows = useCallback(
         (searchString) => {
@@ -62,18 +62,18 @@ function CustomerListPage() {
         setRowsSearched(filtered);
     }, [searchString, filterRows]);
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
     return (
         <RootPageCustomerList>

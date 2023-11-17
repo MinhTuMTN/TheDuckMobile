@@ -11,3 +11,7 @@ export const getNewestProducts = () => {
 export const getHighlyRatedProducts = () => {
   return get("/product/highly-rated");
 };
+
+export const searchProducts = (query) => {
+  return get("/product/search", query);
+};
