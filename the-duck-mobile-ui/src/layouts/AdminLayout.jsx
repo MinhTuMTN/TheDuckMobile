@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
-import React, { Fragment, createContext, useEffect, useState } from "react";
+import React, { Fragment, createContext, useCallback, useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
 import Footer from "../components/Footer";
@@ -17,6 +17,7 @@ import { getAllStores } from "../services/Admin/StoreService";
 import { getAllOSs } from "../services/Admin/OSService";
 import { getAllCoupons } from "../services/Admin/CouponService";
 import { getAllFeedbacks } from "../services/Admin/FeedbackService";
+import { getAllOrders } from "../services/Admin/OrderService";
 import { enqueueSnackbar } from "notistack";
 
 const RootPageUser = styled(Box)(({ theme }) => ({
@@ -49,98 +50,139 @@ function AdminLayout(props) {
   //   }
   // }, [pathname]);
 
-  const fetchData = async () => {
+  // const fetchData = async () => {
+  //   var response;
+  //   if (pathname === "/admin/product-management/list") {
+  //     response = await getAllProducts();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/customer-management/list") {
+  //     response = await getAllCustomers();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/staff-management/list") {
+  //     response = await getAllStaffs();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/address-management/province/list") {
+  //     response = await getAllProvinces();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/catalog-management/list") {
+  //     response = await getAllCatalogs();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/brand-management/list") {
+  //     response = await getAllBrands();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/color-management/list") {
+  //     response = await getAllColors();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/special-feature-management/list") {
+  //     response = await getAllSpecialFeatures();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/store-management/list") {
+  //     response = await getAllStores();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/os-management/list") {
+  //     response = await getAllOSs();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/coupon-management/list") {
+  //     response = await getAllCoupons();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   } else if (pathname === "/admin/feedback-management/list") {
+  //     response = await getAllFeedbacks();
+  //     if (response.success) {
+  //       setDataFected(response.data.data);
+  //     } else {
+  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+  //     }
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, [fetchData]);
+
+  const fetchData = useCallback(async () => {
     var response;
     if (pathname === "/admin/product-management/list") {
       response = await getAllProducts();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/customer-management/list") {
       response = await getAllCustomers();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/staff-management/list") {
       response = await getAllStaffs();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/address-management/province/list") {
       response = await getAllProvinces();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/catalog-management/list") {
       response = await getAllCatalogs();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/brand-management/list") {
       response = await getAllBrands();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/color-management/list") {
       response = await getAllColors();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/special-feature-management/list") {
       response = await getAllSpecialFeatures();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/store-management/list") {
       response = await getAllStores();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/os-management/list") {
       response = await getAllOSs();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/coupon-management/list") {
       response = await getAllCoupons();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
     } else if (pathname === "/admin/feedback-management/list") {
       response = await getAllFeedbacks();
-      if (response.success) {
-        setDataFected(response.data.data);
-      } else {
-        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-      }
+    } else if (pathname === "/admin/order-management/list") {
+      response = await getAllOrders();
     }
-  };
-
+  
+    if (response.success) {
+      setDataFected(response.data.data);
+    } else {
+      enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+    }
+  }, [pathname]);
+  
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   return (
     <DataContext.Provider value={{ dataFetched }}>

@@ -51,10 +51,18 @@ function Login(props) {
   const [otp, setOtp] = React.useState("");
 
   const handleEnterPhoneNumber = async () => {
-    if (phone.trim().length !== 10) {
+    const phoneRegex = /^\d+$/;
+    
+    if (!phoneRegex.test(phone)) {
+      enqueueSnackbar("Vui lòng chỉ nhập số", { variant: "error" });
+      return;
+    }
+
+    if (phone.trim().length !== 10 || phone[0] !== "0") {
       enqueueSnackbar("Số điện thoại không hợp lệ", { variant: "error" });
       return;
     }
+
     const phoneNumber = "+84" + phone.slice(1);
 
     enqueueSnackbar("Đang kiểm tra số điện thoại", { variant: "info" });
