@@ -203,7 +203,7 @@ function StaffListPage() {
             ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={7} />
+                <TableCell colSpan={10} />
               </TableRow>
             )}
           </TableBody>
@@ -211,7 +211,7 @@ function StaffListPage() {
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={6}
+                colSpan={9}
                 count={rowsSearched.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

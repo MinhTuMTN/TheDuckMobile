@@ -122,8 +122,8 @@ const sidebarItems = [
   {
     display: "Mã Giảm Giá",
     icon: <DiscountIcon />,
-    to: "/admin/promotion-management/list",
-    section: "promotion-management",
+    to: "/admin/coupon-management/list",
+    section: "coupon-management",
   },
   {
     display: "Phản Hồi",

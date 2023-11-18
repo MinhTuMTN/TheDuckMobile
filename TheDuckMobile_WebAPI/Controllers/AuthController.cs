@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 using TheDuckMobile_WebAPI.Config;
 using TheDuckMobile_WebAPI.Entities;
 using TheDuckMobile_WebAPI.Models.Request;
@@ -35,10 +36,22 @@ namespace TheDuckMobile_WebAPI.Controllers
         public async Task<IActionResult> CheckPhoneNumber([FromBody] CheckPhoneNumberRequest request)
         {
             bool exist = await _userServices.CheckCustomerExists(request.Phone!);
+            Regex regex = new Regex(@"^(\+84)\d{9,10}$");
+
+
+            if (!regex.IsMatch(request.Phone!) || !request.Phone!.StartsWith("+84"))
+            {
+                return BadRequest(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Invalid Phone Number",
+                    Data = null
+                });
+            }
 
             List<string> phoneNotVerified = _configuration.GetSection("AppSettings:PhoneNotVerified").Get<List<string>>();
 
-            if (phoneNotVerified.Contains(request.Phone!))
+            if (phoneNotVerified != null && phoneNotVerified.Contains(request.Phone!))
             {
                 return Ok(new GenericResponse
                 {
@@ -94,23 +107,27 @@ namespace TheDuckMobile_WebAPI.Controllers
 
             List<string> phoneNotVerified = _configuration.GetSection("AppSettings:PhoneNotVerified").Get<List<string>>();
 
-            if (phoneNotVerified.Contains(request.Phone!) && request.OTP == "777777")
+            if (phoneNotVerified.Contains(request.Phone!))
             {
-                return Ok(new GenericResponse
+                if (request.OTP == "777777")
                 {
-                    Success = true,
-                    Message = "Success",
-                    Data = _jwtProvider.GenerateToken(user)
-                });
-            }
-            else if (phoneNotVerified.Contains(request.Phone!) && request.OTP != "777777")
-            {
-                return Unauthorized(new GenericResponse
+                    return Ok(new GenericResponse
+                    {
+                        Success = true,
+                        Message = "Success",
+                        Data = _jwtProvider.GenerateToken(user)
+                    });
+                }
+                else
                 {
-                    Success = false,
-                    Message = "Invalid Verification Code",
-                    Data = null
-                });
+                    return Unauthorized(new GenericResponse
+                    {
+                        Success = false,
+                        Message = "Invalid Verification Code",
+                        Data = null
+                    });
+                }
+
             }
 
             if (!_twilioServices.VerifySMSVerificationCode(request.Phone!, request.OTP!))

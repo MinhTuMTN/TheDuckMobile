@@ -10,6 +10,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import FormatCurrency from "./FormatCurrency";
 import PercentIcon from "@mui/icons-material/Percent";
+import { useNavigate } from "react-router-dom";
 
 const CardContainer = styled(Paper)(({ theme }) => ({
   borderRadius: "15px",
@@ -38,6 +39,11 @@ const RatingContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ProductGridItem = ({ productInfo, styled }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/product?id=${productInfo.productId}`);
+  };
+
   return (
     <CardContainer style={styled} component={Stack} direction={"column"}>
       <Box

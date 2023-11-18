@@ -157,6 +157,39 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.ToTable("Catalogs");
                 });
 
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.CatalogAttribute", b =>
+                {
+                    b.Property<int>("CatalogAttributeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CatalogAttributeId"));
+
+                    b.Property<int>("CatalogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("CatalogAttributeId");
+
+                    b.HasIndex("CatalogId");
+
+                    b.ToTable("CatalogAttributes");
+                });
+
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Color", b =>
                 {
                     b.Property<Guid>("ColorId")
@@ -400,7 +433,7 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CatalogId")
+                    b.Property<int?>("CatalogId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -412,7 +445,7 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OSId")
+                    b.Property<int?>("OSId")
                         .HasColumnType("int");
 
                     b.Property<string>("ProductDescription")
@@ -457,18 +490,11 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Battery")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("ColorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Images")
                         .IsRequired()
@@ -480,38 +506,29 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<DateTime>("LastModifiredAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Material")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfSim")
-                        .HasColumnType("int");
-
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PromotionId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<double>("PromotionPrice")
+                        .HasColumnType("float");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RAM")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ReleaseTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ScreenResolution")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<float>("ScreenSize")
-                        .HasColumnType("real");
-
                     b.Property<int>("Sold")
                         .HasColumnType("int");
+
+                    b.Property<string>("Specification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VersionName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductVersionId");
 
@@ -519,13 +536,7 @@ namespace TheDuckMobile_WebAPI.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("PromotionId");
-
                     b.ToTable("ProductVersions");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("ProductVersion");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Promotion", b =>
@@ -549,10 +560,15 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("ProductVersionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("PromotionId");
+
+                    b.HasIndex("ProductVersionId");
 
                     b.ToTable("Promotions");
                 });
@@ -572,6 +588,30 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.HasKey("ProvinceId");
 
                     b.ToTable("Provines");
+                });
+
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.SelectionValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CatalogAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CatalogAttributeId");
+
+                    b.ToTable("SelectionValues");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.SpecialFeature", b =>
@@ -776,169 +816,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.ToTable("Wards");
                 });
 
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Laptop", b =>
-                {
-                    b.HasBaseType("TheDuckMobile_WebAPI.Entities.ProductVersion");
-
-                    b.Property<int>("BusRAM")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GraphicCard")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("HardDrive")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TypeOfRAM")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WifiStandard")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("Laptop");
-                });
-
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Phone", b =>
-                {
-                    b.HasBaseType("TheDuckMobile_WebAPI.Entities.ProductVersion");
-
-                    b.Property<string>("BackCamera")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Buetooth")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ChargingPort")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FrontCamera")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("GPS")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HeadphoneJack")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("InternalMemory")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NetworkType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SecurityFeature")
-                        .HasColumnType("int");
-
-                    b.Property<string>("WaterResistance")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Wifi")
-                        .HasColumnType("bit");
-
-                    b.HasDiscriminator().HasValue("Phone");
-                });
-
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.SmartWatch", b =>
-                {
-                    b.HasBaseType("TheDuckMobile_WebAPI.Entities.ProductVersion");
-
-                    b.Property<bool>("Bluetooth")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("GPS")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("InternalMemory")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WatchFaceShape")
-                        .HasColumnType("int");
-
-                    b.Property<string>("WaterResistance")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("WireMaterial")
-                        .HasColumnType("int");
-
-                    b.ToTable("ProductVersions", t =>
-                        {
-                            t.Property("GPS")
-                                .HasColumnName("SmartWatch_GPS");
-
-                            t.Property("InternalMemory")
-                                .HasColumnName("SmartWatch_InternalMemory");
-
-                            t.Property("WaterResistance")
-                                .HasColumnName("SmartWatch_WaterResistance");
-                        });
-
-                    b.HasDiscriminator().HasValue("SmartWatch");
-                });
-
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Tablet", b =>
-                {
-                    b.HasBaseType("TheDuckMobile_WebAPI.Entities.ProductVersion");
-
-                    b.Property<string>("BackCamera")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Bluetooth")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ChargingPort")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FrontCamera")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("GPS")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HeadphoneJack")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("InternalMemory")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NetworkType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Wifi")
-                        .HasColumnType("bit");
-
-                    b.ToTable("ProductVersions", t =>
-                        {
-                            t.Property("BackCamera")
-                                .HasColumnName("Tablet_BackCamera");
-
-                            t.Property("Bluetooth")
-                                .HasColumnName("Tablet_Bluetooth");
-
-                            t.Property("ChargingPort")
-                                .HasColumnName("Tablet_ChargingPort");
-
-                            t.Property("FrontCamera")
-                                .HasColumnName("Tablet_FrontCamera");
-
-                            t.Property("GPS")
-                                .HasColumnName("Tablet_GPS");
-
-                            t.Property("HeadphoneJack")
-                                .HasColumnName("Tablet_HeadphoneJack");
-
-                            t.Property("InternalMemory")
-                                .HasColumnName("Tablet_InternalMemory");
-
-                            t.Property("NetworkType")
-                                .HasColumnName("Tablet_NetworkType");
-
-                            t.Property("Wifi")
-                                .HasColumnName("Tablet_Wifi");
-                        });
-
-                    b.HasDiscriminator().HasValue("Tablet");
-                });
-
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Admin", b =>
                 {
                     b.HasBaseType("TheDuckMobile_WebAPI.Entities.User");
@@ -1034,6 +911,17 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("Ward");
                 });
 
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.CatalogAttribute", b =>
+                {
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.Catalog", "Catalog")
+                        .WithMany("CatalogAttributes")
+                        .HasForeignKey("CatalogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Catalog");
+                });
+
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.District", b =>
                 {
                     b.HasOne("TheDuckMobile_WebAPI.Entities.Provine", "Provine")
@@ -1125,15 +1013,11 @@ namespace TheDuckMobile_WebAPI.Migrations
 
                     b.HasOne("TheDuckMobile_WebAPI.Entities.Catalog", "Catalog")
                         .WithMany("Products")
-                        .HasForeignKey("CatalogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CatalogId");
 
                     b.HasOne("TheDuckMobile_WebAPI.Entities.OS", "OS")
                         .WithMany("Products")
-                        .HasForeignKey("OSId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OSId");
 
                     b.Navigation("Brand");
 
@@ -1150,19 +1034,35 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TheDuckMobile_WebAPI.Entities.Product", null)
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.Product", "Product")
                         .WithMany("ProductVersions")
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("TheDuckMobile_WebAPI.Entities.Promotion", "Promotion")
-                        .WithMany("ProductVersions")
-                        .HasForeignKey("PromotionId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Color");
 
-                    b.Navigation("Promotion");
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Promotion", b =>
+                {
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.ProductVersion", "ProductVersion")
+                        .WithMany("Promotions")
+                        .HasForeignKey("ProductVersionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductVersion");
+                });
+
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.SelectionValue", b =>
+                {
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.CatalogAttribute", "CatalogAttribute")
+                        .WithMany("SelectionValues")
+                        .HasForeignKey("CatalogAttributeId");
+
+                    b.Navigation("CatalogAttribute");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.StoreProduct", b =>
@@ -1232,7 +1132,14 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Catalog", b =>
                 {
+                    b.Navigation("CatalogAttributes");
+
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.CatalogAttribute", b =>
+                {
+                    b.Navigation("SelectionValues");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Color", b =>
@@ -1269,14 +1176,14 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.ProductVersion", b =>
                 {
+                    b.Navigation("Promotions");
+
                     b.Navigation("StoreProducts");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Promotion", b =>
                 {
                     b.Navigation("OrderItems");
-
-                    b.Navigation("ProductVersions");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Provine", b =>

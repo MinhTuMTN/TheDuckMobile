@@ -14,7 +14,7 @@ import {
     styled
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import { Link } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
@@ -22,33 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Search } from "@mui/icons-material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich1', 237, 9.0, 37, 4.3),
-    createData('Eclair2', 262, 16.0, 24, 6.0),
-    createData('Cupcake3', 305, 3.7, 67, 4.3),
-    createData('Gingerbread3', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt4', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich5', 237, 9.0, 37, 4.3),
-    createData('Eclair6', 262, 16.0, 24, 6.0),
-    createData('Cupcake7', 305, 3.7, 67, 4.3),
-    createData('Gingerbread8', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt9', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich0', 237, 9.0, 37, 4.3),
-    createData('Eclair11', 262, 16.0, 24, 6.0),
-    createData('Cupcake12', 305, 3.7, 67, 4.3),
-    createData('Gingerbread13', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt14', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich15', 237, 9.0, 37, 4.3),
-    createData('Eclair16', 262, 16.0, 24, 6.0),
-    createData('Cupcake17', 305, 3.7, 67, 4.3),
-    createData('Gingerbread18', 356, 16.0, 49, 3.9),
-];
-
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
+import { DataContext } from "../../../layouts/AdminLayout";
 
 const RootPageSpecialFeatureList = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -62,7 +36,7 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
     marginBottom: theme.spacing(1),
     "&:hover": {
         backgroundColor: "#FF6969",
-      }
+    }
 }));
 
 const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
@@ -70,24 +44,32 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function SpecialFeatureListPage() {
+    const { dataFetched } = useContext(DataContext);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [rowsSearched, setRowsSearched] = useState(rows);
+    const [rowsSearched, setRowsSearched] = useState([]);
     const [searchString, setSearchString] = useState("");
 
-    const filterRows = (searchString) => {
-        if (searchString === "") {
-            return rows;
-        }
-        return rows.filter((row) =>
-            row.name.toLowerCase().includes(searchString.toLowerCase())
-        );
-    };
+    useEffect(() => {
+        setRowsSearched(dataFetched);
+    }, [dataFetched]);
+
+    const filterRows = useCallback(
+        (searchString) => {
+            if (searchString === "") {
+                return dataFetched;
+            }
+            return dataFetched.filter((row) =>
+                row.specialFeatureName.toLowerCase().includes(searchString.toLowerCase())
+            );
+        },
+        [dataFetched]
+    );
 
     useEffect(() => {
         const filtered = filterRows(searchString);
         setRowsSearched(filtered);
-    }, [searchString]);
+    }, [searchString, filterRows]);
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -126,16 +108,17 @@ function SpecialFeatureListPage() {
                     style: { fontSize: 18 },
                 }}
             />
-            <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
+            <TableContainer
+                component={Paper}
+                sx={{ maxHeight: 1070, minWidth: 1035, maxWidth: 1035 }}
+            >
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Dessert (100g serving)</TableCell>
-                            <TableCell align="right">Calories</TableCell>
-                            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                            <TableCell align="center">Lựa Chọn</TableCell>
+                            <TableCell align="center">Mã tính năng đặc biệt</TableCell>
+                            <TableCell align="center">Tên tính năng đặc biệt</TableCell>
+                            <TableCell align="center">Trạng thái</TableCell>
+                            <TableCell align="center">Lựa chọn</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -143,21 +126,15 @@ function SpecialFeatureListPage() {
                             ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
                         ).map((row) => (
-                            <TableRow key={row.name}>
-                                <TableCell style={{ minWidth: 100 }}>
-                                    {row.name}
+                            <TableRow key={row.specialFeatureId}>
+                                <TableCell style={{ minWidth: 100 }} align="center">
+                                    {row.specialFeatureId}
                                 </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.calories}
+                                <TableCell style={{ minWidth: 200 }} align="center">
+                                    {row.specialFeatureName}
                                 </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.fat}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.carbs}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.protein}
+                                <TableCell style={{ minWidth: 250 }} align="center">
+                                    {row.isDeleted ? "Ngừng hoạt động" : "Còn hoạt động"}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
                                     <MuiButton component={Link} color="oldPrimary"><InfoIcon /></MuiButton>
@@ -168,7 +145,7 @@ function SpecialFeatureListPage() {
                         ))}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={7} />
+                                <TableCell colSpan={5} />
                             </TableRow>
                         )}
                     </TableBody>
@@ -176,7 +153,7 @@ function SpecialFeatureListPage() {
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                                colSpan={6}
+                                colSpan={4}
                                 count={rowsSearched.length}
                                 rowsPerPage={rowsPerPage}
                                 page={page}

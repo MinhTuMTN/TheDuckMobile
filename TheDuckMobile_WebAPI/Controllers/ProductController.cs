@@ -72,5 +72,17 @@ namespace TheDuckMobile_WebAPI.Controllers
             });
         }
 
+        [HttpGet("{productId}/versions")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllProductVersions([FromRoute] Guid productId)
+        {
+            var productVersions = await _productServices.GetProductVersionsByProductId(productId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = productVersions,
+                Message = "Successfully retrieved product versions"
+            });
+        }
     }
 }

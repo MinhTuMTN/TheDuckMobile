@@ -9,5 +9,6 @@ namespace TheDuckMobile_WebAPI.Services
         public Task<List<ProductHomeResponse>> GetNewestProducts(int numberOfProducts);
         public Task<List<ProductHomeResponse>> GetHighlyRatedProducts(int numberOfProducts);
         public Task<PaginationResponse> SearchProduct(string query, string? orderBy, int page, int limit);
+        public Task<ICollection<ProductVersion>> GetProductVersionsByProductId(Guid productId);
     }
 }

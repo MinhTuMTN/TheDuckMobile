@@ -71,6 +71,19 @@ namespace TheDuckMobile_WebAPI.Entities
 
 
             #region One to Many
+            // Quan hệ Catalog - CatalogAttribute
+            modelBuilder.Entity<CatalogAttribute>()
+                .HasOne(catalogAttribute => catalogAttribute.Catalog)
+                .WithMany(catalog => catalog.CatalogAttributes)
+                .HasForeignKey(catalogAttribute => catalogAttribute.CatalogId);
+
+            // Quan hệ CatalogAttribute - SelectionValue
+            modelBuilder.Entity<SelectionValue>()
+                .HasOne(selectionValue => selectionValue.CatalogAttribute)
+                .WithMany(catalogAttribute => catalogAttribute.SelectionValues)
+                .HasForeignKey(selectionValue => selectionValue.CatalogAttributeId);
+
+
             // Quan hệ Product - Catalog
             modelBuilder.Entity<Product>()
                 .HasOne<Catalog>(product => product.Catalog)
@@ -194,17 +207,29 @@ namespace TheDuckMobile_WebAPI.Entities
                 .WithMany(color => color.ProductVersions)
                 .HasForeignKey(pv => pv.ColorId);
 
+            // Quan hệ ProductVersion - Product
+            modelBuilder.Entity<ProductVersion>()
+                .HasOne(pv => pv.Product)
+                .WithMany(product => product.ProductVersions)
+                .HasForeignKey(pv => pv.ProductId);
+
             // Vote - Customer Relationship
             modelBuilder.Entity<Vote>()
                 .HasOne<Customer>(vote => vote.Customer)
                 .WithMany(customer => customer.Votes)
                 .HasForeignKey(vote => vote.CustomerId);
 
+            //// Promotion - ProductVersion Relationship
+            //modelBuilder.Entity<ProductVersion>()
+            //    .HasOne<Promotion>(productVersion => productVersion.Promotion)
+            //    .WithMany(promotion => promotion.ProductVersions)
+            //    .HasForeignKey(productVersion => productVersion.PromotionId);
+
             // Promotion - ProductVersion Relationship
-            modelBuilder.Entity<ProductVersion>()
-                .HasOne<Promotion>(productVersion => productVersion.Promotion)
-                .WithMany(promotion => promotion.ProductVersions)
-                .HasForeignKey(productVersion => productVersion.PromotionId);
+            modelBuilder.Entity<Promotion>()
+                .HasOne(promotion => promotion.ProductVersion)
+                .WithMany(productVersion => productVersion.Promotions)
+                .HasForeignKey(promotion => promotion.ProductVersionId);
 
 
 
@@ -237,26 +262,24 @@ namespace TheDuckMobile_WebAPI.Entities
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Catalog> Catalogs { get; set; }
+        public DbSet<CatalogAttribute> CatalogAttributes { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
-        public DbSet<Laptop> Laptops { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<OS> OSs { get; set; }
-        public DbSet<Phone> Phones { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductVersion> ProductVersions { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<Provine> Provines { get; set; }
-        public DbSet<SmartWatch> SmartWatches { get; set; }
+        public DbSet<SelectionValue> SelectionValues { get; set; }
         public DbSet<SpecialFeature> SpecialFeatures { get; set; }
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<StoreProduct> StoreProducts { get; set; }
-        public DbSet<Tablet> Tablets { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<Ward> Wards { get; set; }

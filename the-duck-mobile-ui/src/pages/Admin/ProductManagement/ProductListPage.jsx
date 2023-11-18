@@ -98,10 +98,12 @@ function ProductListPage(props) {
     setPage(0);
   };
 
-  const handleClick = async () => {
+  const handleButtonClick = async () => {
     if (isDeleted) {
       const productResponse = await restoreProduct(id);
+      console.log(productResponse);
       if (productResponse.success) {
+        console.log(productResponse);
         enqueueSnackbar("Khôi phục sản phẩm thành công!", {
           variant: "success",
         });
@@ -113,7 +115,9 @@ function ProductListPage(props) {
       }
     } else {
       const productResponse = await deleteProduct(id);
+      console.log(productResponse);
       if (productResponse.success) {
+        console.log(productResponse);
         enqueueSnackbar("Xóa sản phẩm thành công!", { variant: "success" });
         const products = [...dataFetched];
         products[index].isDeleted = !isDeleted;
@@ -169,9 +173,9 @@ function ProductListPage(props) {
           <TableBody>
             {(rowsPerPage > 0
               ? rowsSearched.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
               : rowsSearched
             ).map((row, i) => (
               <TableRow key={row.productId}>
@@ -252,7 +256,7 @@ function ProductListPage(props) {
                     }
                     okText={isDeleted ? "Khôi phục" : "Xóa"}
                     cancelText={"Hủy"}
-                    onOk={handleClick}
+                    onOk={handleButtonClick}
                     onCancel={() => setDeleteDialog(false)}
                     onClose={() => setDeleteDialog(false)}
                   />
@@ -261,7 +265,7 @@ function ProductListPage(props) {
             ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 50 * emptyRows }}>
-                <TableCell colSpan={9} />
+                <TableCell colSpan={7} />
               </TableRow>
             )}
           </TableBody>
@@ -269,7 +273,7 @@ function ProductListPage(props) {
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={9}
+                colSpan={6}
                 count={rowsSearched.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

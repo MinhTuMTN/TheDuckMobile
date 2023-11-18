@@ -40,9 +40,9 @@ import EditProductPage from "../pages/Admin/ProductManagement/EditProductPage";
 import EditProductVersionPage from "../pages/Admin/ProductManagement/EditProductVersionPage";
 import ProductDetailPage from "../pages/Admin/ProductManagement/ProductDetailPage";
 import ProductListPage from "../pages/Admin/ProductManagement/ProductListPage";
-import AddPromotionPage from "../pages/Admin/PromotionManagement/AddPromotionPage";
-import EditPromotionPage from "../pages/Admin/PromotionManagement/EditPromotionPage";
-import PromotionListPage from "../pages/Admin/PromotionManagement/PromotionListPage";
+import AddCouponPage from "../pages/Admin/CouponManagement/AddCouponPage";
+import EditCouponPage from "../pages/Admin/CouponManagement/EditCouponPage";
+import CouponListPage from "../pages/Admin/CouponManagement/CouponListPage";
 import AddSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/AddSpecialFeaturePage";
 import EditSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/EditSpecialFeaturePage";
 import SpecialFeatureListPage from "../pages/Admin/SpecialFeatureManagement/SpecialFeatureListPage";
@@ -322,16 +322,16 @@ function Router(props) {
           element: <OrderDetailPage />,
         },
         {
-          path: "promotion-management/list",
-          element: <PromotionListPage />,
+          path: "coupon-management/list",
+          element: <CouponListPage />,
         },
         {
-          path: "promotion-management/add",
-          element: <AddPromotionPage />,
+          path: "coupon-management/add",
+          element: <AddCouponPage />,
         },
         {
-          path: "promotion-management/edit",
-          element: <EditPromotionPage />,
+          path: "coupon-management/edit",
+          element: <EditCouponPage />,
         },
         {
           path: "feedback-management/list",

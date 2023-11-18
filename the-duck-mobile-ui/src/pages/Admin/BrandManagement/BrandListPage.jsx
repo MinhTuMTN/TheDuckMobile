@@ -14,7 +14,7 @@ import {
     styled
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import { Link } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
@@ -23,33 +23,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Search } from "@mui/icons-material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { DataContext } from "../../../layouts/AdminLayout";
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich1', 237, 9.0, 37, 4.3),
-    createData('Eclair2', 262, 16.0, 24, 6.0),
-    createData('Cupcake3', 305, 3.7, 67, 4.3),
-    createData('Gingerbread3', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt4', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich5', 237, 9.0, 37, 4.3),
-    createData('Eclair6', 262, 16.0, 24, 6.0),
-    createData('Cupcake7', 305, 3.7, 67, 4.3),
-    createData('Gingerbread8', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt9', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich0', 237, 9.0, 37, 4.3),
-    createData('Eclair11', 262, 16.0, 24, 6.0),
-    createData('Cupcake12', 305, 3.7, 67, 4.3),
-    createData('Gingerbread13', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt14', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich15', 237, 9.0, 37, 4.3),
-    createData('Eclair16', 262, 16.0, 24, 6.0),
-    createData('Cupcake17', 305, 3.7, 67, 4.3),
-    createData('Gingerbread18', 356, 16.0, 49, 3.9),
-];
-
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
 
 const RootPageBrandList = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -81,19 +54,22 @@ function BrandListPage() {
         setRowsSearched(dataFetched);
     }, [dataFetched]);
 
-    const filterRows = (searchString) => {
-        if (searchString === "") {
-            return dataFetched;
-        }
-        return dataFetched.filter((row) =>
-            row.brandName.toLowerCase().includes(searchString.toLowerCase())
-        );
-    };
+    const filterRows = useCallback(
+        (searchString) => {
+            if (searchString === "") {
+                return dataFetched;
+            }
+            return dataFetched.filter((row) =>
+                row.brandName.toLowerCase().includes(searchString.toLowerCase())
+            );
+        },
+        [dataFetched]
+    );
 
     useEffect(() => {
         const filtered = filterRows(searchString);
         setRowsSearched(filtered);
-    }, [searchString]);
+    }, [searchString, filterRows]);
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -132,7 +108,10 @@ function BrandListPage() {
                     style: { fontSize: 18 },
                 }}
             />
-            <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
+            <TableContainer
+                component={Paper}
+                sx={{ maxHeight: 1070, minWidth: 1035, maxWidth: 1035 }}
+            >
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>

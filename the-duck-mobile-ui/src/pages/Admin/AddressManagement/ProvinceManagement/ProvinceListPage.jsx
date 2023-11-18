@@ -14,7 +14,7 @@ import {
     styled
 } from "@mui/material";
 import TablePaginationActions from "../../../../components/TablePaginationActions";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../../components/MuiButton";
 import { Link } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
@@ -52,19 +52,22 @@ function ProvinceListPage() {
         setRowsSearched(dataFetched);
     }, [dataFetched]);
 
-    const filterRows = (searchString) => {
-        if (searchString === "") {
-            return dataFetched;
-        }
-        return dataFetched.filter((row) =>
-            row.provineName.toLowerCase().includes(searchString.toLowerCase())
-        );
-    };
+    const filterRows = useCallback(
+        (searchString) => {
+            if (searchString === "") {
+                return dataFetched;
+            }
+            return dataFetched.filter((row) =>
+                row.provineName.toLowerCase().includes(searchString.toLowerCase())
+            );
+        },
+        [dataFetched]
+    );
 
     useEffect(() => {
         const filtered = filterRows(searchString);
         setRowsSearched(filtered);
-    }, [searchString]);
+    }, [searchString, filterRows]);
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -103,7 +106,10 @@ function ProvinceListPage() {
                     style: { fontSize: 18 },
                 }}
             />
-            <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
+            <TableContainer
+                component={Paper}
+                sx={{ maxHeight: 1070, minWidth: 1035, maxWidth: 1035 }}
+            >
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
@@ -133,7 +139,7 @@ function ProvinceListPage() {
                         ))}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={7} />
+                                <TableCell colSpan={4} />
                             </TableRow>
                         )}
                     </TableBody>
@@ -141,7 +147,7 @@ function ProvinceListPage() {
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                                colSpan={6}
+                                colSpan={3}
                                 count={rowsSearched.length}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
