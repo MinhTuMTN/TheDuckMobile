@@ -2,6 +2,7 @@
 {
     public class ProductVersionRequest
     {
+        public string? VersionName { get; set; }
         public double Price { get; set; }
         public double PromotionPrice { get; set; }
         public string? ColorId { get; set; }

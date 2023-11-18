@@ -10,6 +10,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         [Key]
         public Guid ProductVersionId { get; set; }
+        public string? VersionName { get; set; }
         public double Price { get; set; }
         public double PromotionPrice { get; set; }
         public DateTime ReleaseTime { get; set; }

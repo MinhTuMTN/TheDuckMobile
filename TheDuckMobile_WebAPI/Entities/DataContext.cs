@@ -81,7 +81,7 @@ namespace TheDuckMobile_WebAPI.Entities
             modelBuilder.Entity<SelectionValue>()
                 .HasOne(selectionValue => selectionValue.CatalogAttribute)
                 .WithMany(catalogAttribute => catalogAttribute.SelectionValues)
-                .HasForeignKey(selectionValue => selectionValue.Key);
+                .HasForeignKey(selectionValue => selectionValue.CatalogAttributeId);
 
 
             // Quan hệ Product - Catalog

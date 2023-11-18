@@ -40,7 +40,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 .Where(ca => ca.CatalogId == product.CatalogId)
                 .ToListAsync();
 
-            IDictionary<string, object> specification = _jsonServices
+            IDictionary<string, object> specification = await _jsonServices
                 .DeserializeObject(request.Specification!, catalogAttributes);
 
             // Color
@@ -65,14 +65,17 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 imageUrls.Add(uploadResult);
             }
 
+            if (request.VersionName == null || request.VersionName.Trim().Length == 0)
+                throw new BadHttpRequestException("Version name can't be empty");
 
             var productVersion = new ProductVersion
             {
+                VersionName = request.VersionName,
                 Product = product,
                 Specification = _jsonServices.SerializeObject(specification),
                 Price = request.Price,
                 Color = color,
-                PromotionPrice = request.PromotionPrice,
+                PromotionPrice = request.PromotionPrice == 0 ? request.Price : request.PromotionPrice,
                 ReleaseTime = request.ReleaseTime,
                 Quantity = request.Quantity,
                 Images = imageUrls.ToArray(),

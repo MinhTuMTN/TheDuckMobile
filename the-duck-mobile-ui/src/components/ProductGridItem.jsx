@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import StarIcon from "@mui/icons-material/Star";
 import FormatCurrency from "./FormatCurrency";
+import { useNavigate } from "react-router-dom";
 
 const CardContainer = styled(Box)(({ theme }) => ({
   backgroundColor: "white",
@@ -17,17 +18,29 @@ const RatingContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ProductGridItem = ({ productInfo, styled }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/product?id=${productInfo.productId}`);
+  };
+
   return (
     <CardContainer style={styled}>
       <img
         style={{
           maxWidth: "100%",
           height: "auto",
+          cursor: "pointer",
         }}
         alt="dien-thoai"
         src={productInfo.thumbnail}
+        onClick={handleClick}
       />
-      <Typography variant="h5" align="left" style={{ margin: "0 5px 0 5px" }}>
+      <Typography
+        variant="h5"
+        align="left"
+        style={{ margin: "0 5px 0 5px", cursor: "pointer" }}
+        onClick={handleClick}
+      >
         {productInfo.productName}
       </Typography>
       {/* <Typography

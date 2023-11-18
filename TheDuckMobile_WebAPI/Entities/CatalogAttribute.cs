@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using TheDuckMobile_WebAPI.Common;
 
 namespace TheDuckMobile_WebAPI.Entities
@@ -6,6 +7,8 @@ namespace TheDuckMobile_WebAPI.Entities
     public class CatalogAttribute
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int CatalogAttributeId { get; set; }
         public string? Key { get; set; }
         public string? DisplayName { get; set; }
         public CatalogAttributeType Type { get; set; }

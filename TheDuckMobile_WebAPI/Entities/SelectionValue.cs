@@ -11,8 +11,7 @@ namespace TheDuckMobile_WebAPI.Entities
         public int Id { get; set; }
         public string? Value { get; set; }
 
-        public string? Key { get; set; }
-        [JsonIgnore]
+        public int? CatalogAttributeId { get; set; }
         public CatalogAttribute? CatalogAttribute { get; set; }
 
         public bool IsDeleted { get; set; }

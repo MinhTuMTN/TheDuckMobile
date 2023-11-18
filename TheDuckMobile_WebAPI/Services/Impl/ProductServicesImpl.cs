@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Entities;
+using TheDuckMobile_WebAPI.ErrorHandler;
 using TheDuckMobile_WebAPI.Models.Response;
 
 namespace TheDuckMobile_WebAPI.Services.Impl
@@ -42,6 +43,22 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 .ToListAsync();
 
             return (await newestProducts).Select(p => new ProductHomeResponse(p)).ToList();
+        }
+
+        public async Task<ICollection<ProductVersion>> GetProductVersionsByProductId(Guid productId)
+        {
+            var product = await _context
+                .Products
+                .Include(p => p.ProductVersions)
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+            if (product == null)
+                throw new CustomNotFoundException("Product not found");
+
+            if (product.ProductVersions == null || product.ProductVersions.Count == 0)
+                throw new CustomNotFoundException("Product version not found");
+
+            return product.ProductVersions;
         }
 
         public async Task<PaginationResponse> SearchProduct(string query, string? orderBy, int page, int limit)
