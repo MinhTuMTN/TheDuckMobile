@@ -15,12 +15,12 @@ function CreatReview(props) {
     <Stack spacing={2.5} width={"100%"} direction={"column"}>
       <Typography variant="h5">Tạo đánh giá mới</Typography>
       <Stack direction={"row"} spacing={1.2}>
-        <FormHelperText marginRight={2}>Đánh giá:</FormHelperText>
+        <FormHelperText sx={{ marginRight: 2 }}>Đánh giá:</FormHelperText>
         <Rating name="rating" precision={0.5} size="small" value={5} />
       </Stack>
       <Stack direction={"row"} spacing={1.2}>
         <Box flexBasis={"65%"}>
-          <MuiTextFeild required label="Họ tên" fontSize={14} />
+          <MuiTextFeild required label="Họ tên" fontSize={14} fullWidth />
         </Box>
         <Box flexBasis={"35%"}>
           <MuiTextFeild required label="Số điện thoại" fontSize={14} />

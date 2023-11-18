@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using TheDuckMobile_WebAPI.Common;
 
 namespace TheDuckMobile_WebAPI.Entities
@@ -14,6 +15,7 @@ namespace TheDuckMobile_WebAPI.Entities
         public CatalogAttributeType Type { get; set; }
 
         public int CatalogId { get; set; }
+        [JsonIgnore]
         public Catalog? Catalog { get; set; }
 
         public bool IsRequired { get; set; }

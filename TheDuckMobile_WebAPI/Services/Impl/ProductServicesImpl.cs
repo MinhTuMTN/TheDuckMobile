@@ -45,29 +45,75 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             return (await newestProducts).Select(p => new ProductHomeResponse(p)).ToList();
         }
 
-        public async Task<ICollection<ProductVersion>> GetProductVersionsByProductId(Guid productId)
+        public Task<List<ProductHomeResponse>> GetProductRelative(Guid productId)
         {
-            var product = await _context
-                .Products
-                .Include(p => p.ProductVersions)
+            throw new NotImplementedException();
+        }
+
+        public async Task<ProductDetailResponse> GetProductVersionsByProductId(Guid productId)
+        {
+            var product = await _context.Products
+                .Include(p => p.Votes)
+                .Include(p => p.Catalog)
                 .FirstOrDefaultAsync(p => p.ProductId == productId);
 
-            if (product == null)
+            if (product is null)
                 throw new CustomNotFoundException("Product not found");
 
-            if (product.ProductVersions == null || product.ProductVersions.Count == 0)
-                throw new CustomNotFoundException("Product version not found");
+            // CatalogAttributes
+            Dictionary<string, string>? catalogAttributesResult = new Dictionary<string, string>();
+            var catalogAttributes = await _context.CatalogAttributes
+                .Where(ca => ca.CatalogId == product.CatalogId)
+                .ToListAsync();
 
-            return product.ProductVersions;
+            foreach (CatalogAttribute catalogAttribute in catalogAttributes)
+                catalogAttributesResult.Add(catalogAttribute.Key!, catalogAttribute.DisplayName!);
+
+            // Product Color
+            var colors = await _context.ProductVersions
+                .Where(pv => pv.ProductId == productId)
+                .Select(pv => pv.Color)
+                .Distinct()
+                .ToListAsync();
+
+            ICollection<ProductColorVersions> colorVersions = new List<ProductColorVersions>();
+            foreach (Color? color in colors)
+            {
+                if (color is null)
+                    continue;
+
+                var productVersions = await _context.ProductVersions
+                    .Where(pv => pv.ProductId == productId && pv.Color == color)
+                    .ToListAsync();
+
+                colorVersions.Add(new ProductColorVersions(color, productVersions));
+            }
+
+
+            return new ProductDetailResponse
+            {
+                ProductId = product.ProductId,
+                ProductName = product.ProductName,
+                ProductDescription = product.ProductDescription,
+                Rate = product.Rate,
+                CatalogAttributes = catalogAttributesResult,
+                ProductColorVersions = colorVersions,
+                Votes = product.Votes
+            };
         }
 
         public async Task<PaginationResponse> SearchProduct(string query, string? orderBy, int page, int limit)
         {
+            // Replace all special characters with space
+            // Search condition with split query and join with AND
+            var searchCondition = string.Join(" AND ", "\"" + query.Split(" ") + "\"" );
+
             var products = _context.Products
                 .Include(p => p.Votes)
-                .Where(p => (p.ProductName!.Contains(query)
-                || p.Brand!.BrandName!.Contains(query))
-                && p.IsDeleted == false);
+                .Include(p => p.Brand)
+                .Where(p => EF.Functions.FreeText(p.ProductName!, query)
+                || EF.Functions.Like(p.Brand!.BrandName!, $"%{query}%")
+                );
 
             switch (orderBy)
             {

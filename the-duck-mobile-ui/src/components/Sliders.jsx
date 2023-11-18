@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CardMedia, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import PropTypes from "prop-types";
@@ -66,7 +66,7 @@ function Sliders(props) {
         {urls &&
           urls.map((url, index) => {
             return (
-              <Typography
+              <img
                 key={"slider" + index}
                 component={"img"}
                 src={url}

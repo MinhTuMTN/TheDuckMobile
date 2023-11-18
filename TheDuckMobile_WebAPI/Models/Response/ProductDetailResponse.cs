@@ -7,20 +7,9 @@ namespace TheDuckMobile_WebAPI.Models.Response
         public Guid ProductId { get; set; }
         public string? ProductName { get; set; }
         public string? ProductDescription { get; set; }
+        public float Rate { get; set; }
         public ICollection<Vote>? Votes { get; set; }
-        public ICollection<ProductVersion>? ProductVersions { get; set; }
-        public ICollection<CatalogAttribute>? CatalogAttributes { get; set; }
-
-        public ProductDetailResponse(Product product,
-            ICollection<CatalogAttribute> catalogAttributes
-        )
-        {
-            ProductId = product.ProductId;
-            ProductName = product.ProductName;
-            ProductDescription = product.ProductDescription;
-            Votes = product.Votes;
-            ProductVersions = product.ProductVersions;
-            CatalogAttributes = catalogAttributes;
-        }
+        public Dictionary<string, string>? CatalogAttributes { get; set; }
+        public ICollection<ProductColorVersions>? ProductColorVersions { get; set; }
     }
 }
