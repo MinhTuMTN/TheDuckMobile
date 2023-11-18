@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TheDuckMobile_WebAPI.Models.Request.Admin;
 using TheDuckMobile_WebAPI.Models.Response;
 using TheDuckMobile_WebAPI.Services.Admin;
 
@@ -16,7 +17,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             _catalogServices = catalogServices;
         }
 
-        [HttpGet("list")]
+        [HttpGet]
         [AllowAnonymous]
         /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllCatalogs()
@@ -27,6 +28,54 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Success = true,
                 Data = catalogs,
                 Message = "Successfully retrieved all catalogs"
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCatalog([FromBody] AddCatalogRequest request)
+        {
+            var catalog = await _catalogServices.AddCatalog(request);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = catalog,
+                Message = "Successfully added catalog"
+            });
+        }
+
+        [HttpPost("{catalogId}/brands")]
+        public async Task<IActionResult> AddBrandToCatalog([FromRoute] int catalogId, [FromBody] AddBrandToCatalogRequest request)
+        {
+            var catalog = await _catalogServices.AddBrandToCatalog(catalogId, request);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = catalog,
+                Message = "Successfully added brand to catalog"
+            });
+        }
+
+        [HttpPost("{catalogId}/special-features")]
+        public async Task<IActionResult> AddSpecialFeatureToCatalog([FromRoute] int catalogId, [FromBody] AddSpecialFeatureToCatalogRequest request)
+        {
+            var catalog = await _catalogServices.AddSpecialFeatureToCatalog(catalogId, request);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = catalog,
+                Message = "Successfully added special feature to catalog"
+            });
+        }
+
+        [HttpGet("{catalogId}/attributes")]
+        public async Task<IActionResult> GetCatalogAttributes([FromRoute] int catalogId)
+        {
+            var catalogAttributes = await _catalogServices.GetCatalogAttributes(catalogId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = catalogAttributes,
+                Message = "Successfully retrieved catalog attributes"
             });
         }
     }

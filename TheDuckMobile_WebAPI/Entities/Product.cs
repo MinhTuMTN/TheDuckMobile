@@ -7,7 +7,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
     public class Product
     {
-        private readonly ILazyLoader _lazyLoader;
+        private readonly ILazyLoader? _lazyLoader;
 
         [Key]
         public Guid ProductId { get; set; }
@@ -34,7 +34,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public int BrandId { get; set; }
         private Brand? _brand;
-
+        
         [JsonIgnore]
         public virtual Brand? Brand
         {
@@ -42,22 +42,18 @@ namespace TheDuckMobile_WebAPI.Entities
             set => _brand = value;
         }
 
-
         [JsonIgnore]
         public virtual ICollection<Vote>? Votes { get; set; }
-
-
+        
         [JsonIgnore]
         public virtual ICollection<ProductVersion>? ProductVersions { get; set; }
 
 
-        public int OSId { get; set; }
-
+        public int? OSId { get; set; }
         [JsonIgnore]
         public virtual OS? OS { get; set; }
 
-        public int CatalogId { get; set; }
-
+        public int? CatalogId { get; set; }
         [JsonIgnore]
         public virtual Catalog? Catalog { get; set; }
 
@@ -72,6 +68,11 @@ namespace TheDuckMobile_WebAPI.Entities
         public Product(ILazyLoader lazyLoader)
         {
             _lazyLoader = lazyLoader;
+            Votes = new HashSet<Vote>();
+        }
+
+        public Product()
+        {
             Votes = new HashSet<Vote>();
         }
     }

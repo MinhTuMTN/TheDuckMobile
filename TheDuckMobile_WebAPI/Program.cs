@@ -49,6 +49,8 @@ builder.Services.AddScoped<IUserServices, UserServicesImpl>();
 builder.Services.AddScoped<IProductServices, ProductServicesImpl>();
 builder.Services.AddScoped<IAddressServices, AddressServicesImpl>();
 builder.Services.AddScoped<ICatalogServices, CatalogServicesImpl>();
+builder.Services.AddScoped<ICloudinaryServices, CloudinaryServicesImpl>();
+builder.Services.AddScoped<IJsonServices, JsonServicesImpl>();
 
 // Admin
 builder.Services.AddScoped<IProductAdminServices, ProductAdminServicesImpl>();
@@ -57,16 +59,21 @@ builder.Services.AddScoped<IStaffAdminServices, StaffAdminServicesImpl>();
 builder.Services.AddScoped<IAddressAdminServices, AddressAdminServicesImpl>();
 builder.Services.AddScoped<ICatalogAdminServices, CatalogAdminServicesImpl>();
 builder.Services.AddScoped<IBrandAdminServices, BrandAdminServicesImpl>();
-builder.Services.AddScoped<IColorAdminServices, ColorAdminServicesImpl>();
 builder.Services.AddScoped<ISpecialFeatureAdminServices, SpecialFeatureAdminServicesImpl>();
 builder.Services.AddScoped<IStoreAdminServices, StoreAdminServicesImpl>();
-builder.Services.AddScoped<IOSAdminServices, OSAdminServicesImpl>();
 builder.Services.AddScoped<IOrderAdminServices, OrderAdminServicesImpl>();
 builder.Services.AddScoped<ICouponAdminServices, CouponAdminServicesImpl>();
 builder.Services.AddScoped<IFeedbackAdminServices, FeedbackAdminServicesImpl>();
+builder.Services.AddScoped<ISpecialFeatureServices, SpecialFeatureServicesImpl>();
+builder.Services.AddScoped<ICatalogAttributeServices, CatalogAttributeServicesImpl>();
+builder.Services.AddScoped<IOSAdminServices, OSServicesImpl>();
+builder.Services.AddScoped<IColorAdminServices, ColorAdminServicesImpl>();
+builder.Services.AddScoped<IProductVersionAdminServices, ProductVersionAdminServicesImpl>();
 #endregion
 
 var app = builder.Build();
+
+app.UseExceptionHandler("/error-handler");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -81,6 +88,8 @@ app.UseCors(x => x
        .AllowAnyMethod()
           .AllowAnyHeader());
 #endregion
+
+
 
 //app.UseHttpsRedirection();
 
