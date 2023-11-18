@@ -1,10 +1,14 @@
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
-import React, { Fragment, createContext, useCallback, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
 import { getAllProducts } from "../services/Admin/ProductService";
 import { getAllCustomers } from "../services/Admin/CustomerService";
 import { getAllStaffs } from "../services/Admin/StaffService";
@@ -19,21 +23,30 @@ import { getAllCoupons } from "../services/Admin/CouponService";
 import { getAllFeedbacks } from "../services/Admin/FeedbackService";
 import { getAllOrders } from "../services/Admin/OrderService";
 import { enqueueSnackbar } from "notistack";
+import TopNavbar from "../components/Store/TopNavbar";
+
+const SIDE_NAV_WIDTH = 280;
 
 const RootPageUser = styled(Box)(({ theme }) => ({
   display: "flex",
-  height: "100%",
-  marginTop: theme.spacing(12),
+  flex: "1 1 auto",
+  maxWidth: "100%",
+  [theme.breakpoints.up("lg")]: {
+    paddingLeft: SIDE_NAV_WIDTH,
+  },
 }));
 
-const Right = styled(Box)(({ theme }) => ({
-  flex: 7,
+const LayoutContainer = styled("div")({
   display: "flex",
-}));
+  flex: "1 1 auto",
+  flexDirection: "column",
+  width: "100%",
+});
 
 const DataContext = createContext();
 
 function AdminLayout(props) {
+  const [open, setOpen] = React.useState(false);
   const pathname = useLocation().pathname;
   const [dataFetched, setDataFected] = useState([]);
 
@@ -172,14 +185,14 @@ function AdminLayout(props) {
     } else if (pathname === "/admin/order-management/list") {
       response = await getAllOrders();
     }
-  
+
     if (response.success) {
       setDataFected(response.data.data);
     } else {
       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
     }
   }, [pathname]);
-  
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -187,14 +200,13 @@ function AdminLayout(props) {
   return (
     <DataContext.Provider value={{ dataFetched }}>
       <Fragment>
-        <Navbar />
+        <TopNavbar onDrawerClick={setOpen} />
+        <AdminSidebar open={open} onOpenClose={setOpen} />
         <RootPageUser>
-          <AdminSidebar />
-          <Right>
+          <LayoutContainer>
             <Outlet />
-          </Right>
+          </LayoutContainer>
         </RootPageUser>
-        <Footer />
       </Fragment>
     </DataContext.Provider>
   );

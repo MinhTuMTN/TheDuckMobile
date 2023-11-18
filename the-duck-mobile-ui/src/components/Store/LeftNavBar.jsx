@@ -1,25 +1,22 @@
-import styled from "@emotion/styled";
 import {
   Box,
-  Divider,
   Drawer,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  SwipeableDrawer,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
-import SimpleBar from "simplebar-react";
 import pic from "../../assets/logo-removebg-preview.jpg";
 
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 function LeftNavBar(props) {
-  const { open, onClose } = props;
+  const { open, onOpenClose } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const content = (
     <Box
@@ -101,7 +98,6 @@ function LeftNavBar(props) {
     return (
       <Drawer
         anchor="left"
-        open
         PaperProps={{
           sx: {
             background: "linear-gradient(180deg, #FF416C 0%, #f38b57 100%)",
@@ -116,13 +112,14 @@ function LeftNavBar(props) {
     );
   }
   return (
-    <Drawer
+    <SwipeableDrawer
       anchor="left"
-      onClose={onClose}
+      onClose={() => onOpenClose(false)}
+      onOpen={() => onOpenClose(true)}
       open={open}
       PaperProps={{
         sx: {
-          backgroundColor: "neutral.800",
+          background: "linear-gradient(180deg, #FF416C 0%, #f38b57 100%)",
           color: "common.white",
           width: 280,
         },
@@ -131,7 +128,7 @@ function LeftNavBar(props) {
       variant="temporary"
     >
       {content}
-    </Drawer>
+    </SwipeableDrawer>
   );
 }
 LeftNavBar.propTypes = {

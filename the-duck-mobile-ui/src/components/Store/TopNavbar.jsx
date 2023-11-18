@@ -18,7 +18,7 @@ const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
 function TopNavbar(props) {
-  const { NavbarOpen } = props;
+  const { onDrawerClick } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg")); // Sử dụng useMediaQuery để lấy ra giá trị của màn hình hiện tại
   const accountPopover = usePopover(); // Sử dụng usePopover để lấy ra giá trị của popover
   return (
@@ -51,7 +51,7 @@ function TopNavbar(props) {
         >
           <Stack direction={"row"} spacing={2}>
             {!lgUp && (
-              <IconButton onClick={NavbarOpen}>
+              <IconButton onClick={() => onDrawerClick(true)}>
                 {" "}
                 <SvgIcon fontSize="small">
                   <MenuIcon />

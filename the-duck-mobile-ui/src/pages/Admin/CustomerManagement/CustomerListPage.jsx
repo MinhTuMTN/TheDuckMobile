@@ -1,5 +1,5 @@
 import {
-  Box,
+  Grid,
   InputAdornment,
   Paper,
   Table,
@@ -12,25 +12,28 @@ import {
   TableRow,
   Typography,
   styled,
+  Stack,
+  Box,
+  IconButton,
 } from "@mui/material";
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useCallback, useContext, useEffect, useState } from "react";
-import InfoIcon from '@mui/icons-material/Info';
-import MuiButton from "../../../components/MuiButton";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { Search } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { DataContext } from "../../../layouts/AdminLayout";
 
-const RootPageCustomerList = styled(Box)(({ theme }) => ({
-  display: "flex",
-  width: "100%",
-  flexDirection: "column",
-  padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
+const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({}));
+const CellHead = styled(TableCell)(({ theme }) => ({
+  fontSize: "18px",
+  paddingY: "0.2rem ",
 }));
 
-const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
+const CellBody = styled(TableCell)(({ theme }) => ({
+  fontSize: "15px !important",
+  paddingX: "0",
+  paddingY: "0",
 }));
 
 function CustomerListPage() {
@@ -45,22 +48,22 @@ function CustomerListPage() {
     setRowsSearched(dataFetched);
   }, [dataFetched]);
 
-    const filterRows = useCallback(
-        (searchString) => {
-            if (searchString === "") {
-                return dataFetched;
-            }
-            return dataFetched.filter((row) =>
-                row.fullName.toLowerCase().includes(searchString.toLowerCase())
-            );
-        },
-        [dataFetched]
-    );
+  const filterRows = useCallback(
+    (searchString) => {
+      if (searchString === "") {
+        return dataFetched;
+      }
+      return dataFetched.filter((row) =>
+        row.fullName.toLowerCase().includes(searchString.toLowerCase())
+      );
+    },
+    [dataFetched]
+  );
 
-    useEffect(() => {
-        const filtered = filterRows(searchString);
-        setRowsSearched(filtered);
-    }, [searchString, filterRows]);
+  useEffect(() => {
+    const filtered = filterRows(searchString);
+    setRowsSearched(filtered);
+  }, [searchString, filterRows]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -75,128 +78,179 @@ function CustomerListPage() {
     setPage(0);
   };
 
-    return (
-        <RootPageCustomerList>
-            <Typography variant="h3">Danh sách khách hàng</Typography>
+  return (
+    <Grid
+      container
+      sx={{
+        py: 3,
+        px: 4,
+        borderTop: "1px solid #e0e0e0",
+      }}
+    >
+      <Grid item xs={12}>
+        <Typography variant="h3" paddingX={2} paddingBottom={2}>
+          Danh sách khách hàng
+        </Typography>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Stack
+          component={Paper}
+          elevation={3}
+          sx={{
+            borderRadius: "25px",
+          }}
+          spacing={"2px"}
+        >
+          <Box
+            sx={{
+              padding: 2,
+              borderRadius: "25px 25px 0 0 ",
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
             <SearchTextField
-                type="text"
-                variant="outlined"
-                component={Paper}
-                placeholder="Tìm kiếm theo tên"
-                value={searchString}
-                onChange={(e) => setSearchString(e.target.value)}
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <Search />
-                        </InputAdornment>
-                    ),
-                    style: { fontSize: 18 },
-                }}
+              fullWidth
+              variant="outlined"
+              placeholder="Tìm kiếm theo tên"
+              value={searchString}
+              onChange={(e) => setSearchString(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+                style: { fontSize: 14 },
+              }}
             />
-            <TableContainer
-                component={Paper}
-                sx={{ maxHeight: 1070, minWidth: 1035, maxWidth: 1035 }}
-            >
-                <Table stickyHeader sx={{ maxWidth: 1200 }}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">Mã khách hàng</TableCell>
-                            <TableCell align="center">Họ tên</TableCell>
-                            <TableCell align="center">Ảnh đại diện</TableCell>
-                            <TableCell align="center">Số điện thoại</TableCell>
-                            <TableCell align="center">Email</TableCell>
-                            <TableCell align="center">Điểm tích lũy</TableCell>
-                            <TableCell align="center">Số lượng đánh giá</TableCell>
-                            <TableCell align="center">Số lượng đơn hàng</TableCell>
-                            <TableCell align="center">Trạng thái</TableCell>
-                            <TableCell align="center">Lựa Chọn</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {(rowsPerPage > 0
-                            ? rowsSearched.slice(
-                                page * rowsPerPage,
-                                page * rowsPerPage + rowsPerPage
-                            )
-                            : rowsSearched
-                        ).map((row, i) => (
-                            <TableRow key={row.userId}>
-                                <TableCell style={{ minWidth: 200 }} align="center">
-                                    {row.userId}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 150 }} align="center">
-                                    {row.fullName}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 250 }} align="center">
-                                    <img
-                                        style={{
-                                            maxWidth: "100%",
-                                            height: "auto",
-                                        }}
-                                        alt="avatar"
-                                        src={row.avatar}
-                                    />
-                                </TableCell>
-                                <TableCell style={{ minWidth: 150 }} align="center">
-                                    {row.phone}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 200 }} align="center">
-                                    {row.email}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 50 }} align="center">
-                                    {row.point == null ? 0 : row.point}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 50 }} align="center">
-                                    {row.numberOfVotes}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 50 }} align="center">
-                                    {row.numberOfOrder}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 170 }} align="center">
-                                    {row.isDeleted ? "Ngừng hoạt động" : "Còn hoạt động"}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 50 }} align="center">
-                                    <MuiButton
-                                        color="oldPrimary"
-                                        onClick={(e) => {
-                                            navigate("/admin/customer-management/detail", {
-                                                state: {
-                                                    id: row.customerId,
-                                                },
-                                            });
-                                        }}
-                                    >
-                                        <InfoIcon />
-                                    </MuiButton>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={11} />
-                            </TableRow>
-                        )}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                                colSpan={10}
-                                count={rowsSearched.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActions}
-                                sx={{ fontSize: 10 }}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </TableContainer>
-        </RootPageCustomerList>
-    );
+          </Box>
+
+          <TableContainer
+            sx={{
+              paddingX: 3,
+              borderRadius: "0 0 25px 25px ",
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <CellHead align="left">Họ Tên</CellHead>
+                  <CellHead
+                    align="left"
+                    sx={{
+                      minWidth: "120px",
+                    }}
+                  >
+                    Số Điện Thoại
+                  </CellHead>
+                  <CellHead align="right">Điểm</CellHead>
+                  <CellHead
+                    align="right"
+                    sx={{
+                      minWidth: "150px",
+                    }}
+                  >
+                    Số Đánh Giá
+                  </CellHead>
+                  <CellHead
+                    align="right"
+                    sx={{
+                      minWidth: "100px",
+                    }}
+                  >
+                    Số Đơn
+                  </CellHead>
+                  <CellHead align="right">Trạng Thái</CellHead>
+                  <CellHead align="right">Tuỳ Chọn</CellHead>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {(rowsPerPage > 0
+                  ? rowsSearched.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : rowsSearched
+                ).map((row, i) => (
+                  <TableRow
+                    key={row.userId}
+                    sx={{
+                      paddingY: "0",
+                    }}
+                  >
+                    <CellBody style={{ minWidth: 200 }} align="left">
+                      {row.fullName}
+                    </CellBody>
+
+                    <CellBody style={{ minWidth: 150 }} align="left">
+                      {row.phone}
+                    </CellBody>
+
+                    <CellBody style={{ minWidth: 50 }} align="right">
+                      {row.point == null ? 0 : row.point}
+                    </CellBody>
+                    <CellBody style={{ minWidth: 50 }} align="right">
+                      {row.numberOfVotes}
+                    </CellBody>
+                    <CellBody style={{ minWidth: 50 }} align="right">
+                      {row.numberOfOrder}
+                    </CellBody>
+                    <CellBody style={{ minWidth: 170 }} align="right">
+                      {row.isDeleted ? "Ngừng hoạt động" : "Còn hoạt động"}
+                    </CellBody>
+                    <CellBody
+                      style={{ minWidth: 50, fontSize: "14px" }}
+                      align="right"
+                    >
+                      <IconButton
+                        color="black"
+                        onClick={(e) => {
+                          navigate("/admin/customer-management/detail", {
+                            state: {
+                              id: row.customerId,
+                            },
+                          });
+                        }}
+                      >
+                        <InfoOutlinedIcon color="black" />
+                      </IconButton>
+                    </CellBody>
+                  </TableRow>
+                ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={11} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[
+                      5,
+                      10,
+                      25,
+                      { label: "All", value: -1 },
+                    ]}
+                    colSpan={10}
+                    count={rowsSearched.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                    sx={{ fontSize: 10 }}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        </Stack>
+      </Grid>
+    </Grid>
+  );
 }
 
 export default CustomerListPage;
