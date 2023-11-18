@@ -50,7 +50,7 @@ const ProductGridItem = ({ productInfo, styled }) => {
         sx={{
           paddingTop: "1.25rem",
           paddingX: "1.5rem",
-          flex: 2,
+          flexBasis: "59%",
           position: "relative",
         }}
       >
@@ -75,17 +75,16 @@ const ProductGridItem = ({ productInfo, styled }) => {
           paddingTop: "1rem",
           paddingBottom: "1.25rem",
           paddingX: "1.5rem",
-          flex: 1,
+          flexBasis: "41%",
         }}
       >
-        {" "}
         {productInfo.promotionPrice &&
           productInfo.promotionPrice < productInfo.productPrice && (
             <Stack
               direction={"row"}
               alignItems={"center"}
               sx={{
-                width: "45%",
+                width: "fit-content",
                 height: "20%",
                 backgroundColor: "#e83a45",
                 borderRadius: "20px",

@@ -1,7 +1,13 @@
 import { Avatar, Rating, Stack, Typography } from "@mui/material";
+import PropTypes from "prop-types";
 import React from "react";
 
+ReviewItem.propTypes = {
+  review: PropTypes.object,
+};
+
 function ReviewItem(props) {
+  const { review } = props;
   return (
     <Stack direction={"row"} spacing={1.75}>
       <Avatar
@@ -20,14 +26,14 @@ function ReviewItem(props) {
             }}
             marginRight={3}
           >
-            Nguyễn Ngọc Tuyết Vi
+            {review.userName}
           </Typography>
           <Rating
             name="rating"
             precision={0.5}
             size="small"
             readOnly
-            value={4.5}
+            value={review.rate}
           />
         </Stack>
         <Typography
@@ -37,9 +43,7 @@ function ReviewItem(props) {
             textAlign: "justify",
           }}
         >
-          Vestibulum ante ipsum primis aucibus orci luctustrices posuere cubilia
-          Curae Suspendisse viverra ed viverra. Mauris ullarper euismod
-          vehicula. Phasellus quam nisi, congue id nulla.
+          {review.comment}
         </Typography>
       </Stack>
     </Stack>

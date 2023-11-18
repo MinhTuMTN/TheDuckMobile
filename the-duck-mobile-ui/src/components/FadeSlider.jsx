@@ -1,19 +1,23 @@
 import React from "react";
-import { Fade, Slide } from "react-slideshow-image";
+import { Fade } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 
 function FadeSlider(props) {
-  const { fadeImages } = props;
+  const { fadeImages, height } = props;
   return (
     <div className="slide-container">
-      <Slide>
+      <Fade duration={2000}>
         {fadeImages?.map((fadeImage, index) => (
-          <div key={index}>
-            <img style={{ width: "100%" }} src={fadeImage.url} />
-            <h2>{fadeImage.caption}</h2>
+          <div key={`fade-slider-${index}`}>
+            <img
+              style={{ width: "100%" }}
+              alt="fade-slider"
+              src={fadeImage}
+              height={height}
+            />
           </div>
         ))}
-      </Slide>
+      </Fade>
     </div>
   );
 }

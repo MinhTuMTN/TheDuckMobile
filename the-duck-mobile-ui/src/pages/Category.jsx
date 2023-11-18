@@ -77,7 +77,6 @@ function Category(props) {
 
   useEffect(() => {
     const handleGetProductFilter = async () => {
-      console.log(pagination.page);
       const response = await getCatalogProductFilter(catalogURL, {
         minPrice: parseInt((filter.price[0] / 100) * 100000000),
         maxPrice: parseInt((filter.price[1] / 100) * 100000000),

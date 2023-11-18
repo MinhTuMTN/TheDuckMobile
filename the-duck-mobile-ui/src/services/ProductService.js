@@ -19,3 +19,7 @@ export const searchProducts = (query) => {
 export const getProductDetails = (id) => {
   return get(`/product/${id}/versions`);
 };
+
+export const getProductsRelatedTo = (id) => {
+  return get(`/product/${id}/relative`);
+};

@@ -11,13 +11,13 @@ namespace TheDuckMobile_WebAPI.Entities
         public Guid VoteId { get; set; }
 
         [Required]
-        public int VoteRate { get; set; }
+        public float VoteRate { get; set; }
 
         public string? Content { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
-        public string[] Images { get; set; }
+        public string[]? Images { get; set; }
 
         public Guid ProductId { get; set; }
         public virtual Product? Product { get; set; }

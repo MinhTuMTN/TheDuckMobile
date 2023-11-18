@@ -45,9 +45,27 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             return (await newestProducts).Select(p => new ProductHomeResponse(p)).ToList();
         }
 
-        public Task<List<ProductHomeResponse>> GetProductRelative(Guid productId)
+        public async Task<List<ProductHomeResponse>> GetProductRelative(Guid productId)
         {
-            throw new NotImplementedException();
+            // Get 4 products with same catalog and best selling
+            var product = await _context.Products
+                .Include(p => p.Votes)
+                .Include(p => p.Catalog)
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+            if (product is null)
+                throw new CustomNotFoundException("Product not found");
+
+            var relativeProducts = await _context.Products
+                .Include(p => p.Votes)
+                .Where(p => p.CatalogId == product.Catalog!.CatalogId
+                    && p.ProductId != product.ProductId
+                    && p.IsDeleted == false)
+                .OrderByDescending(p => p.Sold)
+                .Take(4)
+                .ToListAsync();
+
+            return relativeProducts.Select(p => new ProductHomeResponse(p)).ToList();
         }
 
         public async Task<ProductDetailResponse> GetProductVersionsByProductId(Guid productId)
@@ -104,9 +122,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
         public async Task<PaginationResponse> SearchProduct(string query, string? orderBy, int page, int limit)
         {
-            // Replace all special characters with space
-            // Search condition with split query and join with AND
-            var searchCondition = string.Join(" AND ", "\"" + query.Split(" ") + "\"" );
 
             var products = _context.Products
                 .Include(p => p.Votes)

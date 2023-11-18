@@ -1,7 +1,5 @@
-import styled from "@emotion/styled";
 import {
   Box,
-  Divider,
   Drawer,
   List,
   ListItem,
@@ -11,13 +9,11 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
 import PropTypes from "prop-types";
-import SimpleBar from "simplebar-react";
+import React from "react";
 import pic from "../../assets/logo-removebg-preview.jpg";
 
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 function LeftNavBar(props) {
   const { open, onClose } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));

@@ -84,5 +84,18 @@ namespace TheDuckMobile_WebAPI.Controllers
                 Message = "Successfully retrieved product versions"
             });
         }
+
+        [HttpGet("{productId}/relative")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetProductRelative([FromRoute] Guid productId)
+        {
+            var relativeProducts = await _productServices.GetProductRelative(productId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = relativeProducts,
+                Message = "Successfully retrieved relative products"
+            });
+        }
     }
 }

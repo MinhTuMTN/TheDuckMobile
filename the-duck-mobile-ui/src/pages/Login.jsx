@@ -19,6 +19,7 @@ import React from "react";
 import { useAuth } from "../auth/AuthProvider";
 import MuiTextFeild from "../components/MuiTextFeild";
 import { checkPhoneExists, login, register } from "../services/AuthService";
+import { useLocation } from "react-router-dom";
 
 const Wrapper = styled(Container)`
   padding-top: 6rem;
@@ -41,6 +42,7 @@ const StyledDatePicker = styled(DatePicker)`
 
 function Login(props) {
   const { setToken } = useAuth();
+  const { state } = useLocation();
   const { enqueueSnackbar } = useSnackbar();
   const [step, setStep] = React.useState(1); // 1: Nhập số điện thoại, 2: Nhập mã OTP
   const [phone, setPhone] = React.useState("");
@@ -52,7 +54,7 @@ function Login(props) {
 
   const handleEnterPhoneNumber = async () => {
     const phoneRegex = /^\d+$/;
-    
+
     if (!phoneRegex.test(phone)) {
       enqueueSnackbar("Vui lòng chỉ nhập số", { variant: "error" });
       return;
@@ -90,8 +92,8 @@ function Login(props) {
     } else {
       setToken(response.data.data);
       enqueueSnackbar("Đăng nhập thành công", { variant: "success" });
-      // navigate("/profile", { replace: true });
-      window.location.href = "/profile";
+      if (state.from) window.location.href = state.from;
+      else window.location.href = "/profile";
     }
   };
 

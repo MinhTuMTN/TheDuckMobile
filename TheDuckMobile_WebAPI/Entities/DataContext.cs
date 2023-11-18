@@ -50,7 +50,7 @@ namespace TheDuckMobile_WebAPI.Entities
             modelBuilder.Entity<Vote>()
                 .Property(v => v.Images)
                 .HasConversion(
-                    v => string.Join(',', v),
+                    v => string.Join(',', v == null ? "" : v),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
                 );
             #endregion

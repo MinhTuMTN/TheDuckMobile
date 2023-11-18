@@ -21,8 +21,11 @@ import ProductGrid from "../components/ProductGrid";
 import QuantityCounter from "../components/QuantityCounter";
 import Sliders from "../components/Sliders";
 import TabRelative from "../components/TabRelative";
-import { getProductDetails } from "../services/ProductService";
-import FadeSlider from "../components/FadeSlider";
+import {
+  getProductDetails,
+  getProductsRelatedTo,
+} from "../services/ProductService";
+import { getVotesByProductId } from "../services/VoteServices";
 
 const Wrapper = styled.div``;
 const ShopArea = styled.div`
@@ -92,14 +95,14 @@ const StyledButtonColorOuter = styled(Box)(({ theme }) => ({
 function ProductDetails(props) {
   const [searchParams] = useSearchParams();
   const { enqueueSnackbar } = useSnackbar();
-
   const [selectedImage, setSelectedImage] = React.useState("");
-  const [urlsImage, setUrlsImage] = React.useState([]);
-
+  const [productsRelative, setProductsRelative] = React.useState([]);
+  const [votes, setVotes] = React.useState([]);
   const [info, setInfo] = useState({});
   const [colors, setColors] = useState([]);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedVersion, setSelectedVersion] = useState({});
+  const [quantity, setQuantity] = useState(1);
 
   const handleGetProductDetails = useCallback(async () => {
     const response = await getProductDetails(searchParams.get("id"));
@@ -114,20 +117,59 @@ function ProductDetails(props) {
     } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
   }, [searchParams, enqueueSnackbar]);
 
+  const handleGetProductRelative = useCallback(async () => {
+    const response = await getProductsRelatedTo(searchParams.get("id"));
+    if (response.success) {
+      setProductsRelative(response.data.data);
+    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+  }, [searchParams, enqueueSnackbar]);
+
+  const handleGetVotes = useCallback(async () => {
+    const response = await getVotesByProductId(searchParams.get("id"));
+    if (response.success) {
+      setVotes(response.data.data);
+    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+  }, [searchParams, enqueueSnackbar]);
+
   useEffect(() => {
     handleGetProductDetails();
-  }, [handleGetProductDetails]);
+    handleGetProductRelative();
+    handleGetVotes();
+  }, [handleGetProductDetails, handleGetProductRelative, handleGetVotes]);
 
   useEffect(() => {
     if (selectedVersion?.images) {
       setSelectedImage(selectedVersion.images[0]);
-      setUrlsImage(selectedVersion.images);
     }
   }, [selectedVersion]);
 
   useEffect(() => {
     setSelectedVersion(colors[selectedColorIndex]?.productVersions[0]);
   }, [colors, selectedColorIndex]);
+
+  const handleAddToCart = () => {
+    const cart = localStorage.getItem("cart");
+    if (!cart) {
+      localStorage.setItem("cart", JSON.stringify([]));
+    }
+
+    const cartItems = JSON.parse(localStorage.getItem("cart"));
+    const cartItem = cartItems.find(
+      (item) => item.productVersionId === selectedVersion.productVersionId
+    );
+
+    if (cartItem) {
+      cartItem.quantity += quantity;
+    } else {
+      cartItems.push({
+        productVersionId: selectedVersion.productVersionId,
+        quantity: quantity,
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+    enqueueSnackbar("Thêm vào giỏ hàng thành công", { variant: "success" });
+  };
 
   return (
     <Wrapper>
@@ -185,6 +227,7 @@ function ProductDetails(props) {
                       <Sliders
                         urls={selectedVersion?.images}
                         arrows
+                        infinite={false}
                         slidesToScroll={3}
                         slidesToShow={4}
                         onClick={(e) => {
@@ -307,7 +350,10 @@ function ProductDetails(props) {
                     <Stack direction={"column"} spacing={1}>
                       <Stack direction={"row"} spacing={2} alignItems={"end"}>
                         <Typography variant={"h6"}>Số lượng</Typography>
-                        <QuantityCounter />
+                        <QuantityCounter
+                          quantity={quantity}
+                          onChange={setQuantity}
+                        />
                       </Stack>
                       <Stack
                         direction={"row"}
@@ -325,6 +371,7 @@ function ProductDetails(props) {
                             marginTop: "10px",
                             color: "#fff",
                           }}
+                          onClick={handleAddToCart}
                         >
                           Thêm vào giỏ hàng
                         </StyledButton>
@@ -349,7 +396,8 @@ function ProductDetails(props) {
                   description={info?.productDescription}
                   specification={selectedVersion?.specification}
                   attributes={info?.catalogAttributes}
-                  review={info?.votes}
+                  reviews={votes}
+                  setReviews={setVotes}
                 />
               </Grid>
               <Grid
@@ -371,7 +419,7 @@ function ProductDetails(props) {
                 >
                   Sản phẩm liên quan
                 </Typography>
-                <ProductGrid numberColumn={5} />
+                <ProductGrid numberColumn={4} products={productsRelative} />
               </Grid>
             </Grid>
           </PageContainer>
