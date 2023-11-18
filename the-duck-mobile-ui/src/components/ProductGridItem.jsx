@@ -59,8 +59,10 @@ const ProductGridItem = ({ productInfo, styled }) => {
           width={"100%"}
           height={"100%"}
           image={productInfo.thumbnail}
+          onClick={handleClick}
           alt="Hinh anh san pham"
           sx={{
+            cursor: "pointer",
             transition: "transform 0.3s ease-in-out",
             "&:hover": {
               transform: "translateY(-8px)", // Điều chỉnh giá trị theo mong muốn của bạn
@@ -113,7 +115,9 @@ const ProductGridItem = ({ productInfo, styled }) => {
           variant="h6"
           align="left"
           fontWeight={"580"}
+          onClick={handleClick}
           style={{
+            cursor: "pointer",
             fontSize: "20px",
             overflow: "hidden",
             textOverflow: "ellipsis",
