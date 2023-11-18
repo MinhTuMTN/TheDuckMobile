@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Entities;
-using TheDuckMobile_WebAPI.Models.Response.Admin;
+using TheDuckMobile_WebAPI.ErrorHandler;
+using TheDuckMobile_WebAPI.Models.Request.Admin;
 using TheDuckMobile_WebAPI.Services.Admin;
 
 namespace TheDuckMobile_WebAPI.Services.Impl.Admin
@@ -14,10 +15,61 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             _context = context;
         }
 
-        public async Task<List<OSListResponse>> GetAllOSs()
+        public async Task<OS> AddOS(OSRequest request)
         {
-            var osList = await _context.OSs.ToListAsync();
-            return osList.Select(o => new OSListResponse(o)).ToList();
+            var os = new OS
+            {
+                OSName = request.OSName,
+                CreatedAt = DateTime.Now,
+                LastModifiedAt = DateTime.Now,
+                IsDeleted = false
+            };
+
+            await _context.OSs.AddAsync(os);
+            await _context.SaveChangesAsync();
+
+            return os;
+        }
+
+        public async Task<bool> DeleteOS(int id)
+        {
+            var os = await GetOSById(id);
+
+            os.IsDeleted = true;
+            os.LastModifiedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return os.IsDeleted;
+        }
+
+        public async Task<ICollection<OS>> GetAllOS()
+        {
+            var oss = await _context.OSs.Where(o => o.IsDeleted == false).ToListAsync();
+
+            return oss;
+        }
+
+        public async Task<OS> GetOSById(int id)
+        {
+            var os = await _context.OSs.FirstOrDefaultAsync
+                (o => o.OSId == id && o.IsDeleted == false);
+
+            if (os == null)
+                throw new CustomNotFoundException("Can't found OS");
+
+            return os;
+        }
+
+        public async Task<OS> UpdateOS(int id, OSRequest request)
+        {
+            var os = await GetOSById(id);
+
+            os.OSName = request.OSName;
+            os.LastModifiedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+            return os;
         }
     }
 }

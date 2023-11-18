@@ -66,7 +66,7 @@ builder.Services.AddScoped<ICouponAdminServices, CouponAdminServicesImpl>();
 builder.Services.AddScoped<IFeedbackAdminServices, FeedbackAdminServicesImpl>();
 builder.Services.AddScoped<ISpecialFeatureServices, SpecialFeatureServicesImpl>();
 builder.Services.AddScoped<ICatalogAttributeServices, CatalogAttributeServicesImpl>();
-builder.Services.AddScoped<IOSAdminServices, OSServicesImpl>();
+builder.Services.AddScoped<IOSAdminServices, OSAdminServicesImpl>();
 builder.Services.AddScoped<IColorAdminServices, ColorAdminServicesImpl>();
 builder.Services.AddScoped<IProductVersionAdminServices, ProductVersionAdminServicesImpl>();
 #endregion
