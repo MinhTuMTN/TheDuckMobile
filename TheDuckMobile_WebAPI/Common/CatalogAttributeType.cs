@@ -2,7 +2,7 @@
 {
     public enum CatalogAttributeType
     {
-        String,
+        Normal,
         Selection,
         Boolean,
     }

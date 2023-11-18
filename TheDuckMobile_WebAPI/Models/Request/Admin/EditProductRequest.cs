@@ -14,6 +14,8 @@ namespace TheDuckMobile_WebAPI.Models.Request.Admin
         public int OSId { get; set; }
         [Required(ErrorMessage = "Brand is required")]
         public int BrandId { get; set; }
+        [Required(ErrorMessage = "Catalog is required")]
+        public int CatalogId { get; set; }
 
         public IFormFile? Thumbnail { get; set; }   
     }

@@ -74,10 +74,21 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 product.Thumbnail = thumbnail;
             }
 
+            // Catalog
+            var catalog = await _context
+                .Catalogs
+                .FirstOrDefaultAsync(
+                    c => c.CatalogId == request.CatalogId
+                    && c.IsDeleted == false
+                    );
+            if (catalog == null)
+                throw new CustomNotFoundException("Can't found catalog");
+
             product.ProductName = request.ProductName;
             product.ProductDescription = request.ProductDescription;
             product.Quantity = request.Quantity;
             product.OS = os;
+            product.Catalog = catalog;
             product.Brand = brand;
             product.LastModifiedAt = DateTime.Now;
             await _context.SaveChangesAsync();
@@ -120,15 +131,16 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
         public async Task<Product?> AddProduct(EditProductRequest request)
         {
+            // OS
             var os = await _context
                 .OSs
                 .FirstOrDefaultAsync(
                     o => o.OSId == request.OSId && o.IsDeleted == false
                 );
-
             if (os == null)
                 throw new CustomNotFoundException("Can't found OS");
 
+            // Brand
             var brand = await _context
                 .Brands
                 .FirstOrDefaultAsync(
@@ -137,10 +149,20 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             if (brand == null)
                 throw new CustomNotFoundException("Can't found brand");
 
+            // Thumbnail
             if (request.Thumbnail == null)
                 throw new BadHttpRequestException("Thumbnail is required");
-
             var thumbnail = await _cloudinaryServices.UploadImage(request.Thumbnail);
+
+            // Catalog
+            var catalog = await _context
+                .Catalogs
+                .FirstOrDefaultAsync(
+                    c => c.CatalogId == request.CatalogId 
+                    && c.IsDeleted == false
+            );
+            if (catalog == null)
+                throw new CustomNotFoundException("Can't found catalog");
 
             var product = new Product
             {
@@ -149,6 +171,11 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 Quantity = request.Quantity,
                 OS = os,
                 Brand = brand,
+                Catalog = catalog,
+                IsDeleted = false,
+                ProductPrice = 0,
+                PromotionPrice = 0,
+                Sold = 0,
                 Thumbnail = thumbnail,
                 CreatedAt = DateTime.Now,
                 LastModifiedAt = DateTime.Now

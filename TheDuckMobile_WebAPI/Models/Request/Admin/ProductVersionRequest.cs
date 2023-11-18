@@ -6,12 +6,14 @@
         public double PromotionPrice { get; set; }
         public string? ColorId { get; set; }
         public string? Specification { get; set; }
-        public string[] Images { get; set; }
+        public IFormFile[]? Images { get; set; }
         public DateTime ReleaseTime { get; set; }
+        public int Quantity { get; set; }
+        public Guid ProductId { get; set; }
 
         public ProductVersionRequest()
         {
-            Images = new string[0];
+
         }
     }
 }

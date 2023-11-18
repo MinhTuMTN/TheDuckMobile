@@ -50,6 +50,7 @@ builder.Services.AddScoped<IProductServices, ProductServicesImpl>();
 builder.Services.AddScoped<IAddressServices, AddressServicesImpl>();
 builder.Services.AddScoped<ICatalogServices, CatalogServicesImpl>();
 builder.Services.AddScoped<ICloudinaryServices, CloudinaryServicesImpl>();
+builder.Services.AddScoped<IJsonServices, JsonServicesImpl>();
 
 // Admin
 builder.Services.AddScoped<IProductAdminServices, ProductAdminServicesImpl>();
@@ -62,6 +63,7 @@ builder.Services.AddScoped<ISpecialFeatureServices, SpecialFeatureServicesImpl>(
 builder.Services.AddScoped<ICatalogAttributeServices, CatalogAttributeServicesImpl>();
 builder.Services.AddScoped<IOSAdminServices, OSServicesImpl>();
 builder.Services.AddScoped<IColorAdminServices, ColorAdminServicesImpl>();
+builder.Services.AddScoped<IProductVersionAdminServices, ProductVersionAdminServicesImpl>();
 #endregion
 
 var app = builder.Build();

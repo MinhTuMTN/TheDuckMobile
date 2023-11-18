@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace TheDuckMobile_WebAPI.Entities
@@ -12,6 +13,8 @@ namespace TheDuckMobile_WebAPI.Entities
         public double Price { get; set; }
         public double PromotionPrice { get; set; }
         public DateTime ReleaseTime { get; set; }
+        public int Quantity { get; set; }
+        public int Sold { get; set; }
 
         // Store Specification in JSON
         public string? Specification { get; set; }
@@ -23,12 +26,21 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public string[] Images { get; set; }
 
+        public Guid ProductId { get; set; }
+        private Product? _product;
+        [JsonIgnore]
+        public virtual Product? Product
+        {
+            get => _lazyLoader.Load(this, ref _product);
+            set => _product = value;
+        }
+
         public Guid ColorId { get; set; }
         public virtual Color? Color { get; set; }
 
         public virtual ICollection<StoreProduct>? StoreProducts { get; set; }
-        public Guid PromotionId { get; set; }
-        public virtual Promotion? Promotion { get; set; }
+
+        public virtual ICollection<Promotion>? Promotions { get; set; }
 
         public ProductVersion()
         {

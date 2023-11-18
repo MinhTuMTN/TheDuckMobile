@@ -207,17 +207,29 @@ namespace TheDuckMobile_WebAPI.Entities
                 .WithMany(color => color.ProductVersions)
                 .HasForeignKey(pv => pv.ColorId);
 
+            // Quan hệ ProductVersion - Product
+            modelBuilder.Entity<ProductVersion>()
+                .HasOne(pv => pv.Product)
+                .WithMany(product => product.ProductVersions)
+                .HasForeignKey(pv => pv.ProductId);
+
             // Vote - Customer Relationship
             modelBuilder.Entity<Vote>()
                 .HasOne<Customer>(vote => vote.Customer)
                 .WithMany(customer => customer.Votes)
                 .HasForeignKey(vote => vote.CustomerId);
 
+            //// Promotion - ProductVersion Relationship
+            //modelBuilder.Entity<ProductVersion>()
+            //    .HasOne<Promotion>(productVersion => productVersion.Promotion)
+            //    .WithMany(promotion => promotion.ProductVersions)
+            //    .HasForeignKey(productVersion => productVersion.PromotionId);
+
             // Promotion - ProductVersion Relationship
-            modelBuilder.Entity<ProductVersion>()
-                .HasOne<Promotion>(productVersion => productVersion.Promotion)
-                .WithMany(promotion => promotion.ProductVersions)
-                .HasForeignKey(productVersion => productVersion.PromotionId);
+            modelBuilder.Entity<Promotion>()
+                .HasOne(promotion => promotion.ProductVersion)
+                .WithMany(productVersion => productVersion.Promotions)
+                .HasForeignKey(promotion => promotion.ProductVersionId);
 
 
 
