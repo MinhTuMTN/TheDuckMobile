@@ -99,16 +99,33 @@ const ProductGridItem = ({ productInfo, styled }) => {
                   color: "#FFF",
                 }}
               />
-              <Typography
-                style={{
-                  fontSize: "12px",
-                  color: "#FFF",
-                  fontWeight: "600",
-                  marginLeft: "0.2rem",
-                }}
-              >
-                GIÁ RẺ QUÁ
-              </Typography>
+              {calculateDiscountPercentage(
+                productInfo.promotionPrice,
+                productInfo.productPrice
+              ) > 15 ? (
+                <Typography
+                  style={{
+                    fontSize: "12px",
+                    color: "#FFF",
+                    fontWeight: "600",
+                    marginLeft: "0.2rem",
+                  }}
+                >
+                  HOT
+                </Typography>
+              ) : (
+                <Typography
+                  style={{
+                    fontSize: "12px",
+                    color: "#FFF",
+                    fontWeight: "600",
+                    marginLeft: "0.2rem",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Giá rẻ quá
+                </Typography>
+              )}
             </Stack>
           )}
         <Typography
