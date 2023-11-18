@@ -78,13 +78,28 @@ const TabProducts = () => {
             <CustomTab label="Đánh Giá Cao" value="3" />
           </CustomTabList>
         </Box>
-        <TabPanel value="1">
+        <TabPanel
+          value="1"
+          sx={{
+            paddingX: "0px !important",
+          }}
+        >
           <ProductGrid numberColumn={4} products={newestProducts} />
         </TabPanel>
-        <TabPanel value="2">
+        <TabPanel
+          value="2"
+          sx={{
+            paddingX: "0px !important",
+          }}
+        >
           <ProductGrid numberColumn={4} products={bestSellerProducts} />
         </TabPanel>
-        <TabPanel value="3">
+        <TabPanel
+          value="3"
+          sx={{
+            paddingX: "0px !important",
+          }}
+        >
           <ProductGrid numberColumn={4} products={topRatedProducts} />
         </TabPanel>
       </TabContext>

@@ -30,7 +30,11 @@ function ProductGrid(props) {
             <ProductGridItem
               key={index}
               productInfo={product}
-              styled={{ width: `calc(${100 / numberColumn}% - 16px)` }}
+              styled={{
+                width: `calc(${95 / numberColumn}% - 16px)`,
+                height: "auto",
+                aspectRatio: "1/1.4",
+              }}
             />
           );
         })}
