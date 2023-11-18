@@ -34,23 +34,35 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public int BrandId { get; set; }
         private Brand? _brand;
+
+        [JsonIgnore]
         public virtual Brand? Brand
         {
             get => _lazyLoader.Load(this, ref _brand);
             set => _brand = value;
         }
+
+
+        [JsonIgnore]
         public virtual ICollection<Vote>? Votes { get; set; }
 
+
+        [JsonIgnore]
         public virtual ICollection<ProductVersion>? ProductVersions { get; set; }
 
 
         public int OSId { get; set; }
+
+        [JsonIgnore]
         public virtual OS? OS { get; set; }
 
         public int CatalogId { get; set; }
+
+        [JsonIgnore]
         public virtual Catalog? Catalog { get; set; }
 
         private ICollection<SpecialFeature>? _specialFeatures;
+        [JsonIgnore]
         public virtual ICollection<SpecialFeature>? SpecialFeatures
         {
             get => _lazyLoader.Load(this, ref _specialFeatures);

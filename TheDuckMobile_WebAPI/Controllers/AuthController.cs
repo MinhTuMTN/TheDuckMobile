@@ -36,9 +36,10 @@ namespace TheDuckMobile_WebAPI.Controllers
         public async Task<IActionResult> CheckPhoneNumber([FromBody] CheckPhoneNumberRequest request)
         {
             bool exist = await _userServices.CheckCustomerExists(request.Phone!);
-            Regex regex = new Regex(@"^\d{10}$");
+            Regex regex = new Regex(@"^(\+84)\d{9,10}$");
 
-            if (!regex.IsMatch(request.Phone!) || !request.Phone!.StartsWith("0"))
+
+            if (!regex.IsMatch(request.Phone!) || !request.Phone!.StartsWith("+84"))
             {
                 return BadRequest(new GenericResponse
                 {
@@ -50,7 +51,7 @@ namespace TheDuckMobile_WebAPI.Controllers
 
             List<string> phoneNotVerified = _configuration.GetSection("AppSettings:PhoneNotVerified").Get<List<string>>();
 
-            if (phoneNotVerified.Contains(request.Phone!))
+            if (phoneNotVerified != null && phoneNotVerified.Contains(request.Phone!))
             {
                 return Ok(new GenericResponse
                 {
@@ -126,7 +127,7 @@ namespace TheDuckMobile_WebAPI.Controllers
                         Data = null
                     });
                 }
-                
+
             }
 
             if (!_twilioServices.VerifySMSVerificationCode(request.Phone!, request.OTP!))
