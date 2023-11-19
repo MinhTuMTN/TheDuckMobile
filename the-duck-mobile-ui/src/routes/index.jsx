@@ -349,6 +349,10 @@ function Router(props) {
           path: "special-feature-management/edit",
           element: <EditSpecialFeaturePage />,
         },
+        {
+          path: "order-details",
+          element: <OrderDetails />,
+        },
       ],
     },
     {
@@ -368,7 +372,7 @@ function Router(props) {
           element: <Orders />,
         },
         {
-          path: "orderdetails",
+          path: "order-details",
           element: <OrderDetails />,
         },
       ],

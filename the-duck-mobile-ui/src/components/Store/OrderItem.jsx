@@ -1,12 +1,12 @@
 import { Box, Chip, Stack, Typography } from "@mui/material";
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import FormatCurrency from "../FormatCurrency";
 OrderItem.propTypes = {
   order: PropTypes.object,
 };
 function OrderItem(props) {
-  const { order } = props;
+  const { order, handleClick } = props;
   const statusColors = {
     "Chờ xác nhận": "primary",
     "Chuẩn bị hàng": "info",
@@ -30,8 +30,12 @@ function OrderItem(props) {
         paddingY: 2,
         paddingX: 5,
         alignItems: "center",
+        cursor: "pointer",
       }}
       justifyContent={"space-between"}
+      onClick={() => {
+        handleClick();
+      }}
     >
       <Stack spacing={2} direction={"row"}>
         <Box

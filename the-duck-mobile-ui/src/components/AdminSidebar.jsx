@@ -139,7 +139,7 @@ function AdminSidebar(props) {
     .filter((part) => part !== "")[1];
   const activeSection = sidebarItems.find(
     (item) => item.section === currentSection
-  ).section;
+  )?.section;
 
   if (lgUp) {
     return (
