@@ -157,36 +157,53 @@ function AdminLayout(props) {
   // }, [fetchData]);
 
   const fetchData = useCallback(async () => {
-    var response;
-    if (pathname === "/admin/product-management/list") {
-      response = await getAllProducts();
-    } else if (pathname === "/admin/customer-management/list") {
-      response = await getAllCustomers();
-    } else if (pathname === "/admin/staff-management/list") {
-      response = await getAllStaffs();
-    } else if (pathname === "/admin/address-management/province/list") {
-      response = await getAllProvinces();
-    } else if (pathname === "/admin/catalog-management/list") {
-      response = await getAllCatalogs();
-    } else if (pathname === "/admin/brand-management/list") {
-      response = await getAllBrands();
-    } else if (pathname === "/admin/color-management/list") {
-      response = await getAllColors();
-    } else if (pathname === "/admin/special-feature-management/list") {
-      response = await getAllSpecialFeatures();
-    } else if (pathname === "/admin/store-management/list") {
-      response = await getAllStores();
-    } else if (pathname === "/admin/os-management/list") {
-      response = await getAllOSs();
-    } else if (pathname === "/admin/coupon-management/list") {
-      response = await getAllCoupons();
-    } else if (pathname === "/admin/feedback-management/list") {
-      response = await getAllFeedbacks();
-    } else if (pathname === "/admin/order-management/list") {
-      response = await getAllOrders();
+    let response;
+
+    switch (pathname) {
+      case "/admin/product-management/list":
+        response = await getAllProducts();
+        break;
+      case "/admin/customer-management/list":
+        response = await getAllCustomers();
+        break;
+      case "/admin/staff-management/list":
+        response = await getAllStaffs();
+        break;
+      case "/admin/address-management/province/list":
+        response = await getAllProvinces();
+        break;
+      case "/admin/catalog-management/list":
+        response = await getAllCatalogs();
+        break;
+      case "/admin/brand-management/list":
+        response = await getAllBrands();
+        break;
+      case "/admin/color-management/list":
+        response = await getAllColors();
+        break;
+      case "/admin/special-feature-management/list":
+        response = await getAllSpecialFeatures();
+        break;
+      case "/admin/store-management/list":
+        response = await getAllStores();
+        break;
+      case "/admin/os-management/list":
+        response = await getAllOSs();
+        break;
+      case "/admin/coupon-management/list":
+        response = await getAllCoupons();
+        break;
+      case "/admin/feedback-management/list":
+        response = await getAllFeedbacks();
+        break;
+      case "/admin/order-management/list":
+        response = await getAllOrders();
+        break;
+      default:
+        break;
     }
 
-    if (response.success) {
+    if (response?.success) {
       setDataFected(response.data.data);
     } else {
       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
