@@ -27,8 +27,8 @@ function StoreLayout(props) {
 
   return (
     <>
-      <TopNavbar onNavOpen={() => setOpen(true)} />
-      <LeftNavBar onClose={() => setOpen(false)} open={open} />
+      <TopNavbar onDrawerClick={setOpen} />
+      <LeftNavBar open={open} onOpenClose={setOpen} />
       <LayoutRoot>
         <LayoutContainer>
           <Outlet />
