@@ -9,18 +9,27 @@ FormatCurrency.defaultProps = {
   amount: 0,
 };
 
+function formatCurrency(amount) {
+  const formatter = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
+
+  return formatter.format(amount);
+}
+
 function FormatCurrency(props) {
-  const formatCurrency = (amount) => {
-    const formatter = new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-
-    return formatter.format(amount);
-  };
-
   const { amount } = props;
   return <>{formatCurrency(amount)}</>;
 }
 
+FormatCurrency.propTypes = {
+  amount: PropTypes.number,
+};
+
+FormatCurrency.defaultProps = {
+  amount: 0,
+};
+
+export { formatCurrency };
 export default memo(FormatCurrency);

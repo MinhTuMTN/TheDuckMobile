@@ -24,6 +24,10 @@ namespace TheDuckMobile_WebAPI.Controllers
             {
                 return HandleNotFoundError(context);
             }
+            else if (context?.Error is ExceptionWithStatusCode)
+            {
+                return handleStatusCodeException((ExceptionWithStatusCode)(context?.Error)!);
+            }
             else if (context?.Error is BadHttpRequestException)
             {
                 return HandleBadRequestError(context);
@@ -63,6 +67,17 @@ namespace TheDuckMobile_WebAPI.Controllers
             {
                 Success = false,
                 Message = context?.Error.Message,
+                Data = null
+            });
+        }
+
+        [NonAction]
+        private IActionResult handleStatusCodeException(ExceptionWithStatusCode? error)
+        {
+            return StatusCode(error!.StatusCode, new GenericResponse
+            {
+                Success = false,
+                Message = error!.Message,
                 Data = null
             });
         }

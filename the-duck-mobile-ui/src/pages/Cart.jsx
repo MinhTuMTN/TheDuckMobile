@@ -11,7 +11,7 @@ import { useSnackbar } from "notistack";
 function Cart(props) {
   const { enqueueSnackbar } = useSnackbar();
   const [products, setProducts] = React.useState([]); // [{id, name, price, quantity, image}
-  const [total, setTotal] = React.useState(0);
+  const [coupon, setCoupon] = React.useState({});
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   const handleGetProductCartDetails = useCallback(async () => {
@@ -80,7 +80,11 @@ function Cart(props) {
           onSelectProduct={handleSelectProduct}
         />
 
-        <CartTotal selectedProducts={selectedProducts} />
+        <CartTotal
+          selectedProducts={selectedProducts}
+          coupon={coupon}
+          onCouponChange={setCoupon}
+        />
       </Stack>
     </Stack>
   );

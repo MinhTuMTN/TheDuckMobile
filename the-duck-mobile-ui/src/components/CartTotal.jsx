@@ -12,7 +12,9 @@ import React, { useEffect } from "react";
 
 import MuiTextFeild from "../components/MuiTextFeild";
 import PropTypes from "prop-types";
-import FormatCurrency from "./FormatCurrency";
+import { getCoupon } from "../services/CouponService";
+import { useSnackbar } from "notistack";
+import FormatCurrency, { formatCurrency } from "./FormatCurrency";
 
 const CartButton = styled(Button)(({ theme }) => ({
   "&:hover": {
@@ -22,17 +24,24 @@ const CartButton = styled(Button)(({ theme }) => ({
 
 CartTotal.propTypes = {
   selectedProducts: PropTypes.array,
+  coupon: PropTypes.object,
+  onCouponChange: PropTypes.func,
 };
 
 CartTotal.defaultProps = {
   selectedProducts: [],
+  coupon: null,
+  onCouponChange: () => {},
 };
 
 function CartTotal(props) {
-  const { selectedProducts } = props;
+  const { selectedProducts, coupon, onCouponChange } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const [total, setTotal] = React.useState(0);
+  const [couponCode, setCouponCode] = React.useState("");
+  const [discount, setDiscount] = React.useState(0);
   const shippingFee = 20000;
-  const discount = 0;
+
   useEffect(() => {
     let total = 0;
     selectedProducts.forEach((product) => {
@@ -41,6 +50,57 @@ function CartTotal(props) {
     });
     setTotal(total);
   }, [selectedProducts]);
+
+  const handleCheckCoupon = async () => {
+    if (couponCode.trim() === "") {
+      enqueueSnackbar("Vui lòng nhập mã giảm giá", { variant: "error" });
+      return;
+    }
+
+    const response = await getCoupon(couponCode);
+    if (response.error) {
+      switch (response.statusCode) {
+        case 411:
+          enqueueSnackbar("Mã giảm giá không tồn tại", { variant: "error" });
+          break;
+        case 412:
+          enqueueSnackbar("Mã giảm giá chưa thể dùng ở thời điểm này", {
+            variant: "error",
+          });
+          break;
+        case 413:
+          enqueueSnackbar("Mã giảm giá đã hết hạn", { variant: "error" });
+          break;
+        case 414:
+          enqueueSnackbar("Mã giảm giá đã hết lượt sử dụng", {
+            variant: "error",
+          });
+          break;
+        default:
+          break;
+      }
+    } else {
+      const couponData = response.data.data;
+      if (couponData.minPrice > total) {
+        const formattedMinPrice = formatCurrency(couponData.minPrice);
+        enqueueSnackbar(
+          `Mã giảm giá chỉ áp dụng cho đơn hàng từ ${formattedMinPrice}đ`,
+          { variant: "error" }
+        );
+        return;
+      }
+
+      onCouponChange(couponData);
+      enqueueSnackbar("Áp dụng mã giảm giá thành công", { variant: "success" });
+
+      let discountPrice = Math.min(
+        (total * couponData.discount) / 100,
+        couponData.maxDiscount
+      );
+      setDiscount(discountPrice);
+    }
+  };
+
   return (
     <Grid
       container
@@ -74,9 +134,14 @@ function CartTotal(props) {
         >
           Bạn có mã giảm giá? Vui lòng nhập tại đây
         </Typography>
-        <MuiTextFeild variant="outlined" />
+        <MuiTextFeild
+          variant="outlined"
+          value={couponCode}
+          onChange={(e) => setCouponCode(e.target.value)}
+        />
         <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
           <Button
+            onClick={handleCheckCoupon}
             variant="contained"
             sx={{
               marginTop: "1rem",
