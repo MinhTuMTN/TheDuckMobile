@@ -103,7 +103,7 @@ function CustomerDetailPage() {
           </Stack>
           <Grid container>
             <Grid item xs={12} md={12} lg={10}>
-              <Stack direction={"row"} spacing={2}>
+              <Stack direction={"row"} spacing={2} alignItems={"center"}>
                 <Avatar
                   sx={{
                     width: ["80px", "100px"], // Kích thước sẽ là 50px khi viewport width là 50% hoặc nhỏ hơn, và 100px trong trường hợp khác
