@@ -8,16 +8,99 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 import MuiTextFeild from "../components/MuiTextFeild";
+import PropTypes from "prop-types";
+import { getCoupon } from "../services/CouponService";
+import { useSnackbar } from "notistack";
+import FormatCurrency, { formatCurrency } from "./FormatCurrency";
 
 const CartButton = styled(Button)(({ theme }) => ({
   "&:hover": {
     backgroundColor: theme.palette.color1.main,
   },
 }));
+
+CartTotal.propTypes = {
+  selectedProducts: PropTypes.array,
+  coupon: PropTypes.object,
+  onCouponChange: PropTypes.func,
+};
+
+CartTotal.defaultProps = {
+  selectedProducts: [],
+  coupon: null,
+  onCouponChange: () => {},
+};
+
 function CartTotal(props) {
+  const { selectedProducts, coupon, onCouponChange } = props;
+  const { enqueueSnackbar } = useSnackbar();
+  const [total, setTotal] = React.useState(0);
+  const [couponCode, setCouponCode] = React.useState("");
+  const [discount, setDiscount] = React.useState(0);
+  const shippingFee = 20000;
+
+  useEffect(() => {
+    let total = 0;
+    selectedProducts.forEach((product) => {
+      total +=
+        Math.min(product.price, product.promotionPrice) * product.quantity;
+    });
+    setTotal(total);
+  }, [selectedProducts]);
+
+  const handleCheckCoupon = async () => {
+    if (couponCode.trim() === "") {
+      enqueueSnackbar("Vui lòng nhập mã giảm giá", { variant: "error" });
+      return;
+    }
+
+    const response = await getCoupon(couponCode);
+    if (response.error) {
+      switch (response.statusCode) {
+        case 411:
+          enqueueSnackbar("Mã giảm giá không tồn tại", { variant: "error" });
+          break;
+        case 412:
+          enqueueSnackbar("Mã giảm giá chưa thể dùng ở thời điểm này", {
+            variant: "error",
+          });
+          break;
+        case 413:
+          enqueueSnackbar("Mã giảm giá đã hết hạn", { variant: "error" });
+          break;
+        case 414:
+          enqueueSnackbar("Mã giảm giá đã hết lượt sử dụng", {
+            variant: "error",
+          });
+          break;
+        default:
+          break;
+      }
+    } else {
+      const couponData = response.data.data;
+      if (couponData.minPrice > total) {
+        const formattedMinPrice = formatCurrency(couponData.minPrice);
+        enqueueSnackbar(
+          `Mã giảm giá chỉ áp dụng cho đơn hàng từ ${formattedMinPrice}đ`,
+          { variant: "error" }
+        );
+        return;
+      }
+
+      onCouponChange(couponData);
+      enqueueSnackbar("Áp dụng mã giảm giá thành công", { variant: "success" });
+
+      let discountPrice = Math.min(
+        (total * couponData.discount) / 100,
+        couponData.maxDiscount
+      );
+      setDiscount(discountPrice);
+    }
+  };
+
   return (
     <Grid
       container
@@ -51,9 +134,14 @@ function CartTotal(props) {
         >
           Bạn có mã giảm giá? Vui lòng nhập tại đây
         </Typography>
-        <MuiTextFeild variant="outlined" />
+        <MuiTextFeild
+          variant="outlined"
+          value={couponCode}
+          onChange={(e) => setCouponCode(e.target.value)}
+        />
         <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
           <Button
+            onClick={handleCheckCoupon}
             variant="contained"
             sx={{
               marginTop: "1rem",
@@ -83,7 +171,7 @@ function CartTotal(props) {
         </Typography>
         <Divider />
         <Grid container sx={{ marginTop: "1rem" }} spacing={3}>
-          <Grid item xs={9.5}>
+          <Grid item xs={8.5}>
             <Stack spacing={1.5}>
               <Typography
                 variant="body1"
@@ -111,16 +199,16 @@ function CartTotal(props) {
               </Typography>
             </Stack>
           </Grid>
-          <Grid item xs={2.5}>
+          <Grid item xs={3.5}>
             <Stack spacing={1.5}>
               <Typography variant="body1" component="p" textAlign={"end"}>
-                200.000 đ
+                <FormatCurrency amount={total} />
               </Typography>
               <Typography variant="body1" component="p" textAlign={"end"}>
-                20.000 đ
+                <FormatCurrency amount={total === 0 ? 0 : shippingFee} />
               </Typography>
               <Typography variant="body1" component="p" textAlign={"end"}>
-                0 đ
+                <FormatCurrency amount={discount} />
               </Typography>
             </Stack>
           </Grid>
@@ -132,10 +220,10 @@ function CartTotal(props) {
             component="h2"
             textAlign={"end"}
             mt={1}
-            flex={9.5}
+            flex={8.5}
             sx={{ color: "color4.main" }}
           >
-            Tổng tiền (1 sản phẩm):
+            Tổng tiền ({selectedProducts?.length} sản phẩm):
           </Typography>
           <Typography
             variant="h5"
@@ -143,10 +231,12 @@ function CartTotal(props) {
             textAlign={"end"}
             fontWeight={"bold"}
             mt={1}
-            flex={2.5}
+            flex={3.5}
             sx={{ color: "color1.main" }}
           >
-            70.500.000 đ
+            <FormatCurrency
+              amount={total === 0 ? 0 : total + shippingFee - discount}
+            />
           </Typography>
         </Stack>
         <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>

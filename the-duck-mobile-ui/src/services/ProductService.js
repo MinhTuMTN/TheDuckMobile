@@ -1,4 +1,4 @@
-import { get } from "./AxiosInstance";
+import { get, post } from "./AxiosInstance";
 
 export const getBestSellingProducts = () => {
   return get("/product/best-selling");
@@ -22,4 +22,8 @@ export const getProductDetails = (id) => {
 
 export const getProductsRelatedTo = (id) => {
   return get(`/product/${id}/relative`);
+};
+
+export const getProductCartDetails = (data) => {
+  return post(`/product/cart-details`, data);
 };

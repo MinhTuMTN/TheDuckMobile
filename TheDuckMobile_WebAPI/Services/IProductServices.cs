@@ -1,4 +1,5 @@
 ﻿using TheDuckMobile_WebAPI.Entities;
+using TheDuckMobile_WebAPI.Models.Request;
 using TheDuckMobile_WebAPI.Models.Response;
 
 namespace TheDuckMobile_WebAPI.Services
@@ -11,5 +12,6 @@ namespace TheDuckMobile_WebAPI.Services
         public Task<PaginationResponse> SearchProduct(string query, string? orderBy, int page, int limit);
         public Task<ProductDetailResponse> GetProductVersionsByProductId(Guid productId);
         public Task<List<ProductHomeResponse>> GetProductRelative(Guid productId);
+        public Task<List<ProductCartResponse>> GetProductCartDetails(List<UserCartItem> userCartItems);
     }
 }

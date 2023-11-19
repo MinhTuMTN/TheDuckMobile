@@ -1,5 +1,8 @@
+import styled from "@emotion/styled";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   IconButton,
+  Paper,
   Stack,
   Table,
   TableBody,
@@ -8,12 +11,13 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Paper,
 } from "@mui/material";
+import PropTypes from "prop-types";
 import React from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useNavigate } from "react-router-dom";
 import ColorButton from "./ColorButton";
-import styled from "@emotion/styled";
+import FormatCurrency from "./FormatCurrency";
+import Checkbox from "@mui/material/Checkbox";
 
 const DeleteButton = styled(IconButton)(({ theme }) => ({
   "&:hover": {
@@ -21,12 +25,31 @@ const DeleteButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
+CartTable.propTypes = {
+  products: PropTypes.array,
+  onProductCartChange: PropTypes.func,
+  selectedProducts: PropTypes.array,
+  onSelectProduct: PropTypes.func,
+};
+
+CartTable.defaultProps = {
+  products: [],
+  onProductCartChange: () => {},
+  selectedProducts: [],
+  onSelectProduct: () => {},
+};
+
 function CartTable(props) {
+  const { products, onProductCartChange, selectedProducts, onSelectProduct } =
+    props;
+  const navigate = useNavigate();
+
   return (
     <TableContainer component={Paper} sx={{ marginTop: "1rem" }} elevation={3}>
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell></TableCell>
             <TableCell align="center">Tên sản phẩm</TableCell>
             <TableCell align="center">Hình ảnh</TableCell>
             <TableCell align="right">Đơn giá</TableCell>
@@ -36,64 +59,141 @@ function CartTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow>
-            <TableCell component="th" scope="row">
-              <Typography
-                variant="body1"
-                component="p"
-                sx={{ fontWeight: "bold" }}
-              >
-                Điện thoại Samsung Galaxy S23 Ultra
-              </Typography>
-              <Stack direction={"row"} alignItems={"center"} spacing={1}>
-                <Typography variant="body2" component="p">
-                  Màu: Đen
+          {products?.map((product) => (
+            <TableRow key={`product-cart-${product?.productVersionId}`}>
+              <TableCell>
+                <Checkbox
+                  color="color1"
+                  checked={selectedProducts.includes(product)}
+                  onChange={() => onSelectProduct(product)}
+                />
+              </TableCell>
+              <TableCell component="th" scope="row">
+                <Typography
+                  variant="body1"
+                  component="p"
+                  sx={{ fontWeight: "bold", cursor: "pointer" }}
+                  onClick={() => navigate(`/product?id=${product?.productId}`)}
+                >
+                  {product?.productName}
                 </Typography>
-                <ColorButton color="black" width="1rem" height="1rem" />
-              </Stack>
-              <Typography
-                variant="subtitle1"
-                color="gray"
-                sx={{ fontWeight: "none" }}
-                component="p"
-              >
-                Bộ nhớ: 128GB
-              </Typography>
-            </TableCell>
-            <TableCell align="center">
-              <img
-                src="https://picsum.photos/200/300"
-                alt="product"
-                width="100"
-              />
-            </TableCell>
-            <TableCell align="right">500.000 đ</TableCell>
-            <TableCell align="center">
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                justifyContent={"center"}
-                spacing={1}
-                width={"100%"}
-              >
-                <IconButton size="large" aria-label="minus">
-                  -
-                </IconButton>
-                <Typography variant="body1" component="p">
-                  1
+                <Stack direction={"row"} alignItems={"center"} spacing={1}>
+                  <Typography variant="body2" component="p">
+                    Màu: {product?.colorName}
+                  </Typography>
+                  <ColorButton
+                    color={product?.colorCode}
+                    width="1rem"
+                    height="1rem"
+                  />
+                </Stack>
+                <Typography
+                  variant="subtitle1"
+                  color="gray"
+                  sx={{ fontWeight: "none" }}
+                  component="p"
+                >
+                  Phân loại: {product?.versionName}
                 </Typography>
-                <IconButton size="large" aria-label="plus">
-                  +
-                </IconButton>
-              </Stack>
-            </TableCell>
-            <TableCell align="right">500.000 đ</TableCell>
-            <TableCell align="center">
-              <DeleteButton aria-label="delete" size="large">
-                <DeleteIcon fontSize="inherit" />
-              </DeleteButton>
-            </TableCell>
-          </TableRow>
+              </TableCell>
+              <TableCell align="center">
+                <img src={product?.thumbnail} alt="product" width="100" />
+              </TableCell>
+              <TableCell align="right">
+                {product?.promotionPrice > 0 &&
+                  product?.promotionPrice < product?.price && (
+                    <Typography
+                      variant="subtitle1"
+                      component="p"
+                      sx={{ textDecoration: "line-through" }}
+                      color={"color4.main"}
+                    >
+                      <FormatCurrency amount={product?.price} />
+                    </Typography>
+                  )}
+                <Typography variant="body1" component="p" color={"color1.main"}>
+                  <FormatCurrency
+                    amount={Math.min(product?.price, product?.promotionPrice)}
+                  />
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Stack
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  spacing={1}
+                  width={"100%"}
+                >
+                  <IconButton
+                    size="large"
+                    aria-label="minus"
+                    sx={{
+                      cursor: `${
+                        product?.quantity === 1 ? "not-allowed" : "pointer"
+                      }`,
+                    }}
+                    onClick={() => {
+                      onProductCartChange(
+                        products.map((p) => {
+                          if (p.productVersionId === product.productVersionId) {
+                            p.quantity = Math.max(1, p.quantity - 1);
+                          }
+                          return p;
+                        })
+                      );
+                    }}
+                  >
+                    -
+                  </IconButton>
+                  <Typography variant="body1" component="p">
+                    {product?.quantity}
+                  </Typography>
+                  <IconButton
+                    size="large"
+                    aria-label="plus"
+                    onClick={() => {
+                      onProductCartChange(
+                        products.map((p) => {
+                          if (p.productVersionId === product.productVersionId) {
+                            p.quantity = Math.max(1, p.quantity + 1);
+                          }
+                          return p;
+                        })
+                      );
+                    }}
+                  >
+                    +
+                  </IconButton>
+                </Stack>
+              </TableCell>
+              <TableCell align="right">
+                <Typography variant="body1" component="p" color={"color1.main"}>
+                  <FormatCurrency
+                    amount={
+                      Math.min(product?.price, product?.promotionPrice) *
+                      product?.quantity
+                    }
+                  />
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <DeleteButton
+                  aria-label="delete"
+                  size="large"
+                  onClick={() => {
+                    onProductCartChange(
+                      products.filter(
+                        (p) => p.productVersionId !== product.productVersionId
+                      )
+                    );
+                  }}
+                >
+                  <DeleteIcon fontSize="inherit" />
+                </DeleteButton>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

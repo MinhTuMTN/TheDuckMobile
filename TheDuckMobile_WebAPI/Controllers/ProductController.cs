@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TheDuckMobile_WebAPI.Services;
 using TheDuckMobile_WebAPI.Models.Response;
+using TheDuckMobile_WebAPI.Models.Request;
 
 namespace TheDuckMobile_WebAPI.Controllers
 {
@@ -95,6 +96,20 @@ namespace TheDuckMobile_WebAPI.Controllers
                 Success = true,
                 Data = relativeProducts,
                 Message = "Successfully retrieved relative products"
+            });
+        }
+
+        // Get List Product Version Details by Array of UserCartItem
+        [HttpPost("cart-details")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetProductCartDetails([FromBody] List<UserCartItem> userCartItems)
+        {
+            var productCartDetails = await _productServices.GetProductCartDetails(userCartItems);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = productCartDetails,
+                Message = "Successfully retrieved product cart details"
             });
         }
     }

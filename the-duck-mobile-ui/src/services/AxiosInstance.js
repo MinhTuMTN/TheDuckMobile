@@ -20,6 +20,7 @@ const handleRequest = async (requestMethod, url, data, headers, params) => {
     success: false,
     data: null,
     error: null,
+    statusCode: 200,
   };
 
   try {
@@ -40,8 +41,10 @@ const handleRequest = async (requestMethod, url, data, headers, params) => {
 
     result.success = true;
     result.data = response.data;
+    result.statusCode = requestMethod.status;
   } catch (error) {
     result.error = error.message;
+    result.statusCode = error.response?.status;
     if (error.response) {
       result.error = error.response.data.message;
     }

@@ -1,12 +1,59 @@
 import { Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Helmet } from "react-helmet-async";
 import CartTable from "../components/CartTable";
 import CartTotal from "../components/CartTotal";
 import CustomBreadcrumb from "../components/CustomBreadcrumb";
+import { getProductCartDetails } from "../services/ProductService";
+import { useSnackbar } from "notistack";
 
 function Cart(props) {
+  const { enqueueSnackbar } = useSnackbar();
+  const [products, setProducts] = React.useState([]); // [{id, name, price, quantity, image}
+  const [coupon, setCoupon] = React.useState({});
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
+  const handleGetProductCartDetails = useCallback(async () => {
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    const res = await getProductCartDetails(cart);
+    if (res.error) {
+      enqueueSnackbar(res.message, { variant: "error" });
+    } else {
+      setProducts(res.data.data);
+    }
+  }, [enqueueSnackbar]);
+
+  useEffect(() => {
+    handleGetProductCartDetails();
+  }, [handleGetProductCartDetails]);
+
+  const handleSelectProduct = (product) => {
+    const index = selectedProducts.findIndex(
+      (selectedProduct) =>
+        selectedProduct.productVersionId === product.productVersionId
+    );
+    if (index === -1) {
+      setSelectedProducts([...selectedProducts, product]);
+    } else {
+      setSelectedProducts([
+        ...selectedProducts.slice(0, index),
+        ...selectedProducts.slice(index + 1),
+      ]);
+    }
+  };
+
+  // Update Selected Products when Products change
+  useEffect(() => {
+    const newSelectedProducts = selectedProducts.filter((selectedProduct) =>
+      products.find(
+        (product) =>
+          product.productVersionId === selectedProduct.productVersionId
+      )
+    );
+    setSelectedProducts(newSelectedProducts);
+  }, [products]);
+
   return (
     <Stack mt={10} mb={10} width={"100%"} alignItems={"center"}>
       <Helmet>
@@ -26,9 +73,18 @@ function Cart(props) {
           Giỏ hàng của bạn
         </Typography>
 
-        <CartTable />
+        <CartTable
+          products={products}
+          onProductCartChange={setProducts}
+          selectedProducts={selectedProducts}
+          onSelectProduct={handleSelectProduct}
+        />
 
-        <CartTotal />
+        <CartTotal
+          selectedProducts={selectedProducts}
+          coupon={coupon}
+          onCouponChange={setCoupon}
+        />
       </Stack>
     </Stack>
   );
