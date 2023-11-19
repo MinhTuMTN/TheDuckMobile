@@ -2,6 +2,10 @@ import { Box, Paper, Typography, styled } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import MuiButton from "../../../components/MuiButton";
 import FlexContainer from "../../../components/FlexContainer";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { addOS } from "../../../services/Admin/OSService";
+import { enqueueSnackbar } from "notistack";
 
 const RootPageAddOS = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -28,6 +32,21 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
 }));
 
 function AddOSPage(props) {
+    const navigate = useNavigate();
+    const [os, setOS] = useState({
+        osName: ""
+    });
+
+    const handleAddOS = async () => {
+        const response = await addOS({
+            osName: os.osName
+        });
+
+        if (response.success) {
+            enqueueSnackbar("Thêm hệ điều hành thành công", { variant: "success" });
+            navigate("/admin/os-management/list");
+        } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    };
     return (
         <RootPageAddOS>
             <FormAddOS>
@@ -36,6 +55,12 @@ function AddOSPage(props) {
                     label="Tên hệ điều hành"
                     margin="normal"
                     autoFocus
+                    onChange={(e) => {
+                        setOS((prev) => ({
+                            ...prev,
+                            osName: e.target.value,
+                        }));
+                    }}
                     required
                 />
                 {/* <MuiTextFeild
@@ -44,7 +69,11 @@ function AddOSPage(props) {
                     required
                 /> */}
                 <FlexContainer justifyContent="center">
-                    <AddButton variant="contained" color="color1">
+                    <AddButton
+                        variant="contained"
+                        color="color1"
+                        onClick={handleAddOS}
+                    >
                         <Typography color={"white"}>Thêm Mới</Typography>
                     </AddButton>
                 </FlexContainer>

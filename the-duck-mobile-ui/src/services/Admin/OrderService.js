@@ -1,5 +1,5 @@
 import { get } from "../AxiosInstance";
 
 export const getAllOrders = () => {
-  return get("/orderadmin/list");
+  return get("orderadmin");
 };

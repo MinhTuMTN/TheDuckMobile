@@ -16,13 +16,16 @@ import {
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
-import { Link } from "react-router-dom";
-import InfoIcon from '@mui/icons-material/Info';
+import { Link, useNavigate } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
+import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 import EditIcon from '@mui/icons-material/Edit';
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { Search } from "@mui/icons-material";
 import { DataContext } from "../../../layouts/AdminLayout";
+import { enqueueSnackbar } from "notistack";
+import { deleteOS, restoreOS } from "../../../services/Admin/OSService";
+import DialogConfirm from "../../../components/DialogConfirm";
 
 const RootPageOSList = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -44,11 +47,16 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function OSListPage() {
+    const navigate = useNavigate();
     const { dataFetched } = useContext(DataContext);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rowsSearched, setRowsSearched] = useState([]);
     const [searchString, setSearchString] = useState("");
+    const [isDeleted, setIsDeleted] = useState();
+    const [id, setId] = useState("");
+    const [index, setIndex] = useState(0);
+    const [deleteDialog, setDeleteDialog] = useState(false);
 
     const filterRows = useCallback(
         (searchString) => {
@@ -78,6 +86,30 @@ function OSListPage() {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
+    };
+
+    const handleTrashButtonClick = async () => {
+        let response;
+        const osList = [...dataFetched];
+        if (isDeleted) {
+            response = await restoreOS(id);
+            if (response.success) {
+                enqueueSnackbar("Khôi phục hệ điều hành thành công!", { variant: "success" });
+                osList[index].isDeleted = !isDeleted;
+                setRowsSearched(osList);
+            } else {
+                enqueueSnackbar("Khôi phục hệ điều hành thất bại!", { variant: "error" });
+            }
+        } else {
+            response = await deleteOS(id);
+            if (response.success) {
+                enqueueSnackbar("Xóa hệ điều hành thành công!", { variant: "success" });
+                osList[index].isDeleted = !isDeleted;
+                setRowsSearched(osList);
+            } else {
+                enqueueSnackbar("Xóa hệ điều hành thất bại!", { variant: "error" });
+            }
+        }
     };
 
     return (
@@ -121,7 +153,7 @@ function OSListPage() {
                         {(rowsPerPage > 0
                             ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
-                        ).map((row) => (
+                        ).map((row, i) => (
                             <TableRow key={row.osId}>
                                 <TableCell style={{ minWidth: 200 }} align="center">
                                     {row.osId}
@@ -133,9 +165,44 @@ function OSListPage() {
                                     {row.isDeleted ? "Ngừng hoạt động" : "Còn hoạt động"}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton component={Link} color="oldPrimary"><InfoIcon /></MuiButton>
-                                    <MuiButton component={Link} color="teal" to="/admin/os-management/edit"><EditIcon /></MuiButton>
-                                    <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
+                                    <MuiButton
+                                        color="teal"
+                                        onClick={() => {
+                                            navigate(`/admin/os-management/${row.osId}`, {
+                                                state: {
+                                                    editOS: row
+                                                }
+                                            })
+                                        }}
+                                    >
+                                        <EditIcon />
+                                    </MuiButton>
+                                    <MuiButton
+                                        component={Link}
+                                        color="color1"
+                                        onClick={(e) => {
+                                            setIndex(i);
+                                            setId(row.osId);
+                                            setIsDeleted(row.isDeleted);
+                                            setDeleteDialog(true);
+                                        }}
+                                    >
+                                        {row.isDeleted ? <RestoreFromTrashIcon /> : <DeleteIcon />}
+                                    </MuiButton>
+                                    <DialogConfirm
+                                        open={deleteDialog}
+                                        title={isDeleted ? "Khôi phục hệ điều hành" : "Xóa hệ điều hành"}
+                                        content={
+                                            isDeleted
+                                                ? "Bạn có chắc chắn muốn khôi phục hệ điều hành này"
+                                                : "Bạn có chắc chắn muốn xóa hệ điều hành này?"
+                                        }
+                                        okText={isDeleted ? "Khôi phục" : "Xóa"}
+                                        cancelText={"Hủy"}
+                                        onOk={handleTrashButtonClick}
+                                        onCancel={() => setDeleteDialog(false)}
+                                        onClose={() => setDeleteDialog(false)}
+                                    />
                                 </TableCell>
                             </TableRow>
                         ))}

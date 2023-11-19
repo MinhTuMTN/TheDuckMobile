@@ -208,7 +208,7 @@ function Router(props) {
           element: <AddColorPage />,
         },
         {
-          path: "color-management/edit",
+          path: "color-management/:colorId",
           element: <EditColorPage />,
         },
         {
@@ -220,7 +220,7 @@ function Router(props) {
           element: <AddCatalogPage />,
         },
         {
-          path: "catalog-management/edit",
+          path: "catalog-management/:catalogId",
           element: <EditCatalogPage />,
         },
         {
@@ -310,7 +310,7 @@ function Router(props) {
           element: <AddOSPage />,
         },
         {
-          path: "os-management/edit",
+          path: "os-management/:osId",
           element: <EditOSPage />,
         },
         {
@@ -346,7 +346,7 @@ function Router(props) {
           element: <AddSpecialFeaturePage />,
         },
         {
-          path: "special-feature-management/edit",
+          path: "special-feature-management/:specialFeature",
           element: <EditSpecialFeaturePage />,
         },
       ],

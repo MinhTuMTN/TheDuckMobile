@@ -2,6 +2,10 @@ import { Box, Paper, Typography, styled } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import MuiButton from "../../../components/MuiButton";
 import FlexContainer from "../../../components/FlexContainer";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { addCatalog } from "../../../services/Admin/CatalogService";
+import { enqueueSnackbar } from "notistack";
 
 const RootPageAddCatalog = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -28,6 +32,23 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
 }));
 
 function AddCatalogPage(props) {
+    const navigate = useNavigate();
+    const [catalog, setCatalog] = useState({
+        catalogName: "",
+        catalogURL: "",
+    });
+
+    const handleAddCatalog = async () => {
+        const response = await addCatalog({
+            catalogName: catalog.catalogName,
+            catalogURL: catalog.catalogURL,
+        });
+
+        if (response.success) {
+            enqueueSnackbar("Thêm màu sắc thành công", { variant: "success" });
+            navigate("/admin/catalog-management/list");
+        } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    };
     return (
         <RootPageAddCatalog>
 
@@ -37,10 +58,31 @@ function AddCatalogPage(props) {
                     label="Tên danh mục"
                     margin="normal"
                     autoFocus
+                    onChange={(e) => {
+                        setCatalog((prev) => ({
+                            ...prev,
+                            catalogName: e.target.value,
+                        }));
+                    }}
+                    required
+                />
+                <MuiTextFeild
+                    label="Đường dẫn"
+                    margin="normal"
+                    onChange={(e) => {
+                        setCatalog((prev) => ({
+                            ...prev,
+                            catalogURL: e.target.value,
+                        }));
+                    }}
                     required
                 />
                 <FlexContainer justifyContent="center">
-                    <AddButton variant="contained" color="color1">
+                    <AddButton
+                        variant="contained"
+                        color="color1"
+                        onClick={handleAddCatalog}
+                    >
                         <Typography color={"white"}>Thêm Mới</Typography>
                     </AddButton>
                 </FlexContainer>

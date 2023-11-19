@@ -16,7 +16,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             _addressServices = addressServices;
         }
 
-        [HttpGet("province/list")]
+        [HttpGet("province")]
         [AllowAnonymous]
         /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllProvinces()

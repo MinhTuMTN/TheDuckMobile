@@ -2,6 +2,10 @@ import { Box, Paper, Typography, styled } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import MuiButton from "../../../components/MuiButton";
 import FlexContainer from "../../../components/FlexContainer";
+import { useState } from "react";
+import { addColor } from "../../../services/Admin/ColorService";
+import { enqueueSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 const RootPageAddColor = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -28,6 +32,23 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
 }));
 
 function AddColorPage(props) {
+    const navigate = useNavigate();
+    const [color, setColor] = useState({
+        colorName: "",
+        colorCode: "",
+    });
+
+    const handleAddColor = async () => {
+        const response = await addColor({
+            colorName: color.colorName,
+            colorCode: color.colorCode,
+        });
+
+        if (response.success) {
+            enqueueSnackbar("Thêm màu sắc thành công", { variant: "success" });
+            navigate("/admin/color-management/list");
+        } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    };
     return (
         <RootPageAddColor>
 
@@ -38,13 +59,30 @@ function AddColorPage(props) {
                     margin="normal"
                     autoFocus
                     required
-                /><MuiTextFeild
-                label="Mã màu"
-                margin="normal"
-                required
-            />
+                    onChange={(e) => {
+                        setColor((prev) => ({
+                            ...prev,
+                            colorName: e.target.value,
+                        }));
+                    }}
+                />
+                <MuiTextFeild
+                    label="Mã màu"
+                    margin="normal"
+                    required
+                    onChange={(e) => {
+                        setColor((prev) => ({
+                            ...prev,
+                            colorCode: e.target.value,
+                        }));
+                    }}
+                />
                 <FlexContainer justifyContent="center">
-                    <AddButton variant="contained" color="color1">
+                    <AddButton
+                        variant="contained"
+                        color="color1"
+                        onClick={handleAddColor}
+                    >
                         <Typography color={"white"}>Thêm Mới</Typography>
                     </AddButton>
                 </FlexContainer>

@@ -65,7 +65,7 @@ builder.Services.AddScoped<IStoreAdminServices, StoreAdminServicesImpl>();
 builder.Services.AddScoped<IOrderAdminServices, OrderAdminServicesImpl>();
 builder.Services.AddScoped<ICouponAdminServices, CouponAdminServicesImpl>();
 builder.Services.AddScoped<IFeedbackAdminServices, FeedbackAdminServicesImpl>();
-builder.Services.AddScoped<ISpecialFeatureServices, SpecialFeatureServicesImpl>();
+builder.Services.AddScoped<ISpecialFeatureAdminServices, SpecialFeatureAdminServicesImpl>();
 builder.Services.AddScoped<ICatalogAttributeServices, CatalogAttributeServicesImpl>();
 builder.Services.AddScoped<IOSAdminServices, OSAdminServicesImpl>();
 builder.Services.AddScoped<IColorAdminServices, ColorAdminServicesImpl>();

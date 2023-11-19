@@ -43,6 +43,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             var catalog = new Catalog
             {
                 CatalogName = request.CatalogName,
+                CatalogURL = request.CatalogURL,
                 CreatedAt = DateTime.Now,
                 LastModifiedAt = DateTime.Now
             };
@@ -78,7 +79,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         public async Task<List<CatalogListResponse>> GetAllCatalogs()
         {
             var catalogs = await _context.Catalogs
-                .Where(c => c.IsDeleted == false)
                 .Include(c => c.Products)
                 .ToListAsync();
             return catalogs.Select(c => new CatalogListResponse(c)).ToList();
@@ -86,14 +86,60 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
         public async Task<ICollection<CatalogAttribute>> GetCatalogAttributes(int catalogId)
         {
-            var catalog = await _context.Catalogs
-                .Include(c => c.CatalogAttributes)
-                .FirstOrDefaultAsync(c => c.CatalogId == catalogId && c.IsDeleted == false);
+            var catalog = await GetCatalogById(catalogId);
+
+            return catalog.CatalogAttributes!;
+        }
+
+        public async Task<Catalog> GetCatalogById(int catalogId)
+        {
+            var catalog = await _context
+                .Catalogs
+                .FirstOrDefaultAsync(c => c.CatalogId == catalogId);
 
             if (catalog == null)
                 throw new CustomNotFoundException("Can't found catalog");
 
-            return catalog.CatalogAttributes!;
+            return catalog;
+        }
+
+        public async Task<Catalog?> EditCatalog(int catalogId, AddCatalogRequest request)
+        {
+            var catalog = await GetCatalogById(catalogId);
+
+            catalog.CatalogName = request.CatalogName;
+            catalog.CatalogURL = request.CatalogURL;
+            catalog.LastModifiedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+            return catalog;
+        }
+
+        public async Task<bool> DeleteCatalog(int catalogId)
+        {
+            var catalog = await GetCatalogById(catalogId);
+
+            catalog.IsDeleted = true;
+            catalog.LastModifiedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+            return catalog.IsDeleted;
+        }
+
+        public async Task<Catalog?> RestoreCatalog(int catalogId)
+        {
+            var catalog = await _context
+                .Catalogs
+                .FirstOrDefaultAsync(c => c.CatalogId == catalogId && c.IsDeleted == true);
+
+            if (catalog == null)
+                throw new CustomNotFoundException("Can't found catalog");
+
+            catalog.IsDeleted = false;
+            catalog.LastModifiedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return catalog;
         }
     }
 }

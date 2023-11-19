@@ -18,11 +18,11 @@ namespace TheDuckMobile_WebAPI.Entities
         public string? Content { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public string FeedbackImagesJson
+        /*public string FeedbackImagesJson
         {
             get => JsonSerializer.Serialize(FeedbackImages);
             set => FeedbackImages = JsonSerializer.Deserialize<List<string>>(value);
-        }
+        }*/
 
         [NotMapped]
         public List<string>? FeedbackImages { get; set; } = new List<string>();

@@ -16,13 +16,16 @@ import {
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
-import { Link } from "react-router-dom";
-import InfoIcon from '@mui/icons-material/Info';
+import { Link, useNavigate } from "react-router-dom";
+import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Search } from "@mui/icons-material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { DataContext } from "../../../layouts/AdminLayout";
+import { enqueueSnackbar } from "notistack";
+import { deleteSpecialFeature, restoreSpecialFeature } from "../../../services/Admin/SpecialFeatureService";
+import DialogConfirm from "../../../components/DialogConfirm";
 
 const RootPageSpecialFeatureList = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -44,11 +47,16 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function SpecialFeatureListPage() {
+    const navigate = useNavigate();
     const { dataFetched } = useContext(DataContext);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rowsSearched, setRowsSearched] = useState([]);
     const [searchString, setSearchString] = useState("");
+    const [isDeleted, setIsDeleted] = useState();
+    const [id, setId] = useState("");
+    const [index, setIndex] = useState(0);
+    const [deleteDialog, setDeleteDialog] = useState(false);
 
     useEffect(() => {
         setRowsSearched(dataFetched);
@@ -71,10 +79,6 @@ function SpecialFeatureListPage() {
         setRowsSearched(filtered);
     }, [searchString, filterRows]);
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -84,6 +88,29 @@ function SpecialFeatureListPage() {
         setPage(0);
     };
 
+    const handleTrashButtonClick = async () => {
+        let response;
+        const specialFeatures = [...dataFetched];
+        if (isDeleted) {
+            response = await restoreSpecialFeature(id);
+            if (response.success) {
+                enqueueSnackbar("Khôi phục tính năng đặc biệt thành công!", { variant: "success" });
+                specialFeatures[index].isDeleted = !isDeleted;
+                setRowsSearched(specialFeatures);
+            } else {
+                enqueueSnackbar("Khôi phục tính năng đặc biệt thất bại!", { variant: "error" });
+            }
+        } else {
+            response = await deleteSpecialFeature(id);
+            if (response.success) {
+                enqueueSnackbar("Xóa tính năng đặc biệt thành công!", { variant: "success" });
+                specialFeatures[index].isDeleted = !isDeleted;
+                setRowsSearched(specialFeatures);
+            } else {
+                enqueueSnackbar("Xóa tính năng đặc biệt thất bại!", { variant: "error" });
+            }
+        }
+    };
     return (
         <RootPageSpecialFeatureList>
             <Typography variant="h3">Danh sách tính năng đặc biệt</Typography>
@@ -125,7 +152,7 @@ function SpecialFeatureListPage() {
                         {(rowsPerPage > 0
                             ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
-                        ).map((row) => (
+                        ).map((row, i) => (
                             <TableRow key={row.specialFeatureId}>
                                 <TableCell style={{ minWidth: 100 }} align="center">
                                     {row.specialFeatureId}
@@ -137,17 +164,47 @@ function SpecialFeatureListPage() {
                                     {row.isDeleted ? "Ngừng hoạt động" : "Còn hoạt động"}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton component={Link} color="oldPrimary"><InfoIcon /></MuiButton>
-                                    <MuiButton component={Link} color="teal" to="/admin/special-feature-management/edit"><EditIcon /></MuiButton>
-                                    <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
+                                    <MuiButton
+                                        color="teal"
+                                        onClick={() => {
+                                            navigate(`/admin/special-feature-management/${row.specialFeatureId}`, {
+                                                state: {
+                                                    editSpecialFeature: row
+                                                }
+                                            })
+                                        }}
+                                    >
+                                        <EditIcon />
+                                    </MuiButton>
+                                    <MuiButton
+                                        component={Link}
+                                        color="color1"
+                                        onClick={(e) => {
+                                            setIndex(i);
+                                            setId(row.specialFeatureId);
+                                            setIsDeleted(row.isDeleted);
+                                            setDeleteDialog(true);
+                                        }}
+                                    >
+                                        {row.isDeleted ? <RestoreFromTrashIcon /> : <DeleteIcon />}
+                                    </MuiButton>
+                                    <DialogConfirm
+                                        open={deleteDialog}
+                                        title={isDeleted ? "Khôi phục tính năng đặc biệt" : "Xóa tính năng đặc biệt"}
+                                        content={
+                                            isDeleted
+                                                ? "Bạn có chắc chắn muốn khôi phục tính năng đặc biệt này"
+                                                : "Bạn có chắc chắn muốn xóa tính năng đặc biệt này?"
+                                        }
+                                        okText={isDeleted ? "Khôi phục" : "Xóa"}
+                                        cancelText={"Hủy"}
+                                        onOk={handleTrashButtonClick}
+                                        onCancel={() => setDeleteDialog(false)}
+                                        onClose={() => setDeleteDialog(false)}
+                                    />
                                 </TableCell>
                             </TableRow>
                         ))}
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={5} />
-                            </TableRow>
-                        )}
                     </TableBody>
                     <TableFooter>
                         <TableRow>

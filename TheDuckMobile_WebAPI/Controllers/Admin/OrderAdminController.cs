@@ -16,7 +16,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             _orderAdminServices = orderAdminServices;
         }
 
-        [HttpGet("list")]
+        [HttpGet]
         [AllowAnonymous]
         /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllOrders()

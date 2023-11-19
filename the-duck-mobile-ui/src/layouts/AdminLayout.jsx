@@ -48,7 +48,7 @@ const DataContext = createContext();
 function AdminLayout(props) {
   const [open, setOpen] = React.useState(false);
   const pathname = useLocation().pathname;
-  const [dataFetched, setDataFected] = useState([]);
+  const [dataFetched, setDataFetched] = useState([]);
 
   // const handleGetProducts = async () => {
   //   const productsResponse = await getAllProducts();
@@ -86,7 +86,7 @@ function AdminLayout(props) {
   //     } else {
   //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
   //     }
-  //   } else if (pathname === "/admin/address-management/province/list") {
+  //   } else if (pathname === "/admin/address-management/province/") {
   //     response = await getAllProvinces();
   //     if (response.success) {
   //       setDataFected(response.data.data);
@@ -204,9 +204,11 @@ function AdminLayout(props) {
     }
 
     if (response?.success) {
-      setDataFected(response.data.data);
+      setDataFetched(response.data.data);
     } else {
-      enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      if (typeof response !== "undefined") {
+        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      }
     }
   }, [pathname]);
 

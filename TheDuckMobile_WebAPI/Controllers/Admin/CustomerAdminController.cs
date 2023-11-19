@@ -16,7 +16,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             _customerServices = customerServices;
         }
 
-        [HttpGet("list")]
+        [HttpGet]
         [AllowAnonymous]
         /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllCustomers()

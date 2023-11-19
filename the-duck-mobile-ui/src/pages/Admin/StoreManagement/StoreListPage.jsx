@@ -16,40 +16,17 @@ import {
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from '@mui/icons-material/Delete';
+import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 import EditIcon from '@mui/icons-material/Edit';
 import { Search } from "@mui/icons-material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { DataContext } from "../../../layouts/AdminLayout";
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich1', 237, 9.0, 37, 4.3),
-    createData('Eclair2', 262, 16.0, 24, 6.0),
-    createData('Cupcake3', 305, 3.7, 67, 4.3),
-    createData('Gingerbread3', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt4', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich5', 237, 9.0, 37, 4.3),
-    createData('Eclair6', 262, 16.0, 24, 6.0),
-    createData('Cupcake7', 305, 3.7, 67, 4.3),
-    createData('Gingerbread8', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt9', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich0', 237, 9.0, 37, 4.3),
-    createData('Eclair11', 262, 16.0, 24, 6.0),
-    createData('Cupcake12', 305, 3.7, 67, 4.3),
-    createData('Gingerbread13', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt14', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich15', 237, 9.0, 37, 4.3),
-    createData('Eclair16', 262, 16.0, 24, 6.0),
-    createData('Cupcake17', 305, 3.7, 67, 4.3),
-    createData('Gingerbread18', 356, 16.0, 49, 3.9),
-];
-
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
+import { deleteStore, restoreStore } from "../../../services/Admin/StoreService";
+import { enqueueSnackbar } from "notistack";
+import DialogConfirm from "../../../components/DialogConfirm";
 
 const RootPageStoreList = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -71,11 +48,16 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function StoreListPage() {
+    const navigate = useNavigate();
     const { dataFetched } = useContext(DataContext);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [rowsSearched, setRowsSearched] = useState(rows);
+    const [rowsSearched, setRowsSearched] = useState([]);
     const [searchString, setSearchString] = useState("");
+    const [isDeleted, setIsDeleted] = useState();
+    const [id, setId] = useState("");
+    const [index, setIndex] = useState(0);
+    const [deleteDialog, setDeleteDialog] = useState(false);
 
     useEffect(() => {
         setRowsSearched(dataFetched);
@@ -111,6 +93,29 @@ function StoreListPage() {
         setPage(0);
     };
 
+    const handleTrashButtonClick = async () => {
+        let response;
+        const stores = [...dataFetched];
+        if (isDeleted) {
+            response = await restoreStore(id);
+            if (response.success) {
+                enqueueSnackbar("Khôi phục chi nhánh thành công!", { variant: "success" });
+                stores[index].isDeleted = !isDeleted;
+                setRowsSearched(stores);
+            } else {
+                enqueueSnackbar("Khôi phục chi nhánh thất bại!", { variant: "error" });
+            }
+        } else {
+            response = await deleteStore(id);
+            if (response.success) {
+                enqueueSnackbar("Xóa chi nhánh thành công!", { variant: "success" });
+                stores[index].isDeleted = !isDeleted;
+                setRowsSearched(stores);
+            } else {
+                enqueueSnackbar("Xóa chi nhánh thất bại!", { variant: "error" });
+            }
+        }
+    };
     return (
         <RootPageStoreList>
             <Typography variant="h3">Danh sách chi nhánh</Typography>
@@ -146,6 +151,7 @@ function StoreListPage() {
                             <TableCell align="center">Tên chi nhánh</TableCell>
                             <TableCell align="center">Số lượng nhân viên</TableCell>
                             <TableCell align="center">Số lượng đơn hàng</TableCell>
+                            <TableCell align="center">Trạng thái</TableCell>
                             <TableCell align="center">Lựa chọn</TableCell>
                         </TableRow>
                     </TableHead>
@@ -153,7 +159,7 @@ function StoreListPage() {
                         {(rowsPerPage > 0
                             ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
-                        ).map((row) => (
+                        ).map((row, i) => (
                             <TableRow key={row.storeId}>
                                 <TableCell style={{ minWidth: 200 }} align="center">
                                     {row.storeId}
@@ -172,13 +178,49 @@ function StoreListPage() {
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
                                     <MuiButton component={Link} color="oldPrimary" to="/admin/store-management/detail"><InfoIcon /></MuiButton>
-                                    <MuiButton component={Link} color="teal" to="/admin/store-management/edit"><EditIcon /></MuiButton>
-                                    <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
+                                    <MuiButton
+                                        color="teal"
+                                        onClick={() => {
+                                            navigate(`/admin/store-management/${row.storeId}`, {
+                                                state: {
+                                                    editStore: row
+                                                }
+                                            })
+                                        }}
+                                    >
+                                        <EditIcon />
+                                    </MuiButton>
+                                    <MuiButton
+                                        component={Link}
+                                        color="color1"
+                                        onClick={(e) => {
+                                            setIndex(i);
+                                            setId(row.storeId);
+                                            setIsDeleted(row.isDeleted);
+                                            setDeleteDialog(true);
+                                        }}
+                                    >
+                                        {row.isDeleted ? <RestoreFromTrashIcon /> : <DeleteIcon />}
+                                    </MuiButton>
+                                    <DialogConfirm
+                                        open={deleteDialog}
+                                        title={isDeleted ? "Khôi phục chi nhánh" : "Xóa chi nhánh"}
+                                        content={
+                                            isDeleted
+                                                ? "Bạn có chắc chắn muốn khôi phục chi nhánh này"
+                                                : "Bạn có chắc chắn muốn xóa chi nhánh này?"
+                                        }
+                                        okText={isDeleted ? "Khôi phục" : "Xóa"}
+                                        cancelText={"Hủy"}
+                                        onOk={handleTrashButtonClick}
+                                        onCancel={() => setDeleteDialog(false)}
+                                        onClose={() => setDeleteDialog(false)}
+                                    />
                                 </TableCell>
                             </TableRow>
                         ))}
                         {emptyRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyRows }}>
+                            <TableRow style={{ height: 1 * emptyRows }}>
                                 <TableCell colSpan={6} />
                             </TableRow>
                         )}

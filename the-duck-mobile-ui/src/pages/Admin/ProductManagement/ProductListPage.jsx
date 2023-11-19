@@ -98,7 +98,7 @@ function ProductListPage(props) {
     setPage(0);
   };
 
-  const handleButtonClick = async () => {
+  const handleTrashButtonClick = async () => {
     if (isDeleted) {
       const productResponse = await restoreProduct(id);
       console.log(productResponse);
@@ -256,7 +256,7 @@ function ProductListPage(props) {
                     }
                     okText={isDeleted ? "Khôi phục" : "Xóa"}
                     cancelText={"Hủy"}
-                    onOk={handleButtonClick}
+                    onOk={handleTrashButtonClick}
                     onCancel={() => setDeleteDialog(false)}
                     onClose={() => setDeleteDialog(false)}
                   />

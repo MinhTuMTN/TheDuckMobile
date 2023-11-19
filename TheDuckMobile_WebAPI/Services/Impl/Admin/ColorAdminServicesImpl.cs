@@ -63,10 +63,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
         public async Task<List<Color>> GetAllColors()
         {
-            var colors = await _context
-                .Colors
-                .Where(c => c.IsDeleted == false)
-                .ToListAsync();
+            var colors = await _context.Colors.ToListAsync();
 
             return colors;
         }
@@ -76,7 +73,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             Guid guid = Guid.Parse(colorId);
             var color = await _context
                 .Colors
-                .FirstOrDefaultAsync(c => c.ColorId == guid && c.IsDeleted == false);
+                .FirstOrDefaultAsync(c => c.ColorId == guid);
 
             if (color == null)
                 throw new CustomNotFoundException("Can't found color");

@@ -16,13 +16,17 @@ import {
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from '@mui/icons-material/Delete';
+import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 import EditIcon from '@mui/icons-material/Edit';
 import { Search } from "@mui/icons-material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { DataContext } from "../../../layouts/AdminLayout";
+import { enqueueSnackbar } from "notistack";
+import { deleteColor, restoreColor } from "../../../services/Admin/ColorService";
+import DialogConfirm from "../../../components/DialogConfirm";
 
 const RootPageColorList = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -44,11 +48,16 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function ColorListPage() {
+    const navigate = useNavigate();
     const { dataFetched } = useContext(DataContext);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [rowsSearched, setRowsSearched] = useState([]);
     const [searchString, setSearchString] = useState("");
+    const [isDeleted, setIsDeleted] = useState();
+    const [id, setId] = useState("");
+    const [index, setIndex] = useState(0);
+    const [deleteDialog, setDeleteDialog] = useState(false);
 
     useEffect(() => {
         setRowsSearched(dataFetched);
@@ -82,6 +91,30 @@ function ColorListPage() {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
+    };
+
+    const handleTrashButtonClick = async () => {
+        let response;
+        const colors = [...dataFetched];
+        if (isDeleted) {
+            response = await restoreColor(id);
+            if (response.success) {
+                enqueueSnackbar("Khôi phục màu sắc thành công!", {  variant: "success" });
+                colors[index].isDeleted = !isDeleted;
+                setRowsSearched(colors);
+            } else {
+                enqueueSnackbar("Khôi phục màu sắc thất bại!", { variant: "error" });
+            }
+        } else {
+            response = await deleteColor(id);
+            if (response.success) {
+                enqueueSnackbar("Xóa màu sắc thành công!", { variant: "success" });
+                colors[index].isDeleted = !isDeleted;
+                setRowsSearched(colors);
+            } else {
+                enqueueSnackbar("Xóa màu sắc thất bại!", { variant: "error" });
+            }
+        }
     };
 
     return (
@@ -126,7 +159,7 @@ function ColorListPage() {
                         {(rowsPerPage > 0
                             ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
-                        ).map((row) => (
+                        ).map((row, i) => (
                             <TableRow key={row.colorId}>
                                 <TableCell style={{ minWidth: 200 }} align="center">
                                     {row.colorId}
@@ -142,8 +175,44 @@ function ColorListPage() {
                                 </TableCell>
                                 <TableCell style={{ minWidth: 200 }} align="center">
                                     <MuiButton component={Link} color="oldPrimary"><InfoIcon /></MuiButton>
-                                    <MuiButton component={Link} color="teal" to="/admin/color-management/edit"><EditIcon /></MuiButton>
-                                    <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
+                                    <MuiButton
+                                        color="teal"
+                                        onClick={() => {
+                                            navigate(`/admin/color-management/${row.colorId}`, {
+                                                state: {
+                                                    editColor: row
+                                                }
+                                            })
+                                        }}
+                                    >
+                                        <EditIcon />
+                                    </MuiButton>
+                                    <MuiButton
+                                        component={Link}
+                                        color="color1"
+                                        onClick={(e) => {
+                                            setIndex(i);
+                                            setId(row.colorId);
+                                            setIsDeleted(row.isDeleted);
+                                            setDeleteDialog(true);
+                                        }}
+                                    >
+                                        {row.isDeleted ? <RestoreFromTrashIcon /> : <DeleteIcon />}
+                                    </MuiButton>
+                                    <DialogConfirm
+                                        open={deleteDialog}
+                                        title={isDeleted ? "Khôi phục màu sắc" : "Xóa màu sắc"}
+                                        content={
+                                            isDeleted
+                                                ? "Bạn có chắc chắn muốn khôi phục màu này"
+                                                : "Bạn có chắc chắn muốn xóa màu này?"
+                                        }
+                                        okText={isDeleted ? "Khôi phục" : "Xóa"}
+                                        cancelText={"Hủy"}
+                                        onOk={handleTrashButtonClick}
+                                        onCancel={() => setDeleteDialog(false)}
+                                        onClose={() => setDeleteDialog(false)}
+                                    />
                                 </TableCell>
                             </TableRow>
                         ))}

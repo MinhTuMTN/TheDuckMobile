@@ -3,6 +3,9 @@ import MuiTextFeild from "../../../components/MuiTextFeild";
 import MuiButton from "../../../components/MuiButton";
 import FlexContainer from "../../../components/FlexContainer";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { addSpecialFeature } from "../../../services/Admin/SpecialFeatureService";
+import { enqueueSnackbar } from "notistack";
 
 const RootPageAddSpecialFeature = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -29,10 +32,20 @@ const AddButton = styled(MuiButton)(({ theme }) => ({
 }));
 
 function AddSpecialFeaturePage(props) {
-    const [catalog, setCatalog] = useState('');
+    const navigate = useNavigate();
+    const [specialFeature, setSpecialFeature] = useState({
+        specialFeatureName: ""
+    });
 
-    const handleCatalogChange = (event) => {
-        setCatalog(event.target.value);
+    const handleAddSpecialFeature = async () => {
+        const response = await addSpecialFeature({
+            specialFeatureName: specialFeature.specialFeatureName
+        });
+
+        if (response.success) {
+            enqueueSnackbar("Thêm hệ điều hành thành công", { variant: "success" });
+            navigate("/admin/special-feature-management/list");
+        } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     };
 
     return (
@@ -43,30 +56,20 @@ function AddSpecialFeaturePage(props) {
                     label="Tên tính năng đặc biệt"
                     margin="normal"
                     autoFocus
+                    onChange={(e) => {
+                        setSpecialFeature((prev) => ({
+                            ...prev,
+                            specialFeatureName: e.target.value,
+                        }));
+                    }}
                     required
                 />
-                <MuiTextFeild
-                    label="Mô tả"
-                    margin="normal"
-                    required
-                />
-                <FormControl sx={{ mt: 2, mb: 2 }}>
-                    <FormLabel><Typography>Danh Mục</Typography></FormLabel>
-                    <Select
-                        displayEmpty
-                        value={catalog}
-                        onChange={handleCatalogChange}
-                    >
-                        <MenuItem disabled value="">
-                            <em>Lựa Chọn Danh Mục</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                </FormControl>
                 <FlexContainer justifyContent="center">
-                    <AddButton variant="contained" color="color1">
+                    <AddButton
+                        variant="contained"
+                        color="color1"
+                        onClick={handleAddSpecialFeature}
+                    >
                         <Typography color={"white"}>Thêm Mới</Typography>
                     </AddButton>
                 </FlexContainer>
