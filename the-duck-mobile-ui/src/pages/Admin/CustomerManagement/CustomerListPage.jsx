@@ -202,7 +202,7 @@ function CustomerListPage() {
                     </CellBody>
                     <CellBody
                       style={{ minWidth: 50, fontSize: "14px" }}
-                      align="right"
+                      align="center"
                     >
                       <IconButton
                         color="black"

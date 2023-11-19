@@ -3,6 +3,7 @@ import React from "react";
 import SearchSeller from "./SearchSeller";
 import OrderItem from "./OrderItem";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 ListOrder.propTypes = {
   items: PropTypes.array,
@@ -10,6 +11,7 @@ ListOrder.propTypes = {
 
 function ListOrder(props) {
   const { items } = props;
+  const navigate = useNavigate();
   return (
     <>
       <Box
@@ -23,7 +25,16 @@ function ListOrder(props) {
         <SearchSeller borderRadius="15px" />
       </Box>
 
-      {items && items.map((item) => <OrderItem order={item} key={item.id} />)}
+      {items &&
+        items.map((item) => (
+          <OrderItem
+            order={item}
+            key={item.id}
+            handleClick={() => {
+              navigate(`/store/order-details?orderId=${item.id}`);
+            }}
+          />
+        ))}
     </>
   );
 }
