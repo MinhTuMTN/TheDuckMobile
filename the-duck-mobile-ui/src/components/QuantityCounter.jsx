@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Button, Card, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 
 function QuantityCounter(props) {
   const { quantity, onChange } = props;

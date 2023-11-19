@@ -32,13 +32,13 @@ import CustomLink from "./CustomLink";
 import PropTypes from "prop-types";
 
 const CustomListItemButton = styled(ListItemButton)(({ theme, active }) => ({
-  backgroundColor: active ? "#333860da" : "",
+  backgroundColor: active === "true" ? "#333860da" : "",
   marginRight: theme.spacing(0.5),
   width: "100%",
   color: "white",
 
   "&:hover": {
-    backgroundColor: active ? "#333860da" : "#3a3d5685",
+    backgroundColor: active === "true" ? "#333860da" : "#3a3d5685",
   },
 }));
 
@@ -140,6 +140,7 @@ function AdminSidebar(props) {
   const activeSection = sidebarItems.find(
     (item) => item.section === currentSection
   ).section;
+
   if (lgUp) {
     return (
       <Drawer
@@ -201,7 +202,9 @@ function AdminSidebar(props) {
             {sidebarItems.map((item, index) => (
               <ListItem disablePadding key={item.section}>
                 <CustomLink to={item.to} width={"100%"}>
-                  <CustomListItemButton active={activeSection === item.section}>
+                  <CustomListItemButton
+                    active={activeSection === item.section ? "true" : "false"}
+                  >
                     <CustomListItemIcon>{item.icon}</CustomListItemIcon>
                     <ListItemText
                       disableTypography
