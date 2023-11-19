@@ -46,10 +46,6 @@ import CouponListPage from "../pages/Admin/CouponManagement/CouponListPage";
 import AddSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/AddSpecialFeaturePage";
 import EditSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/EditSpecialFeaturePage";
 import SpecialFeatureListPage from "../pages/Admin/SpecialFeatureManagement/SpecialFeatureListPage";
-import AddStaffPage from "../pages/Admin/StaffManagement/AddStaffPage";
-import EditStaffPage from "../pages/Admin/StaffManagement/EditStaffPage";
-import StaffDetailPage from "../pages/Admin/StaffManagement/StaffDetailPage";
-import StaffListPage from "../pages/Admin/StaffManagement/StaffListPage";
 import AddStorePage from "../pages/Admin/StoreManagement/AddStorePage";
 import EditStorePage from "../pages/Admin/StoreManagement/EditStorePage";
 import StoreDetailPage from "../pages/Admin/StoreManagement/StoreDetailPage";
@@ -256,23 +252,7 @@ function Router(props) {
           path: "customer-management/detail",
           element: <CustomerDetailPage />,
         },
-        {
-          path: "staff-management/list",
-          element: <StaffListPage />,
-        },
-        {
-          path: "staff-management/add",
-          element: <AddStaffPage />,
-        },
-        {
-          path: "staff-management/edit",
-          element: <EditStaffPage />,
-        },
 
-        {
-          path: "staff-management/detail",
-          element: <StaffDetailPage />,
-        },
         {
           path: "brand-management/list",
           element: <BrandListPage />,
@@ -349,6 +329,10 @@ function Router(props) {
           path: "special-feature-management/edit",
           element: <EditSpecialFeaturePage />,
         },
+        {
+          path: "order-details",
+          element: <OrderDetails />,
+        },
       ],
     },
     {
@@ -368,7 +352,7 @@ function Router(props) {
           element: <Orders />,
         },
         {
-          path: "orderdetails",
+          path: "order-details",
           element: <OrderDetails />,
         },
       ],

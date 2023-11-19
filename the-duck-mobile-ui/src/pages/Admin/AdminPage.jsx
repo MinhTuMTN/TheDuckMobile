@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
-import { Box, Paper, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { Box } from "@mui/material";
+import AdminSidebar from "../../components/Admin/AdminSidebar";
 import { Outlet } from "react-router-dom";
-import React from 'react'
+import React from "react";
 
 const RootPageUser = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -14,16 +15,13 @@ const Right = styled(Box)(({ theme }) => ({
 }));
 
 function AdminPage(props) {
-
   return (
-
-      <RootPageUser>
-        <AdminSidebar />
-        <Right>
-          <Outlet />
-        </Right>
-      </RootPageUser>
-
+    <RootPageUser>
+      <AdminSidebar />
+      <Right>
+        <Outlet />
+      </Right>
+    </RootPageUser>
   );
 }
 

@@ -55,12 +55,7 @@ const sidebarItems = [
     to: "/admin/customer-management/list",
     section: "customer-management",
   },
-  {
-    display: "Nhân Viên",
-    icon: <BadgeIcon />,
-    to: "/admin/staff-management/list",
-    section: "staff-management",
-  },
+
   {
     display: "Địa chỉ",
     icon: <HomeIcon />,
@@ -139,7 +134,7 @@ function AdminSidebar(props) {
     .filter((part) => part !== "")[1];
   const activeSection = sidebarItems.find(
     (item) => item.section === currentSection
-  ).section;
+  )?.section;
 
   if (lgUp) {
     return (
