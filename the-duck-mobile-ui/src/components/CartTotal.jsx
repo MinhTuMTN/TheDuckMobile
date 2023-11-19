@@ -8,16 +8,39 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 import MuiTextFeild from "../components/MuiTextFeild";
+import PropTypes from "prop-types";
+import FormatCurrency from "./FormatCurrency";
 
 const CartButton = styled(Button)(({ theme }) => ({
   "&:hover": {
     backgroundColor: theme.palette.color1.main,
   },
 }));
+
+CartTotal.propTypes = {
+  selectedProducts: PropTypes.array,
+};
+
+CartTotal.defaultProps = {
+  selectedProducts: [],
+};
+
 function CartTotal(props) {
+  const { selectedProducts } = props;
+  const [total, setTotal] = React.useState(0);
+  const shippingFee = 20000;
+  const discount = 0;
+  useEffect(() => {
+    let total = 0;
+    selectedProducts.forEach((product) => {
+      total +=
+        Math.min(product.price, product.promotionPrice) * product.quantity;
+    });
+    setTotal(total);
+  }, [selectedProducts]);
   return (
     <Grid
       container
@@ -83,7 +106,7 @@ function CartTotal(props) {
         </Typography>
         <Divider />
         <Grid container sx={{ marginTop: "1rem" }} spacing={3}>
-          <Grid item xs={9.5}>
+          <Grid item xs={8.5}>
             <Stack spacing={1.5}>
               <Typography
                 variant="body1"
@@ -111,16 +134,16 @@ function CartTotal(props) {
               </Typography>
             </Stack>
           </Grid>
-          <Grid item xs={2.5}>
+          <Grid item xs={3.5}>
             <Stack spacing={1.5}>
               <Typography variant="body1" component="p" textAlign={"end"}>
-                200.000 đ
+                <FormatCurrency amount={total} />
               </Typography>
               <Typography variant="body1" component="p" textAlign={"end"}>
-                20.000 đ
+                <FormatCurrency amount={total === 0 ? 0 : shippingFee} />
               </Typography>
               <Typography variant="body1" component="p" textAlign={"end"}>
-                0 đ
+                <FormatCurrency amount={discount} />
               </Typography>
             </Stack>
           </Grid>
@@ -132,10 +155,10 @@ function CartTotal(props) {
             component="h2"
             textAlign={"end"}
             mt={1}
-            flex={9.5}
+            flex={8.5}
             sx={{ color: "color4.main" }}
           >
-            Tổng tiền (1 sản phẩm):
+            Tổng tiền ({selectedProducts?.length} sản phẩm):
           </Typography>
           <Typography
             variant="h5"
@@ -143,10 +166,12 @@ function CartTotal(props) {
             textAlign={"end"}
             fontWeight={"bold"}
             mt={1}
-            flex={2.5}
+            flex={3.5}
             sx={{ color: "color1.main" }}
           >
-            70.500.000 đ
+            <FormatCurrency
+              amount={total === 0 ? 0 : total + shippingFee - discount}
+            />
           </Typography>
         </Stack>
         <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>

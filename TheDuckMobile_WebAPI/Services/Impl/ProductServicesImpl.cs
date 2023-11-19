@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Entities;
 using TheDuckMobile_WebAPI.ErrorHandler;
+using TheDuckMobile_WebAPI.Models.Request;
 using TheDuckMobile_WebAPI.Models.Response;
 
 namespace TheDuckMobile_WebAPI.Services.Impl
@@ -43,6 +44,38 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 .ToListAsync();
 
             return (await newestProducts).Select(p => new ProductHomeResponse(p)).ToList();
+        }
+
+        public async Task<List<ProductCartResponse>> GetProductCartDetails(List<UserCartItem> userCartItems)
+        {
+            List<ProductCartResponse> productCartResponses = new List<ProductCartResponse>();
+
+            foreach (UserCartItem userCartItem in userCartItems)
+            {
+                var productVersion = await _context.ProductVersions
+                    .Include(pv => pv.Product)
+                    .Include(pv => pv.Color)
+                    .FirstOrDefaultAsync(pv => pv.ProductVersionId == userCartItem.ProductVersionId);
+
+                if (productVersion is null)
+                    throw new CustomNotFoundException($"Product version with product version id {userCartItem.ProductVersionId} not found");
+
+                productCartResponses.Add(new ProductCartResponse
+                {
+                    ProductVersionId = productVersion.ProductVersionId,
+                    ProductId = productVersion.ProductId,
+                    ProductName = productVersion.Product!.ProductName,
+                    VersionName = productVersion.VersionName,
+                    Thumbnail = productVersion.Product.Thumbnail,
+                    Price = productVersion.Price,
+                    PromotionPrice = productVersion.PromotionPrice,
+                    Quantity = userCartItem.Quantity,
+                    ColorName = productVersion.Color!.ColorName,
+                    ColorCode = productVersion.Color.ColorCode
+                });
+            }
+
+            return productCartResponses;
         }
 
         public async Task<List<ProductHomeResponse>> GetProductRelative(Guid productId)
@@ -127,7 +160,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 .Include(p => p.Votes)
                 .Include(p => p.Brand)
                 .Where(p => EF.Functions.FreeText(p.ProductName!, query)
-                || EF.Functions.Like(p.Brand!.BrandName!, $"%{query}%")
+                    || p.Brand!.BrandName!.Contains(query)
                 );
 
             switch (orderBy)

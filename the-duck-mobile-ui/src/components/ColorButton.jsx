@@ -9,7 +9,7 @@ function ColorButton(props) {
         display: "inline-block",
         width: props.width && "1rem",
         height: props.height && "1rem",
-        backgroundColor: props.color && "black",
+        backgroundColor: props.color || "black",
         borderRadius: "50%",
       }}
     >

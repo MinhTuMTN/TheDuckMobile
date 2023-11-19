@@ -92,7 +92,7 @@ function Login(props) {
     } else {
       setToken(response.data.data);
       enqueueSnackbar("Đăng nhập thành công", { variant: "success" });
-      if (state.from) window.location.href = state.from;
+      if (state?.from) window.location.href = state.from;
       else window.location.href = "/profile";
     }
   };
