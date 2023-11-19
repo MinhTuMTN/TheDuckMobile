@@ -166,9 +166,6 @@ function AdminLayout(props) {
       case "/admin/customer-management/list":
         response = await getAllCustomers();
         break;
-      case "/admin/staff-management/list":
-        response = await getAllStaffs();
-        break;
       case "/admin/address-management/province/list":
         response = await getAllProvinces();
         break;
