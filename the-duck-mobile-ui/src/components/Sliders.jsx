@@ -1,7 +1,7 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 
@@ -66,9 +66,10 @@ function Sliders(props) {
         {urls &&
           urls.map((url, index) => {
             return (
-              <Typography
+              <img
                 key={"slider" + index}
                 component={"img"}
+                alt="slider"
                 src={url}
                 width={width}
                 height={height}

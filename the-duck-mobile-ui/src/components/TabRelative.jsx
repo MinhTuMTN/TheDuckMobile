@@ -5,6 +5,21 @@ import React, { useState } from "react";
 import AddtionalInformation from "./AddtionalInformation";
 import ProductDescription from "./ProductDescription";
 import ReviewProduct from "./ReviewProduct";
+import PropTypes from "prop-types";
+
+TabRelative.propTypes = {
+  specification: PropTypes.string,
+  attributes: PropTypes.object,
+  description: PropTypes.string,
+  review: PropTypes.array,
+};
+
+TabRelative.defaultProps = {
+  specification: "",
+  attributes: {},
+  description: "",
+  reviews: [],
+};
 
 const CustomTabList = styled(TabList)(({ theme }) => ({
   margin: "25px 0 0 0",
@@ -15,6 +30,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   fontSize: "22px",
 }));
 function TabRelative(props) {
+  const { specification, attributes, description, reviews, setReviews } = props;
   const [tab, setTab] = useState("1");
 
   const handleChangeTab = (event, newTab) => {
@@ -31,13 +47,18 @@ function TabRelative(props) {
           </CustomTabList>
         </Box>
         <TabPanel value="1" style={{ padding: "2rem 0px" }}>
-          <AddtionalInformation />
+          <AddtionalInformation
+            attributes={attributes}
+            specification={
+              specification !== "" ? JSON.parse(specification) : {}
+            }
+          />
         </TabPanel>
         <TabPanel value="2" style={{ padding: "2rem 0px" }}>
-          <ProductDescription />
+          <ProductDescription desc={description} />
         </TabPanel>
         <TabPanel value="3" style={{ padding: "2rem 0px" }}>
-          <ReviewProduct />
+          <ReviewProduct reviews={reviews} setReviews={setReviews} />
         </TabPanel>
       </TabContext>
     </>

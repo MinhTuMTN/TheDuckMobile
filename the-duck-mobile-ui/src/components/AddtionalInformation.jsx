@@ -7,6 +7,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import PropTypes from "prop-types";
 import React from "react";
 
 const StyledTableBody = styled(TableBody)`
@@ -15,63 +16,39 @@ const StyledTableBody = styled(TableBody)`
   }
 `;
 
+AddtionalInformation.propTypes = {
+  specification: PropTypes.object,
+  attributes: PropTypes.object,
+};
+
+AddtionalInformation.defaultProps = {
+  specification: {},
+  attributes: {},
+};
+
 function AddtionalInformation(props) {
+  const { specification, attributes } = props;
+
   return (
     <Box>
       <Table>
         <StyledTableBody>
-          <TableRow>
-            <TableCell>
-              <strong>Thương hiệu:</strong>
-            </TableCell>
-            <TableCell>Apple</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <strong>Công nghệ màn hình:</strong>
-            </TableCell>
-            <TableCell>OLED</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <strong>Độ phân giải:</strong>
-            </TableCell>
-            <TableCell>Super Retina XDR (1290 x 2796 Pixels)</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <strong>Màn hình rộng:</strong>
-            </TableCell>
-            <TableCell>6.1"</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <strong>Hệ điều hành:</strong>
-            </TableCell>
-            <TableCell>iOS 16</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <strong>Chất liệu:</strong>
-            </TableCell>
-            <TableCell>Khung thép không gỉ & Mặt lưng kính cường lực</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <strong>Thời lượng pin:</strong>
-            </TableCell>
-            <TableCell>4323 mAh</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <strong>Tính năng đặc biệt:</strong>
-            </TableCell>
-            <TableCell>
-              <Typography>Sạc pin nhanh</Typography>
-              <Typography>Tiết kiệm pin</Typography>
-              <Typography>Sạc không dây</Typography>
-            </TableCell>
-          </TableRow>
+          {Object.keys(specification).map((key, index) => (
+            <TableRow key={`specification-${index}`}>
+              <TableCell width={"30%"}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {attributes[key]}
+                </Typography>
+              </TableCell>
+              <TableCell>
+                {typeof specification[key] === "boolean"
+                  ? specification[key]
+                    ? "Có"
+                    : "Không"
+                  : specification[key]}
+              </TableCell>
+            </TableRow>
+          ))}
         </StyledTableBody>
       </Table>
     </Box>

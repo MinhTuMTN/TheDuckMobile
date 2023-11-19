@@ -15,3 +15,11 @@ export const getHighlyRatedProducts = () => {
 export const searchProducts = (query) => {
   return get("/product/search", query);
 };
+
+export const getProductDetails = (id) => {
+  return get(`/product/${id}/versions`);
+};
+
+export const getProductsRelatedTo = (id) => {
+  return get(`/product/${id}/relative`);
+};

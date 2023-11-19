@@ -72,5 +72,30 @@ namespace TheDuckMobile_WebAPI.Controllers
             });
         }
 
+        [HttpGet("{productId}/versions")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllProductVersions([FromRoute] Guid productId)
+        {
+            var productVersions = await _productServices.GetProductVersionsByProductId(productId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = productVersions,
+                Message = "Successfully retrieved product versions"
+            });
+        }
+
+        [HttpGet("{productId}/relative")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetProductRelative([FromRoute] Guid productId)
+        {
+            var relativeProducts = await _productServices.GetProductRelative(productId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = relativeProducts,
+                Message = "Successfully retrieved relative products"
+            });
+        }
     }
 }

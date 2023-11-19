@@ -10,8 +10,8 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import pic from "../../assets/logo-removebg-preview.jpg";
 
 import InboxIcon from "@mui/icons-material/MoveToInbox";

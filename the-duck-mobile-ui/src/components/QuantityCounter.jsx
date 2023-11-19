@@ -2,20 +2,20 @@ import styled from "@emotion/styled";
 import { Button, Card, Stack } from "@mui/material";
 import React, { useState } from "react";
 
-function QuantityCounter() {
+function QuantityCounter(props) {
+  const { quantity, onChange } = props;
   const InputCustom = styled.input`
     border: none;
     width: 1rem;
   `;
-  const [quantity, setQuantity] = useState(1);
 
   const incrementQuantity = () => {
-    setQuantity(quantity + 1);
+    onChange(quantity + 1);
   };
 
   const decrementQuantity = () => {
     if (quantity > 1) {
-      setQuantity(quantity - 1);
+      onChange(quantity - 1);
     }
   };
 

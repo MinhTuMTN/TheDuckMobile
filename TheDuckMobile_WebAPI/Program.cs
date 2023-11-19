@@ -51,6 +51,7 @@ builder.Services.AddScoped<IAddressServices, AddressServicesImpl>();
 builder.Services.AddScoped<ICatalogServices, CatalogServicesImpl>();
 builder.Services.AddScoped<ICloudinaryServices, CloudinaryServicesImpl>();
 builder.Services.AddScoped<IJsonServices, JsonServicesImpl>();
+builder.Services.AddScoped<IVoteServices, VoteServicesImpl>();
 
 // Admin
 builder.Services.AddScoped<IProductAdminServices, ProductAdminServicesImpl>();

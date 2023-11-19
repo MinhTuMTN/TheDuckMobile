@@ -45,29 +45,90 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             return (await newestProducts).Select(p => new ProductHomeResponse(p)).ToList();
         }
 
-        public async Task<ICollection<ProductVersion>> GetProductVersionsByProductId(Guid productId)
+        public async Task<List<ProductHomeResponse>> GetProductRelative(Guid productId)
         {
-            var product = await _context
-                .Products
-                .Include(p => p.ProductVersions)
+            // Get 4 products with same catalog and best selling
+            var product = await _context.Products
+                .Include(p => p.Votes)
+                .Include(p => p.Catalog)
                 .FirstOrDefaultAsync(p => p.ProductId == productId);
 
-            if (product == null)
+            if (product is null)
                 throw new CustomNotFoundException("Product not found");
 
-            if (product.ProductVersions == null || product.ProductVersions.Count == 0)
-                throw new CustomNotFoundException("Product version not found");
+            var relativeProducts = await _context.Products
+                .Include(p => p.Votes)
+                .Where(p => p.CatalogId == product.Catalog!.CatalogId
+                    && p.ProductId != product.ProductId
+                    && p.IsDeleted == false)
+                .OrderByDescending(p => p.Sold)
+                .Take(4)
+                .ToListAsync();
 
-            return product.ProductVersions;
+            return relativeProducts.Select(p => new ProductHomeResponse(p)).ToList();
+        }
+
+        public async Task<ProductDetailResponse> GetProductVersionsByProductId(Guid productId)
+        {
+            var product = await _context.Products
+                .Include(p => p.Votes)
+                .Include(p => p.Catalog)
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+            if (product is null)
+                throw new CustomNotFoundException("Product not found");
+
+            // CatalogAttributes
+            Dictionary<string, string>? catalogAttributesResult = new Dictionary<string, string>();
+            var catalogAttributes = await _context.CatalogAttributes
+                .Where(ca => ca.CatalogId == product.CatalogId)
+                .ToListAsync();
+
+            foreach (CatalogAttribute catalogAttribute in catalogAttributes)
+                catalogAttributesResult.Add(catalogAttribute.Key!, catalogAttribute.DisplayName!);
+
+            // Product Color
+            var colors = await _context.ProductVersions
+                .Where(pv => pv.ProductId == productId)
+                .Select(pv => pv.Color)
+                .Distinct()
+                .ToListAsync();
+
+            ICollection<ProductColorVersions> colorVersions = new List<ProductColorVersions>();
+            foreach (Color? color in colors)
+            {
+                if (color is null)
+                    continue;
+
+                var productVersions = await _context.ProductVersions
+                    .Where(pv => pv.ProductId == productId && pv.Color == color)
+                    .ToListAsync();
+
+                colorVersions.Add(new ProductColorVersions(color, productVersions));
+            }
+
+
+            return new ProductDetailResponse
+            {
+                ProductId = product.ProductId,
+                ProductName = product.ProductName,
+                ProductDescription = product.ProductDescription,
+                Rate = product.Rate,
+                CatalogAttributes = catalogAttributesResult,
+                ProductColorVersions = colorVersions,
+                Votes = product.Votes
+            };
         }
 
         public async Task<PaginationResponse> SearchProduct(string query, string? orderBy, int page, int limit)
         {
+
             var products = _context.Products
                 .Include(p => p.Votes)
-                .Where(p => (p.ProductName!.Contains(query)
-                || p.Brand!.BrandName!.Contains(query))
-                && p.IsDeleted == false);
+                .Include(p => p.Brand)
+                .Where(p => EF.Functions.FreeText(p.ProductName!, query)
+                || EF.Functions.Like(p.Brand!.BrandName!, $"%{query}%")
+                );
 
             switch (orderBy)
             {

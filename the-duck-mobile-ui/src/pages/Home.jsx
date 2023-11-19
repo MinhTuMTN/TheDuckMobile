@@ -2,8 +2,8 @@ import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { Helmet } from "react-helmet-async";
+import FadeSlider from "../components/FadeSlider";
 import HomeCatalogs from "../components/HomeCatalogs";
-import Sliders from "../components/Sliders";
 import TabProducts from "../components/TabProducts";
 
 // const HomeImage = styled("div")(({ theme }) => ({
@@ -36,7 +36,7 @@ function Home(props) {
         <meta name="description" content="Trang chủ" />
       </Helmet>
       <HomeContainer>
-        <Sliders urls={urlsSlider} height={"35rem"} />
+        <FadeSlider fadeImages={urlsSlider} height={"500rem"} />
 
         <HomeCatalogs />
 

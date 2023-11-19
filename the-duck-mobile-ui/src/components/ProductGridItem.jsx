@@ -50,7 +50,7 @@ const ProductGridItem = ({ productInfo, styled }) => {
         sx={{
           paddingTop: "1.25rem",
           paddingX: "1.5rem",
-          flex: 2,
+          flexBasis: "59%",
           position: "relative",
         }}
       >
@@ -75,17 +75,16 @@ const ProductGridItem = ({ productInfo, styled }) => {
           paddingTop: "1rem",
           paddingBottom: "1.25rem",
           paddingX: "1.5rem",
-          flex: 1,
+          flexBasis: "41%",
         }}
       >
-        {" "}
         {productInfo.promotionPrice &&
           productInfo.promotionPrice < productInfo.productPrice && (
             <Stack
               direction={"row"}
               alignItems={"center"}
               sx={{
-                width: "45%",
+                width: "fit-content",
                 height: "20%",
                 backgroundColor: "#e83a45",
                 borderRadius: "20px",
@@ -99,16 +98,33 @@ const ProductGridItem = ({ productInfo, styled }) => {
                   color: "#FFF",
                 }}
               />
-              <Typography
-                style={{
-                  fontSize: "12px",
-                  color: "#FFF",
-                  fontWeight: "600",
-                  marginLeft: "0.2rem",
-                }}
-              >
-                GIÁ RẺ QUÁ
-              </Typography>
+              {calculateDiscountPercentage(
+                productInfo.promotionPrice,
+                productInfo.productPrice
+              ) > 15 ? (
+                <Typography
+                  style={{
+                    fontSize: "12px",
+                    color: "#FFF",
+                    fontWeight: "600",
+                    marginLeft: "0.2rem",
+                  }}
+                >
+                  HOT
+                </Typography>
+              ) : (
+                <Typography
+                  style={{
+                    fontSize: "12px",
+                    color: "#FFF",
+                    fontWeight: "600",
+                    marginLeft: "0.2rem",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Giá rẻ quá
+                </Typography>
+              )}
             </Stack>
           )}
         <Typography
