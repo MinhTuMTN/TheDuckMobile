@@ -52,6 +52,7 @@ builder.Services.AddScoped<ICatalogServices, CatalogServicesImpl>();
 builder.Services.AddScoped<ICloudinaryServices, CloudinaryServicesImpl>();
 builder.Services.AddScoped<IJsonServices, JsonServicesImpl>();
 builder.Services.AddScoped<IVoteServices, VoteServicesImpl>();
+builder.Services.AddScoped<ICouponServices, CouponServicesImpl>();
 
 // Admin
 builder.Services.AddScoped<IProductAdminServices, ProductAdminServicesImpl>();

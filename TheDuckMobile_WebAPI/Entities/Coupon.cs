@@ -1,4 +1,6 @@
-﻿namespace TheDuckMobile_WebAPI.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace TheDuckMobile_WebAPI.Entities
 {
     public class Coupon
     {
@@ -17,6 +19,7 @@
         public DateTime LastModifiedAt { get; set; }
         public bool IsDeleted { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Order>? Orders { get; set; }
     }
 }
