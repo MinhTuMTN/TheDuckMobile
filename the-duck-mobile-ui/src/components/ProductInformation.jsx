@@ -1,19 +1,19 @@
 import { Stack, Typography } from "@mui/material";
 import React from "react";
-import pic from "../assets/iphone.jpg";
 import PropTypes from "prop-types";
 import Unit from "./Unit";
+import FormatCurrency from "./FormatCurrency";
 
 ProductInformation.propTypes = {
   color: PropTypes.string,
   fontWeight: PropTypes.string,
 };
 function ProductInformation(props) {
-  const { color, fontWeight } = props;
+  const { color, fontWeight, product } = props;
   return (
     <Stack direction={"row"} spacing={1}>
       <Stack direction={"row"} flexBasis={"60%"}>
-        <img src={pic} alt="product" width={"15%"} />
+        <img src={product.thumbnail} alt="product" width={"25%"} />
         <Stack
           direction={"column"}
           spacing={0.5}
@@ -27,30 +27,57 @@ function ProductInformation(props) {
               marginLeft: "0.5rem",
             }}
           >
-            Iphone 15 Pro Max
+            {product.productName}
           </Typography>
           <Stack direction={"row"}>
-            <Typography
-              variant="body1"
-              fontWeight={"500"}
-              style={{
-                fontSize: "12px",
-                marginLeft: "0.5rem",
-              }}
-            >
-              Màu sắc:{" "}
-            </Typography>
-            <Typography
-              variant="body1"
-              fontWeight={"500"}
-              style={{
-                fontSize: "12px",
-                marginLeft: "0.2rem",
-                marginRight: "1.5rem",
-              }}
-            >
-              Đen
-            </Typography>
+            <Stack direction={"column"} spacing={0.5}>
+              <Stack direction={"row"} spacing={1}>
+                <Typography
+                  variant="body1"
+                  fontWeight={"500"}
+                  style={{
+                    fontSize: "12px",
+                    marginLeft: "0.5rem",
+                  }}
+                >
+                  Màu sắc:
+                </Typography>
+                <Typography
+                  variant="body1"
+                  fontWeight={"500"}
+                  style={{
+                    fontSize: "12px",
+                    marginLeft: "0.2rem",
+                    marginRight: "1.5rem",
+                  }}
+                >
+                  {product.colorName}
+                </Typography>
+              </Stack>
+              <Stack direction={"row"} spacing={1}>
+                <Typography
+                  variant="body1"
+                  fontWeight={"500"}
+                  style={{
+                    fontSize: "12px",
+                    marginLeft: "0.5rem",
+                  }}
+                >
+                  Phân loại:
+                </Typography>
+                <Typography
+                  variant="body1"
+                  fontWeight={"500"}
+                  style={{
+                    fontSize: "12px",
+                    marginLeft: "0.2rem",
+                    marginRight: "1.5rem",
+                  }}
+                >
+                  {product.versionName}
+                </Typography>
+              </Stack>
+            </Stack>
             <Typography
               variant="body1"
               fontWeight={"500"}
@@ -69,29 +96,43 @@ function ProductInformation(props) {
                 marginLeft: "0.2rem",
               }}
             >
-              1
+              {product.quantity}
             </Typography>
           </Stack>
         </Stack>
       </Stack>
       <Stack
-        direction={"row"}
+        direction={"column"}
         spacing={1}
-        alignItems={"flex-start"}
+        alignItems={"flex-end"}
         flexBasis={"40%"}
-        justifyContent={"flex-end"}
+        justifyContent={"center"}
       >
+        {product.promotionPrice > 0 &&
+          product.promotionPrice < product.price && (
+            <Typography
+              variant="body1"
+              fontWeight={"500"}
+              style={{
+                fontSize: "12px",
+                textDecoration: "line-through",
+              }}
+            >
+              <FormatCurrency amount={product.price} />
+            </Typography>
+          )}
         <Typography
           variant="body1"
           fontWeight={"500"}
+          color={"color1.main"}
           style={{
             fontSize: "16px",
-            color: color,
           }}
         >
-          40.000.000
+          <FormatCurrency
+            amount={Math.min(product.price, product.promotionPrice)}
+          />
         </Typography>
-        <Unit color={color} />
       </Stack>
     </Stack>
   );

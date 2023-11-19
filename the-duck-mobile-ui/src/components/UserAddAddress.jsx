@@ -138,6 +138,8 @@ function UserAddAddress(props) {
               setAddress((prev) => ({
                 ...prev,
                 province: newValue ? newValue.provinceId : "",
+                district: "",
+                ward: "",
               }));
             }}
             isOptionEqualToValue={(option, value) =>
@@ -179,6 +181,7 @@ function UserAddAddress(props) {
               setAddress((prev) => ({
                 ...prev,
                 district: newValue ? newValue.districtId : "",
+                ward: "",
               }));
             }}
             isOptionEqualToValue={(option, value) =>

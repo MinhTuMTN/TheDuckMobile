@@ -14,6 +14,8 @@ namespace TheDuckMobile_WebAPI.Entities
         [Required]
         public string? ProvineName { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         //Chứa danh sách các district (1 provine chứa nhiều district)
         private ICollection<District>? _districts;
         [JsonIgnore]

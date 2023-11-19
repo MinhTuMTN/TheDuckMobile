@@ -70,13 +70,20 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
         public async Task<ICollection<District>> GetDistricts(int provineId)
         {
-            var districts = await _dataContext.Districts.Where(d => d.ProvineId == provineId).ToListAsync();
+            var districts = await _dataContext
+                .Districts
+                .Where(d => d.ProvineId == provineId && d.IsDeleted == false)
+                .OrderBy(d => d.DistrictName)
+                .ToListAsync();
             return districts;
         }
 
         public async Task<ICollection<Provine>> GetProvines()
         {
-            var provines = await _dataContext.Provines.ToListAsync();
+            var provines = await _dataContext.Provines
+                .Where(p => p.IsDeleted == false)
+                .OrderBy(p => p.ProvineName)
+                .ToListAsync();
             return provines;
         }
 
@@ -88,7 +95,10 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
         public async Task<ICollection<Ward>> GetWards(int districtId)
         {
-            var wards = await _dataContext.Wards.Where(w => w.DistrictId == districtId).ToListAsync();
+            var wards = await _dataContext
+                .Wards
+                .Where(w => w.DistrictId == districtId && w.IsDeleted == false)
+                .ToListAsync();
             return wards;
         }
     }

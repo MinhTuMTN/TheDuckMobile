@@ -104,7 +104,7 @@ function Router(props) {
           element: <CartLazy />,
         },
         {
-          path: "/buy-product",
+          path: "/payment",
           element: <BuyProduct />,
         },
         {
