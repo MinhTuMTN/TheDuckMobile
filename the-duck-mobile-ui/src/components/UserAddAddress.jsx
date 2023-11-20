@@ -149,7 +149,9 @@ function UserAddAddress(props) {
             renderOption={(props, option) => {
               return (
                 <li {...props}>
-                  <Typography>{option.provineName}</Typography>
+                  <Typography style={{ fontSize: "14px" }}>
+                    {option.provineName}
+                  </Typography>
                 </li>
               );
             }}
@@ -159,7 +161,11 @@ function UserAddAddress(props) {
                 style={{
                   height: "100%",
                 }}
-                inputProps={{ ...inputProps, readOnly: true }}
+                inputProps={{
+                  ...inputProps,
+                  readOnly: true,
+                  style: { fontSize: "14px" },
+                }}
                 label="Tỉnh/Thành phố"
               />
             )}
@@ -191,7 +197,9 @@ function UserAddAddress(props) {
             renderOption={(props, option) => {
               return (
                 <li {...props}>
-                  <Typography>{option.districtName}</Typography>
+                  <Typography style={{ fontSize: "14px" }}>
+                    {option.districtName}
+                  </Typography>
                 </li>
               );
             }}
@@ -201,7 +209,11 @@ function UserAddAddress(props) {
                 style={{
                   height: "100%",
                 }}
-                inputProps={{ ...inputProps, readOnly: true }}
+                inputProps={{
+                  ...inputProps,
+                  readOnly: true,
+                  style: { fontSize: "14px" },
+                }}
                 label="Quận/Huyện"
               />
             )}
@@ -231,7 +243,9 @@ function UserAddAddress(props) {
           renderOption={(props, option) => {
             return (
               <li {...props}>
-                <Typography>{option.wardName}</Typography>
+                <Typography style={{ fontSize: "14px" }}>
+                  {option.wardName}
+                </Typography>
               </li>
             );
           }}
@@ -241,7 +255,11 @@ function UserAddAddress(props) {
               style={{
                 height: "100%",
               }}
-              inputProps={{ ...inputProps, readOnly: true }}
+              inputProps={{
+                ...inputProps,
+                readOnly: true,
+                style: { fontSize: "14px" },
+              }}
               label="Phường/Xã"
             />
           )}
@@ -255,6 +273,9 @@ function UserAddAddress(props) {
               ...prev,
               street: e.target.value,
             }));
+          }}
+          inputProps={{
+            style: { fontSize: "14px" },
           }}
         />
       </Stack>

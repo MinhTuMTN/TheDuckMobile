@@ -27,6 +27,8 @@ import { useAuth } from "../auth/AuthProvider";
 import { getAddresses } from "../services/AddressService";
 import { getCoupon } from "../services/CouponService";
 import { enqueueSnackbar } from "notistack";
+import { getStoreAddresses } from "../services/StoreService";
+import { createOrderLoggedIn } from "../services/OrderService";
 
 const Wrapped = styled.div`
   color: rgba(0, 0, 0, 0.65);
@@ -58,7 +60,7 @@ function BuyProduct(props) {
     if (state === null) {
       navigate("/");
     }
-  }, [state, props.history]);
+  }, [state, props.history, navigate]);
 
   const [info, setInfo] = useState({
     name: "",
@@ -77,7 +79,7 @@ function BuyProduct(props) {
         phone: data.phone,
       });
     }
-  }, []);
+  }, [token]);
 
   const [address, setAddress] = useState([]);
   const handleGetAddress = useCallback(async () => {
@@ -93,7 +95,7 @@ function BuyProduct(props) {
         setSelectedAddress(data[0]);
       }
     }
-  }, []);
+  }, [token]);
   useEffect(() => {
     handleGetInfo();
     handleGetAddress();
@@ -101,14 +103,18 @@ function BuyProduct(props) {
 
   const [selectedOption, setSelectedOption] = useState("AtHome");
 
-  const [selectedAddress, setSelectedAddress] = React.useState(null);
+  const [selectedAddress, setSelectedAddress] = React.useState({
+    addressId: null,
+    streetName: "",
+    wardId: null,
+    storeId: false,
+  });
   const oldInfoForm = useRef(null);
 
   const handleRadioChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  const [couponCode, setCouponCode] = React.useState(state?.couponCode || "");
   const [discount, setDiscount] = React.useState(state?.discount || 0);
   const handleCheckCoupon = async () => {
     if (couponCode.trim() === "") {
@@ -158,6 +164,87 @@ function BuyProduct(props) {
       setDiscount(discountPrice);
     }
   };
+
+  const [couponCode, setCouponCode] = React.useState(state?.couponCode || "");
+
+  const [storeAddress, setStoreAddress] = useState([]);
+
+  const handleGetStoreAddresses = useCallback(async () => {
+    const response = await getStoreAddresses();
+    if (response.success) {
+      const data = response.data.data;
+      setStoreAddress(data);
+
+      if (data.length > 0) {
+        setSelectedAddress({
+          addressId: data[0]?.address?.addressId,
+          streetName: data[0]?.address?.street,
+          wardId: data[0]?.address?.wardId,
+          storeId: true,
+        });
+      }
+    }
+  }, [setSelectedAddress]);
+
+  useEffect(() => {
+    handleGetStoreAddresses();
+  }, [handleGetStoreAddresses]);
+
+  // Check selected option change to change selected address to index 0
+  useEffect(() => {
+    if (selectedOption === "AtHome") {
+      setSelectedAddress({
+        addressId: address[0]?.addressId,
+        streetName: address[0]?.street,
+        wardId: address[0]?.wardId,
+        storeId: false,
+      });
+    } else {
+      setSelectedAddress({
+        addressId: storeAddress[0]?.address?.addressId,
+        streetName: storeAddress[0]?.address?.street,
+        wardId: storeAddress[0]?.address?.wardId,
+        storeId: true,
+      });
+    }
+  }, [selectedOption, address, storeAddress]);
+
+  const [orderNote, setOrderNote] = useState("");
+
+  const handlePayment = useCallback(async () => {
+    const data = {
+      couponCode,
+      orderNote,
+      orderAddress: selectedAddress,
+      productVersionQuantities: state?.selectedProducts?.map((item) => ({
+        productVersionId: item.productVersionId,
+        quantity: item.quantity,
+      })),
+    };
+
+    const response = await createOrderLoggedIn(data);
+    if (response.success) {
+      enqueueSnackbar("Đặt hàng thành công", { variant: "success" });
+      navigate("/profile/order-history");
+
+      // Update cart in local storage remove selected products
+      const cartData = JSON.parse(localStorage.getItem("cart"));
+      const updatedCartData = cartData.filter((item) => {
+        return !state?.selectedProducts.some((selectedItem) => {
+          return selectedItem.productVersionId === item.productVersionId;
+        });
+      });
+      localStorage.setItem("cart", JSON.stringify(updatedCartData));
+    } else {
+      enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    }
+  }, [
+    couponCode,
+    orderNote,
+    selectedAddress,
+    state?.selectedProducts,
+    navigate,
+  ]);
   return (
     <Wrapped>
       <Helmet>
@@ -328,7 +415,13 @@ function BuyProduct(props) {
               selectedAddress={selectedAddress}
             />
           )}
-          {selectedOption === "AtStore" && <AtStoreDeliver />}
+          {selectedOption === "AtStore" && (
+            <AtStoreDeliver
+              storeAddress={storeAddress}
+              selectedAddress={selectedAddress}
+              onStoreAddressChange={setSelectedAddress}
+            />
+          )}
         </Stack>
         <Box
           paddingLeft={4}
@@ -344,11 +437,18 @@ function BuyProduct(props) {
             size={"medium"}
             fullWidth
             label="Yêu cầu khác"
+            value={orderNote}
+            inputProps={{
+              style: {
+                fontSize: "14px",
+              },
+            }}
+            onChange={(e) => setOrderNote(e.target.value)}
           />
         </Box>
 
         <UseCoupon
-          couponCode={state?.couponCode}
+          couponCode={couponCode}
           onCheck={handleCheckCoupon}
           onChange={setCouponCode}
         />
@@ -432,6 +532,7 @@ function BuyProduct(props) {
             variant="contained"
             fullWidth
             sx={{ marginTop: "1rem" }}
+            onClick={handlePayment}
           >
             Mua hàng
           </CustomButtom>

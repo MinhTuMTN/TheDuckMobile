@@ -41,7 +41,6 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public virtual ICollection<StoreProduct>? StoreProducts { get; set; }
 
-        public virtual ICollection<Promotion>? Promotions { get; set; }
 
         public ProductVersion()
         {

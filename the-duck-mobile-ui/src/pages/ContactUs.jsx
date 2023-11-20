@@ -134,7 +134,7 @@ function ContactUs(props) {
             Liên hệ với chúng tôi
           </Typography>
           <Divider />
-          <Stack spacing={2}>
+          <Stack spacing={2} mt={1}>
             <Stack direction={"row"} spacing={2}>
               <MuiTextFeild
                 fontSize={15}
@@ -148,6 +148,7 @@ function ContactUs(props) {
                 label="Email"
                 variant="outlined"
                 required
+                fullWidth
               />
             </Stack>
             <MuiTextFeild

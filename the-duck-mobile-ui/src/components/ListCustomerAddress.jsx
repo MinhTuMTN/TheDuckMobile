@@ -60,7 +60,12 @@ function ListCustomerAddress(props) {
               <FormControlLabel
                 checked={selectedAddress.addressId === option.addressId}
                 onChange={() => {
-                  onChangeSelectedAddress(option);
+                  onChangeSelectedAddress({
+                    addressId: option.addressId,
+                    streetName: option.street,
+                    wardId: option.wardId,
+                    storeId: false,
+                  });
                 }}
                 key={option.addressId}
                 label={

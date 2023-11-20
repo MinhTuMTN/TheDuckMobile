@@ -61,6 +61,12 @@ namespace TheDuckMobile_WebAPI.Entities
                 .HasOne(store => store.Address)
                 .WithOne(address => address.Store)
                 .HasForeignKey<Address>(add => add.StoreId);
+
+            // Order - TemporaryCustomer Relationship
+            modelBuilder.Entity<TemporaryCustomer>()
+                .HasOne(tempCustomer => tempCustomer.Order)
+                .WithOne(order => order.TemporaryCustomer)
+                .HasForeignKey<Order>(order => order.TemporaryCustomerId);
             #endregion
 
             #region Primary Key 
@@ -149,11 +155,6 @@ namespace TheDuckMobile_WebAPI.Entities
                 .WithMany(customer => customer.Votes)
                 .HasForeignKey(vote => vote.CustomerId);
 
-            // OrderItem - Promotion Relationship
-            modelBuilder.Entity<OrderItem>()
-                .HasOne(oi => oi.Promotion)
-                .WithMany(promotion => promotion.OrderItems)
-                .HasForeignKey(oi => oi.PromotionId);
 
             // OrderItem - StoreProduct Relationship
             modelBuilder.Entity<OrderItem>()
@@ -232,11 +233,7 @@ namespace TheDuckMobile_WebAPI.Entities
             //    .WithMany(promotion => promotion.ProductVersions)
             //    .HasForeignKey(productVersion => productVersion.PromotionId);
 
-            // Promotion - ProductVersion Relationship
-            modelBuilder.Entity<Promotion>()
-                .HasOne(promotion => promotion.ProductVersion)
-                .WithMany(productVersion => productVersion.Promotions)
-                .HasForeignKey(promotion => promotion.ProductVersionId);
+
 
 
 
@@ -280,13 +277,13 @@ namespace TheDuckMobile_WebAPI.Entities
         public DbSet<OS> OSs { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductVersion> ProductVersions { get; set; }
-        public DbSet<Promotion> Promotions { get; set; }
         public DbSet<Provine> Provines { get; set; }
         public DbSet<SelectionValue> SelectionValues { get; set; }
         public DbSet<SpecialFeature> SpecialFeatures { get; set; }
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<StoreProduct> StoreProducts { get; set; }
+        public DbSet<TemporaryCustomer> TemporaryCustomers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Vote> Votes { get; set; }
         public DbSet<Ward> Wards { get; set; }
