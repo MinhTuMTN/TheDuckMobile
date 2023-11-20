@@ -55,12 +55,7 @@ const sidebarItems = [
     to: "/admin/customer-management/list",
     section: "customer-management",
   },
-  {
-    display: "Nhân Viên",
-    icon: <BadgeIcon />,
-    to: "/admin/staff-management/list",
-    section: "staff-management",
-  },
+
   {
     display: "Địa chỉ",
     icon: <HomeIcon />,

@@ -14,6 +14,8 @@ namespace TheDuckMobile_WebAPI.Entities
         [Required]
         public string? ProvineName { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         //Chứa danh sách các district (1 provine chứa nhiều district)
         private ICollection<District>? _districts;
         [JsonIgnore]
@@ -22,6 +24,10 @@ namespace TheDuckMobile_WebAPI.Entities
             get => _lazyLoader.Load(this, ref _districts);
             set => _districts = value;
         }
+
+        public Guid? StoreId { get; set; }
+        [JsonIgnore]
+        public virtual Store? Store { get; set; }
 
         public Provine()
         {
@@ -32,5 +38,7 @@ namespace TheDuckMobile_WebAPI.Entities
         {
             _lazyLoader = lazyLoader;
         }
+
+
     }
 }

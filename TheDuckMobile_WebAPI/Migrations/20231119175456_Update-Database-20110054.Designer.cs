@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheDuckMobile_WebAPI.Entities;
 
@@ -11,9 +12,11 @@ using TheDuckMobile_WebAPI.Entities;
 namespace TheDuckMobile_WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231119175456_Update-Database-20110054")]
+    partial class UpdateDatabase20110054
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -591,12 +594,7 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("StoreId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("ProvinceId");
-
-                    b.HasIndex("StoreId");
 
                     b.ToTable("Provines");
                 });
@@ -1069,17 +1067,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("ProductVersion");
                 });
 
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Provine", b =>
-                {
-                    b.HasOne("TheDuckMobile_WebAPI.Entities.Store", "Store")
-                        .WithMany("Provines")
-                        .HasForeignKey("StoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Store");
-                });
-
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.SelectionValue", b =>
                 {
                     b.HasOne("TheDuckMobile_WebAPI.Entities.CatalogAttribute", "CatalogAttribute")
@@ -1220,8 +1207,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("Orders");
-
-                    b.Navigation("Provines");
 
                     b.Navigation("Staffs");
 

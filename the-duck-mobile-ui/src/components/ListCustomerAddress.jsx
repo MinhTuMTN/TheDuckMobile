@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import UserAddAddress from "./UserAddAddress";
 
 const Wrapped = styled(Paper)`
   color: rgba(0, 0, 0, 0.65);
@@ -19,18 +20,20 @@ const Wrapped = styled(Paper)`
   padding: 1rem;
   border-radius: 4px;
 `;
-const options = [
-  "403 Nguyễn Thị Đinh, P. Long Thạnh Mỹ, Q. 9, TP. HCM",
-  "201 Lê Văn Việt, P. Tăng Nhơn Phú A, Q. 9, TP. HCM",
-  "111 Nguyễn Trãi, P. 2, Q. 5, TP. HCM",
-  "303 Nguyễn Bỉnh Khiêm, P. Đa Kao, Q. 1, TP. HCM",
-];
 
 function ListCustomerAddress(props) {
+  const {
+    addresses,
+    onChangeAddress,
+    onChangeSelectedAddress,
+    selectedAddress,
+  } = props;
   const [customerAddress, setCustomerAddress] = React.useState("store1");
   const handleChangeStoreAddress = (event) => {
     setCustomerAddress(event.target.value);
   };
+  const [open, setOpen] = React.useState(false);
+
   return (
     <Wrapped elevation={1}>
       <FormHelperText
@@ -53,11 +56,17 @@ function ListCustomerAddress(props) {
             value={customerAddress}
             onChange={handleChangeStoreAddress}
           >
-            {options.map((option, index) => (
+            {addresses.map((option, index) => (
               <FormControlLabel
-                key={index}
+                checked={selectedAddress.addressId === option.addressId}
+                onChange={() => {
+                  onChangeSelectedAddress(option);
+                }}
+                key={option.addressId}
                 label={
-                  <Typography style={{ fontSize: "14px" }}>{option}</Typography>
+                  <Typography
+                    style={{ fontSize: "14px" }}
+                  >{`${option.street}, ${option.wardName}, ${option.districtName}, ${option.provinceName}`}</Typography>
                 }
                 value={option}
                 control={<Radio size="small" />}
@@ -72,9 +81,16 @@ function ListCustomerAddress(props) {
           width={"fit-content"}
           style={{ fontSize: "14px" }}
           startIcon={<AddCircleOutlineIcon size={"small"} />}
+          onClick={() => setOpen(true)}
         >
           Thêm địa chỉ mới
         </Typography>
+
+        <UserAddAddress
+          onChangeAddress={onChangeAddress}
+          open={open}
+          setOpen={setOpen}
+        />
       </Stack>
     </Wrapped>
   );

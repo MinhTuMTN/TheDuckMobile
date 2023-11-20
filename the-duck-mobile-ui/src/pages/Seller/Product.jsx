@@ -13,6 +13,16 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import SearchSeller from "../../components/Store/SearchSeller";
 import Filter from "../../components/Store/Filter";
 import ProductsTable from "../../components/Store/ProductsTable";
+import styled from "@emotion/styled";
+
+const CustomButton = styled(Button)(({ theme }) => ({
+  color: "#fff",
+  backgroundColor: "#FF6969",
+  borderRadius: "15px",
+  "&:hover": {
+    backgroundColor: "#ea4545 !important",
+  },
+}));
 
 const items = [
   {
@@ -125,14 +135,9 @@ function Product(props) {
         <Stack spacing={3}>
           <Stack direction={"row"} justifyContent={"space-between"}>
             <Typography variant="h3">Danh sách sản phẩm</Typography>
-            <Button
-              variant="contained"
-              color="color2"
-              sx={{ borderRadius: "15px" }}
-              startIcon={<AddOutlinedIcon />}
-            >
+            <CustomButton variant="contained" startIcon={<AddOutlinedIcon />}>
               Thêm sản phẩm
-            </Button>
+            </CustomButton>
           </Stack>
           <Stack
             component={Paper}

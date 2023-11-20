@@ -71,6 +71,9 @@ builder.Services.AddScoped<ICatalogAttributeServices, CatalogAttributeServicesIm
 builder.Services.AddScoped<IOSAdminServices, OSAdminServicesImpl>();
 builder.Services.AddScoped<IColorAdminServices, ColorAdminServicesImpl>();
 builder.Services.AddScoped<IProductVersionAdminServices, ProductVersionAdminServicesImpl>();
+builder.Services.AddScoped<IProvinceAdminServices, ProvinceAdminServicesImpl>();
+builder.Services.AddScoped<IDistrictAdminServices, DistrictAdminServicesImpl>();
+builder.Services.AddScoped<IWardAdminServices, WardAdminServicesImpl>();
 #endregion
 
 var app = builder.Build();

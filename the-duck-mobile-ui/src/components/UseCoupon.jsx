@@ -38,6 +38,7 @@ const StyledButton = styled(Button)`
 `;
 
 function UseCoupon(props) {
+  const { couponCode, onCheck, onChange } = props;
   const [open, setOpen] = React.useState(false);
   return (
     <Box
@@ -68,6 +69,7 @@ function UseCoupon(props) {
       {open && (
         <StyledBox>
           <TextField
+            autoComplete="off"
             placeholder="Nhập mã giảm giá"
             InputProps={{
               style: {
@@ -80,8 +82,12 @@ function UseCoupon(props) {
               borderRadius: "inherit",
               width: "80%",
             }}
+            value={couponCode}
+            onChange={(e) => onChange(e.target.value)}
           />
-          <StyledButton variant="outlined">Áp dụng</StyledButton>
+          <StyledButton variant="outlined" onClick={onCheck}>
+            Áp dụng
+          </StyledButton>
         </StyledBox>
       )}
     </Box>

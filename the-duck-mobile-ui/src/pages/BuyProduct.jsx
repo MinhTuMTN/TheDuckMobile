@@ -12,16 +12,22 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { useLocation, useNavigate } from "react-router-dom";
 import AtStoreDeliver from "../components/AtStoreDeliver";
-import FormatCurrency from "../components/FormatCurrency";
+import FormatCurrency, { formatCurrency } from "../components/FormatCurrency";
 import ListCustomerAddress from "../components/ListCustomerAddress";
 import MuiTextFeild from "../components/MuiTextFeild";
 import NewCustomerInfomation from "../components/NewCustomerInfomation";
 import ProductInformation from "../components/ProductInformation";
-import Unit from "../components/Unit";
 import UseCoupon from "../components/UseCoupon";
+import { getInfo } from "../services/UserService";
+import { useAuth } from "../auth/AuthProvider";
+import { getAddresses } from "../services/AddressService";
+import { getCoupon } from "../services/CouponService";
+import { enqueueSnackbar } from "notistack";
+
 const Wrapped = styled.div`
   color: rgba(0, 0, 0, 0.65);
   padding-top: 64px;
@@ -35,27 +41,123 @@ const Container = styled(Paper)`
   padding-bottom: 4rem;
 `;
 
+const CustomButtom = styled(Button)`
+  background: ${(props) => props.theme.palette.color2.main};
+  &:hover {
+    background: ${(props) => props.theme.palette.color1.main};
+    color: #fff;
+  }
+`;
+
 function BuyProduct(props) {
-  const [selectedOption, setSelectedOption] = useState("AtHome");
+  const { state } = useLocation();
+  const { token } = useAuth();
+  const navigate = useNavigate();
+  // Check if state is null redirect to home
+  useEffect(() => {
+    if (state === null) {
+      navigate("/");
+    }
+  }, [state, props.history]);
+
   const [info, setInfo] = useState({
-    name: "Nguyen Van A",
+    name: "",
     gender: 0,
-    phone: "0123456789",
+    phone: "",
   });
-  const [edit, setEdit] = React.useState(false);
+  const handleGetInfo = useCallback(async () => {
+    if (!token) return;
+
+    const response = await getInfo();
+    if (response.success) {
+      const data = response.data.data;
+      setInfo({
+        name: data.fullName,
+        gender: data.gender,
+        phone: data.phone,
+      });
+    }
+  }, []);
+
+  const [address, setAddress] = useState([]);
+  const handleGetAddress = useCallback(async () => {
+    if (!token) return;
+
+    const response = await getAddresses();
+    if (response.success) {
+      const data = response.data.data;
+      setAddress(data);
+
+      // Set default address
+      if (data.length > 0) {
+        setSelectedAddress(data[0]);
+      }
+    }
+  }, []);
+  useEffect(() => {
+    handleGetInfo();
+    handleGetAddress();
+  }, [handleGetInfo, handleGetAddress]);
+
+  const [selectedOption, setSelectedOption] = useState("AtHome");
+
+  const [selectedAddress, setSelectedAddress] = React.useState(null);
   const oldInfoForm = useRef(null);
 
   const handleRadioChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  const CustomButtom = styled(Button)`
-    background: ${(props) => props.theme.palette.color2.main};
-    &:hover {
-      background: ${(props) => props.theme.palette.color1.main};
-      color: #fff;
+  const [couponCode, setCouponCode] = React.useState(state?.couponCode || "");
+  const [discount, setDiscount] = React.useState(state?.discount || 0);
+  const handleCheckCoupon = async () => {
+    if (couponCode.trim() === "") {
+      enqueueSnackbar("Vui lòng nhập mã giảm giá", { variant: "error" });
+      return;
     }
-  `;
+
+    const response = await getCoupon(couponCode);
+    if (response.error) {
+      switch (response.statusCode) {
+        case 411:
+          enqueueSnackbar("Mã giảm giá không tồn tại", { variant: "error" });
+          break;
+        case 412:
+          enqueueSnackbar("Mã giảm giá chưa thể dùng ở thời điểm này", {
+            variant: "error",
+          });
+          break;
+        case 413:
+          enqueueSnackbar("Mã giảm giá đã hết hạn", { variant: "error" });
+          break;
+        case 414:
+          enqueueSnackbar("Mã giảm giá đã hết lượt sử dụng", {
+            variant: "error",
+          });
+          break;
+        default:
+          break;
+      }
+    } else {
+      const couponData = response.data.data;
+      if (couponData.minPrice > state?.total) {
+        const formattedMinPrice = formatCurrency(couponData.minPrice);
+        enqueueSnackbar(
+          `Mã giảm giá chỉ áp dụng cho đơn hàng từ ${formattedMinPrice}đ`,
+          { variant: "error" }
+        );
+        return;
+      }
+
+      enqueueSnackbar("Áp dụng mã giảm giá thành công", { variant: "success" });
+
+      let discountPrice = Math.min(
+        (state?.total * couponData.discount) / 100,
+        couponData.maxDiscount
+      );
+      setDiscount(discountPrice);
+    }
+  };
   return (
     <Wrapped>
       <Helmet>
@@ -87,7 +189,14 @@ function BuyProduct(props) {
 
           {/* Phần thông tin sản phẩm */}
           <Stack direction={"column"} spacing={3}>
-            <ProductInformation color={"red"} fontWeight={"bold"} />
+            {state?.selectedProducts?.map((item) => (
+              <ProductInformation
+                key={item.productVersionId}
+                product={item}
+                color={"#000"}
+                fontWeight={"400"}
+              />
+            ))}
             <Stack
               direction={"row"}
               spacing={1}
@@ -95,11 +204,20 @@ function BuyProduct(props) {
             >
               <Stack direction={"row"} spacing={1}>
                 <Typography variant={"textcustom"}>Tạm tính</Typography>
-                <Typography variant={"textcustom"}>(1 sản phẩm):</Typography>
+                <Typography variant={"textcustom"}>
+                  ({state?.selectedProducts?.length} sản phẩm):
+                </Typography>
               </Stack>
               <Stack direction={"row"}>
-                <Typography variant={"textcustom"}>39.000.000</Typography>
-                <Unit />
+                <Typography
+                  variant={"textcustom"}
+                  color={"color1.main"}
+                  style={{
+                    fontSize: "18px",
+                  }}
+                >
+                  <FormatCurrency amount={state?.total} />
+                </Typography>
               </Stack>
             </Stack>
           </Stack>
@@ -120,7 +238,7 @@ function BuyProduct(props) {
           >
             THÔNG TIN KHÁCH HÀNG
           </Typography>
-          {info !== null ? (
+          {info.name.trim() !== "" ? (
             <>
               <Stack
                 ref={oldInfoForm}
@@ -136,9 +254,10 @@ function BuyProduct(props) {
                     fontSize: "14px",
                   }}
                 >
-                  Xin chào, anh <b>Nguyen Van A</b> - 8391231271298{" "}
+                  Xin chào, {info.gender === 0 ? "anh" : "chị"}{" "}
+                  <b>{info.name}</b> - {info.phone}
                 </Typography>
-                <Button
+                {/* <Button
                   variant="text"
                   sx={{
                     color: "#484B5B",
@@ -149,16 +268,16 @@ function BuyProduct(props) {
                   }}
                 >
                   Sửa
-                </Button>
+                </Button> */}
               </Stack>
-              {edit && (
+              {/* {edit && (
                 <NewCustomerInfomation
                   info={info}
                   onChange={(newInfo) => {
                     setInfo(newInfo);
                   }}
                 />
-              )}
+              )} */}
             </>
           ) : (
             <NewCustomerInfomation />
@@ -201,7 +320,14 @@ function BuyProduct(props) {
               />
             </RadioGroup>
           </FormControl>
-          {selectedOption === "AtHome" && <ListCustomerAddress />}
+          {selectedOption === "AtHome" && (
+            <ListCustomerAddress
+              addresses={address}
+              onChangeAddress={setAddress}
+              onChangeSelectedAddress={setSelectedAddress}
+              selectedAddress={selectedAddress}
+            />
+          )}
           {selectedOption === "AtStore" && <AtStoreDeliver />}
         </Stack>
         <Box
@@ -221,8 +347,60 @@ function BuyProduct(props) {
           />
         </Box>
 
-        <UseCoupon />
+        <UseCoupon
+          couponCode={state?.couponCode}
+          onCheck={handleCheckCoupon}
+          onChange={setCouponCode}
+        />
         <Stack direction={"column"} paddingX={4} paddingTop={2}>
+          <Stack
+            direction={"row"}
+            display={"flex"}
+            justifyContent={"space-between"}
+          >
+            <Typography
+              variant="h6"
+              fontWeight={"600"}
+              style={{
+                fontSize: "16px",
+              }}
+            >
+              Giảm giá:{" "}
+            </Typography>
+            <Typography
+              variant="h6"
+              fontWeight={"550"}
+              style={{
+                fontSize: "16px",
+              }}
+            >
+              <FormatCurrency amount={discount} />
+            </Typography>
+          </Stack>
+          <Stack
+            direction={"row"}
+            display={"flex"}
+            justifyContent={"space-between"}
+          >
+            <Typography
+              variant="h6"
+              fontWeight={"600"}
+              style={{
+                fontSize: "16px",
+              }}
+            >
+              Phí vận chuyển:{" "}
+            </Typography>
+            <Typography
+              variant="h6"
+              fontWeight={"550"}
+              style={{
+                fontSize: "16px",
+              }}
+            >
+              <FormatCurrency amount={state?.shippingFee} />
+            </Typography>
+          </Stack>
           <Stack
             direction={"row"}
             display={"flex"}
@@ -240,12 +418,14 @@ function BuyProduct(props) {
             <Typography
               variant="h6"
               fontWeight={"550"}
-              color={"red"}
+              color={"color1.main"}
               style={{
                 fontSize: "16px",
               }}
             >
-              <FormatCurrency amount={39000000} />
+              <FormatCurrency
+                amount={state?.total + state?.shippingFee - discount}
+              />
             </Typography>
           </Stack>
           <CustomButtom

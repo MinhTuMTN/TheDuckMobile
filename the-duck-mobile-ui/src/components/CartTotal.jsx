@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import { getCoupon } from "../services/CouponService";
 import { useSnackbar } from "notistack";
 import FormatCurrency, { formatCurrency } from "./FormatCurrency";
+import { useNavigate } from "react-router-dom";
 
 const CartButton = styled(Button)(({ theme }) => ({
   "&:hover": {
@@ -41,6 +42,7 @@ function CartTotal(props) {
   const [couponCode, setCouponCode] = React.useState("");
   const [discount, setDiscount] = React.useState(0);
   const shippingFee = 20000;
+  const navigate = useNavigate();
 
   useEffect(() => {
     let total = 0;
@@ -241,10 +243,26 @@ function CartTotal(props) {
         </Stack>
         <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
           <CartButton
+            disabled={total === 0}
             variant="contained"
             sx={{
               marginTop: "1rem",
               textTransform: "none",
+            }}
+            onClick={() => {
+              if (total === 0) return;
+
+              // Navigate with state
+              navigate("/payment", {
+                state: {
+                  selectedProducts,
+                  coupon,
+                  total,
+                  discount,
+                  shippingFee,
+                  couponCode,
+                },
+              });
             }}
           >
             Thanh toán
