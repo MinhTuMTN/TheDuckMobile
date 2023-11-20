@@ -4,5 +4,6 @@
     {
         public string? BrandName { get; set; }
         public IFormFile? Image { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

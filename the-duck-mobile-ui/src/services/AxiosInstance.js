@@ -4,7 +4,7 @@ var qs = require("qs");
 const axiosInstance = axios.create({
   // baseURL: "https://tb7drp6q-5129.asse.devtunnels.ms/api",
   baseURL: "https://localhost:7008/api",
-  timeout: 1000,
+  timeout: 5000,
   headers: {
     "Content-Type": "application/json",
     "ngrok-skip-browser-warning": "69420",

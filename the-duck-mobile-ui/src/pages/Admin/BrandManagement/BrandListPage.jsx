@@ -11,13 +11,16 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import SearchSeller from "../../../components/Store/SearchSeller";
 import styled from "@emotion/styled";
 import BrandsTable from "../../../components/Admin/BrandsTables";
 import AddNewBrand from "../../../components/Admin/AddNewBrand";
 import CloseIcon from "@mui/icons-material/Close";
+import { DataContext } from "../../../layouts/AdminLayout";
+import SearchList from "../../../components/Admin/SearchList";
+import { addBrand } from "../../../services/Admin/BrandService";
+import { enqueueSnackbar } from "notistack";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -37,73 +40,45 @@ const CustomButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const items = [
-  {
-    id: "5e887ac47eed253091be10cb",
-    brandName: "SamSung",
-    brandImage:
-      "https://m-cdn.phonearena.com/images/articles/383565-image/Samsung-Logo-with-serif.jpg",
-    quantity: 50,
-    status: "Đang hoạt động",
-  },
-  {
-    id: "5e887b209c28ac3dd97f6db5",
-    brandName: "Dell Inc",
-    brandImage:
-      "https://inkythuatso.com/uploads/images/2021/10/dell-logo-inkythuatso-4-01-30-10-17-55.jpg",
-
-    quantity: 0,
-    status: "Khoá",
-  },
-  {
-    id: "5e86809283e28b96d2d38537",
-    brandName: "Điện thoại Samsung Galaxy S21 Ultra 5G 128GB",
-    brandImage:
-      "https://smartviets.com/template/plugins/timthumb.php?src=/upload/image/nh%20%C4%91%E1%BA%A1i%20di%E1%BB%87n/s21%20ultra%20titan.jpg&w=770&h=770&q=80",
-
-    quantity: 100,
-    status: "Đang hoạt động",
-  },
-  {
-    id: "6e887b203c28ac3dd97f1db5",
-    brandName: "Đồng hồ thông minh Apple Watch SE 2022 GPS 40mm",
-    brandImage:
-      "https://cdn.tgdd.vn/Products/Images/7077/289612/apple-watch-se-2022-40mm-day-silicone-trang-kem-1.jpg",
-
-    quantity: 0,
-    status: "Đang hoạt động",
-  },
-  {
-    id: "7e887b209c281c3dd97f6db7",
-    brandName: "Đồng hồ thông minh Apple Watch SE 2022 LTE 40mm ",
-    brandImage:
-      "https://cdn.tgdd.vn/Products/Images/7077/289799/apple-watch-se-2022-lte-40mm-den-xanh-1.jpg",
-
-    quantity: 0,
-    status: "Khoá",
-  },
-  {
-    id: "5e887b202c28ac3dd94f6vb5",
-    brandName: "Laptop Apple MacBook Pro 13 inch M2 2022",
-    brandImage:
-      "https://cdn.tgdd.vn/Products/Images/44/282828/apple-macbook-pro-13-inch-m2-2022-1-1.jpg",
-
-    quantity: 0,
-    status: "Đang hoạt động",
-  },
-];
-
 function BrandListPage(props) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const { dataFetched } = useContext(DataContext);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsSearched, setRowsSearched] = useState([]);
+  const [searchString, setSearchString] = useState("");
+  const [open, setOpen] = useState(false);
+  const [brandAdd, setBrandAdd] = useState({
+    brandName: "",
+    image: null,
+  });
+
+  useEffect(() => {
+    setRowsSearched(dataFetched);
+  }, [dataFetched]);
+
+  
+
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(event.target.value);
   };
-  const [open, setOpen] = React.useState(false);
 
+  const handleAddBrand = async () => {
+    const formData = new FormData();
+    formData.append('brandName', brandAdd.brandName);
+    formData.append('image', brandAdd.image);
+
+    enqueueSnackbar("Đang thêm thông tin...", { variant: "info" });
+    const response = await addBrand(formData);
+
+    if (response.success) {
+      enqueueSnackbar("Thêm thương hiệu thành công", { variant: "success" });
+      setOpen(false);
+      window.location.reload();
+    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+  };
   return (
     <Box component={"main"} sx={{ flexGrow: 1, py: 8 }}>
       <Container maxWidth={"lg"}>
@@ -115,7 +90,7 @@ function BrandListPage(props) {
               variant="contained"
               startIcon={<AddOutlinedIcon />}
             >
-              Thêm nhãn hàng
+              Thêm thương hiệu
             </CustomButton>
           </Stack>
           <Stack
@@ -127,11 +102,17 @@ function BrandListPage(props) {
             }}
             spacing={"2px"}
           >
-            <SearchSeller />
+            <SearchList
+            placeholder="Tìm kiếm thương hiệu"
+            searchString={searchString}
+            setRowsSearched={setRowsSearched}
+            dataFetched={dataFetched}
+            setSearchString={setSearchString}
+            />
 
             <BrandsTable
-              count={items.length}
-              items={items}
+              count={rowsSearched.length}
+              items={rowsSearched}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
@@ -143,7 +124,7 @@ function BrandListPage(props) {
 
       <BootstrapDialog
         open={open}
-        onOk={() => {}}
+        onOk={() => { }}
         onClose={() => setOpen(false)}
         aria-labelledby="customized-dialog-title"
       >
@@ -163,10 +144,10 @@ function BrandListPage(props) {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <AddNewBrand />
+          <AddNewBrand setBrandAdd={setBrandAdd} />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => setOpen(false)}>
+          <Button autoFocus onClick={handleAddBrand}>
             Tạo mới
           </Button>
         </DialogActions>

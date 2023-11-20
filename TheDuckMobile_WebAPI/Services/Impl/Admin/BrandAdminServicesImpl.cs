@@ -44,7 +44,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         {
             var brands = await _context.Brands
                 .Include(b => b.Products)
-                .Where(b => b.IsDeleted == false)
                 .ToListAsync();
             return brands.Select(b => new BrandListResponse(b)).ToList();
         }
@@ -52,7 +51,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         public async Task<BrandResponse> EditBrand(int brandId, BrandRequest request)
         {
             var brand = await _context.Brands
-                .Where(b => b.BrandId == brandId && b.IsDeleted == false)
+                .Where(b => b.BrandId == brandId)
                 .FirstOrDefaultAsync();
 
             if (brand == null)
@@ -67,6 +66,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             if (request.BrandName != null)
                 brand.BrandName = request.BrandName;
 
+            brand.IsDeleted = request.IsDeleted;
+
             brand.LastModifiedAt = DateTime.Now;
 
             await _context.SaveChangesAsync();
@@ -77,7 +78,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         public async Task<bool> DeleteBrand(int brandId)
         {
             var brand = await _context.Brands
-                .Where(b => b.BrandId == brandId && b.IsDeleted == false)
+                .Where(b => b.BrandId == brandId)
                 .FirstOrDefaultAsync();
 
             if (brand == null)

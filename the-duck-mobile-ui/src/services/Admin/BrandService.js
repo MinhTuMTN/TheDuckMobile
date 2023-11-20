@@ -1,5 +1,13 @@
-import { get } from "../AxiosInstance";
+import { get, post, put } from "../AxiosInstance";
 
 export const getAllBrands = () => {
   return get("brandadmin");
+};
+
+export const addBrand = (data) => {
+  return post(`brandadmin`, data, { "Content-Type": "multipart/form-data" });
+};
+
+export const updateBrand = (brandId, data) => {
+  return put(`brandadmin/${brandId}`, data, { "Content-Type": "multipart/form-data" });
 };

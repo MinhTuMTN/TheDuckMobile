@@ -11,10 +11,11 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import FormatDate from "../FormatDate";
 import { deleteCustomer, restoreCustomer } from "../../services/Admin/CustomerService";
 import { enqueueSnackbar } from "notistack";
+import DialogConfirm from "../DialogConfirm";
 const BoxStyle = styled(Box)(({ theme }) => ({
   borderBottom: "1px solid #E0E0E0",
   paddingLeft: "24px !important",
@@ -45,8 +46,9 @@ const NoiDung = styled(Typography)(({ theme }) => ({
 function BasicDetailsCustomer(props) {
   const { customer } = props;
   let status = customer.isDeleted ? 1 : 0;
-  const [editStatus, setEditStatus] = React.useState(0);
-  const [disabledButton, setDisabledButton] = React.useState(true);
+  const [editStatus, setEditStatus] = useState(0);
+  const [disabledButton, setDisabledButton] = useState(true);
+  const [deleteDialog, setDeleteDialog] = useState(false);
 
   useEffect(() => {
     setEditStatus(status);
@@ -200,10 +202,26 @@ function BasicDetailsCustomer(props) {
                 },
               }}
               disabled={disabledButton}
-              onClick={handleUpdateButtonClick}
+              onClick={(e) => {
+                setDeleteDialog(true);
+              }}
             >
               Cập nhật
             </Button>
+            <DialogConfirm
+              open={deleteDialog}
+              title={customer.isDeleted ? "Khôi phục tính năng đặc biệt" : "Xóa tính năng đặc biệt"}
+              content={
+                customer.isDeleted
+                  ? "Bạn có chắc chắn muốn khôi phục tính năng đặc biệt này"
+                  : "Bạn có chắc chắn muốn xóa tính năng đặc biệt này?"
+              }
+              okText={customer.isDeleted ? "Khôi phục" : "Xóa"}
+              cancelText={"Hủy"}
+              onOk={handleUpdateButtonClick}
+              onCancel={() => setDeleteDialog(false)}
+              onClose={() => setDeleteDialog(false)}
+            />
           </Grid>
         </Grid>
       </BoxStyle>

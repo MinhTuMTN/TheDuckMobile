@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Box, Pagination, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import OrderItem from "../Store/OrderItem";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,18 @@ ListOrdersCustomer.propTypes = {
 };
 function ListOrdersCustomer(props) {
   const { items } = props;
+  
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Số lượng mục trong mỗi trang
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = items?.slice(startIndex, endIndex);
+
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
+  };
+
   return (
     <Stack
       sx={{
@@ -35,8 +46,8 @@ function ListOrdersCustomer(props) {
       <BoxStyle>
         <TieuDe>Danh sách đơn hàng</TieuDe>
       </BoxStyle>
-      {items &&
-        items.map((item) => (
+      {currentItems &&
+        currentItems.map((item) => (
           <OrderItem
             order={item}
             key={item.orderId}
@@ -46,7 +57,9 @@ function ListOrdersCustomer(props) {
           />
         ))}
       <Pagination
-        count={10}
+        count={Math.ceil(items?.length / itemsPerPage)}
+        page={currentPage}
+        onChange={handlePageChange}
         showFirstButton
         showLastButton
         sx={{

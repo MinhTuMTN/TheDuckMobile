@@ -17,9 +17,7 @@ import ProvinceListPage from "../pages/Admin/AddressManagement/ProvinceManagemen
 import AddWardPage from "../pages/Admin/AddressManagement/WardManagement/AddWardPage";
 import EditWardPage from "../pages/Admin/AddressManagement/WardManagement/EditWardPage";
 import WardListPage from "../pages/Admin/AddressManagement/WardManagement/WardListPage";
-import AddBrandPage from "../pages/Admin/BrandManagement/AddBrandPage";
 import BrandListPage from "../pages/Admin/BrandManagement/BrandListPage";
-import EditBrandPage from "../pages/Admin/BrandManagement/EditBrandPage";
 import AddCatalogPage from "../pages/Admin/CatalogManagement/AddCatalogPage";
 import CatalogListPage from "../pages/Admin/CatalogManagement/CatalogListPage";
 import EditCatalogPage from "../pages/Admin/CatalogManagement/EditCatalogPage";
@@ -256,14 +254,6 @@ function Router(props) {
         {
           path: "brand-management/list",
           element: <BrandListPage />,
-        },
-        {
-          path: "brand-management/add",
-          element: <AddBrandPage />,
-        },
-        {
-          path: "brand-management/edit",
-          element: <EditBrandPage />,
         },
         {
           path: "store-management/list",

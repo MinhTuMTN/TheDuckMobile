@@ -12,43 +12,9 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import BasicDetailsCustomer from "../../../components/Admin/BasicDetailCustomer";
 import ListOrdersCustomer from "../../../components/Admin/ListOrdersCustomer";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import { getCustomerById } from "../../../services/Admin/CustomerService";
-
-const items = [
-  {
-    id: "091be10cb",
-    date: "2021-05-30",
-    status: "Đã huỷ",
-    total: 10000000,
-  },
-  {
-    id: "091be10cb",
-    date: "2021-11-10",
-
-    status: "Đã hoàn thành",
-    total: 1000000,
-  },
-  {
-    id: "091be10cb",
-    date: "2021-10-10",
-    status: "Chờ xác nhận",
-    total: 12200000,
-  },
-  {
-    id: "vv1be10cb",
-    date: "2021-12-12",
-    status: "Đang giao hàng",
-    total: 77000000,
-  },
-  {
-    id: "294be10cb",
-    date: "2021-11-11",
-    status: "Đã hoàn thành",
-    total: 56000000,
-  },
-];
 
 const UserId = styled(Typography)(({ theme }) => ({
   backgroundColor: "#d6d7db",
@@ -62,21 +28,18 @@ const UserId = styled(Typography)(({ theme }) => ({
 
 function CustomerDetailPage() {
   const { state } = useLocation();
-  const navigate = useNavigate();
   const [customer, setCustomer] = useState({});
-  const image =
-    "https://i.pinimg.com/736x/d4/15/95/d415956c03d9ca8783bfb3c5cc984dde.jpg";
 
-    const handleGetCustomer = useCallback(async () => {
-      const response = await getCustomerById(state.id);
-      if (response.success) {
-        setCustomer(response.data.data);
-      }
-    }, [state.id]);
+  const handleGetCustomer = useCallback(async () => {
+    const response = await getCustomerById(state.id);
+    if (response.success) {
+      setCustomer(response.data.data);
+    }
+  }, [state.id]);
 
-    useEffect(() => {
-      handleGetCustomer();
-    }, [handleGetCustomer]);
+  useEffect(() => {
+    handleGetCustomer();
+  }, [handleGetCustomer]);
 
   return (
     <Box

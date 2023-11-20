@@ -11,7 +11,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
 import { getAllProducts } from "../services/Admin/ProductService";
 import { getAllCustomers } from "../services/Admin/CustomerService";
-import { getAllStaffs } from "../services/Admin/StaffService";
 import { getAllProvinces } from "../services/Admin/AddressService";
 import { getAllCatalogs } from "../services/Admin/CatalogService";
 import { getAllBrands } from "../services/Admin/BrandService";
