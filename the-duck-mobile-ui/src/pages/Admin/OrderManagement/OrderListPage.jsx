@@ -21,7 +21,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DataContext } from "../../../layouts/AdminLayout";
 
 const RootPageOrderList = styled(Box)(({ theme }) => ({
@@ -36,6 +36,7 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function OrderListPage() {
+  const navigate = useNavigate();
   const { dataFetched } = useContext(DataContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -131,7 +132,17 @@ function OrderListPage() {
                   {row.couponCode}
                 </TableCell>
                 <TableCell style={{ minWidth: 200 }} align="center">
-                  <MuiButton component={Link} color="oldPrimary" to="/admin/order-management/detail">
+                  <MuiButton
+                    color="oldPrimary"
+                    onClick={() => {
+                      navigate(`/admin/order-management/${row.orderId}`, {
+                        state: {
+                          prevURL: "/admin/order-management/list",
+                          id: row.orderId
+                        }
+                      });
+                    }}
+                  >
                     <InfoIcon />
                   </MuiButton>
                   <MuiButton color="teal">

@@ -12,7 +12,7 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import BasicDetailsCustomer from "../../../components/Admin/BasicDetailCustomer";
 import ListOrdersCustomer from "../../../components/Admin/ListOrdersCustomer";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import { getCustomerById } from "../../../services/Admin/CustomerService";
 
@@ -28,6 +28,7 @@ const UserId = styled(Typography)(({ theme }) => ({
 
 function CustomerDetailPage() {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const [customer, setCustomer] = useState({});
 
   const handleGetCustomer = useCallback(async () => {
@@ -65,6 +66,7 @@ function CustomerDetailPage() {
               padding="0"
               margin="0"
               color="#111927"
+              onClick={() => { navigate("/admin/customer-management/list") }}
             >
               <ArrowBackIosIcon />
             </IconButton>
@@ -143,7 +145,7 @@ function CustomerDetailPage() {
                 }}
                 spacing={"2px"}
               >
-                <ListOrdersCustomer items={customer.orders} />
+                <ListOrdersCustomer items={customer.orders} customerId={customer.userId} />
               </Stack>
             </Grid>
           </Grid>

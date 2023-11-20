@@ -23,8 +23,7 @@ ListOrdersCustomer.propTypes = {
   items: PropTypes.array,
 };
 function ListOrdersCustomer(props) {
-  const { items } = props;
-  
+  const { items, customerId } = props;
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Số lượng mục trong mỗi trang
@@ -52,7 +51,12 @@ function ListOrdersCustomer(props) {
             order={item}
             key={item.orderId}
             handleClick={() => {
-              navigate(`/admin/order-details?orderId=${item.orderId}`);
+              navigate(`/admin/order-management/${item.orderId}`, {
+                state: {
+                  prevURL: `/admin/customer-management/${customerId}`,
+                  id: item.orderId
+                }
+              });
             }}
           />
         ))}

@@ -288,7 +288,7 @@ function Router(props) {
           element: <OrderListPage />,
         },
         {
-          path: "order-management/detail",
+          path: "order-management/:orderId",
           element: <OrderDetailPage />,
         },
         {
@@ -318,10 +318,6 @@ function Router(props) {
         {
           path: "special-feature-management/:specialFeature",
           element: <EditSpecialFeaturePage />,
-        },
-        {
-          path: "order-details",
-          element: <OrderDetails />,
         },
       ],
     },
