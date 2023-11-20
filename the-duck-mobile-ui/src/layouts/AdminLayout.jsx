@@ -21,7 +21,7 @@ import { getAllStores } from "../services/Admin/StoreService";
 import { getAllOSs } from "../services/Admin/OSService";
 import { getAllCoupons } from "../services/Admin/CouponService";
 import { getAllFeedbacks } from "../services/Admin/FeedbackService";
-import { getAllOrders } from "../services/Admin/OrderService";
+import { getAllOrders } from "../services/OrderService";
 import { enqueueSnackbar } from "notistack";
 import TopNavbar from "../components/Store/TopNavbar";
 

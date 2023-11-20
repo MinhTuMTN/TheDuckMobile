@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheDuckMobile_WebAPI.Entities;
 
@@ -11,9 +12,11 @@ using TheDuckMobile_WebAPI.Entities;
 namespace TheDuckMobile_WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231120121617_Update-Database-20111916")]
+    partial class UpdateDatabase20111916
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -377,9 +380,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TemporaryCustomerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<double>("Total")
                         .HasColumnType("float");
 
@@ -394,10 +394,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.HasIndex("StaffId");
 
                     b.HasIndex("StoreId");
-
-                    b.HasIndex("TemporaryCustomerId")
-                        .IsUnique()
-                        .HasFilter("[TemporaryCustomerId] IS NOT NULL");
 
                     b.ToTable("Orders");
                 });
@@ -695,26 +691,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.ToTable("StoreProducts");
                 });
 
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.TemporaryCustomer", b =>
-                {
-                    b.Property<Guid>("TemporaryCustomerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TemporaryCustomerId");
-
-                    b.ToTable("TemporaryCustomers");
-                });
-
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -965,10 +941,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TheDuckMobile_WebAPI.Entities.TemporaryCustomer", "TemporaryCustomer")
-                        .WithOne("Order")
-                        .HasForeignKey("TheDuckMobile_WebAPI.Entities.Order", "TemporaryCustomerId");
-
                     b.Navigation("Address");
 
                     b.Navigation("Coupon");
@@ -978,8 +950,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("Staff");
 
                     b.Navigation("Store");
-
-                    b.Navigation("TemporaryCustomer");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.OrderItem", b =>
@@ -1196,11 +1166,6 @@ namespace TheDuckMobile_WebAPI.Migrations
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.StoreProduct", b =>
                 {
                     b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.TemporaryCustomer", b =>
-                {
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.User", b =>

@@ -8,7 +8,6 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
         public string? FullName { get; set; }
         public string? Avatar { get; set; }
         public string? Phone { get; set; }
-        public string? Email { get; set; }
         public int? Point { get; set; }
         public int NumberOfVotes { get; set; }
         public int NumberOfOrder { get; set; }
@@ -20,7 +19,6 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
             FullName = customer.FullName;
             Avatar = customer.Avatar;
             Phone = customer.Phone;
-            Email = customer.Email;
             Point = customer.Point;
             NumberOfVotes = customer.Votes == null ? 0 : customer.Votes.Count;
             NumberOfOrder = customer.Orders == null ? 0 : customer.Orders.Count;

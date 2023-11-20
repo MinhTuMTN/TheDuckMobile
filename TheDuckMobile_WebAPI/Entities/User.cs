@@ -25,10 +25,8 @@ namespace TheDuckMobile_WebAPI.Entities
         [RegularExpression(@"^(\+84|0)\d{9}$")]
         public string? Phone { get; set; }
 
-        [EmailAddress]
-        public string? Email { get; set; }
 
-        public int? Point { get; set; }
+        public int Point { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
 
@@ -50,12 +48,14 @@ namespace TheDuckMobile_WebAPI.Entities
         public User()
         {
             Addresses = new HashSet<Address>();
+            Point = 0;
         }
 
         public User(ILazyLoader lazyLoader)
         {
             _lazyLoader = lazyLoader;
             Addresses = new HashSet<Address>();
+            Point = 0;
         }
     }
 }

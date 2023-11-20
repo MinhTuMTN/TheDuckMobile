@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheDuckMobile_WebAPI.Entities;
 
@@ -11,9 +12,11 @@ using TheDuckMobile_WebAPI.Entities;
 namespace TheDuckMobile_WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231120114939_Update-Database-20111849")]
+    partial class UpdateDatabase20111849
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -377,9 +380,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TemporaryCustomerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<double>("Total")
                         .HasColumnType("float");
 
@@ -394,10 +394,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.HasIndex("StaffId");
 
                     b.HasIndex("StoreId");
-
-                    b.HasIndex("TemporaryCustomerId")
-                        .IsUnique()
-                        .HasFilter("[TemporaryCustomerId] IS NOT NULL");
 
                     b.ToTable("Orders");
                 });
@@ -422,6 +418,9 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<Guid>("PromotionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<double>("PromotionPrice")
                         .HasColumnType("float");
 
@@ -429,6 +428,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("OrderId", "StoreProductId");
+
+                    b.HasIndex("PromotionId");
 
                     b.HasIndex("StoreProductId");
 
@@ -548,6 +549,40 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductVersions");
+                });
+
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Promotion", b =>
+                {
+                    b.Property<Guid>("PromotionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProductVersionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("PromotionId");
+
+                    b.HasIndex("ProductVersionId");
+
+                    b.ToTable("Promotions");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Provine", b =>
@@ -695,26 +730,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.ToTable("StoreProducts");
                 });
 
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.TemporaryCustomer", b =>
-                {
-                    b.Property<Guid>("TemporaryCustomerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TemporaryCustomerId");
-
-                    b.ToTable("TemporaryCustomers");
-                });
-
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -734,6 +749,9 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -751,7 +769,7 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Point")
+                    b.Property<int?>("Point")
                         .HasColumnType("int");
 
                     b.HasKey("UserId");
@@ -837,9 +855,6 @@ namespace TheDuckMobile_WebAPI.Migrations
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Staff", b =>
                 {
                     b.HasBaseType("TheDuckMobile_WebAPI.Entities.User");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
@@ -965,10 +980,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TheDuckMobile_WebAPI.Entities.TemporaryCustomer", "TemporaryCustomer")
-                        .WithOne("Order")
-                        .HasForeignKey("TheDuckMobile_WebAPI.Entities.Order", "TemporaryCustomerId");
-
                     b.Navigation("Address");
 
                     b.Navigation("Coupon");
@@ -978,8 +989,6 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("Staff");
 
                     b.Navigation("Store");
-
-                    b.Navigation("TemporaryCustomer");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.OrderItem", b =>
@@ -990,6 +999,12 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.Promotion", "Promotion")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TheDuckMobile_WebAPI.Entities.StoreProduct", "StoreProduct")
                         .WithMany("OrderItems")
                         .HasForeignKey("StoreProductId")
@@ -997,6 +1012,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
+
+                    b.Navigation("Promotion");
 
                     b.Navigation("StoreProduct");
                 });
@@ -1041,6 +1058,17 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("Color");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Promotion", b =>
+                {
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.ProductVersion", "ProductVersion")
+                        .WithMany("Promotions")
+                        .HasForeignKey("ProductVersionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductVersion");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Provine", b =>
@@ -1172,7 +1200,14 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.ProductVersion", b =>
                 {
+                    b.Navigation("Promotions");
+
                     b.Navigation("StoreProducts");
+                });
+
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Promotion", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Provine", b =>
@@ -1196,11 +1231,6 @@ namespace TheDuckMobile_WebAPI.Migrations
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.StoreProduct", b =>
                 {
                     b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.TemporaryCustomer", b =>
-                {
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.User", b =>

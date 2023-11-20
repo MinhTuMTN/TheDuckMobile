@@ -11,6 +11,8 @@ namespace TheDuckMobile_WebAPI.Entities
         [Range(minimum: 0, maximum: double.MaxValue)]
         public double Total { get; set; }
 
+        public string? OrderNote { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastModifiredAt { get; set; }
@@ -22,16 +24,19 @@ namespace TheDuckMobile_WebAPI.Entities
         public Guid StoreId { get; set; }
         public virtual Store? Store { get; set; }
 
-        public Guid StaffId { get; set; }
+        public Guid? StaffId { get; set; }
         public virtual Staff? Staff { get; set; }
 
-        public Guid CustomerId { get; set; }
+        public Guid? CustomerId { get; set; }
         public virtual Customer? Customer { get; set; }
 
-        public Guid AddressId { get; set; }
+        public Guid? AddressId { get; set; }
         public virtual Address? Address { get; set; }
 
-        public Guid CouponId { get; set; }
+        public Guid? CouponId { get; set; }
         public virtual Coupon? Coupon { get; set; }
+
+        public Guid? TemporaryCustomerId { get; set; }
+        public virtual TemporaryCustomer? TemporaryCustomer { get; set; }
     }
 }

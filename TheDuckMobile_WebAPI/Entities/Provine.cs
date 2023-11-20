@@ -26,8 +26,13 @@ namespace TheDuckMobile_WebAPI.Entities
         }
 
         public Guid? StoreId { get; set; }
+        private Store? _store;
         [JsonIgnore]
-        public virtual Store? Store { get; set; }
+        public virtual Store? Store
+        {
+            get => _lazyLoader.Load(this, ref _store);
+            set => _store = value;
+        }
 
         public Provine()
         {
