@@ -77,7 +77,7 @@ const sidebarItems = [
   {
     display: "Thương Hiệu",
     icon: <BrandingWatermarkIcon />,
-    to: "/admin/brand-management/list",
+    to: "/admin/brand-management",
     section: "brand-management",
   },
   {

@@ -1,196 +1,464 @@
-import {
-    Box,
-    InputAdornment,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableFooter,
-    TableHead,
-    TablePagination,
-    TableRow,
-    Typography,
-    styled
-} from "@mui/material";
-import TablePaginationActions from "../../../../components/TablePaginationActions";
-import { useEffect, useState } from "react";
-import MuiButton from "../../../../components/MuiButton";
-import { Link } from "react-router-dom";
-import InfoIcon from '@mui/icons-material/Info';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import { useTheme } from "@emotion/react";
 import { Search } from "@mui/icons-material";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import CloseIcon from "@mui/icons-material/Close";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Paper,
+  Popover,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+  styled,
+  useMediaQuery,
+} from "@mui/material";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MuiTextFeild from "../../../../components/MuiTextFeild";
+import TablePaginationActions from "../../../../components/TablePaginationActions";
+import { DataContext } from "../../../../layouts/AdminLayout";
 
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich1', 237, 9.0, 37, 4.3),
-    createData('Eclair2', 262, 16.0, 24, 6.0),
-    createData('Cupcake3', 305, 3.7, 67, 4.3),
-    createData('Gingerbread3', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt4', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich5', 237, 9.0, 37, 4.3),
-    createData('Eclair6', 262, 16.0, 24, 6.0),
-    createData('Cupcake7', 305, 3.7, 67, 4.3),
-    createData('Gingerbread8', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt9', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich0', 237, 9.0, 37, 4.3),
-    createData('Eclair11', 262, 16.0, 24, 6.0),
-    createData('Cupcake12', 305, 3.7, 67, 4.3),
-    createData('Gingerbread13', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt14', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich15', 237, 9.0, 37, 4.3),
-    createData('Eclair16', 262, 16.0, 24, 6.0),
-    createData('Cupcake17', 305, 3.7, 67, 4.3),
-    createData('Gingerbread18', 356, 16.0, 49, 3.9),
-];
-
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const RootPageDistrictList = styled(Box)(({ theme }) => ({
-    display: "flex",
-    width: "100%",
-    flexDirection: "column",
-    padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
 }));
 
-const AddButton = styled(MuiButton)(({ theme }) => ({
-    width: "25%",
-    marginBottom: theme.spacing(1),
-    "&:hover": {
-        backgroundColor: "#FF6969",
-      }
+const CustomButton = styled(Button)(({ theme }) => ({
+  color: "#fff",
+  backgroundColor: "#FF6969",
+  borderRadius: "15px",
+  height: "2.5rem",
+  "&:hover": {
+    backgroundColor: "#ea4545 !important",
+  },
+}));
+
+const CellHead = styled(TableCell)(({ theme }) => ({
+  fontSize: "18px",
+  paddingY: "0.2rem ",
+}));
+
+const CellBody = styled(TableCell)(({ theme }) => ({
+  fontSize: "15px !important",
+  paddingX: "0",
+  paddingY: "0",
 }));
 
 const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
-    marginBottom: theme.spacing(1),
+  marginBottom: theme.spacing(1),
 }));
 
 function DistrictListPage() {
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [rowsSearched, setRowsSearched] = useState(rows);
-    const [searchString, setSearchString] = useState("");
+  const { dataFetched } = useContext(DataContext);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsSearched, setRowsSearched] = useState([]);
+  const [searchString, setSearchString] = useState("");
 
-    const filterRows = (searchString) => {
-        if (searchString === "") {
-            return rows;
-        }
-        return rows.filter((row) =>
-            row.name.toLowerCase().includes(searchString.toLowerCase())
-        );
-    };
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const filtered = filterRows(searchString);
-        setRowsSearched(filtered);
-    }, [searchString]);
+  useEffect(() => {
+    setRowsSearched(dataFetched);
+  }, [dataFetched]);
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
+  const filterRows = useCallback(
+    (searchString) => {
+      if (searchString === "") {
+        return dataFetched;
+      }
+      return dataFetched.filter((row) =>
+        row.provineName.toLowerCase().includes(searchString.toLowerCase())
+      );
+    },
+    [dataFetched]
+  );
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+  useEffect(() => {
+    const filtered = filterRows(searchString);
+    setRowsSearched(filtered);
+  }, [searchString, filterRows]);
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
 
-    return (
-        <RootPageDistrictList>
-            <Typography variant="h3">Danh sách huyện</Typography>
-            <AddButton component={Link} variant="contained" color="color1" to="/admin/address-management/province/district/add">
-                <Typography color={"white"}>
-                    Thêm Huyện Mới
-                </Typography>
-            </AddButton>
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [editProvice, setEditProvice] = useState("");
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  const theme = useTheme();
+  const isFullScreen = useMediaQuery(theme.breakpoints.up("lg"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  return (
+    <Grid
+      container
+      sx={{
+        py: 3,
+        px: isFullScreen ? 8 : 3,
+        borderTop: "1px solid #e0e0e0",
+      }}
+    >
+      <Grid item xs={12} mb={2}>
+        <Stack
+          direction={"row"}
+          spacing={0}
+          alignItems={"center"}
+          marginBottom={3}
+        >
+          <IconButton
+            aria-label="back"
+            size="small"
+            color="#111927"
+            onClick={() => navigate("/admin/address-management/province")}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
+          <Typography
+            variant="body1"
+            fontWeight={600}
+            style={{
+              fontSize: "14px",
+              color: "#111927",
+            }}
+          >
+            Danh sách tỉnh thành
+          </Typography>
+        </Stack>
+        <Stack
+          direction={"row"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: ["20px", "28px"],
+            }}
+            fontWeight="700"
+            paddingX={2}
+            paddingBottom={2}
+          >
+            {isSmallScreen
+              ? "Danh sách quận huyện"
+              : "Danh sách quận huyện của Tp Hồ Chí Minh"}
+          </Typography>
+          <CustomButton
+            variant="contained"
+            size="medium"
+            startIcon={<AddOutlinedIcon />}
+            onClick={(e) => {
+              setOpenPopup(true);
+              setEditProvice("");
+            }}
+          >
+            Thêm mới
+          </CustomButton>
+        </Stack>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Stack
+          component={Paper}
+          elevation={3}
+          sx={{
+            borderRadius: "25px",
+          }}
+          spacing={"2px"}
+        >
+          <Box
+            sx={{
+              padding: 2,
+              borderRadius: "25px 25px 0 0 ",
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
             <SearchTextField
-                type="text"
-                variant="outlined"
-                component={Paper}
-                placeholder="Tìm kiếm theo tên"
-                value={searchString}
-                onChange={(e) => setSearchString(e.target.value)}
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <Search />
-                        </InputAdornment>
-                    ),
-                    style: { fontSize: 18 },
-                }}
+              fullWidth
+              variant="outlined"
+              placeholder="Tìm kiếm theo quận huyện"
+              value={searchString}
+              onChange={(e) => setSearchString(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+                style: { fontSize: 14 },
+              }}
             />
-            <TableContainer component={Paper} sx={{ maxHeight: 515, minWidth: 1035, maxWidth: 1035 }}>
-                <Table stickyHeader sx={{ maxWidth: 1200 }}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Dessert (100g serving)</TableCell>
-                            <TableCell align="right">Calories</TableCell>
-                            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                            <TableCell align="center">Lựa Chọn</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {(rowsPerPage > 0
-                            ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : rowsSearched
-                        ).map((row) => (
-                            <TableRow key={row.name}>
-                                <TableCell style={{ minWidth: 100 }}>
-                                    {row.name}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.calories}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.fat}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.carbs}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 100 }} align="right">
-                                    {row.protein}
-                                </TableCell>
-                                <TableCell style={{ minWidth: 200 }} align="center">
-                                    <MuiButton component={Link} color="oldPrimary" to="/admin/address-management/province/district/detail"><InfoIcon /></MuiButton>
-                                    <MuiButton component={Link} color="teal" to="/admin/address-management/province/district/edit"><EditIcon /></MuiButton>
-                                    <MuiButton component={Link} color="color1"><DeleteIcon /></MuiButton>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={7} />
-                            </TableRow>
-                        )}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                                colSpan={6}
-                                count={rowsSearched.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActions}
-                                sx={{ fontSize: 10 }}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </TableContainer>
-        </RootPageDistrictList>
-    );
+          </Box>
+
+          <TableContainer
+            sx={{
+              paddingX: 3,
+              borderRadius: "0 0 25px 25px ",
+            }}
+            component={Paper}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <CellHead
+                    align="center"
+                    sx={{
+                      width: "20%",
+                    }}
+                  >
+                    Mã quận huyện
+                  </CellHead>
+
+                  <CellHead
+                    align="center"
+                    sx={{
+                      width: "60%",
+                    }}
+                  >
+                    Tên quận huyện
+                  </CellHead>
+                  <CellHead
+                    align="center"
+                    sx={{
+                      width: "20%",
+                    }}
+                  >
+                    Tuỳ Chọn
+                  </CellHead>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {(rowsPerPage > 0
+                  ? rowsSearched.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : rowsSearched
+                ).map((row, i) => (
+                  <TableRow
+                    key={row.districtId}
+                    sx={{
+                      paddingY: "0",
+                    }}
+                  >
+                    <CellBody style={{ width: "20%" }} align="center">
+                      {row.districtId}
+                    </CellBody>
+
+                    <CellBody style={{ width: "60%" }} align="center">
+                      {row.districtName}
+                    </CellBody>
+                    <CellBody
+                      style={{
+                        minWidth: 50,
+                        fontSize: "14px",
+                      }}
+                      align="center"
+                    >
+                      {isSmallScreen ? (
+                        <>
+                          <IconButton
+                            color="black"
+                            aria-describedby={id}
+                            onClick={handleClick}
+                          >
+                            <MoreVertIcon color="black" />
+                          </IconButton>
+                          <Popover
+                            id={id}
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "right",
+                            }}
+                            transformOrigin={{
+                              vertical: "top",
+                              horizontal: "right",
+                            }}
+                          >
+                            <Stack direction={"column"}>
+                              {[
+                                {
+                                  label: "Chỉnh sửa",
+                                  action: () => {
+                                    setOpenPopup(true);
+                                    setEditProvice(row.provineName);
+                                  },
+                                },
+                                {
+                                  label: "Xem",
+                                  action: () =>
+                                    navigate(
+                                      "/admin/address-management/province/district/detail",
+                                      { state: { id: row.districId } }
+                                    ),
+                                },
+                              ].map((item, index) => (
+                                <Button
+                                  key={index}
+                                  variant="text"
+                                  size="medium"
+                                  onClick={item.action}
+                                  sx={{
+                                    paddingX: 2,
+                                    paddingY: 1,
+                                    textAlign: "left",
+                                  }}
+                                >
+                                  {item.label}
+                                </Button>
+                              ))}
+                            </Stack>
+                          </Popover>
+                        </>
+                      ) : (
+                        <>
+                          {[
+                            {
+                              icon: <ModeEditIcon color="black" />,
+                              action: () => {
+                                setOpenPopup(true);
+                                setEditProvice(row.provineName);
+                              },
+                            },
+                            {
+                              icon: <InfoOutlinedIcon color="black" />,
+                              action: () =>
+                                navigate(
+                                  "/admin/address-management/province/district/detail",
+                                  { state: { id: row.provinceId } }
+                                ),
+                            },
+                          ].map((item, index) => (
+                            <IconButton
+                              key={index}
+                              color="black"
+                              onClick={item.action}
+                            >
+                              {item.icon}
+                            </IconButton>
+                          ))}
+                        </>
+                      )}
+                    </CellBody>
+                  </TableRow>
+                ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={11} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[
+                      5,
+                      10,
+                      25,
+                      { label: "All", value: -1 },
+                    ]}
+                    colSpan={10}
+                    count={rowsSearched.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                    sx={{ fontSize: 10 }}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        </Stack>
+      </Grid>
+      <BootstrapDialog
+        open={openPopup}
+        onOk={() => {}}
+        onClose={() => setOpenPopup(false)}
+        aria-labelledby="customized-dialog-title"
+      >
+        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+          {editProvice === "" ? "Thêm quận/huyện mới" : "Chỉnh sửa quận/huyện"}
+        </DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={() => setOpenPopup(false)}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: "text.secondary",
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        <DialogContent dividers>
+          <MuiTextFeild
+            label="Tên quận/huyện"
+            value={editProvice}
+            margin="normal"
+            autoFocus
+            required
+            onChange={(e) => {
+              editProvice === ""
+                ? setEditProvice(e.target.value)
+                : setEditProvice(e.target.value);
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={() => setOpenPopup(false)}>
+            {editProvice === "" ? "Tạo mới" : "Cập nhật"}
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
+    </Grid>
+  );
 }
 
 export default DistrictListPage;
