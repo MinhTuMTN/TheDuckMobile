@@ -25,6 +25,10 @@ namespace TheDuckMobile_WebAPI.Entities
             set => _districts = value;
         }
 
+        public Guid? StoreId { get; set; }
+        [JsonIgnore]
+        public virtual Store? Store { get; set; }
+
         public Provine()
         {
 
@@ -34,5 +38,7 @@ namespace TheDuckMobile_WebAPI.Entities
         {
             _lazyLoader = lazyLoader;
         }
+
+
     }
 }
