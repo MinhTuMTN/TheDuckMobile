@@ -16,11 +16,31 @@ function OrderItem(props) {
   };
   const options = { month: "short", day: "numeric" };
   const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-    new Date(order.date)
+    new Date(order.createdAt)
   );
 
+  switch (order.orderState) {
+    case 0:
+      order.orderState = "Chờ xác nhận";
+      break;
+    case 1:
+      order.orderState = "Chuẩn bị hàng";
+      break;
+    case 2:
+      order.orderState = "Đang giao hàng";
+      break;
+    case 3:
+      order.orderState = "Đã hoàn thành";
+      break;
+    case 4:
+      order.orderState = "Đã huỷ";
+      break;
+    default:
+      break;
+  }
+
   // Màu sắc của Chip dựa trên giá trị status
-  const chipColor = statusColors[order.status] || "default";
+  const chipColor = statusColors[order.orderState] || "default";
 
   return (
     <Stack
@@ -68,7 +88,7 @@ function OrderItem(props) {
               textTransform: "uppercase",
             }}
           >
-            Đơn hàng {order.id}
+            Đơn hàng {order.orderId}
           </Typography>
           <Typography
             variant="body1"
@@ -83,7 +103,7 @@ function OrderItem(props) {
         </Stack>
       </Stack>
       <Box width={"auto"}>
-        <Chip color={chipColor} label={order.status} />
+        <Chip color={chipColor} label={order.orderState} />
       </Box>
     </Stack>
   );

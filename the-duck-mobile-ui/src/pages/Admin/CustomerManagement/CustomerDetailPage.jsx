@@ -12,6 +12,9 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import BasicDetailsCustomer from "../../../components/Admin/BasicDetailCustomer";
 import ListOrdersCustomer from "../../../components/Admin/ListOrdersCustomer";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { getCustomerById } from "../../../services/Admin/CustomerService";
 
 const items = [
   {
@@ -58,10 +61,22 @@ const UserId = styled(Typography)(({ theme }) => ({
 }));
 
 function CustomerDetailPage() {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const [customer, setCustomer] = useState({});
   const image =
     "https://i.pinimg.com/736x/d4/15/95/d415956c03d9ca8783bfb3c5cc984dde.jpg";
 
-  // Avoid a layout jump when reaching the last page with empty rows.
+    const handleGetCustomer = useCallback(async () => {
+      const response = await getCustomerById(state.id);
+      if (response.success) {
+        setCustomer(response.data.data);
+      }
+    }, [state.id]);
+
+    useEffect(() => {
+      handleGetCustomer();
+    }, [handleGetCustomer]);
 
   return (
     <Box
@@ -109,7 +124,7 @@ function CustomerDetailPage() {
                     width: ["80px", "100px"], // Kích thước sẽ là 50px khi viewport width là 50% hoặc nhỏ hơn, và 100px trong trường hợp khác
                     height: ["80px", "100px"],
                   }}
-                  src={image}
+                  src={customer.avatar}
                 />
                 <Stack direction={"column"}>
                   <Typography
@@ -120,7 +135,7 @@ function CustomerDetailPage() {
                       fontSize: ["1.5rem", "2rem"],
                     }}
                   >
-                    Nguyễn Ngọc Tuyết Vi
+                    {customer.fullName}
                   </Typography>
                   <Stack direction={"row"} spacing={1} alignItems={"center"}>
                     <Typography
@@ -132,7 +147,7 @@ function CustomerDetailPage() {
                     >
                       user_id:
                     </Typography>
-                    <UserId>5e86805e2bafd54f66cc95c3</UserId>
+                    <UserId>{customer.userId}</UserId>
                   </Stack>
                 </Stack>
               </Stack>
@@ -149,7 +164,7 @@ function CustomerDetailPage() {
                 }}
                 spacing={"2px"}
               >
-                <BasicDetailsCustomer />
+                <BasicDetailsCustomer customer={customer} />
               </Stack>
             </Grid>
           </Grid>
@@ -165,7 +180,7 @@ function CustomerDetailPage() {
                 }}
                 spacing={"2px"}
               >
-                <ListOrdersCustomer items={items} />
+                <ListOrdersCustomer items={customer.orders} />
               </Stack>
             </Grid>
           </Grid>

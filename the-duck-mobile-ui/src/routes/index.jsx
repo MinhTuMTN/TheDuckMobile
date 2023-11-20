@@ -253,7 +253,7 @@ function Router(props) {
         },
 
         {
-          path: "customer-management/detail",
+          path: "customer-management/:customerId",
           element: <CustomerDetailPage />,
         },
         {

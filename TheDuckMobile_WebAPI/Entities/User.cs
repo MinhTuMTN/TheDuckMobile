@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using TheDuckMobile_WebAPI.Common;

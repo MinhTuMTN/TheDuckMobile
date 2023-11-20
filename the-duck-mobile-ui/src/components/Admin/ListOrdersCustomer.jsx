@@ -39,9 +39,9 @@ function ListOrdersCustomer(props) {
         items.map((item) => (
           <OrderItem
             order={item}
-            key={item.id}
+            key={item.orderId}
             handleClick={() => {
-              navigate(`/admin/order-details?orderId=${item.id}`);
+              navigate(`/admin/order-details?orderId=${item.orderId}`);
             }}
           />
         ))}

@@ -5,7 +5,7 @@ export const getAllProducts = () => {
 };
 
 export const getProductById = (productId) => {
-  return get(`productadmin/detail?productId=${productId}`);
+  return get(`productadmin/${productId}`);
 };
 
 export const deleteProduct = (productId) => {

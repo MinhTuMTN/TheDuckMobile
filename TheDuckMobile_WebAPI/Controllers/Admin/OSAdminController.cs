@@ -81,16 +81,16 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         [HttpDelete("{osId}")]
         public async Task<IActionResult> DeleteOS([FromRoute] int osId)
         {
-            var os = await _osServices.DeleteOS(osId);
+            var success = await _osServices.DeleteOS(osId);
 
-            if (os == false)
+            if (success == false)
                 throw new Exception("OS could not be deleted.");
 
             return Ok(new GenericResponse
             {
                 Success = true,
                 Message = "OS deleted successfully.",
-                Data = os
+                Data = null
             });
         }
 

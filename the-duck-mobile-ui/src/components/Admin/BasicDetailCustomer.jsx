@@ -11,7 +11,10 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
+import FormatDate from "../FormatDate";
+import { deleteCustomer, restoreCustomer } from "../../services/Admin/CustomerService";
+import { enqueueSnackbar } from "notistack";
 const BoxStyle = styled(Box)(({ theme }) => ({
   borderBottom: "1px solid #E0E0E0",
   paddingLeft: "24px !important",
@@ -40,12 +43,43 @@ const NoiDung = styled(Typography)(({ theme }) => ({
 }));
 
 function BasicDetailsCustomer(props) {
-  const [status, setStatus] = React.useState("");
+  const { customer } = props;
+  let status = customer.isDeleted ? 1 : 0;
+  const [editStatus, setEditStatus] = React.useState(0);
+  const [disabledButton, setDisabledButton] = React.useState(true);
+
+  useEffect(() => {
+    setEditStatus(status);
+  }, [status]);
 
   const handleChange = (event) => {
-    setStatus(event.target.value);
+    setEditStatus(event.target.value);
+    setDisabledButton(false);
   };
+
   const isSmallScreen = useMediaQuery("(max-width:600px)");
+
+  const handleUpdateButtonClick = async () => {
+    let response;
+    if (editStatus === 0) {
+      response = await restoreCustomer(customer.userId);
+      if (response.success) {
+        enqueueSnackbar("Mở khóa khách hàng thành công!", { variant: "success" });
+        setDisabledButton(true);
+      } else {
+        enqueueSnackbar("Mở khóa khách hàng thất bại!", { variant: "error" });
+      }
+    } else {
+      response = await deleteCustomer(customer.userId);
+      if (response.success) {
+        enqueueSnackbar("Khóa khách hàng thành công!", { variant: "success" });
+        setDisabledButton(true);
+      } else {
+        enqueueSnackbar("Khóa khách hàng thất bại!", { variant: "error" });
+      }
+    }
+  };
+
   return (
     <Stack
       sx={{
@@ -64,7 +98,7 @@ function BasicDetailsCustomer(props) {
           </Grid>
           <Grid item xs={8} md={9}>
             <Stack direction={"column"} spacing={1} alignItems={"flex-start"}>
-              <TieuDeCot>Nguyễn Ngọc Tuyết Vi</TieuDeCot>
+              <TieuDeCot>{customer.fullName}</TieuDeCot>
             </Stack>
           </Grid>
         </Grid>
@@ -77,7 +111,7 @@ function BasicDetailsCustomer(props) {
           </Grid>
 
           <Grid item xs={8} md={9}>
-            <NoiDung>12/10/2022</NoiDung>
+            <NoiDung><FormatDate dateTime={customer.dateOfBirth} /></NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
@@ -88,7 +122,7 @@ function BasicDetailsCustomer(props) {
           </Grid>
 
           <Grid item xs={8} md={9}>
-            <NoiDung>Nữ</NoiDung>
+            <NoiDung>{customer.gender === "Male" ? "Nam" : customer.gender === "Female" ? "Nữ" : "Khác"}</NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
@@ -99,7 +133,7 @@ function BasicDetailsCustomer(props) {
           </Grid>
 
           <Grid item xs={8} md={9}>
-            <NoiDung>01234568975</NoiDung>
+            <NoiDung>{customer.phone}</NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
@@ -110,7 +144,7 @@ function BasicDetailsCustomer(props) {
           </Grid>
 
           <Grid item xs={8} md={9}>
-            <NoiDung>900</NoiDung>
+            <NoiDung>{customer.point}</NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
@@ -124,15 +158,21 @@ function BasicDetailsCustomer(props) {
             <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">Trạng thái</InputLabel>
               <Select
-                value={status}
+                value={editStatus}
                 label="Trạng thái"
                 onChange={handleChange}
                 className="custom-select"
               >
-                <MenuItem value={10} style={{ fontSize: "14px" }}>
+                <MenuItem
+                  value={0}
+                  style={{ fontSize: "14px" }}
+                >
                   Đang hoạt động
                 </MenuItem>
-                <MenuItem value={20} style={{ fontSize: "14px" }}>
+                <MenuItem
+                  value={1}
+                  style={{ fontSize: "14px" }}
+                >
                   Đã khóa
                 </MenuItem>
               </Select>
@@ -159,6 +199,8 @@ function BasicDetailsCustomer(props) {
                   color: "#fff",
                 },
               }}
+              disabled={disabledButton}
+              onClick={handleUpdateButtonClick}
             >
               Cập nhật
             </Button>

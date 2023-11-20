@@ -207,9 +207,9 @@ function CustomerListPage() {
                       <IconButton
                         color="black"
                         onClick={(e) => {
-                          navigate("/admin/customer-management/detail", {
+                          navigate(`/admin/customer-management/${row.userId}`, {
                             state: {
-                              id: row.customerId,
+                              id: row.userId,
                             },
                           });
                         }}
