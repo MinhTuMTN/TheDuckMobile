@@ -163,11 +163,12 @@ function AdminLayout(props) {
   const fetchData = useCallback(async () => {
     let response;
 
+    console.log(pathname);
     switch (pathname) {
-      case "/admin/product-management/list":
+      case "/admin/product-management":
         response = await getAllProducts();
         break;
-      case "/admin/customer-management/list":
+      case "/admin/customer-management":
         response = await getAllCustomers();
         break;
       case "/admin/address-management/province":
@@ -176,31 +177,31 @@ function AdminLayout(props) {
       case "/admin/address-management/province/detail":
         response = await getAllDistricts(searchParams.get("provinceId"));
         break;
-      case "/admin/catalog-management/list":
+      case "/admin/catalog-management":
         response = await getAllCatalogs();
         break;
       case "/admin/brand-management":
         response = await getAllBrands();
         break;
-      case "/admin/color-management/list":
+      case "/admin/color-management":
         response = await getAllColors();
         break;
-      case "/admin/special-feature-management/list":
+      case "/admin/special-feature-management":
         response = await getAllSpecialFeatures();
         break;
-      case "/admin/store-management/list":
+      case "/admin/store-management":
         response = await getAllStores();
         break;
-      case "/admin/os-management/list":
+      case "/admin/os-management":
         response = await getAllOSs();
         break;
-      case "/admin/coupon-management/list":
+      case "/admin/coupon-management":
         response = await getAllCoupons();
         break;
-      case "/admin/feedback-management/list":
+      case "/admin/feedback-management":
         response = await getAllFeedbacks();
         break;
-      case "/admin/order-management/list":
+      case "/admin/order-management":
         response = await getAllOrders();
         break;
       default:
@@ -214,7 +215,7 @@ function AdminLayout(props) {
         enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
       }
     }
-  }, [pathname]);
+  }, [pathname, searchParams]);
 
   useEffect(() => {
     fetchData();

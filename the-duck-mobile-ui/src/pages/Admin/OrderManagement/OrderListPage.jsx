@@ -21,7 +21,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DataContext } from "../../../layouts/AdminLayout";
 
 const RootPageOrderList = styled(Box)(({ theme }) => ({
@@ -137,7 +137,7 @@ function OrderListPage() {
                     onClick={() => {
                       navigate(`/admin/order-management/${row.orderId}`, {
                         state: {
-                          prevURL: "/admin/order-management/list",
+                          prevURL: "/admin/order-management",
                           id: row.orderId
                         }
                       });

@@ -51,7 +51,7 @@ function OrderDetailPage(props) {
               margin="0"
               color="#111927"
               onClick={() => {
-                pathSegs[pathSegs.length - 1] !== "list" ?
+                pathSegs[pathSegs.length - 1] !== "order-management" ?
                   navigate(state.prevURL, {
                     state: {
                       id: pathSegs[pathSegs.length - 1],

@@ -39,7 +39,7 @@ function SearchList(props) {
   useEffect(() => {
     const filtered = filterRows(searchString);
     setRowsSearched(filtered);
-  }, [searchString, filterRows]);
+  }, [searchString, filterRows, setRowsSearched]);
   return (
     <Box
       sx={{

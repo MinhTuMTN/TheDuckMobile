@@ -66,7 +66,7 @@ function CustomerDetailPage() {
               padding="0"
               margin="0"
               color="#111927"
-              onClick={() => { navigate("/admin/customer-management/list") }}
+              onClick={() => { navigate("/admin/customer-management") }}
             >
               <ArrowBackIosIcon />
             </IconButton>

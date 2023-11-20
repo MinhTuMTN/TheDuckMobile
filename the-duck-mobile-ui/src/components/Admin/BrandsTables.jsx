@@ -24,7 +24,6 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import MuiTextField from "../MuiTextFeild";
 import { enqueueSnackbar } from "notistack";
 import { updateBrand } from "../../services/Admin/BrandService";
-import { useNavigate } from "react-router-dom";
 
 const ButtonCustom = styled(Button)`
   border-radius: 0.7rem;

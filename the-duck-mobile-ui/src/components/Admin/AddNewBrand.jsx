@@ -32,7 +32,7 @@ function AddNewBrand(props) {
       };
     });
     return () => URL.revokeObjectURL(url);
-  }, [imageSelected]);
+  }, [imageSelected, setBrandAdd]);
 
   
   return (

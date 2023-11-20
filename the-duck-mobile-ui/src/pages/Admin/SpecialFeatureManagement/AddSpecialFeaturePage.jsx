@@ -1,4 +1,4 @@
-import { Box, FormControl, FormLabel, MenuItem, Paper, Select, Typography, styled } from "@mui/material";
+import { Box, Paper, Typography, styled } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import MuiButton from "../../../components/MuiButton";
 import FlexContainer from "../../../components/FlexContainer";
@@ -44,7 +44,7 @@ function AddSpecialFeaturePage(props) {
 
         if (response.success) {
             enqueueSnackbar("Thêm hệ điều hành thành công", { variant: "success" });
-            navigate("/admin/special-feature-management/list");
+            navigate("/admin/special-feature-management");
         } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     };
 

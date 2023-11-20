@@ -57,7 +57,7 @@ function EditCatalogPage(props) {
 
         if (response.success) {
             enqueueSnackbar("Chỉnh sửa danh mục thành công", { variant: "success" });
-            navigate("/admin/catalog-management/list");
+            navigate("/admin/catalog-management");
         } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     };
     return (

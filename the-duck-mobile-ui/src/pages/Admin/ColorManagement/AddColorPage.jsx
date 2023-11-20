@@ -46,7 +46,7 @@ function AddColorPage(props) {
 
         if (response.success) {
             enqueueSnackbar("Thêm màu sắc thành công", { variant: "success" });
-            navigate("/admin/color-management/list");
+            navigate("/admin/color-management");
         } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     };
     return (

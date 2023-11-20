@@ -167,11 +167,11 @@ function Router(props) {
         },
 
         {
-          path: "color-management/list",
+          path: "color-management",
           element: <ColorListPage />,
         },
         {
-          path: "color-management/add",
+          path: "color-management",
           element: <AddColorPage />,
         },
         {
@@ -179,7 +179,7 @@ function Router(props) {
           element: <EditColorPage />,
         },
         {
-          path: "catalog-management/list",
+          path: "catalog-management",
           element: <CatalogListPage />,
         },
         {
@@ -191,7 +191,7 @@ function Router(props) {
           element: <EditCatalogPage />,
         },
         {
-          path: "product-management/list",
+          path: "product-management",
           element: <ProductListPage />,
         },
         {
@@ -215,7 +215,7 @@ function Router(props) {
           element: <EditProductVersionPage />,
         },
         {
-          path: "customer-management/list",
+          path: "customer-management",
           element: <CustomerListPage />,
         },
 
@@ -230,7 +230,7 @@ function Router(props) {
         },
 
         {
-          path: "store-management/list",
+          path: "store-management",
           element: <StoreListPage />,
         },
         {
@@ -246,7 +246,7 @@ function Router(props) {
           element: <StoreDetailPage />,
         },
         {
-          path: "os-management/list",
+          path: "os-management",
           element: <OSListPage />,
         },
         {
@@ -258,7 +258,7 @@ function Router(props) {
           element: <EditOSPage />,
         },
         {
-          path: "order-management/list",
+          path: "order-management",
           element: <OrderListPage />,
         },
         {
@@ -266,7 +266,7 @@ function Router(props) {
           element: <OrderDetailPage />,
         },
         {
-          path: "coupon-management/list",
+          path: "coupon-management",
           element: <CouponListPage />,
         },
         {
@@ -278,11 +278,11 @@ function Router(props) {
           element: <EditCouponPage />,
         },
         {
-          path: "feedback-management/list",
+          path: "feedback-management",
           element: <FeedbackListPage />,
         },
         {
-          path: "special-feature-management/list",
+          path: "special-feature-management",
           element: <SpecialFeatureListPage />,
         },
         {

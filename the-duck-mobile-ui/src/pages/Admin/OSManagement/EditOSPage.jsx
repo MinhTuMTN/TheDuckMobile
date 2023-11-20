@@ -54,7 +54,7 @@ function EditOSPage(props) {
 
         if (response.success) {
             enqueueSnackbar("Chỉnh sửa hệ điều hành thành công", { variant: "success" });
-            navigate("/admin/os-management/list");
+            navigate("/admin/os-management");
         } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     };
     return (
