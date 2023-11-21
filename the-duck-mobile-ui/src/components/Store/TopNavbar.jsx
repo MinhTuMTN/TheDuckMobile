@@ -1,3 +1,5 @@
+import { HomeWork } from "@mui/icons-material";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   Box,
   IconButton,
@@ -7,10 +9,8 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
-import MenuIcon from "@mui/icons-material/Menu";
 import PropTypes from "prop-types";
-import { HomeWork } from "@mui/icons-material";
+import React from "react";
 import { usePopover } from "../../hooks/use-popover";
 import StorePopover from "./StorePopover";
 

@@ -1,5 +1,9 @@
 import styled from "@emotion/styled";
-import { LocalShippingOutlined, Person2Outlined } from "@mui/icons-material";
+import {
+  LocalShippingOutlined,
+  Person2Outlined,
+  StoreMallDirectoryOutlined,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -106,27 +110,26 @@ function ProfileLayout(props) {
                 </Typography>
               </CustomLink>
             </Stack>
-            {role === "Admin" ||
-              (role === "Staff" && (
-                <>
-                  <Stack direction={"row"} spacing={2} mt={1}>
-                    <LocalShippingOutlined />
-                    <CustomLink to={role === "admin" ? "/admin" : "/store"}>
-                      <Typography variant="body1" component="h1">
-                        {role === "Admin"
-                          ? "Admin Dashboard"
-                          : "Quản lý cửa hàng"}
-                      </Typography>
-                    </CustomLink>
-                  </Stack>
-                  <Divider
-                    sx={{
-                      borderColor: "rgba(0,0,0,0.5)",
-                      margin: "0.5rem 0rem",
-                    }}
-                  />
-                </>
-              ))}
+            {(role === "Admin" || role === "Staff") && (
+              <>
+                <Stack direction={"row"} spacing={2} mt={1}>
+                  <StoreMallDirectoryOutlined />
+                  <CustomLink to={role === "admin" ? "/admin" : "/store"}>
+                    <Typography variant="body1" component="h1">
+                      {role === "Admin"
+                        ? "Admin Dashboard"
+                        : "Quản lý cửa hàng"}
+                    </Typography>
+                  </CustomLink>
+                </Stack>
+                <Divider
+                  sx={{
+                    borderColor: "rgba(0,0,0,0.5)",
+                    margin: "0.5rem 0rem",
+                  }}
+                />
+              </>
+            )}
             <LogOutButton
               variant="outlined"
               fullWidth

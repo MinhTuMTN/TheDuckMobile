@@ -72,6 +72,17 @@ namespace TheDuckMobile_WebAPI.Controllers
         }
 
         [NonAction]
+        private IActionResult HandleUnauthorizedRequestError(IExceptionHandlerFeature context)
+        {
+            return Unauthorized(new GenericResponse
+            {
+                Success = false,
+                Message = context?.Error.Message,
+                Data = null
+            });
+        }
+
+        [NonAction]
         private IActionResult handleStatusCodeException(ExceptionWithStatusCode? error)
         {
             return StatusCode(error!.StatusCode, new GenericResponse

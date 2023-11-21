@@ -45,6 +45,7 @@ import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
 import OrderDetails from "../pages/Seller/OrderDetails";
 import Orders from "../pages/Seller/Orders";
 import Product from "../pages/Seller/Product";
+import { StoreProtectedLayout } from "../layouts/StoreProtectedLayout";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -111,6 +112,10 @@ function Router(props) {
           path: "/login",
           element: <LoginLazy />,
         },
+        {
+          path: "*",
+          element: <NotFound />,
+        },
       ],
     },
     {
@@ -134,16 +139,6 @@ function Router(props) {
               element: <OrderHistoryDetails />,
             },
           ],
-        },
-      ],
-    },
-    {
-      path: "*",
-      element: <MainLayout />,
-      children: [
-        {
-          path: "*",
-          element: <NotFound />,
         },
       ],
     },
@@ -303,28 +298,30 @@ function Router(props) {
       ],
     },
     {
-      path: "loading",
-      element: <Loading />,
-    },
-    {
-      path: "/store",
-      element: <StoreLayout />,
+      path: "/",
+      element: <StoreProtectedLayout />,
       children: [
         {
-          element: <Product />,
-          index: true,
-        },
-        {
-          path: "products",
-          element: <Product />,
-        },
-        {
-          path: "orders",
-          element: <Orders />,
-        },
-        {
-          path: "order-details",
-          element: <OrderDetails />,
+          path: "/store",
+          element: <StoreLayout />,
+          children: [
+            {
+              element: <Product />,
+              index: true,
+            },
+            {
+              path: "products",
+              element: <Product />,
+            },
+            {
+              path: "orders",
+              element: <Orders />,
+            },
+            {
+              path: "order-details",
+              element: <OrderDetails />,
+            },
+          ],
         },
       ],
     },

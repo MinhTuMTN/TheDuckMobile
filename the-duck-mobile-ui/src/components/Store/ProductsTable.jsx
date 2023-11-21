@@ -43,7 +43,7 @@ function Row(props) {
           <Stack direction={"row"} spacing={2} alignItems={"center"}>
             <CardMedia
               component="img"
-              image={row.productImage}
+              image={row.thumbnail}
               alt="Hình ảnh sản phẩm"
               style={{ maxHeight: "5rem", maxWidth: "5rem" }}
             />
@@ -57,7 +57,7 @@ function Row(props) {
                   maxWidth: "300px", // Điều chỉnh chiều rộng tối đa
                 }}
               >
-                {row.productName}
+                {row.productName} - {row.productVersionName}
               </Typography>
               <Typography
                 variant="subtitle1"
@@ -67,16 +67,29 @@ function Row(props) {
                 }}
               >
                 {" "}
-                Category {row.category}
+                Category {row.catalogName}
               </Typography>
             </Stack>
           </Stack>
         </TableCell>
-        <TableCell align="right">
-          <FormatCurrency amount={row.price} />
+        <TableCell
+          align="right"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography>
+            <FormatCurrency amount={row.price} />
+          </Typography>
+          <Typography>
+            <FormatCurrency amount={row.promotionPrice} />
+          </Typography>
         </TableCell>
         <TableCell align="right">{row.quantity}</TableCell>
-        <TableCell align="right">{row.status}</TableCell>
+        <TableCell align="right">
+          {!row.isDeleted ? "Đang bán" : "Ngưng bán"}
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell
@@ -203,9 +216,9 @@ function ProductsTable(props) {
         count={count}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
+        page={page - 1}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[1, 5, 10, 25]}
       />
     </>
   );

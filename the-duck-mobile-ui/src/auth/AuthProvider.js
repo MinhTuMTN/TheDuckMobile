@@ -21,6 +21,10 @@ const AuthProvider = ({ children }) => {
     setToken_(newToken);
   };
 
+  const setRole = (newRole) => {
+    setRole_(newRole);
+  };
+
   const handleCheckToken = useCallback(async () => {
     const response = await checkToken();
     if (response.success) {
@@ -49,6 +53,7 @@ const AuthProvider = ({ children }) => {
       token,
       setToken,
       role,
+      setRole,
     }),
     [token, role]
   );

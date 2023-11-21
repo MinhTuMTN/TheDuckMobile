@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import DeleteIcon from "@mui/icons-material/Delete";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import {
   IconButton,
   Paper,
@@ -59,6 +60,29 @@ function CartTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
+          {products?.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={7} align="center">
+                <Typography
+                  variant="body1"
+                  component="p"
+                  padding={5}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <HighlightOffRoundedIcon
+                    style={{
+                      marginRight: 5,
+                    }}
+                  />
+                  Không có sản phẩm nào trong giỏ hàng
+                </Typography>
+              </TableCell>
+            </TableRow>
+          )}
           {products?.map((product) => (
             <TableRow key={`product-cart-${product?.productVersionId}`}>
               <TableCell>
