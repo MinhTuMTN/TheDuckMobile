@@ -28,7 +28,10 @@ import { getAddresses } from "../services/AddressService";
 import { getCoupon } from "../services/CouponService";
 import { enqueueSnackbar } from "notistack";
 import { getStoreAddresses } from "../services/StoreService";
-import { createOrderLoggedIn } from "../services/OrderService";
+import {
+  createOrderLoggedIn,
+  createOrderNonLoggedIn,
+} from "../services/OrderService";
 
 const Wrapped = styled.div`
   color: rgba(0, 0, 0, 0.65);
@@ -222,10 +225,21 @@ function BuyProduct(props) {
       })),
     };
 
-    const response = await createOrderLoggedIn(data);
+    if (!token) {
+      data.temporaryCustomer = {};
+      data.temporaryCustomer.fullName = info.name;
+      data.temporaryCustomer.phone = info.phone;
+      data.temporaryCustomer.gender = info.gender;
+    }
+
+    let response;
+    if (token) response = await createOrderLoggedIn(data);
+    else response = await createOrderNonLoggedIn(data);
     if (response.success) {
       enqueueSnackbar("Đặt hàng thành công", { variant: "success" });
-      navigate("/profile/order-history");
+
+      if (token) navigate("/profile/order-history");
+      else navigate("/");
 
       // Update cart in local storage remove selected products
       const cartData = JSON.parse(localStorage.getItem("cart"));
@@ -244,6 +258,7 @@ function BuyProduct(props) {
     selectedAddress,
     state?.selectedProducts,
     navigate,
+    info,
   ]);
   return (
     <Wrapped>
@@ -325,7 +340,7 @@ function BuyProduct(props) {
           >
             THÔNG TIN KHÁCH HÀNG
           </Typography>
-          {info.name.trim() !== "" ? (
+          {token ? (
             <>
               <Stack
                 ref={oldInfoForm}
@@ -367,7 +382,7 @@ function BuyProduct(props) {
               )} */}
             </>
           ) : (
-            <NewCustomerInfomation />
+            <NewCustomerInfomation info={info} onChange={setInfo} />
           )}
         </Stack>
         <Stack

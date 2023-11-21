@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import React, { memo, useEffect } from "react";
 import {
   addAddress,
+  addAddressAnonymous,
   getDistricts,
   getProvines,
   getWards,
@@ -11,6 +12,7 @@ import {
 } from "../services/AddressService";
 import DialogForm from "./DialogForm";
 import MuiTextFeild from "./MuiTextFeild";
+import { useAuth } from "../auth/AuthProvider";
 
 UserAddAddress.propTypes = {
   open: PropTypes.bool,
@@ -18,6 +20,14 @@ UserAddAddress.propTypes = {
   editAddress: PropTypes.object,
   onChangeAddress: PropTypes.func,
   setEditAddress: PropTypes.func,
+};
+
+UserAddAddress.defaultProps = {
+  open: false,
+  setOpen: null,
+  editAddress: null,
+  onChangeAddress: () => {},
+  setEditAddress: () => {},
 };
 
 function UserAddAddress(props) {
@@ -32,6 +42,7 @@ function UserAddAddress(props) {
   const [province, setProvince] = React.useState([]);
   const [district, setDistrict] = React.useState([]);
   const [ward, setWard] = React.useState([]);
+  const { token } = useAuth();
 
   useEffect(() => {
     if (!editAddress) return;
@@ -77,10 +88,18 @@ function UserAddAddress(props) {
   }, [address.district, enqueueSnackbar]);
 
   const handleAddAddress = async () => {
-    const response = await addAddress({
-      street: address.street,
-      wardId: address.ward,
-    });
+    let response;
+    if (token) {
+      response = await addAddress({
+        street: address.street,
+        wardId: address.ward,
+      });
+    } else {
+      response = await addAddressAnonymous({
+        street: address.street,
+        wardId: address.ward,
+      });
+    }
 
     if (response.success) {
       enqueueSnackbar("Thêm địa chỉ thành công", { variant: "success" });

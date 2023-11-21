@@ -1,19 +1,18 @@
 import { Stack, Typography } from "@mui/material";
-import React from "react";
 import PropTypes from "prop-types";
-import Unit from "./Unit";
+import React from "react";
 import FormatCurrency from "./FormatCurrency";
 
 ProductInformation.propTypes = {
-  color: PropTypes.string,
   fontWeight: PropTypes.string,
+  product: PropTypes.object,
 };
 function ProductInformation(props) {
-  const { color, fontWeight, product } = props;
+  const { fontWeight, product } = props;
   return (
     <Stack direction={"row"} spacing={1}>
       <Stack direction={"row"} flexBasis={"60%"}>
-        <img src={product.thumbnail} alt="product" width={"25%"} />
+        <img src={product?.thumbnail} alt="product" width={"25%"} />
         <Stack
           direction={"column"}
           spacing={0.5}
@@ -27,7 +26,7 @@ function ProductInformation(props) {
               marginLeft: "0.5rem",
             }}
           >
-            {product.productName}
+            {product?.productName}
           </Typography>
           <Stack direction={"row"}>
             <Stack direction={"column"} spacing={0.5}>
@@ -48,11 +47,21 @@ function ProductInformation(props) {
                   style={{
                     fontSize: "12px",
                     marginLeft: "0.2rem",
-                    marginRight: "1.5rem",
                   }}
                 >
-                  {product.colorName}
+                  {product?.colorName}
                 </Typography>
+                <Typography
+                  component={"span"}
+                  sx={{
+                    display: "inline-block",
+                    width: "1rem",
+                    height: "1rem",
+                    backgroundColor: product?.colorCode || "black",
+                    borderRadius: "50%",
+                    marginLeft: 1,
+                  }}
+                />
               </Stack>
               <Stack direction={"row"} spacing={1}>
                 <Typography
@@ -74,7 +83,7 @@ function ProductInformation(props) {
                     marginRight: "1.5rem",
                   }}
                 >
-                  {product.versionName}
+                  {product?.versionName}
                 </Typography>
               </Stack>
             </Stack>
@@ -96,7 +105,7 @@ function ProductInformation(props) {
                 marginLeft: "0.2rem",
               }}
             >
-              {product.quantity}
+              {product?.quantity}
             </Typography>
           </Stack>
         </Stack>
@@ -108,8 +117,8 @@ function ProductInformation(props) {
         flexBasis={"40%"}
         justifyContent={"center"}
       >
-        {product.promotionPrice > 0 &&
-          product.promotionPrice < product.price && (
+        {product?.promotionPrice > 0 &&
+          product?.promotionPrice < product?.price && (
             <Typography
               variant="body1"
               fontWeight={"500"}
@@ -118,7 +127,7 @@ function ProductInformation(props) {
                 textDecoration: "line-through",
               }}
             >
-              <FormatCurrency amount={product.price} />
+              <FormatCurrency amount={product?.price} />
             </Typography>
           )}
         <Typography
@@ -130,7 +139,10 @@ function ProductInformation(props) {
           }}
         >
           <FormatCurrency
-            amount={Math.min(product.price, product.promotionPrice)}
+            amount={
+              Math.min(product?.price, product?.promotionPrice) *
+              product?.quantity
+            }
           />
         </Typography>
       </Stack>

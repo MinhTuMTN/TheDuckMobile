@@ -7,6 +7,17 @@ import {
 } from "@mui/material";
 import React from "react";
 import MuiTextFeild from "./MuiTextFeild";
+import PropTypes from "prop-types";
+
+NewCustomerInfomation.propTypes = {
+  info: PropTypes.object,
+  onChange: PropTypes.func,
+};
+
+NewCustomerInfomation.defaultProps = {
+  info: {},
+  onChange: () => {},
+};
 
 function NewCustomerInfomation(props) {
   const { info, onChange } = props;
@@ -22,7 +33,7 @@ function NewCustomerInfomation(props) {
             className="custom-radio"
             control={<Radio size="small" />}
             label={<span style={{ fontSize: "14px" }}>Anh</span>}
-            checked={info && info.gender === 0}
+            checked={info?.gender === 0}
             onChange={(e) => {
               handleChange({ ...info, gender: 0 });
             }}
@@ -31,7 +42,7 @@ function NewCustomerInfomation(props) {
             value="male"
             control={<Radio size="small" />}
             label={<span style={{ fontSize: "14px" }}>Chị</span>}
-            checked={info && info.gender === 1}
+            checked={info?.gender === 1}
             onChange={(e) => {
               handleChange({ ...info, gender: 1 });
             }}
@@ -61,8 +72,8 @@ function NewCustomerInfomation(props) {
             label="Số điện thoại"
             size="medium"
             fontSize={"14px"}
-            disabled={info && info.phone}
             value={info && info.phone}
+            onChange={(e) => handleChange({ ...info, phone: e.target.value })}
           />
         </Grid>
       </Grid>

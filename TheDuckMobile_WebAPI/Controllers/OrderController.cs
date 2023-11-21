@@ -53,5 +53,41 @@ namespace TheDuckMobile_WebAPI.Controllers
             });
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUserOrders([FromQuery] int page = 0,
+            [FromQuery] int limit = 1)
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var paginationOrders = await _orderServices.GetUserOrders(
+                Guid.Parse(id!), page, limit);
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = paginationOrders
+            });
+        }
+
+        [HttpGet("{orderId}")]
+        [Authorize]
+        public async Task<IActionResult> GetOrderDetails([FromRoute] Guid orderId)
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var orderDetails = await _orderServices.GetOrderDetails(Guid.Parse(id!), orderId);
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = orderDetails
+            });
+        }
+
     }
 }
