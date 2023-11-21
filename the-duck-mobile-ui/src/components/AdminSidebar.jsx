@@ -128,9 +128,11 @@ function AdminSidebar(props) {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
 
   const location = useLocation();
-  const currentSection = location.pathname
+  let currentSection = location.pathname
     .split("/")
     .filter((part) => part !== "")[1];
+
+  if (currentSection === undefined) currentSection = "customer-management";
   const activeSection = sidebarItems.find(
     (item) => item.section === currentSection
   )?.section;

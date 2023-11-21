@@ -218,7 +218,10 @@ function Router(props) {
           path: "customer-management/list",
           element: <CustomerListPage />,
         },
-
+        {
+          element: <CustomerListPage />,
+          index: true,
+        },
         {
           path: "customer-management/detail",
           element: <CustomerDetailPage />,
@@ -307,6 +310,10 @@ function Router(props) {
       path: "/store",
       element: <StoreLayout />,
       children: [
+        {
+          element: <Product />,
+          index: true,
+        },
         {
           path: "products",
           element: <Product />,

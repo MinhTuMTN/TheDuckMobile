@@ -28,7 +28,7 @@ const LogOutButton = styled(Button)(({ theme }) => ({
 const UserInfoContext = createContext(null);
 
 function ProfileLayout(props) {
-  const { setToken } = useAuth();
+  const { setToken, role } = useAuth();
 
   const handleLogout = useCallback(() => {
     setToken(null);
@@ -106,9 +106,27 @@ function ProfileLayout(props) {
                 </Typography>
               </CustomLink>
             </Stack>
-            <Divider
-              sx={{ borderColor: "rgba(0,0,0,0.5)", margin: "0.5rem 0rem" }}
-            />
+            {role === "Admin" ||
+              (role === "Staff" && (
+                <>
+                  <Stack direction={"row"} spacing={2} mt={1}>
+                    <LocalShippingOutlined />
+                    <CustomLink to={role === "admin" ? "/admin" : "/store"}>
+                      <Typography variant="body1" component="h1">
+                        {role === "Admin"
+                          ? "Admin Dashboard"
+                          : "Quản lý cửa hàng"}
+                      </Typography>
+                    </CustomLink>
+                  </Stack>
+                  <Divider
+                    sx={{
+                      borderColor: "rgba(0,0,0,0.5)",
+                      margin: "0.5rem 0rem",
+                    }}
+                  />
+                </>
+              ))}
             <LogOutButton
               variant="outlined"
               fullWidth

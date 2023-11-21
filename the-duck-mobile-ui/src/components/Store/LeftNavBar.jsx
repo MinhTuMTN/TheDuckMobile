@@ -59,7 +59,15 @@ function LeftNavBar(props) {
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary={"Thống kê"} />
+            <ListItemText primary={"Sản phẩm"} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Đơn hàng"} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -68,27 +76,6 @@ function LeftNavBar(props) {
               <InboxIcon />
             </ListItemIcon>
             <ListItemText primary={"Thống kê"} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Thống kê"} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton color="white">
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText
-              secondary={"Thống kê"}
-              sx={{
-                color: "white",
-              }}
-            />
           </ListItemButton>
         </ListItem>
       </List>

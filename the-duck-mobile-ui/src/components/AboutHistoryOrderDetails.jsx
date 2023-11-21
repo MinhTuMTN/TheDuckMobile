@@ -1,11 +1,10 @@
+import styled from "@emotion/styled";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Box, Button, Card, Stack, Typography } from "@mui/material";
 import React from "react";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import styled from "@emotion/styled";
-import Unit from "./Unit";
-import ProductInformation from "./ProductInformation";
 import CustomLink from "./CustomLink";
 import FormatCurrency from "./FormatCurrency";
+import ProductInformation from "./ProductInformation";
 
 const LeftText = styled(Typography)`
   flex-basis: 85%;
