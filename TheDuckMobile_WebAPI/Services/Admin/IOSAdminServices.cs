@@ -9,7 +9,7 @@ namespace TheDuckMobile_WebAPI.Services.Admin
         public Task<OS> GetOSById(int id);
         public Task<OS> AddOS(OSRequest request);
         public Task<OS> UpdateOS(int id, OSRequest request);
-        public Task<OS?> RestoreColor(int osId);
+        public Task<OS?> RestoreOS(int osId);
         public Task<bool> DeleteOS(int id);
     }
 }

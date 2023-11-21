@@ -97,7 +97,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         [HttpGet("restore/{osId}")]
         public async Task<IActionResult> RestoreOS([FromRoute] int osId)
         {
-            var os = await _osServices.RestoreColor(osId);
+            var os = await _osServices.RestoreOS(osId);
 
             if (os == null)
                 throw new BadHttpRequestException("OS could not be restored.");

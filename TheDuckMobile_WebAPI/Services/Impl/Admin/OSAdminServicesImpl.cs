@@ -43,7 +43,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return os.IsDeleted;
         }
 
-        public async Task<OS?> RestoreColor(int osId)
+        public async Task<OS?> RestoreOS(int osId)
         {
             var os = await GetOSById(osId);
 

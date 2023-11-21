@@ -382,7 +382,7 @@ function OSListPage() {
                                   setDeleteDialog(true);
                                 }}
                               >
-                                Xem
+                                {row.isDeleted ? "Mở khóa" : "Khóa"}
                               </Button>
                             </Stack>
                           </Popover>

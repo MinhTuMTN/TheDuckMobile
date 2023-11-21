@@ -49,6 +49,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
 }));
+
 const CustomButton = styled(Button)(({ theme }) => ({
   color: "#fff",
   backgroundColor: "#FF6969",
@@ -384,7 +385,7 @@ function ColorListPage() {
                                   setColorRequest(
                                     {
                                       colorName: row.colorName,
-                                      colorCode: row.colorNcolorCodeame
+                                      colorCode: row.colorCode
                                     }
                                   );
                                   setAddNew(false);
@@ -412,7 +413,7 @@ function ColorListPage() {
                                   setDeleteDialog(true);
                                 }}
                               >
-                                Xem
+                                {row.isDeleted ? "Mở khóa" : "Khóa"}
                               </Button>
                             </Stack>
                           </Popover>
@@ -446,7 +447,6 @@ function ColorListPage() {
                               setDeleteDialog(true);
                           }}
                           >
-                            {/* <InfoOutlinedIcon color="black" /> */}
                             {row.isDeleted ? <RestoreFromTrashIcon color="black" /> : <DeleteIcon color="black" />}
                           </IconButton>
                         </>
