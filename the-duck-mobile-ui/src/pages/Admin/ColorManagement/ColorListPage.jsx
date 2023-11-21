@@ -24,7 +24,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import TablePaginationActions from "../../../components/TablePaginationActions";
 
 import { useTheme } from "@emotion/react";
@@ -91,14 +90,13 @@ function ColorListPage() {
     colorCode: "",
   });
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     setRowsSearched(dataFetched);
   }, [dataFetched]);
 
   const filterRows = useCallback(
     (searchString) => {
+      setPage(0);
       if (searchString === "") {
         return dataFetched;
       }
@@ -174,7 +172,7 @@ function ColorListPage() {
       response = await restoreColor(colorId);
       if (response.success) {
         enqueueSnackbar("Mở khóa màu sắc thành công!", { variant: "success" });
-        colors[index].isDeleted = !isDeleted;
+        colors[index + page * rowsPerPage].isDeleted = !isDeleted;
         setRowsSearched(colors);
       } else {
         enqueueSnackbar("Mở khóa màu sắc thất bại!", { variant: "error" });
@@ -183,7 +181,7 @@ function ColorListPage() {
       response = await deleteColor(colorId);
       if (response.success) {
         enqueueSnackbar("Khóa màu sắc thành công!", { variant: "success" });
-        colors[index].isDeleted = !isDeleted;
+        colors[index + page * rowsPerPage].isDeleted = !isDeleted;
         setRowsSearched(colors);
       } else {
         enqueueSnackbar("Khóa màu sắc thất bại!", { variant: "error" });

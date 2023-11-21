@@ -59,9 +59,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 }
                 order.OrderItems = orderItems;
             }
-
-
-
             return new OrderDetailResponse(order);
         }
     }

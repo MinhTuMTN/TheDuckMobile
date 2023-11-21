@@ -65,6 +65,7 @@ function ColorListPage() {
 
     const filterRows = useCallback(
         (searchString) => {
+            setPage(0);
             if (searchString === "") {
                 return dataFetched;
             }
@@ -100,7 +101,7 @@ function ColorListPage() {
             response = await restoreColor(id);
             if (response.success) {
                 enqueueSnackbar("Khôi phục màu sắc thành công!", {  variant: "success" });
-                colors[index].isDeleted = !isDeleted;
+                colors[index + page * rowsPerPage].isDeleted = !isDeleted;
                 setRowsSearched(colors);
             } else {
                 enqueueSnackbar("Khôi phục màu sắc thất bại!", { variant: "error" });
@@ -109,7 +110,7 @@ function ColorListPage() {
             response = await deleteColor(id);
             if (response.success) {
                 enqueueSnackbar("Xóa màu sắc thành công!", { variant: "success" });
-                colors[index].isDeleted = !isDeleted;
+                colors[index + page * rowsPerPage].isDeleted = !isDeleted;
                 setRowsSearched(colors);
             } else {
                 enqueueSnackbar("Xóa màu sắc thất bại!", { variant: "error" });

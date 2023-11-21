@@ -21,11 +21,13 @@ function SearchList(props) {
     searchString,
     setRowsSearched,
     dataFetched,
-    setSearchString
+    setSearchString,
+    setPage
   } = props;
 
   const filterRows = useCallback(
     (searchString) => {
+      setPage(0);
       if (searchString === "") {
         return dataFetched;
       }
@@ -33,7 +35,7 @@ function SearchList(props) {
         row.brandName.toLowerCase().includes(searchString.toLowerCase())
       );
     },
-    [dataFetched]
+    [dataFetched, setPage]
   );
 
   useEffect(() => {

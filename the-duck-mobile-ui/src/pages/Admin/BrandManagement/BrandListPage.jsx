@@ -108,6 +108,7 @@ function BrandListPage(props) {
             setRowsSearched={setRowsSearched}
             dataFetched={dataFetched}
             setSearchString={setSearchString}
+            setPage={setPage}
             />
 
             <BrandsTable

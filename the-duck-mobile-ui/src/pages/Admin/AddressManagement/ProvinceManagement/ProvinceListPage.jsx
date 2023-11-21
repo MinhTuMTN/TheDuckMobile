@@ -86,6 +86,7 @@ function ProvinceListPage() {
 
   const filterRows = useCallback(
     (searchString) => {
+      setPage(0);
       if (searchString === "") {
         return dataFetched;
       }

@@ -45,9 +45,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
         public async Task<ICollection<SpecialFeature>> GetAllSpecialFeatures()
         {
-            var specailFeatures = await _context.SpecialFeatures
-                .Where(s => s.IsDeleted == false)
-                .ToListAsync();
+            var specailFeatures = await _context.SpecialFeatures.ToListAsync();
 
             return specailFeatures;
         }

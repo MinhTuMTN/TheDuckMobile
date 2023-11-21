@@ -64,6 +64,7 @@ function CatalogListPage() {
 
   const filterRows = useCallback(
     (searchString) => {
+      setPage(0);
       if (searchString === "") {
         return dataFetched;
       }
@@ -99,7 +100,7 @@ function CatalogListPage() {
       response = await restoreCatalog(id);
       if (response.success) {
         enqueueSnackbar("Khôi phục danh mục thành công!", { variant: "success" });
-        catalogs[index].isDeleted = !isDeleted;
+        catalogs[index + page * rowsPerPage].isDeleted = !isDeleted;
         setRowsSearched(catalogs);
       } else {
         enqueueSnackbar("Khôi phục danh mục thất bại!", { variant: "error" });
@@ -108,7 +109,7 @@ function CatalogListPage() {
       response = await deleteCatalog(id);
       if (response.success) {
         enqueueSnackbar("Xóa danh mục thành công!", { variant: "success" });
-        catalogs[index].isDeleted = !isDeleted;
+        catalogs[index + page * rowsPerPage].isDeleted = !isDeleted;
         setRowsSearched(catalogs);
       } else {
         enqueueSnackbar("Xóa danh mục thất bại!", { variant: "error" });

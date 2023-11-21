@@ -17,17 +17,17 @@ import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import { Link, useNavigate } from "react-router-dom";
-import DeleteIcon from '@mui/icons-material/Delete';
 import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import MuiTextFeild from "../../../components/MuiTextFeild";
 import { Search } from "@mui/icons-material";
+import MuiTextFeild from "../../../components/MuiTextFeild";
 import { DataContext } from "../../../layouts/AdminLayout";
 import { enqueueSnackbar } from "notistack";
-import { deleteOS, restoreOS } from "../../../services/Admin/OSService";
+import { deleteSpecialFeature, restoreSpecialFeature } from "../../../services/Admin/SpecialFeatureService";
 import DialogConfirm from "../../../components/DialogConfirm";
 
-const RootPageOSList = styled(Box)(({ theme }) => ({
+const RootPageSpecialFeatureList = styled(Box)(({ theme }) => ({
     display: "flex",
     width: "100%",
     flexDirection: "column",
@@ -35,7 +35,7 @@ const RootPageOSList = styled(Box)(({ theme }) => ({
 }));
 
 const AddButton = styled(MuiButton)(({ theme }) => ({
-    width: "25%",
+    width: "30%",
     marginBottom: theme.spacing(1),
     "&:hover": {
         backgroundColor: "#FF6969",
@@ -46,7 +46,7 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-function OSListPage() {
+function SpecialFeatureListPage() {
     const navigate = useNavigate();
     const { dataFetched } = useContext(DataContext);
     const [page, setPage] = useState(0);
@@ -58,6 +58,10 @@ function OSListPage() {
     const [index, setIndex] = useState(0);
     const [deleteDialog, setDeleteDialog] = useState(false);
 
+    useEffect(() => {
+        setRowsSearched(dataFetched);
+    }, [dataFetched]);
+
     const filterRows = useCallback(
         (searchString) => {
             setPage(0);
@@ -65,7 +69,7 @@ function OSListPage() {
                 return dataFetched;
             }
             return dataFetched.filter((row) =>
-                row.osName.toLowerCase().includes(searchString.toLowerCase())
+                row.specialFeatureName.toLowerCase().includes(searchString.toLowerCase())
             );
         },
         [dataFetched]
@@ -75,10 +79,6 @@ function OSListPage() {
         const filtered = filterRows(searchString);
         setRowsSearched(filtered);
     }, [searchString, filterRows]);
-
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -91,34 +91,33 @@ function OSListPage() {
 
     const handleTrashButtonClick = async () => {
         let response;
-        const osList = [...dataFetched];
+        const specialFeatures = [...dataFetched];
         if (isDeleted) {
-            response = await restoreOS(id);
+            response = await restoreSpecialFeature(id);
             if (response.success) {
-                enqueueSnackbar("Khôi phục hệ điều hành thành công!", { variant: "success" });
-                osList[index + page * rowsPerPage].isDeleted = !isDeleted;
-                setRowsSearched(osList);
+                enqueueSnackbar("Khôi phục tính năng đặc biệt thành công!", { variant: "success" });
+                specialFeatures[index + page * rowsPerPage].isDeleted = !isDeleted;
+                setRowsSearched(specialFeatures);
             } else {
-                enqueueSnackbar("Khôi phục hệ điều hành thất bại!", { variant: "error" });
+                enqueueSnackbar("Khôi phục tính năng đặc biệt thất bại!", { variant: "error" });
             }
         } else {
-            response = await deleteOS(id);
+            response = await deleteSpecialFeature(id);
             if (response.success) {
-                enqueueSnackbar("Xóa hệ điều hành thành công!", { variant: "success" });
-                osList[index + page * rowsPerPage].isDeleted = !isDeleted;
-                setRowsSearched(osList);
+                enqueueSnackbar("Xóa tính năng đặc biệt thành công!", { variant: "success" });
+                specialFeatures[index + page * rowsPerPage].isDeleted = !isDeleted;
+                setRowsSearched(specialFeatures);
             } else {
-                enqueueSnackbar("Xóa hệ điều hành thất bại!", { variant: "error" });
+                enqueueSnackbar("Xóa tính năng đặc biệt thất bại!", { variant: "error" });
             }
         }
     };
-
     return (
-        <RootPageOSList>
-            <Typography variant="h3">Danh sách hệ điều hành</Typography>
-            <AddButton component={Link} variant="contained" color="color1" to="/admin/os-management/add">
+        <RootPageSpecialFeatureList>
+            <Typography variant="h3">Danh sách tính năng đặc biệt</Typography>
+            <AddButton component={Link} variant="contained" color="color1" to="/admin/special-feature-management/add">
                 <Typography color={"white"}>
-                    Thêm Hệ Điều Hành Mới
+                    Thêm Tính Năng Đặc Biệt Mới
                 </Typography>
             </AddButton>
             <SearchTextField
@@ -144,8 +143,8 @@ function OSListPage() {
                 <Table stickyHeader sx={{ maxWidth: 1200 }}>
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center">Mã hệ điều hành</TableCell>
-                            <TableCell align="center">Tên hệ điều hành</TableCell>
+                            <TableCell align="center">Mã tính năng đặc biệt</TableCell>
+                            <TableCell align="center">Tên tính năng đặc biệt</TableCell>
                             <TableCell align="center">Trạng thái</TableCell>
                             <TableCell align="center">Lựa chọn</TableCell>
                         </TableRow>
@@ -156,11 +155,11 @@ function OSListPage() {
                             : rowsSearched
                         ).map((row, i) => (
                             <TableRow key={i}>
-                                <TableCell style={{ minWidth: 200 }} align="center">
-                                    {row.osId}
+                                <TableCell style={{ minWidth: 100 }} align="center">
+                                    {row.specialFeatureId}
                                 </TableCell>
-                                <TableCell style={{ minWidth: 150 }} align="center">
-                                    {row.osName}
+                                <TableCell style={{ minWidth: 200 }} align="center">
+                                    {row.specialFeatureName}
                                 </TableCell>
                                 <TableCell style={{ minWidth: 250 }} align="center">
                                     {row.isDeleted ? "Ngừng hoạt động" : "Còn hoạt động"}
@@ -169,9 +168,9 @@ function OSListPage() {
                                     <MuiButton
                                         color="teal"
                                         onClick={() => {
-                                            navigate(`/admin/os-management/${row.osId}`, {
+                                            navigate(`/admin/special-feature-management/${row.specialFeatureId}`, {
                                                 state: {
-                                                    editOS: row
+                                                    editSpecialFeature: row
                                                 }
                                             })
                                         }}
@@ -183,7 +182,7 @@ function OSListPage() {
                                         color="color1"
                                         onClick={(e) => {
                                             setIndex(i);
-                                            setId(row.osId);
+                                            setId(row.specialFeatureId);
                                             setIsDeleted(row.isDeleted);
                                             setDeleteDialog(true);
                                         }}
@@ -192,11 +191,11 @@ function OSListPage() {
                                     </MuiButton>
                                     <DialogConfirm
                                         open={deleteDialog}
-                                        title={isDeleted ? "Khôi phục hệ điều hành" : "Xóa hệ điều hành"}
+                                        title={isDeleted ? "Khôi phục tính năng đặc biệt" : "Xóa tính năng đặc biệt"}
                                         content={
                                             isDeleted
-                                                ? "Bạn có chắc chắn muốn khôi phục hệ điều hành này"
-                                                : "Bạn có chắc chắn muốn xóa hệ điều hành này?"
+                                                ? "Bạn có chắc chắn muốn khôi phục tính năng đặc biệt này"
+                                                : "Bạn có chắc chắn muốn xóa tính năng đặc biệt này?"
                                         }
                                         okText={isDeleted ? "Khôi phục" : "Xóa"}
                                         cancelText={"Hủy"}
@@ -207,11 +206,6 @@ function OSListPage() {
                                 </TableCell>
                             </TableRow>
                         ))}
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={5} />
-                            </TableRow>
-                        )}
                     </TableBody>
                     <TableFooter>
                         <TableRow>
@@ -230,8 +224,8 @@ function OSListPage() {
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </RootPageOSList>
+        </RootPageSpecialFeatureList>
     );
 }
 
-export default OSListPage;
+export default SpecialFeatureListPage;

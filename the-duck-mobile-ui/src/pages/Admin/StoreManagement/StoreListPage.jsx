@@ -65,6 +65,7 @@ function StoreListPage() {
 
     const filterRows = useCallback(
         (searchString) => {
+            setPage(0);
             if (searchString === "") {
                 return dataFetched;
             }
@@ -100,7 +101,7 @@ function StoreListPage() {
             response = await restoreStore(id);
             if (response.success) {
                 enqueueSnackbar("Khôi phục chi nhánh thành công!", { variant: "success" });
-                stores[index].isDeleted = !isDeleted;
+                stores[index + page * rowsPerPage].isDeleted = !isDeleted;
                 setRowsSearched(stores);
             } else {
                 enqueueSnackbar("Khôi phục chi nhánh thất bại!", { variant: "error" });
@@ -109,7 +110,7 @@ function StoreListPage() {
             response = await deleteStore(id);
             if (response.success) {
                 enqueueSnackbar("Xóa chi nhánh thành công!", { variant: "success" });
-                stores[index].isDeleted = !isDeleted;
+                stores[index + page * rowsPerPage].isDeleted = !isDeleted;
                 setRowsSearched(stores);
             } else {
                 enqueueSnackbar("Xóa chi nhánh thất bại!", { variant: "error" });

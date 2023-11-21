@@ -30,16 +30,13 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public Guid StoreId { get; set; }
         [JsonIgnore]
-        [JsonIgnore]
         public virtual Store? Store { get; set; }
 
         public Guid? StaffId { get; set; }
         [JsonIgnore]
-        [JsonIgnore]
         public virtual Staff? Staff { get; set; }
 
         public Guid? CustomerId { get; set; }
-        [JsonIgnore]
         [JsonIgnore]
         public virtual Customer? Customer { get; set; }
 
@@ -53,7 +50,6 @@ namespace TheDuckMobile_WebAPI.Entities
 
         [JsonIgnore]
         public Guid? TemporaryCustomerId { get; set; }
-        [JsonIgnore]
         [JsonIgnore]
         public virtual TemporaryCustomer? TemporaryCustomer { get; set; }
     }
