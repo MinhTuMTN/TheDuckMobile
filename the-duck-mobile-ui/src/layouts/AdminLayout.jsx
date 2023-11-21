@@ -212,7 +212,7 @@ function AdminLayout(props) {
     } else {
       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
     }
-  }, [pathname]);
+  }, [pathname, searchParams]);
 
   useEffect(() => {
     fetchData();

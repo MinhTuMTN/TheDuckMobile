@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import BadgeIcon from "@mui/icons-material/Badge";
 import BrandingWatermarkIcon from "@mui/icons-material/BrandingWatermark";
 import CategoryIcon from "@mui/icons-material/Category";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
@@ -26,10 +25,10 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import PropTypes from "prop-types";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import CustomLink from "./CustomLink";
-import PropTypes from "prop-types";
 
 const CustomListItemButton = styled(ListItemButton)(({ theme, active }) => ({
   backgroundColor: active === "true" ? "#333860da" : "",

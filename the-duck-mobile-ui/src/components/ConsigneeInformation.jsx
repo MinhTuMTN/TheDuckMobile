@@ -103,7 +103,7 @@ function ConsigneeInformation(props) {
               width: "80%",
             }}
           >
-            Trước {dateReceive.getHours()} : {dateReceive.getMinutes()} -{" "}
+            Trước {dateReceive.getHours()}:{dateReceive.getMinutes()} -{" "}
             {days[dateReceive.getDay()]} ({formatDate()})
           </Typography>
         </Stack>
