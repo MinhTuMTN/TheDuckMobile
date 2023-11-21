@@ -199,7 +199,6 @@ function Row(props) {
                       label="Tên thương hiệu"
                       type="text"
                       size="medium"
-                      color="color5"
                       value={brand.brandName}
                       onChange={(e) => {
                         setBrand((prev) => ({

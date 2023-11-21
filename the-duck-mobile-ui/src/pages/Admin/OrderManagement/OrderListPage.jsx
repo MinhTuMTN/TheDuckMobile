@@ -1,6 +1,4 @@
 import { Search } from "@mui/icons-material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
 import {
   Box,
@@ -140,12 +138,6 @@ function OrderListPage() {
                     }}
                   >
                     <InfoIcon />
-                  </MuiButton>
-                  <MuiButton color="teal">
-                    <EditIcon />
-                  </MuiButton>
-                  <MuiButton color="color1">
-                    <DeleteIcon />
                   </MuiButton>
                 </TableCell>
               </TableRow>

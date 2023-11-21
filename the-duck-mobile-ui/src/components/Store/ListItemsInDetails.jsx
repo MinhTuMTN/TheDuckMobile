@@ -3,27 +3,6 @@ import { Box, Grid, Stack, Typography } from "@mui/material";
 import React from "react";
 import FormatCurrency from "../FormatCurrency";
 
-const Items = [
-  {
-    id: 1,
-    name: "Điện thoại SamSung Galaxy M31",
-    quantity: 3,
-    price: 100000000,
-  },
-  {
-    id: 2,
-    name: "Điện thoại iPhone 14 Pro Max 128GB",
-    quantity: 1,
-    price: 27290000,
-  },
-  {
-    id: 3,
-    name: "Laptop Dell Inspiron 14 T7430 i5 1335U/8GB/512GB/Touch/Pen/OfficeHS/Win11 (N7430I58W1) ",
-    quantity: 1,
-    price: 23290000,
-  },
-];
-
 const BoxStyle = styled(Box)(({ theme }) => ({
   borderBottom: "1px solid #E0E0E0",
   paddingLeft: "24px !important",
