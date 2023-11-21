@@ -59,7 +59,7 @@ const sidebarItems = [
   {
     display: "Địa chỉ",
     icon: <HomeIcon />,
-    to: "/admin/address-management/province/list",
+    to: "/admin/address-management/province",
     section: "address-management",
   },
   {
