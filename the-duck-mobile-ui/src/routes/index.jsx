@@ -130,7 +130,7 @@ function Router(props) {
               element: <OrderHistory />,
             },
             {
-              path: "order-history-details",
+              path: "order-details",
               element: <OrderHistoryDetails />,
             },
           ],

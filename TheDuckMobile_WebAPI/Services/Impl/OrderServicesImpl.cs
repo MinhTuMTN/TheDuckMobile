@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Common;
 using TheDuckMobile_WebAPI.Entities;
+using TheDuckMobile_WebAPI.ErrorHandler;
 using TheDuckMobile_WebAPI.Models.Request;
+using TheDuckMobile_WebAPI.Models.Response;
 
 namespace TheDuckMobile_WebAPI.Services.Impl
 {
@@ -138,7 +140,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                     if (coupon != null)
                     {
                         coupon.CurrentUse++;
-                        discount = Math.Min(coupon.Discount / 100 * totalPrice, coupon.MaxDiscount);
+                        discount = Math.Min((double)coupon.Discount / 100 * totalPrice, coupon.MaxDiscount);
                         await _dataContext.SaveChangesAsync();
                     }
                 }
@@ -175,6 +177,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                         OrderNote = request.OrderNote,
                         Staff = null,
                         Store = store,
+                        Discount = discount,
                         Total = totalPrice + shippingFee - discount,
                         OrderItems = orderItems,
                         TemporaryCustomer = temporaryCustomerEntity
@@ -206,6 +209,61 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 Guid.Empty,
                 request.TemporaryCustomer
             );
+        }
+
+        public async Task<PaginationResponse> GetUserOrders(Guid userId, int page, int limit)
+        {
+            // Include OrderItems, StoreProducts, ProductVersions, Products, ProductVersion.Color
+            var orders = await _dataContext
+                .Orders
+                .Include(o => o.OrderItems!)
+                    .ThenInclude(oi => oi.StoreProduct!)
+                    .ThenInclude(sp => sp.ProductVersion!)
+                    .ThenInclude(pv => pv.Product)
+                .Include(o => o.OrderItems!)
+                    .ThenInclude(oi => oi.StoreProduct!)
+                    .ThenInclude(sp => sp.ProductVersion!)
+                    .ThenInclude(pv => pv.Color)
+                .Where(o => o.CustomerId == userId)
+                .OrderByDescending(o => o.CreatedAt)
+                .Skip(page * limit)
+                .Take(limit)
+                .ToListAsync();
+
+            // Return PaginationResponse
+            var totalObjects = await _dataContext.Orders.Where(o => o.CustomerId == userId).CountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalObjects / limit);
+            return new PaginationResponse
+            {
+                TotalObjects = totalObjects,
+                Page = page,
+                Limit = limit,
+                Objects = orders.Select(o => new OrderListUserResponse(o)).ToList(),
+                TotalPages = totalPages
+            };
+        }
+
+        public async Task<OrderDetailsUserResponse> GetOrderDetails(Guid userId, Guid orderId)
+        {
+            var order = await _dataContext
+                .Orders
+                .Include(o => o.OrderItems!)
+                    .ThenInclude(oi => oi.StoreProduct!)
+                    .ThenInclude(sp => sp.ProductVersion!)
+                    .ThenInclude(pv => pv.Product!)
+                .Include(o => o.OrderItems!)
+                    .ThenInclude(oi => oi.StoreProduct!)
+                    .ThenInclude(sp => sp.ProductVersion!)
+                    .ThenInclude(pv => pv.Color)
+                .Include(o => o.Address)
+                .Include(o => o.Customer)
+                .Where(o => o.OrderId == orderId && o.CustomerId == userId)
+                .FirstOrDefaultAsync();
+
+            if (order == null)
+                throw new CustomNotFoundException("Order does not exist");
+
+            return new OrderDetailsUserResponse(order);
         }
     }
 }
