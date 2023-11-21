@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
+import { enqueueSnackbar } from "notistack";
 import React, {
   Fragment,
   createContext,
@@ -7,23 +8,24 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useSearchParams } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
-import { getAllProducts } from "../services/Admin/ProductService";
-import { getAllCustomers } from "../services/Admin/CustomerService";
-import { getAllStaffs } from "../services/Admin/StaffService";
-import { getAllProvinces } from "../services/Admin/AddressService";
-import { getAllCatalogs } from "../services/Admin/CatalogService";
+import TopNavbar from "../components/Store/TopNavbar";
+import {
+  getAllDistricts,
+  getAllProvinces,
+} from "../services/Admin/AddressService";
 import { getAllBrands } from "../services/Admin/BrandService";
+import { getAllCatalogs } from "../services/Admin/CatalogService";
 import { getAllColors } from "../services/Admin/ColorService";
+import { getAllCoupons } from "../services/Admin/CouponService";
+import { getAllCustomers } from "../services/Admin/CustomerService";
+import { getAllFeedbacks } from "../services/Admin/FeedbackService";
+import { getAllOSs } from "../services/Admin/OSService";
+import { getAllOrders } from "../services/Admin/OrderService";
+import { getAllProducts } from "../services/Admin/ProductService";
 import { getAllSpecialFeatures } from "../services/Admin/SpecialFeatureService";
 import { getAllStores } from "../services/Admin/StoreService";
-import { getAllOSs } from "../services/Admin/OSService";
-import { getAllCoupons } from "../services/Admin/CouponService";
-import { getAllFeedbacks } from "../services/Admin/FeedbackService";
-import { getAllOrders } from "../services/OrderService";
-import { enqueueSnackbar } from "notistack";
-import TopNavbar from "../components/Store/TopNavbar";
 
 const SIDE_NAV_WIDTH = 280;
 
@@ -156,6 +158,8 @@ function AdminLayout(props) {
   //   fetchData();
   // }, [fetchData]);
 
+  const [searchParams] = useSearchParams();
+
   const fetchData = useCallback(async () => {
     let response;
 
@@ -166,13 +170,16 @@ function AdminLayout(props) {
       case "/admin/customer-management/list":
         response = await getAllCustomers();
         break;
-      case "/admin/address-management/province/list":
+      case "/admin/address-management/province":
         response = await getAllProvinces();
+        break;
+      case "/admin/address-management/province/detail":
+        response = await getAllDistricts(searchParams.get("provinceId"));
         break;
       case "/admin/catalog-management/list":
         response = await getAllCatalogs();
         break;
-      case "/admin/brand-management/list":
+      case "/admin/brand-management":
         response = await getAllBrands();
         break;
       case "/admin/color-management/list":

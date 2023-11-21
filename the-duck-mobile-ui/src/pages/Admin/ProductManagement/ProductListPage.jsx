@@ -1,292 +1,255 @@
 import {
   Box,
-  InputAdornment,
+  Button,
+  Chip,
+  Container,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableFooter,
-  TableHead,
-  TablePagination,
-  TableRow,
+  Stack,
+  TextField,
   Typography,
-  styled,
 } from "@mui/material";
-import TablePaginationActions from "../../../components/TablePaginationActions";
-import { useCallback, useContext, useEffect, useState } from "react";
-import MuiButton from "../../../components/MuiButton";
-import { Link, useNavigate } from "react-router-dom";
-import InfoIcon from "@mui/icons-material/Info";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { Search } from "@mui/icons-material";
-import MuiTextFeild from "../../../components/MuiTextFeild";
-import AddToQueueIcon from "@mui/icons-material/AddToQueue";
-import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
-import { DataContext } from "../../../layouts/AdminLayout";
-import {
-  deleteProduct,
-  restoreProduct,
-} from "../../../services/Admin/ProductService";
-import DialogConfirm from "../../../components/DialogConfirm";
-import { useSnackbar } from "notistack";
+import React from "react";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import SearchSeller from "../../../components/Store/SearchSeller";
+import Filter from "../../../components/Store/Filter";
+import ProductsTableBasis from "../../../components/Admin/ProductsTableBasic";
+import styled from "@emotion/styled";
 
-const RootPageProductList = styled(Box)(({ theme }) => ({
-  display: "flex",
-  width: "100%",
-  flexDirection: "column",
-  padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
-}));
-
-const AddButton = styled(MuiButton)(({ theme }) => ({
-  width: "25%",
-  marginBottom: theme.spacing(1),
+const CustomButton = styled(Button)(({ theme }) => ({
+  color: "#fff",
+  backgroundColor: "#FF6969",
+  borderRadius: "6px",
+  fontWeight: "600",
+  fontSize: "15px",
+  height: "42px",
   "&:hover": {
-    backgroundColor: "#FF6969",
+    backgroundColor: "#ea4545 !important",
   },
 }));
 
-const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
-}));
+const items = [
+  {
+    id: "5e887ac47eed253091be10cb",
+    productName: "Điện thoại iPhone 14 Pro Max 128GB",
+    productImage:
+      "https://cdn1.viettelstore.vn/images/Product/ProductImage/medium/iPhone-15-pink1.jpg",
+    createDate: "2021-10-9",
+    quantity: 50,
+    status: "Còn bán",
+    category: "Điện thoại",
+  },
+  {
+    id: "5e887b209c28ac3dd97f6db5",
+    productName: "Laptop Dell XPS 13",
+    productImage:
+      "https://file.hstatic.net/200000722513/file/gearvn-laptop-asus-vivobook-15-oled-a1505za-l1245w-5_9a8ca184f97545c9bbb80529c69735a8.png",
+    createDate: "2021-10-10",
+    quantity: 0,
+    status: "Ngưng bán",
+    category: "Laptop",
+  },
+  {
+    id: "5e86809283e28b96d2d38537",
+    productName: "Điện thoại Samsung Galaxy S21 Ultra 5G 128GB",
+    productImage:
+      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_75/https://cdn.tgdd.vn/Products/Images/42/290829/samsung-galaxy-s23-plus-3-200x200.jpg",
+    createDate: "2021-10-10",
+    quantity: 100,
+    status: "Còn bán",
+    category: "Điện thoại",
+  },
+  {
+    id: "6e887b203c28ac3dd97f1db5",
+    productName: "Đồng hồ thông minh Apple Watch SE 2022 GPS 40mm",
+    productImage:
+      "https://cdn.tgdd.vn/Products/Images/7077/289612/apple-watch-se-2022-40mm-day-silicone-trang-kem-1.jpg",
+    createDate: "2021-10-10",
+    quantity: 0,
+    status: "Còn bán",
+    category: "Đồng hồ",
+  },
+  {
+    id: "7e887b209c281c3dd97f6db7",
+    productName: "Đồng hồ thông minh Apple Watch SE 2022 LTE 40mm ",
+    productImage:
+      "https://cdn.tgdd.vn/Products/Images/7077/289799/apple-watch-se-2022-lte-40mm-den-xanh-1.jpg",
+    createDate: "2021-10-10",
+    quantity: 0,
+    status: "Ngưng bán",
+    category: "Đồng hồ",
+  },
+  {
+    id: "5e887b202c28ac3dd94f6vb5",
+    productName: "Laptop Apple MacBook Pro 13 inch M2 2022",
+    productImage:
+      "https://cdn.tgdd.vn/ProductListPages/Images/44/282828/apple-macbook-pro-13-inch-m2-2022-1-1.jpg",
+    createDate: "2021-10-10",
+    quantity: 0,
+    status: "Còn bán",
+    category: "Laptop",
+  },
+];
 
 function ProductListPage(props) {
-  const { dataFetched } = useContext(DataContext);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [searchString, setSearchString] = useState("");
-  const [rowsSearched, setRowsSearched] = useState([]);
-  const [isDeleted, setIsDeleted] = useState();
-  const [id, setId] = useState("");
-  const [index, setIndex] = useState(0);
-  const [deleteDialog, setDeleteDialog] = useState(false);
-  const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
-
-  useEffect(() => {
-    setRowsSearched(dataFetched);
-  }, [dataFetched]);
-
-  const filterRows = useCallback(
-    (searchString) => {
-      if (searchString === "") {
-        return dataFetched;
-      }
-      return dataFetched.filter((row) =>
-        row.productName.toLowerCase().includes(searchString.toLowerCase())
-      );
-    },
-    [dataFetched]
-  );
-
-  useEffect(() => {
-    const filtered = filterRows(searchString);
-    setRowsSearched(filtered);
-  }, [searchString, filterRows]);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
-
-  const handleChangePage = (event, newPage) => {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(event.target.value);
   };
 
-  const handleButtonClick = async () => {
-    if (isDeleted) {
-      const productResponse = await restoreProduct(id);
-      console.log(productResponse);
-      if (productResponse.success) {
-        console.log(productResponse);
-        enqueueSnackbar("Khôi phục sản phẩm thành công!", {
-          variant: "success",
-        });
-        const products = [...dataFetched];
-        products[index].isDeleted = !isDeleted;
-        setRowsSearched(products);
-      } else {
-        enqueueSnackbar("Khôi phục sản phẩm thất bại!", { variant: "error" });
-      }
+  const [selectedCategory, setSelectedCategory] = React.useState([]);
+  const handleChangeCategoryFilter = (event) => {
+    if (event.target.checked) {
+      setSelectedCategory((prev) => [...prev, event.target.value]);
     } else {
-      const productResponse = await deleteProduct(id);
-      console.log(productResponse);
-      if (productResponse.success) {
-        console.log(productResponse);
-        enqueueSnackbar("Xóa sản phẩm thành công!", { variant: "success" });
-        const products = [...dataFetched];
-        products[index].isDeleted = !isDeleted;
-        setRowsSearched(products);
-      } else {
-        enqueueSnackbar("Xóa sản phẩm thất bại!", { variant: "error" });
-      }
+      setSelectedCategory((prev) =>
+        prev.filter((item) => item !== event.target.value)
+      );
     }
   };
 
+  const [selectedStatus, setSelectedStatus] = React.useState([]);
+  const handleChangeStatusFilter = (event) => {
+    if (event.target.checked) {
+      setSelectedStatus((prev) => [...prev, event.target.value]);
+    } else {
+      setSelectedStatus((prev) =>
+        prev.filter((item) => item !== event.target.value)
+      );
+    }
+  };
+
+  const [selectedQuantity, setSelectedQuantity] = React.useState([]);
+  const handleChangeQuantityFilter = (event) => {
+    if (event.target.checked) {
+      setSelectedQuantity((prev) => [...prev, event.target.value]);
+    } else {
+      setSelectedQuantity((prev) =>
+        prev.filter((item) => item !== event.target.value)
+      );
+    }
+  };
   return (
-    <RootPageProductList>
-      <Typography variant="h3">Danh sách sản phẩm</Typography>
-      <AddButton
-        component={Link}
-        variant="contained"
-        color="color1"
-        to="/admin/product-management/add"
-      >
-        <Typography color={"white"}>Thêm Sản Phẩm Mới</Typography>
-      </AddButton>
-      <SearchTextField
-        type="text"
-        variant="outlined"
-        component={Paper}
-        placeholder="Tìm kiếm theo tên"
-        value={searchString}
-        onChange={(e) => setSearchString(e.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Search />
-            </InputAdornment>
-          ),
-          style: { fontSize: 18 },
-        }}
-      />
-      <TableContainer
-        component={Paper}
-        sx={{ maxHeight: 1070, minWidth: 1035, maxWidth: 1035 }}
-      >
-        <Table stickyHeader sx={{ maxWidth: 1200 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Mã sản phẩm</TableCell>
-              <TableCell align="center">Tên sản phẩm</TableCell>
-              <TableCell align="center">Hình ảnh</TableCell>
-              <TableCell align="center">Tồn kho</TableCell>
-              <TableCell align="center">Đã bán</TableCell>
-              <TableCell align="center">Lựa Chọn</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? rowsSearched.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
-              : rowsSearched
-            ).map((row, i) => (
-              <TableRow key={row.productId}>
-                <TableCell style={{ minWidth: 200 }} align="center">
-                  {row.productId}
-                </TableCell>
-                <TableCell style={{ minWidth: 150 }} align="center">
-                  {row.productName}
-                </TableCell>
-                <TableCell style={{ minWidth: 250 }} align="center">
-                  <img
-                    style={{
-                      maxWidth: "100%",
-                      height: "auto",
+    <Box component={"main"} sx={{ flexGrow: 1, py: 4 }}>
+      <Container maxWidth={"lg"}>
+        <Stack spacing={4}>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <Typography
+              variant="h3"
+              fontWeight={"680"}
+              style={{
+                fontSize: "32px",
+              }}
+            >
+              Danh sách sản phẩm
+            </Typography>
+            <CustomButton variant="contained" startIcon={<AddOutlinedIcon />}>
+              Thêm
+            </CustomButton>
+          </Stack>
+          <Stack
+            component={Paper}
+            elevation={3}
+            sx={{
+              paddingBottom: 2,
+              borderRadius: "10px",
+            }}
+            spacing={"2px"}
+          >
+            <SearchSeller />
+            <Box py={2} px={3}>
+              {selectedCategory.length === 0 &&
+                selectedQuantity.length === 0 &&
+                selectedStatus.length === 0 && (
+                  <TextField
+                    disabled
+                    variant="standard"
+                    fullWidth
+                    size="medium"
+                    InputProps={{
+                      disableUnderline: true,
+                      fontSize: "14px",
                     }}
-                    alt="thumbnail"
-                    src={row.thumbnail}
+                    placeholder="Không có bộ lọc nào được chọn"
                   />
-                </TableCell>
-                <TableCell style={{ minWidth: 50 }} align="center">
-                  {row.quantity}
-                </TableCell>
-                <TableCell style={{ minWidth: 50 }} align="center">
-                  {row.sold}
-                </TableCell>
-                <TableCell style={{ minWidth: 300 }} align="center">
-                  <MuiButton
-                    color="oldPrimary"
-                    onClick={(e) => {
-                      navigate("/admin/product-management/detail", {
-                        state: {
-                          id: row.productId,
-                        },
-                      });
-                    }}
-                  >
-                    <InfoIcon />
-                  </MuiButton>
-                  <MuiButton
-                    component={Link}
-                    color="peach"
-                    to="/admin/product-management/add-product-version"
-                    state={{ category: "smartwatch" }}
-                  >
-                    <AddToQueueIcon />
-                  </MuiButton>
-                  <MuiButton
-                    color="teal"
-                    onClick={(e) => {
-                      navigate("/admin/product-management/edit", {
-                        state: {
-                          id: row.productId,
-                        },
-                      });
-                    }}
-                  >
-                    <EditIcon />
-                  </MuiButton>
-                  <MuiButton
-                    component={Link}
-                    color="color1"
-                    onClick={(e) => {
-                      setIndex(i);
-                      setId(row.productId);
-                      setIsDeleted(row.isDeleted);
-                      setDeleteDialog(true);
-                    }}
-                  >
-                    {row.isDeleted ? <RestoreFromTrashIcon /> : <DeleteIcon />}
-                  </MuiButton>
-                  <DialogConfirm
-                    open={deleteDialog}
-                    title={isDeleted ? "Khôi phục sản phẩm" : "Xóa sản phẩm"}
-                    content={
-                      isDeleted
-                        ? "Bạn có chắc chắn muốn khôi phục sản phẩm?"
-                        : "Bạn có chắc chắn muốn xóa sản phẩm này?"
-                    }
-                    okText={isDeleted ? "Khôi phục" : "Xóa"}
-                    cancelText={"Hủy"}
-                    onOk={handleButtonClick}
-                    onCancel={() => setDeleteDialog(false)}
-                    onClose={() => setDeleteDialog(false)}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 50 * emptyRows }}>
-                <TableCell colSpan={7} />
-              </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={6}
-                count={rowsSearched.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-                sx={{ fontSize: 10 }}
+                )}
+              {selectedCategory.map((item) => (
+                <Chip
+                  color="primary"
+                  label={item}
+                  onDelete={() =>
+                    setSelectedCategory((prev) =>
+                      prev.filter((i) => i !== item)
+                    )
+                  }
+                />
+              ))}
+
+              {selectedStatus.map((item) => (
+                <Chip
+                  color="secondary"
+                  label={item}
+                  onDelete={() =>
+                    setSelectedStatus((prev) => prev.filter((i) => i !== item))
+                  }
+                />
+              ))}
+
+              {selectedQuantity.map((item) => (
+                <Chip
+                  color="warning"
+                  label={item}
+                  onDelete={() =>
+                    setSelectedQuantity((prev) =>
+                      prev.filter((i) => i !== item)
+                    )
+                  }
+                />
+              ))}
+            </Box>
+            <Stack
+              direction={"row"}
+              spacing={1}
+              paddingLeft={2}
+              paddingBottom={1}
+              sx={{
+                borderBottom: "1px solid #e0e0e0",
+              }}
+            >
+              <Filter
+                label={"Category"}
+                options={["Điện thoại", "Laptop", "Máy tính bảng", "Phụ kiện"]}
+                value={selectedCategory}
+                onChange={handleChangeCategoryFilter}
               />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-    </RootPageProductList>
+              <Filter
+                label={"Trạng thái"}
+                options={["Đang bán", "Ngưng bán"]}
+                value={selectedStatus}
+                onChange={handleChangeStatusFilter}
+              />
+              <Filter
+                label={"Số lượng"}
+                options={["Còn hàng", "Sắp hết", "Hết hàng"]}
+                value={selectedQuantity}
+                onChange={handleChangeQuantityFilter}
+              />
+            </Stack>
+            <ProductsTableBasis
+              count={items.length}
+              items={items}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleRowsPerPageChange}
+              page={page}
+              rowsPerPage={rowsPerPage}
+            />
+          </Stack>
+        </Stack>
+      </Container>
+    </Box>
   );
 }
 

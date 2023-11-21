@@ -8,24 +8,19 @@ import NotFound from "../pages/NotFound";
 import Loading from "../components/Loading";
 import AdminLayout from "../layouts/AdminLayout";
 import StoreLayout from "../layouts/StoreLayout";
-import AddDistrictPage from "../pages/Admin/AddressManagement/DistrictManagement/AddDistrictPage";
 import DistrictListPage from "../pages/Admin/AddressManagement/DistrictManagement/DistrictListPage";
-import EditDistrictPage from "../pages/Admin/AddressManagement/DistrictManagement/EditDistrictPage";
-import AddProvincePage from "../pages/Admin/AddressManagement/ProvinceManagement/AddProvincePage";
-import EditProvincePage from "../pages/Admin/AddressManagement/ProvinceManagement/EditProvincePage";
 import ProvinceListPage from "../pages/Admin/AddressManagement/ProvinceManagement/ProvinceListPage";
-import AddWardPage from "../pages/Admin/AddressManagement/WardManagement/AddWardPage";
-import EditWardPage from "../pages/Admin/AddressManagement/WardManagement/EditWardPage";
 import WardListPage from "../pages/Admin/AddressManagement/WardManagement/WardListPage";
-import AddBrandPage from "../pages/Admin/BrandManagement/AddBrandPage";
 import BrandListPage from "../pages/Admin/BrandManagement/BrandListPage";
-import EditBrandPage from "../pages/Admin/BrandManagement/EditBrandPage";
 import AddCatalogPage from "../pages/Admin/CatalogManagement/AddCatalogPage";
 import CatalogListPage from "../pages/Admin/CatalogManagement/CatalogListPage";
 import EditCatalogPage from "../pages/Admin/CatalogManagement/EditCatalogPage";
 import AddColorPage from "../pages/Admin/ColorManagement/AddColorPage";
 import ColorListPage from "../pages/Admin/ColorManagement/ColorListPage";
 import EditColorPage from "../pages/Admin/ColorManagement/EditColorPage";
+import AddCouponPage from "../pages/Admin/CouponManagement/AddCouponPage";
+import CouponListPage from "../pages/Admin/CouponManagement/CouponListPage";
+import EditCouponPage from "../pages/Admin/CouponManagement/EditCouponPage";
 import CustomerDetailPage from "../pages/Admin/CustomerManagement/CustomerDetailPage";
 import CustomerListPage from "../pages/Admin/CustomerManagement/CustomerListPage";
 import FeedbackListPage from "../pages/Admin/FeedbackManagement/FeedbackListPage";
@@ -40,9 +35,6 @@ import EditProductPage from "../pages/Admin/ProductManagement/EditProductPage";
 import EditProductVersionPage from "../pages/Admin/ProductManagement/EditProductVersionPage";
 import ProductDetailPage from "../pages/Admin/ProductManagement/ProductDetailPage";
 import ProductListPage from "../pages/Admin/ProductManagement/ProductListPage";
-import AddCouponPage from "../pages/Admin/CouponManagement/AddCouponPage";
-import EditCouponPage from "../pages/Admin/CouponManagement/EditCouponPage";
-import CouponListPage from "../pages/Admin/CouponManagement/CouponListPage";
 import AddSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/AddSpecialFeaturePage";
 import EditSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/EditSpecialFeaturePage";
 import SpecialFeatureListPage from "../pages/Admin/SpecialFeatureManagement/SpecialFeatureListPage";
@@ -160,41 +152,20 @@ function Router(props) {
       element: <AdminLayout />,
       children: [
         {
-          path: "address-management/province/list",
+          path: "address-management/province",
           element: <ProvinceListPage />,
         },
-        {
-          path: "address-management/province/add",
-          element: <AddProvincePage />,
-        },
-        {
-          path: "address-management/province/edit",
-          element: <EditProvincePage />,
-        },
+
         {
           path: "address-management/province/detail",
           element: <DistrictListPage />,
         },
-        {
-          path: "address-management/province/district/add",
-          element: <AddDistrictPage />,
-        },
-        {
-          path: "address-management/province/district/edit",
-          element: <EditDistrictPage />,
-        },
+
         {
           path: "address-management/province/district/detail",
           element: <WardListPage />,
         },
-        {
-          path: "address-management/province/district/ward/add",
-          element: <AddWardPage />,
-        },
-        {
-          path: "address-management/province/district/ward/edit",
-          element: <EditWardPage />,
-        },
+
         {
           path: "color-management/list",
           element: <ColorListPage />,
@@ -254,17 +225,10 @@ function Router(props) {
         },
 
         {
-          path: "brand-management/list",
+          path: "brand-management",
           element: <BrandListPage />,
         },
-        {
-          path: "brand-management/add",
-          element: <AddBrandPage />,
-        },
-        {
-          path: "brand-management/edit",
-          element: <EditBrandPage />,
-        },
+
         {
           path: "store-management/list",
           element: <StoreListPage />,
