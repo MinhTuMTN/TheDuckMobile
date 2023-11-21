@@ -47,7 +47,6 @@ function BasicDetails(props) {
   };
   return (
     <Stack
-      d
       sx={{
         borderRadius: "15px",
         paddingTop: 2,
