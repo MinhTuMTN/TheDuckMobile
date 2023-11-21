@@ -100,7 +100,7 @@ const sidebarItems = [
   {
     display: "Hệ Điều Hành",
     icon: <DevicesIcon />,
-    to: "/admin/os-management/",
+    to: "/admin/os-management",
     section: "os-management",
   },
   {

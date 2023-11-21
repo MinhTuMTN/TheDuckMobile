@@ -277,7 +277,7 @@ function DistrictListPage() {
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
-                    key={row.districtId}
+                    key={i}
                     sx={{
                       paddingY: "0",
                     }}

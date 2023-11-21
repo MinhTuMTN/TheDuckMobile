@@ -125,8 +125,8 @@ function CouponListPage() {
                         {(rowsPerPage > 0
                             ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
-                        ).map((row) => (
-                            <TableRow key={row.couponId}>
+                        ).map((row, i) => (
+                            <TableRow key={i}>
                                 <TableCell style={{ minWidth: 200 }} align="center">
                                     {row.couponId}
                                 </TableCell>

@@ -35,14 +35,14 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllOS()
+        public async Task<IActionResult> GetAllOSs()
         {
-            var os = await _osServices.GetAllOS();
+            var osList = await _osServices.GetAllOSs();
             return Ok(new GenericResponse
             {
                 Success = true,
-                Data = os,
-                Message = "Successfully retrieved all OS"
+                Data = osList,
+                Message = "Successfully retrieved all OSs"
             });
         }
 

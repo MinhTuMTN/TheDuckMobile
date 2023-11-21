@@ -114,8 +114,8 @@ function OrderListPage() {
                 page * rowsPerPage + rowsPerPage
               )
               : rowsSearched
-            ).map((row) => (
-              <TableRow key={row.orderId}>
+            ).map((row, i) => (
+              <TableRow key={i}>
                 <TableCell style={{ minWidth: 200 }} align="center">
                   {row.orderId}
                 </TableCell>

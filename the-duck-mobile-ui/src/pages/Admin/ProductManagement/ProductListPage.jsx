@@ -178,7 +178,7 @@ function ProductListPage(props) {
               )
               : rowsSearched
             ).map((row, i) => (
-              <TableRow key={row.productId}>
+              <TableRow key={i}>
                 <TableCell style={{ minWidth: 200 }} align="center">
                   {row.productId}
                 </TableCell>

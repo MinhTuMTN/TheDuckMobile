@@ -159,7 +159,7 @@ function CatalogListPage() {
               ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rowsSearched
             ).map((row, i) => (
-              <TableRow key={row.catalogId}>
+              <TableRow key={i}>
                 <TableCell style={{ minWidth: 50 }} align="center">
                   {row.catalogId}
                 </TableCell>

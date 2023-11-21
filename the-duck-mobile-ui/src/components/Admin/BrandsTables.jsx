@@ -280,15 +280,6 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    brandName: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    numberOfProducts: PropTypes.number.isRequired,
-    isDeleted: PropTypes.bool.isRequired,
-  }).isRequired,
-};
-
 function BrandsTable(props) {
   const { count, onPageChange, onRowsPerPageChange, page, rowsPerPage, items } =
     props;
@@ -311,8 +302,8 @@ function BrandsTable(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.slice(0, rowsPerPage).map((row) => (
-                <Row key={row.brandId} row={row} />
+              {items.slice(0, rowsPerPage).map((row, index) => (
+                <Row key={index} row={row} />
               ))}
             </TableBody>
           </Table>

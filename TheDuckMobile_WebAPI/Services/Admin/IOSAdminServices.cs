@@ -5,7 +5,7 @@ namespace TheDuckMobile_WebAPI.Services.Admin
 {
     public interface IOSAdminServices
     {
-        public Task<ICollection<OS>> GetAllOS();
+        public Task<List<OS>> GetAllOSs();
         public Task<OS> GetOSById(int id);
         public Task<OS> AddOS(OSRequest request);
         public Task<OS> UpdateOS(int id, OSRequest request);

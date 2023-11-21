@@ -101,10 +101,6 @@ function ProvinceListPage() {
     setRowsSearched(filtered);
   }, [searchString, filterRows]);
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -250,7 +246,7 @@ function ProvinceListPage() {
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
-                    key={`province-${row.provinceId}`}
+                    key={i}
                     sx={{
                       paddingY: "0",
                     }}
@@ -358,11 +354,6 @@ function ProvinceListPage() {
                     </CellBody>
                   </TableRow>
                 ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={11} />
-                  </TableRow>
-                )}
               </TableBody>
               <TableFooter>
                 <TableRow>

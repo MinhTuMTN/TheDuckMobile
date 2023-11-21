@@ -153,7 +153,7 @@ function SpecialFeatureListPage() {
                             ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
                         ).map((row, i) => (
-                            <TableRow key={row.specialFeatureId}>
+                            <TableRow key={i}>
                                 <TableCell style={{ minWidth: 100 }} align="center">
                                     {row.specialFeatureId}
                                 </TableCell>

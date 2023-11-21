@@ -160,7 +160,7 @@ function ColorListPage() {
                             ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
                         ).map((row, i) => (
-                            <TableRow key={row.colorId}>
+                            <TableRow key={i}>
                                 <TableCell style={{ minWidth: 200 }} align="center">
                                     {row.colorId}
                                 </TableCell>

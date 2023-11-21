@@ -54,7 +54,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return os;
         }
 
-        public async Task<ICollection<OS>> GetAllOS()
+        public async Task<List<OS>> GetAllOSs()
         {
             var oss = await _context.OSs.ToListAsync();
 

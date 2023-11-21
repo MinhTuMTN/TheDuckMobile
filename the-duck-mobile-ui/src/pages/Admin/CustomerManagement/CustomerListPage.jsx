@@ -175,7 +175,7 @@ function CustomerListPage() {
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
-                    key={row.userId}
+                    key={i}
                     sx={{
                       paddingY: "0",
                     }}
