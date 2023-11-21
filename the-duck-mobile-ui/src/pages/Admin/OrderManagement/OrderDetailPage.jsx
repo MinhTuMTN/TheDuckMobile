@@ -17,7 +17,6 @@ function OrderDetailPage(props) {
   const handleGetOrder = useCallback(async () => {
     const response = await getOrderById(state.id);
     console.log(response);
-    console.log(state.id);
     if (response.success) {
       setOrder(response.data.data);
     }

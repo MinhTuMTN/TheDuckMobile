@@ -7,8 +7,6 @@ namespace TheDuckMobile_WebAPI.Entities
 {
     public class Order
     {
-        private readonly ILazyLoader? _lazyLoader;
-
         [Key]
         public Guid OrderId { get; set; }
 
@@ -23,28 +21,19 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public OrderState OrderState { get; set; }
 
-        private ICollection<OrderItem>? _orderItems;
-        [JsonIgnore]
-        public virtual ICollection<OrderItem>? OrderItems
-        {
-            get => _lazyLoader.Load(this, ref _orderItems);
-            set => _orderItems = value;
-        }
+        public virtual ICollection<OrderItem>? OrderItems { get; set; }
 
 
         public Guid StoreId { get; set; }
-        private Store? _store;
         [JsonIgnore]
-        public virtual Store? Store
-        {
-            get => _lazyLoader.Load(this, ref _store);
-            set => _store = value;
-        }
+        public virtual Store? Store { get; set; }
 
         public Guid? StaffId { get; set; }
+        [JsonIgnore]
         public virtual Staff? Staff { get; set; }
 
         public Guid? CustomerId { get; set; }
+        [JsonIgnore]
         public virtual Customer? Customer { get; set; }
 
         public Guid? AddressId { get; set; }
@@ -54,6 +43,7 @@ namespace TheDuckMobile_WebAPI.Entities
         public virtual Coupon? Coupon { get; set; }
 
         public Guid? TemporaryCustomerId { get; set; }
+        [JsonIgnore]
         public virtual TemporaryCustomer? TemporaryCustomer { get; set; }
     }
 }

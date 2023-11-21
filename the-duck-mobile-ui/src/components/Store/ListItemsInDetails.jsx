@@ -55,6 +55,8 @@ const NameContainer = styled.div({
   overflow: "hidden",
 });
 function ListItemsInDetails(props) {
+  const { items } = props;
+  console.log(items);
   return (
     <Stack
       d
@@ -83,8 +85,8 @@ function ListItemsInDetails(props) {
           </Grid>
         </Grid>
       </BoxStyle>
-      {Items.map((item) => (
-        <BoxStyle key={item.id}>
+      {items?.map((item, index) => (
+        <BoxStyle key={index}>
           <Grid container>
             <Grid item xs={6}>
               <NameContainer>
@@ -96,7 +98,7 @@ function ListItemsInDetails(props) {
                     width: "95%",
                   }}
                 >
-                  {item.name}
+                  {item.storeProduct?.productVersion?.product?.productName} {item.storeProduct?.productVersion?.versionName}
                 </TieuDeCot>
               </NameContainer>
             </Grid>

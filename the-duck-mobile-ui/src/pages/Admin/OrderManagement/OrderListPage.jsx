@@ -60,10 +60,6 @@ function OrderListPage() {
     setRowsSearched(filtered);
   }, [searchString, filterRows]);
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -154,11 +150,6 @@ function OrderListPage() {
                 </TableCell>
               </TableRow>
             ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={7} />
-              </TableRow>
-            )}
           </TableBody>
           <TableFooter>
             <TableRow>

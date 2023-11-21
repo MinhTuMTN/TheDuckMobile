@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import FormatCurrency from "../FormatCurrency";
+import FormatDateTime from "../FormatDateTime";
 const BoxStyle = styled(Box)(({ theme }) => ({
   borderBottom: "1px solid #E0E0E0",
   paddingLeft: "24px !important",
@@ -68,10 +69,10 @@ function OrderDetails(props) {
   }
 
   const chipColor = statusColors[order.orderState] || "default";
+  const address = `${order.streetName}, ${order.wardName}, ${order.districtName}, ${order.provinceName}`;
   // const chipColor = statusColors["Chờ xác nhận"] || "default";
   return (
     <Stack
-      d
       sx={{
         borderRadius: "15px",
         paddingTop: 2,
@@ -87,9 +88,9 @@ function OrderDetails(props) {
           </Grid>
           <Grid item xs={9}>
             <Stack direction={"column"} spacing={1} alignItems={"flex-start"}>
-              <TieuDeCot>{order.customer?.customerName}</TieuDeCot>
-              <NoiDung>0123456789</NoiDung>
-              <NoiDung>4 Nguyễn Khuyến, Phường 1, Quận Gò Vấp, TP.HCM</NoiDung>
+              <TieuDeCot>{order.customer?.fullName}</TieuDeCot>
+              <NoiDung>{order.customer?.phone}</NoiDung>
+              <NoiDung>{address}</NoiDung>
             </Stack>
           </Grid>
         </Grid>
@@ -101,9 +102,7 @@ function OrderDetails(props) {
           </Grid>
           <Grid item xs={9}>
             <Stack direction={"column"} spacing={1} alignItems={"flex-start"}>
-              <TieuDeCot>Nguyễn Văn A</TieuDeCot>
-              <NoiDung>0987654321</NoiDung>
-              <NoiDung>4 Nguyễn Khuyến, Phường 1, Quận Gò Vấp, TP.HCM</NoiDung>
+              <TieuDeCot>{order.staffName}</TieuDeCot>
             </Stack>
           </Grid>
         </Grid>
@@ -115,7 +114,7 @@ function OrderDetails(props) {
           </Grid>
 
           <Grid item xs={9}>
-            <NoiDung>12/10/2022 10:20</NoiDung>
+            <NoiDung><FormatDateTime dateTime={order.createdAt} /></NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
@@ -131,8 +130,19 @@ function OrderDetails(props) {
                 textTransform: "uppercase",
               }}
             >
-              promo1
+              {order.couponCode}
             </NoiDung>
+          </Grid>
+        </Grid>
+      </BoxStyle>
+      <BoxStyle>
+        <Grid container>
+          <Grid item xs={3}>
+            <TieuDeCot>Ghi chú</TieuDeCot>
+          </Grid>
+
+          <Grid item xs={9}>
+            <NoiDung>{order.orderNote}</NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
@@ -143,7 +153,7 @@ function OrderDetails(props) {
           </Grid>
           <Grid item xs={9}>
             <NoiDung>
-              <FormatCurrency amount={10000000} />
+              <FormatCurrency amount={order.total} />
             </NoiDung>
           </Grid>
         </Grid>
@@ -155,7 +165,7 @@ function OrderDetails(props) {
           </Grid>
           <Grid item xs={9}>
             <NoiDung>
-            <Chip color={chipColor} label={"Chờ xác nhận"} />
+            <Chip color={chipColor} label={order.orderState} />
             </NoiDung>
           </Grid>
         </Grid>

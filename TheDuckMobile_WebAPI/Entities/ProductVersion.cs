@@ -29,7 +29,6 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public Guid ProductId { get; set; }
         private Product? _product;
-        [JsonIgnore]
         public virtual Product? Product
         {
             get => _lazyLoader.Load(this, ref _product);
@@ -39,6 +38,7 @@ namespace TheDuckMobile_WebAPI.Entities
         public Guid ColorId { get; set; }
         public virtual Color? Color { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<StoreProduct>? StoreProducts { get; set; }
 
 

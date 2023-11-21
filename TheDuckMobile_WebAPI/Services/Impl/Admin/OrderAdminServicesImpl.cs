@@ -35,11 +35,32 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 .Include(o => o.Staff)
                 .Include(o => o.Coupon)
                 .Include(o => o.Address)
-                .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(o => o.OrderId == guid);
+
+            var orderItems = await _context.OrderItems
+                .Include(oi => oi.StoreProduct)
+                .Where(oi => oi.OrderId == guid)
+                .ToListAsync();
 
             if (order == null)
                 throw new CustomNotFoundException("Can't found order");
+
+            if (orderItems != null)
+            {
+                foreach (var item in orderItems)
+                {
+                    var storeProduct = await _context.StoreProducts
+                        .Include(sp => sp.ProductVersion)
+                        .FirstOrDefaultAsync(sp => sp.StoreProductId == item.StoreProductId);
+                    if (storeProduct != null)
+                    {
+                        item.StoreProduct = storeProduct;
+                    }
+                }
+                order.OrderItems = orderItems;
+            }
+
+
 
             return new OrderDetailResponse(order);
         }

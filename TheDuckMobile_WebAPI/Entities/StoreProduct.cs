@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TheDuckMobile_WebAPI.Entities
 {
@@ -19,6 +20,7 @@ namespace TheDuckMobile_WebAPI.Entities
         public Guid ProductVersionId { get; set; }
         public virtual ProductVersion? ProductVersion { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<OrderItem>? OrderItems { get; set; }
 
 

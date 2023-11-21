@@ -50,6 +50,7 @@ const DataContext = createContext();
 function AdminLayout(props) {
   const [open, setOpen] = React.useState(false);
   const pathname = useLocation().pathname;
+  const editedPath = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
   const [dataFetched, setDataFetched] = useState([]);
 
   // const handleGetProducts = async () => {
@@ -162,58 +163,45 @@ function AdminLayout(props) {
 
   const fetchData = useCallback(async () => {
     let response;
-    
-    switch (pathname) {
+
+    switch (editedPath) {
       case "/admin/product-management":
-      case "/admin/product-management/":
         response = await getAllProducts();
         break;
       case "/admin/customer-management":
-      case "/admin/customer-management/":
         response = await getAllCustomers();
         break;
       case "/admin/address-management/province":
-      case "/admin/address-management/province/":
         response = await getAllProvinces();
         break;
       case "/admin/address-management/province/detail":
-      case "/admin/address-management/province/detail/":
         response = await getAllDistricts(searchParams.get("provinceId"));
         break;
       case "/admin/catalog-management":
-      case "/admin/catalog-management/":
         response = await getAllCatalogs();
         break;
       case "/admin/brand-management":
-      case "/admin/brand-management/":
         response = await getAllBrands();
         break;
       case "/admin/color-management":
-      case "/admin/color-management/":
         response = await getAllColors();
         break;
       case "/admin/special-feature-management":
-      case "/admin/special-feature-management/":
         response = await getAllSpecialFeatures();
         break;
       case "/admin/store-management":
-      case "/admin/store-management/":
         response = await getAllStores();
         break;
       case "/admin/os-management":
-      case "/admin/os-management/":
         response = await getAllOSs();
         break;
       case "/admin/coupon-management":
-      case "/admin/coupon-management/":
         response = await getAllCoupons();
         break;
       case "/admin/feedback-management":
-      case "/admin/feedback-management/":
         response = await getAllFeedbacks();
         break;
       case "/admin/order-management":
-      case "/admin/order-management/":
         response = await getAllOrders();
         break;
       default:
@@ -227,7 +215,7 @@ function AdminLayout(props) {
         enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
       }
     }
-  }, [pathname, searchParams]);
+  }, [editedPath, searchParams]);
 
   useEffect(() => {
     fetchData();
