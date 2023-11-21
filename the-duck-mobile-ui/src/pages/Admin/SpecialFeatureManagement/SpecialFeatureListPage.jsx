@@ -135,7 +135,7 @@ function SpecialFeatureListPage() {
   const isFullScreen = useMediaQuery(theme.breakpoints.up("lg"));
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Điều này sẽ kiểm tra nếu màn hình lớn hơn hoặc bằng lg breakpoint
 
-  const handleSendColorRequest = async () => {
+  const handleSendRequest = async () => {
     let response;
     if (addNew) {
       response = await addSpecialFeature({
@@ -467,7 +467,7 @@ function SpecialFeatureListPage() {
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          {addNew ? "Thêm tính năng mới" : "Chỉnh sửa tính năng sắc"}
+          {addNew ? "Thêm tính năng mới" : "Chỉnh sửa tính năng"}
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -494,7 +494,7 @@ function SpecialFeatureListPage() {
           />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleSendColorRequest}>
+          <Button autoFocus onClick={handleSendRequest}>
             {addNew ? "Tạo mới" : "Cập nhật"}
           </Button>
         </DialogActions>
