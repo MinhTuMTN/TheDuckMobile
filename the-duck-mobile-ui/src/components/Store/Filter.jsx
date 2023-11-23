@@ -65,29 +65,29 @@ export default function BasicPopover(props) {
         }}
       >
         <FormGroup sx={{ padding: 1 }}>
-          {props.options &&
-            props.options.map((option) => (
-              <FormControlLabel
-                sx={{ padding: 0.75 }} // Đặt padding cho mỗi option
-                control={
-                  <Checkbox
-                    icon={icon}
-                    checked={props.value.includes(option)}
-                    checkedIcon={checkedIcon}
-                    name={option}
-                    sx={{
+          {props?.options?.map((option, index) => (
+            <FormControlLabel
+              key={`option-${index}-${option.value}`}
+              sx={{ padding: 0.75 }} // Đặt padding cho mỗi option
+              control={
+                <Checkbox
+                  icon={icon}
+                  checked={props.value.includes(option.value)}
+                  checkedIcon={checkedIcon}
+                  name={option.name}
+                  sx={{
+                    color: "#D80032",
+                    "&.Mui-checked": {
                       color: "#D80032",
-                      "&.Mui-checked": {
-                        color: "#D80032",
-                      },
-                    }}
-                    onChange={props.onChange}
-                    value={option}
-                  />
-                }
-                label={option}
-              />
-            ))}
+                    },
+                  }}
+                  onChange={props.onChange}
+                  value={option.value}
+                />
+              }
+              label={option.name}
+            />
+          ))}
         </FormGroup>
       </Popover>
     </div>

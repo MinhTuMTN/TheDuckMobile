@@ -1,11 +1,10 @@
 import styled from "@emotion/styled";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CircleIcon from "@mui/icons-material/Circle";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Box,
   Button,
   CardMedia,
-  Grid,
   IconButton,
   Popover,
   Stack,
@@ -87,7 +86,7 @@ function Row(props) {
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
-                  maxWidth: maxWidth, // Điều chỉnh chiều rộng tối đa
+                  maxWidth: maxWidth,
                 }}
               >
                 {row.productName}
@@ -100,7 +99,7 @@ function Row(props) {
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
-                  maxWidth: maxWidth, // Điều chỉnh chiều rộng tối đa
+                  maxWidth: maxWidth,
                 }}
               >
                 Category {row.category}
@@ -157,9 +156,11 @@ function Row(props) {
                   variant="text"
                   size="medium"
                   onClick={(e) => {
-                    navigate(
-                      `/admin/address-management/province/detail?id=${row.provinceId}`
-                    );
+                    navigate("/admin/product-management/detail", {
+                      state: {
+                        id: row.productId,
+                      },
+                    });
                   }}
                 >
                   Xem

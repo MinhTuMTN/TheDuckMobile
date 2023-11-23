@@ -59,5 +59,14 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
             return user;
         }
+
+        public async Task<User?> FindUserByUserId(Guid userId)
+        {
+            var user = await _context
+                .Users
+                .FirstOrDefaultAsync(user => user.UserId == userId && !user.IsDeleted);
+            
+            return user;
+        }
     }
 }

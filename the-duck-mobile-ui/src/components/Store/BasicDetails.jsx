@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import FormatCurrency from "../FormatCurrency";
+import Loading from "../Loading";
 const BoxStyle = styled(Box)(({ theme }) => ({
   borderBottom: "1px solid #E0E0E0",
   paddingLeft: "24px !important",
@@ -40,11 +41,13 @@ const NoiDung = styled(Typography)(({ theme }) => ({
 }));
 
 function BasicDetails(props) {
+  const { order } = props;
   const [status, setStatus] = React.useState("");
 
   const handleChange = (event) => {
     setStatus(event.target.value);
   };
+
   return (
     <Stack
       sx={{
@@ -62,10 +65,14 @@ function BasicDetails(props) {
           </Grid>
           <Grid item xs={9}>
             <Stack direction={"column"} spacing={1} alignItems={"flex-start"}>
-              <TieuDeCot>Nguyễn Ngọc Tuyết Vi</TieuDeCot>
-              <NoiDung>4 Nguyễn Khuyến, Phường 1</NoiDung>
-              <NoiDung>Quận Gò Vấp</NoiDung>
-              <NoiDung>TP.HCM</NoiDung>
+              <TieuDeCot>{order?.customer?.customerName}</TieuDeCot>
+              <NoiDung>{`${order?.customer?.customerAddress?.street}, ${order?.customer?.customerAddress?.wardName}`}</NoiDung>
+              <NoiDung>
+                {order?.customer?.customerAddress?.districtName}
+              </NoiDung>
+              <NoiDung>
+                {order?.customer?.customerAddress?.provinceName}
+              </NoiDung>
             </Stack>
           </Grid>
         </Grid>

@@ -7,16 +7,31 @@ OrderItem.propTypes = {
 };
 function OrderItem(props) {
   const { order, handleClick } = props;
-  const statusColors = {
-    "Chờ xác nhận": "primary",
-    "Chuẩn bị hàng": "info",
-    "Đang giao hàng": "warning",
-    "Đã hoàn thành": "success",
-    "Đã huỷ": "error",
+  const statusOptions = {
+    0: {
+      color: "primary",
+      label: "Chờ xác nhận",
+    },
+    1: {
+      color: "info",
+      label: "Đang xử lý",
+    },
+    2: {
+      color: "warning",
+      label: "Đang giao hàng",
+    },
+    3: {
+      color: "success",
+      label: "Đã hoàn thành",
+    },
+    4: {
+      color: "error",
+      label: "Đã huỷ",
+    },
   };
   const options = { month: "short", day: "numeric" };
   const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-    new Date(order.createdAt)
+    new Date(order.orderDate)
   );
 
   switch (order.orderState) {
@@ -40,7 +55,7 @@ function OrderItem(props) {
   }
 
   // Màu sắc của Chip dựa trên giá trị status
-  const chipColor = statusColors[order.orderState] || "default";
+  const chipColor = statusOptions[order.orderState].color || "default";
 
   return (
     <Stack
@@ -103,7 +118,7 @@ function OrderItem(props) {
         </Stack>
       </Stack>
       <Box width={"auto"}>
-        <Chip color={chipColor} label={order.orderState} />
+        <Chip color={chipColor} label={statusOptions[order.orderState].label} />
       </Box>
     </Stack>
   );

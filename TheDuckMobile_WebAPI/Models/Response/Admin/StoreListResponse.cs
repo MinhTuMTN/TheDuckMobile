@@ -10,7 +10,7 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
         public int NumberOfOrders { get; set; }
         public bool IsDeleted { get; set; }
 
-        public StoreListResponse(Store store)
+        public StoreListResponse(Entities.Store store)
         {
             StoreId = store.StoreId;
             StoreName = store.StoreName;

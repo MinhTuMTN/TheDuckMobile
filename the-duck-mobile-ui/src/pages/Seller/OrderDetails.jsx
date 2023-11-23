@@ -1,11 +1,32 @@
 import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import BasicDetails from "../../components/Store/BasicDetails";
 import ListItemsInDetails from "../../components/Store/ListItemsInDetails";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { getStoreOrderById } from "../../services/Store/StoreOrderService";
+import Loading from "../../components/Loading";
 
 function OrderDetails(props) {
+  const navigate = useNavigate();
+  const [order, setOrder] = React.useState(null);
+  const [searchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = React.useState(true);
+  useEffect(() => {
+    const getOrderDetails = async () => {
+      const response = await getStoreOrderById(searchParams.get("orderId"));
+
+      if (response.success) setOrder(response.data.data);
+
+      setIsLoading(false);
+    };
+    getOrderDetails();
+  }, [searchParams]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <Box
       sx={{
@@ -23,6 +44,9 @@ function OrderDetails(props) {
             spacing={0}
             alignItems={"center"}
             marginBottom={3}
+            onClick={() => {
+              navigate(-1);
+            }}
           >
             <IconButton
               aria-label="back"
@@ -39,6 +63,7 @@ function OrderDetails(props) {
               style={{
                 fontSize: "14px",
                 color: "#111927",
+                cursor: "pointer",
               }}
             >
               Danh sách đơn hàng
@@ -52,7 +77,7 @@ function OrderDetails(props) {
               fontSize: "2rem",
             }}
           >
-            ĐH - vv1be10cb
+            ĐH - {order?.orderId}
           </Typography>
           <Stack direction={"row"} spacing={1} alignItems={"center"}>
             <Typography
@@ -76,7 +101,7 @@ function OrderDetails(props) {
                 fontSize: "14px",
               }}
             >
-              20/10/2021 10:00
+              {order?.createdAt}
             </Typography>
           </Stack>
 
@@ -89,7 +114,7 @@ function OrderDetails(props) {
             }}
             spacing={"2px"}
           >
-            <BasicDetails />
+            <BasicDetails order={order} />
           </Stack>
           <Stack
             component={Paper}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, InputAdornment, TextField } from "@mui/material";
+import { Box, InputAdornment, TextField, Button } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import PropTypes from "prop-types";
 
@@ -11,8 +11,19 @@ SearchSeller.prototype = {
   borderBottomRightRadius: PropTypes.number,
 };
 
+SearchSeller.defaultProps = {
+  onApply: () => {},
+};
+
 function SearchSeller(props) {
-  const { borderRadius, borderTopLeftRadius, borderTopRightRadius } = props;
+  const {
+    borderRadius,
+    borderTopLeftRadius,
+    borderTopRightRadius,
+    onApply,
+    value,
+    onChange,
+  } = props;
   return (
     <Box
       sx={{
@@ -21,6 +32,8 @@ function SearchSeller(props) {
         borderTopRightRadius: { borderTopRightRadius },
         borderRadius: { borderRadius },
         borderBottom: "1px solid #e0e0e0",
+        display: "flex",
+        alignItems: "center",
       }}
     >
       <TextField
@@ -38,8 +51,14 @@ function SearchSeller(props) {
             </InputAdornment>
           ),
         }}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         placeholder="Tìm kiếm sản phẩm"
       />
+
+      <Button color="color4" onClick={onApply} sx={{ flexBasis: "15%" }}>
+        Áp dụng
+      </Button>
     </Box>
   );
 }
