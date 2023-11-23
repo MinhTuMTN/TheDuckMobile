@@ -38,8 +38,10 @@ const NameContainer = styled.div({
 
 function ListItemsInDetails(props) {
   const { items } = props;
+  console.log(items);
   return (
     <Stack
+      d
       sx={{
         borderRadius: "15px",
         paddingTop: 2,
@@ -82,9 +84,8 @@ function ListItemsInDetails(props) {
                     textAlign: "left",
                   }}
                 >
-                  {item?.productName}
-                  {" - "}
-                  {item?.versionName}
+                  {item.storeProduct?.productVersion?.product?.productName}{" "}
+                  {item.storeProduct?.productVersion?.versionName}
                 </TieuDeCot>
               </NameContainer>
             </Grid>
@@ -98,7 +99,7 @@ function ListItemsInDetails(props) {
             </Grid>
             <Grid item xs={3}>
               <NoiDung>
-                <FormatCurrency amount={item.total} />
+                <FormatCurrency amount={item.price} />
               </NoiDung>
             </Grid>
           </Grid>

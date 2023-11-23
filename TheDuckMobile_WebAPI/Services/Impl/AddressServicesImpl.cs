@@ -120,6 +120,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             var wards = await _dataContext
                 .Wards
                 .Where(w => w.DistrictId == districtId && w.IsDeleted == false)
+                .OrderBy(w => w.WardName)
                 .ToListAsync();
             return wards;
         }

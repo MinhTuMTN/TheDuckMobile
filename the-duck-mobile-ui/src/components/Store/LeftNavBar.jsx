@@ -140,7 +140,7 @@ function LeftNavBar(props) {
       open={open}
       PaperProps={{
         sx: {
-          background: "linear-gradient(180deg, #FF416C 0%, #f38b57 100%)",
+          background: "linear-gradient(180deg, #000428 0%, #043765 100%)",
           color: "common.white",
           width: 280,
         },

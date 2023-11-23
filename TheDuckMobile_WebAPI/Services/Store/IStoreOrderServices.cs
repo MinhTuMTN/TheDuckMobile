@@ -13,5 +13,9 @@ namespace TheDuckMobile_WebAPI.Services.Store
             OrderState? orderState);
 
         public Task<StoreOrderDetailsResponse> GetStoreOrderDetails(Guid staffId, Guid orderId);
+        public Task<bool> ConfirmStoreOrder(Guid staffId, Guid orderId);
+        public Task<bool> CancelStoreOrder(Guid staffId, Guid orderId);
+        public Task<bool> ConfirmDeliveryOrder(Guid staffId, Guid orderId);
+        public Task<bool> ConfirmCompletedOrder(Guid staffId, Guid orderId);
     }
 }

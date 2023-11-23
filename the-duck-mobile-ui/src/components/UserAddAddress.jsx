@@ -1,7 +1,8 @@
 import { Autocomplete, Stack, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useRef } from "react";
+import { useAuth } from "../auth/AuthProvider";
 import {
   addAddress,
   addAddressAnonymous,
@@ -12,7 +13,6 @@ import {
 } from "../services/AddressService";
 import DialogForm from "./DialogForm";
 import MuiTextFeild from "./MuiTextFeild";
-import { useAuth } from "../auth/AuthProvider";
 
 UserAddAddress.propTypes = {
   open: PropTypes.bool,
@@ -33,6 +33,9 @@ UserAddAddress.defaultProps = {
 function UserAddAddress(props) {
   const { open, setOpen, editAddress, onChangeAddress, setEditAddress } = props;
   const { enqueueSnackbar } = useSnackbar();
+  const districtInput = useRef(null);
+  const wardInput = useRef(null);
+
   const [address, setAddress] = React.useState({
     province: "",
     district: "",
@@ -78,6 +81,7 @@ function UserAddAddress(props) {
   }, [address.province, enqueueSnackbar]);
 
   useEffect(() => {
+    wardInput.current?.querySelector("button")?.click();
     const handleGetWard = async () => {
       const response = await getWards(address.district);
       if (response.success) {
@@ -154,6 +158,8 @@ function UserAddAddress(props) {
             }
             value={province.find((item) => item.provineId === address.province)}
             onChange={(event, newValue) => {
+              districtInput.current?.querySelector("button")?.click();
+              wardInput.current?.querySelector("button")?.click();
               setAddress((prev) => ({
                 ...prev,
                 province: newValue ? newValue.provinceId : "",
@@ -198,6 +204,7 @@ function UserAddAddress(props) {
                 districtName: editAddress.districtName,
               }
             }
+            ref={districtInput}
             value={district.find(
               (item) => item.districtId === address.district
             )}
@@ -258,6 +265,7 @@ function UserAddAddress(props) {
           isOptionEqualToValue={(option, value) =>
             option.wardId === value.wardId
           }
+          ref={wardInput}
           getOptionLabel={(option) => option.wardName}
           renderOption={(props, option) => {
             return (

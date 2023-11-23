@@ -7,7 +7,7 @@ namespace TheDuckMobile_WebAPI.Services.Admin
     {
         public Task<List<StoreListResponse>> GetAllStores();
         public Task<bool> DeleteStore(string storeId);
-        public Task<Store?> RestoreStore(string storeId);
-        public Task<Store> GetStoreById(string storeId);
+        public Task<Entities.Store?> RestoreStore(string storeId);
+        public Task<Entities.Store> GetStoreById(string storeId);
     }
 }

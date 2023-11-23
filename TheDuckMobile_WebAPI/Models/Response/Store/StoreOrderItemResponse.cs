@@ -14,7 +14,7 @@ namespace TheDuckMobile_WebAPI.Models.Response.Store
         {
             Quantity = orderItem.Quantity;
             Price = Math.Min(orderItem.Price, orderItem.PromotionPrice);
-            Total = orderItem.Price * orderItem.Quantity;
+            Total = Price * orderItem.Quantity;
             ProductName = orderItem.StoreProduct?.ProductVersion?.Product?.ProductName;
             VersionName = orderItem.StoreProduct?.ProductVersion?.VersionName;
         }

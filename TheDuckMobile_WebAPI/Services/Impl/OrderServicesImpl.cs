@@ -67,6 +67,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                     // Update quantity of product version and product
                     productVersion.Quantity -= productVersionQuantity.Quantity;
                     productVersion.Product!.Quantity -= productVersionQuantity.Quantity;
+                    productVersion.Product!.Sold += productVersionQuantity.Quantity;
                     await _dataContext.SaveChangesAsync();
 
                     // Calculate total price with min(price, promotion price)

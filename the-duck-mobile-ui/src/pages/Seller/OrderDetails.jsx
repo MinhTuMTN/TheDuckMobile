@@ -13,6 +13,19 @@ function OrderDetails(props) {
   const [order, setOrder] = React.useState(null);
   const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = React.useState(true);
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    var options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
+    return d.toLocaleDateString("vi-VN", options);
+  };
   useEffect(() => {
     const getOrderDetails = async () => {
       const response = await getStoreOrderById(searchParams.get("orderId"));
@@ -101,7 +114,7 @@ function OrderDetails(props) {
                 fontSize: "14px",
               }}
             >
-              {order?.createdAt}
+              {formatDate(order?.createdAt)}
             </Typography>
           </Stack>
 
@@ -125,7 +138,7 @@ function OrderDetails(props) {
             }}
             spacing={"2px"}
           >
-            <ListItemsInDetails />
+            <ListItemsInDetails items={order?.items} />
           </Stack>
         </Stack>
       </Stack>

@@ -23,7 +23,7 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
             DateOfBirth = customer.DateOfBirth;
             Avatar = customer.Avatar;
             Phone = customer.Phone;
-            Point = customer.Point == null ? 0 : customer.Point;
+            Point = customer.Point;
             Orders = customer.Orders;
             IsDeleted = customer.IsDeleted;
         }

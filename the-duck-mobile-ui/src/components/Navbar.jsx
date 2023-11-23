@@ -171,9 +171,9 @@ const NavBar = ({ strings, menuWhiteClass, sidebarMenu }) => {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             onKeyPress={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === "Enter" && searchText.trim() !== "") {
                 setSearchText("");
-                navigate(`/search?q=${searchText}`);
+                navigate(`/search?q=${searchText.trim()}`);
               }
             }}
           />

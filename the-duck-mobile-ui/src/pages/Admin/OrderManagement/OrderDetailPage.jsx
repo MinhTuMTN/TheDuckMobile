@@ -2,7 +2,7 @@ import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import ListItemsInDetails from "../../../components/Store/ListItemsInDetails";
+import ListItemsInDetails from "../../../components/Admin/ListItemsInDetails";
 import { useLocation, useNavigate } from "react-router-dom";
 import OrderDetails from "../../../components/Admin/OrderDetails";
 import { getOrderById } from "../../../services/Admin/OrderService";
@@ -10,7 +10,7 @@ import FormatDateTime from "../../../components/FormatDateTime";
 
 function OrderDetailPage(props) {
   const { state } = useLocation();
-  const pathSegs = state.prevURL.split('/');
+  const pathSegs = state.prevURL.split("/");
   const navigate = useNavigate();
   const [order, setOrder] = useState({});
 
@@ -50,13 +50,13 @@ function OrderDetailPage(props) {
               margin="0"
               color="#111927"
               onClick={() => {
-                pathSegs[pathSegs.length - 1] !== "order-management" ?
-                  navigate(state.prevURL, {
-                    state: {
-                      id: pathSegs[pathSegs.length - 1],
-                    }
-                  }) :
-                  navigate(state.prevURL)
+                pathSegs[pathSegs.length - 1] !== "order-management"
+                  ? navigate(state.prevURL, {
+                      state: {
+                        id: pathSegs[pathSegs.length - 1],
+                      },
+                    })
+                  : navigate(state.prevURL);
               }}
             >
               <ArrowBackIosIcon />

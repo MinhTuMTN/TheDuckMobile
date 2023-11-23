@@ -52,7 +52,7 @@ function DialogForm(props) {
       <DialogTitle>
         <span style={{ fontSize: "1.5rem" }}>{props.title}</span>
       </DialogTitle>
-      <DialogContent>{props.children}</DialogContent>
+      <DialogContent>{props.children || props.content}</DialogContent>
       <DialogActions style={{ padding: "16px 24px" }}>
         {props.cancelText && (
           <Button onClick={handleCancel} variant="outlined">

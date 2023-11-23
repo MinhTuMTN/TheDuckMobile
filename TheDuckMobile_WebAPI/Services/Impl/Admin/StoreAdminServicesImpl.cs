@@ -24,7 +24,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return stores.Select(s => new StoreListResponse(s)).ToList();
         }
 
-        public async Task<Store> GetStoreById(string storeId)
+        public async Task<Entities.Store> GetStoreById(string storeId)
         {
             Guid guid = Guid.Parse(storeId);
             var store = await _context
@@ -48,7 +48,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return store.IsDeleted;
         }
 
-        public async Task<Store?> RestoreStore(string storeId)
+        public async Task<Entities.Store?> RestoreStore(string storeId)
         {
             Guid guid = Guid.Parse(storeId);
             var store = await GetStoreById(storeId);
