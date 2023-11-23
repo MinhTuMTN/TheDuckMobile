@@ -11,5 +11,7 @@ namespace TheDuckMobile_WebAPI.Services.Store
             int page,
             int limit,
             OrderState? orderState);
+
+        public Task<StoreOrderDetailsResponse> GetStoreOrderDetails(Guid staffId, Guid orderId);
     }
 }

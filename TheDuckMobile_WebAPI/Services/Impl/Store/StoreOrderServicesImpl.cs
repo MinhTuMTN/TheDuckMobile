@@ -59,5 +59,32 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 Objects = result
             };
         }
+
+        public async Task<StoreOrderDetailsResponse> GetStoreOrderDetails(Guid staffId, Guid orderId)
+        {
+            var staff = await _dataContext.Staffs
+                .Include(s => s.Store)
+                .FirstOrDefaultAsync(s => s.UserId == staffId
+                    && s.IsDeleted == false
+                );
+
+            if (staff == null)
+                throw new UnauthorizedException("Can't access to this resources");
+
+            var order = await _dataContext.Orders
+                .Include(o => o.OrderItems!)
+                    .ThenInclude(oi => oi.StoreProduct!)
+                    .ThenInclude(sp => sp.ProductVersion!)
+                    .ThenInclude(pv => pv.Product)
+                .Include(o => o.Customer)
+                .Include(o => o.Store)
+                .Include(o => o.Address)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId && o.StoreId == staff.StoreId);
+
+            if (order == null)
+                throw new UnauthorizedException("Can't access to this resources");
+
+            return new StoreOrderDetailsResponse(order);
+        }
     }
 }

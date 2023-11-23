@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -175,6 +176,7 @@ namespace TheDuckMobile_WebAPI.Controllers
         }
 
         [HttpGet("check-token")]
+        [Authorize]
         public async Task<IActionResult> CheckToken()
         {
             // Get user id from token

@@ -44,5 +44,23 @@ namespace TheDuckMobile_WebAPI.Controllers.Store
                 Data = orders
             });
         }
+
+        // Get Order Details
+        [HttpGet("{orderId}")]
+        public async Task<IActionResult> GetOrderDetails(Guid orderId)
+        {
+            // Get Staff Id
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var orderDetails = await _storeOrderServices.GetStoreOrderDetails(Guid.Parse(id!), orderId);
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = orderDetails
+            });
+        }
     }
 }
