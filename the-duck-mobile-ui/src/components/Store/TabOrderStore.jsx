@@ -1,9 +1,12 @@
 import styled from "@emotion/styled";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Tab, TablePagination } from "@mui/material";
+import { Box, Tab, TablePagination, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 import PropTypes from "prop-types";
 import ListOrder from "./ListOrder";
+import { getStoreOrder } from "../../services/Store/StoreOrderService";
+import Loading from "../Loading";
 
 const CustomTabList = styled(TabList)(({ theme }) => ({
   borderBottom: "1px solid #e0e0e0",
@@ -55,133 +58,92 @@ const items = [
   },
 ];
 function TabOrderStore(props) {
-  const [tab, setTab] = useState("1");
-  const [filteredItems, setFilteredItems] = useState([]);
-
-  useEffect(() => {
-    // Lọc mục dựa trên tab hiện tại
-    switch (tab) {
-      case "1":
-        setFilteredItems(items); // Hiển thị tất cả các mục
-        break;
-      case "2":
-        setFilteredItems(
-          items.filter((item) => item.status === "Chờ xác nhận")
-        );
-        break;
-      case "3":
-        setFilteredItems(
-          items.filter((item) => item.status === "Chuẩn bị hàng")
-        );
-        break;
-      case "4":
-        setFilteredItems(
-          items.filter((item) => item.status === "Đang giao hàng")
-        );
-        break;
-      case "5":
-        setFilteredItems(
-          items.filter((item) => item.status === "Đã hoàn thành")
-        );
-        break;
-      case "6":
-        setFilteredItems(items.filter((item) => item.status === "Đã huỷ"));
-        break;
-      default:
-        setFilteredItems([]);
-        break;
-    }
-  }, [tab]);
+  const [orders, setOrders] = useState([]);
+  const [pagination, setPagination] = useState({
+    page: 0,
+    limit: 5,
+    orderState: 5,
+  });
+  const [count, setCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChangeTab = (event, newTab) => {
-    setTab(newTab);
+    setPagination((prev) => ({
+      ...prev,
+      orderState: parseInt(newTab),
+      page: 0,
+    }));
   };
+
+  useEffect(() => {
+    const getOrders = async () => {
+      const response = await getStoreOrder({
+        page: pagination.page,
+        limit: pagination.limit,
+        orderState: pagination.orderState,
+      });
+
+      setIsLoading(true);
+      if (response.success) {
+        const result = response.data.data;
+        setOrders(result.objects);
+        setPagination((prev) => ({
+          ...prev,
+          page: result.page,
+          limit: result.limit,
+        }));
+        setCount(result.totalObjects);
+      } else console.log(response.message);
+      setIsLoading(false);
+    };
+    getOrders();
+  }, [pagination.page, pagination.limit, pagination.orderState]);
 
   return (
     <>
-      <TabContext value={tab}>
+      <TabContext value={pagination.orderState.toString()}>
         <Box>
           <CustomTabList onChange={handleChangeTab}>
-            <CustomTab label="Tất cả" value="1" />
-            <CustomTab label="Chờ xác nhận" value="2" />
-            <CustomTab label="Chuẩn bị hàng" value="3" />
-            <CustomTab label="Đang giao hàng" value="4" />
-            <CustomTab label="Đã hoàn thành" value="5" />
-            <CustomTab label="Đã huỷ" value="6" />
+            <CustomTab label="Tất cả" value={"5"} />
+            <CustomTab label="Chờ xác nhận" value={"0"} />
+            <CustomTab label="Chuẩn bị hàng" value={"1"} />
+            <CustomTab label="Đang giao hàng" value={"2"} />
+            <CustomTab label="Đã hoàn thành" value={"3"} />
+            <CustomTab label="Đã huỷ" value={"4"} />
           </CustomTabList>
         </Box>
         <TabPanel
-          value="1"
+          value={pagination.orderState.toString()}
           sx={{
             paddingX: "0px",
           }}
         >
-          <ListOrder items={items} />
-        </TabPanel>
-        <TabPanel
-          value="2"
-          sx={{
-            paddingX: "0px",
-          }}
-        >
-          <ListOrder items={filteredItems} />
-        </TabPanel>
-        <TabPanel
-          value="3"
-          sx={{
-            paddingX: "0px",
-          }}
-        >
-          <ListOrder items={filteredItems} />
-        </TabPanel>
-        <TabPanel
-          value="4"
-          sx={{
-            paddingX: "0px",
-          }}
-        >
-          <ListOrder items={filteredItems} />
-        </TabPanel>
-        <TabPanel
-          value="5"
-          sx={{
-            paddingX: "0px",
-          }}
-        >
-          <ListOrder items={filteredItems} />
-        </TabPanel>
-        <TabPanel
-          value="6"
-          sx={{
-            paddingX: "0px",
-          }}
-        >
-          <ListOrder items={filteredItems} />
+          {count === 0 ? (
+            <Typography variant="body1" textAlign={"center"} padding={4}>
+              Không có đơn hàng nào để hiển thị
+            </Typography>
+          ) : (
+            <ListOrder items={orders} />
+          )}
         </TabPanel>
       </TabContext>
       <TablePagination
         component="div"
-        count={items.length}
-        onPageChange={() => {
-          console.log("on page change");
+        count={count}
+        onPageChange={(e, page) => setPagination((prev) => ({ ...prev, page }))}
+        onRowsPerPageChange={(e) => {
+          setPagination((prev) => ({
+            ...prev,
+            limit: parseInt(e.target.value),
+            page: 0,
+          }));
         }}
-        onRowsPerPageChange={() => {
-          console.log("on row per page change");
-        }}
-        page={0}
-        rowsPerPage={1}
-        rowsPerPageOptions={[1]}
+        page={pagination.page}
+        rowsPerPage={pagination.limit}
+        rowsPerPageOptions={[1, 5, 10, 25]}
       />
     </>
   );
 }
-
-TabOrderStore.propTypes = {
-  count: PropTypes.number,
-  items: PropTypes.array,
-  onPageChange: PropTypes.func,
-  onRowsPerPageChange: PropTypes.func,
-  page: PropTypes.number,
-};
 
 export default TabOrderStore;

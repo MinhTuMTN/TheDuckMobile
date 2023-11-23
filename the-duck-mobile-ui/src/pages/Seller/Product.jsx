@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Chip,
   Container,
   Paper,
@@ -8,25 +7,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import SearchSeller from "../../components/Store/SearchSeller";
+import { useSnackbar } from "notistack";
+import React, { useCallback, useEffect } from "react";
+import Loading from "../../components/Loading";
 import Filter from "../../components/Store/Filter";
 import ProductsTable from "../../components/Store/ProductsTable";
-import styled from "@emotion/styled";
-import { GetStoreProduct } from "../../services/Store/StoreProductService";
+import SearchSeller from "../../components/Store/SearchSeller";
 import { getCatalogItems } from "../../services/Store/StoreCatalogService";
-import { useSnackbar } from "notistack";
-import Loading from "../../components/Loading";
-
-const CustomButton = styled(Button)(({ theme }) => ({
-  color: "#fff",
-  backgroundColor: "#FF6969",
-  borderRadius: "15px",
-  "&:hover": {
-    backgroundColor: "#ea4545 !important",
-  },
-}));
+import { GetStoreProduct } from "../../services/Store/StoreProductService";
 
 const statusOptions = [
   {
@@ -54,6 +42,8 @@ const quantityOptions = [
   },
 ];
 function Product(props) {
+  const [search, setSearch] = React.useState("");
+  const [buttonClicked, setButtonClicked] = React.useState(true);
   const [productItems, setProductItems] = React.useState([]);
   const [totalItems, setTotalItems] = React.useState(0);
   const [limit, setLimit] = React.useState(5);
@@ -111,37 +101,47 @@ function Product(props) {
     };
     handleGetCatalogs();
   }, []);
-  useEffect(() => {
-    const handleGetStoreProduct = async () => {
-      setIsLoading(true);
-      const response = await GetStoreProduct({
-        page: page - 1,
-        limit: limit,
-        catalogIds: selectedCategory,
-        storeProductStatus: selectedStatus,
-        storeProductQuantity: selectedQuantity,
-      });
-      if (response.success) {
-        setProductItems(response.data.data.objects);
-        setPage(parseInt(response.data.data.page) + 1);
-        setTotalItems(response.data.data.totalObjects);
-        setLimit(response.data.data.limit);
-      } else
-        enqueueSnackbar("Đã có lỗi xảy ra khi lấy thông tin sản phẩm", {
-          variant: "error",
-        });
-      setIsLoading(false);
-    };
 
-    handleGetStoreProduct();
+  const handleGetStoreProduct = useCallback(async () => {
+    if (!buttonClicked) return;
+    setIsLoading(true);
+    const response = await GetStoreProduct({
+      search: search,
+      page: page - 1,
+      limit: limit,
+      catalogIds: selectedCategory,
+      storeProductStatus: selectedStatus,
+      storeProductQuantity: selectedQuantity,
+    });
+    if (response.success) {
+      setProductItems(response.data.data.objects);
+      setPage(parseInt(response.data.data.page) + 1);
+      setTotalItems(response.data.data.totalObjects);
+      setLimit(response.data.data.limit);
+    } else
+      enqueueSnackbar("Đã có lỗi xảy ra khi lấy thông tin sản phẩm", {
+        variant: "error",
+      });
+    setIsLoading(false);
+    setButtonClicked(false);
   }, [
-    selectedCategory,
-    selectedStatus,
-    selectedQuantity,
     enqueueSnackbar,
-    page,
     limit,
+    page,
+    search,
+    selectedCategory,
+    selectedQuantity,
+    selectedStatus,
+    buttonClicked,
   ]);
+
+  useEffect(() => {
+    setButtonClicked(true);
+  }, [page, limit]);
+
+  useEffect(() => {
+    handleGetStoreProduct();
+  }, [handleGetStoreProduct]);
   return (
     <>
       {isLoading ? (
@@ -152,12 +152,6 @@ function Product(props) {
             <Stack spacing={3}>
               <Stack direction={"row"} justifyContent={"space-between"}>
                 <Typography variant="h3">Danh sách sản phẩm</Typography>
-                <CustomButton
-                  variant="contained"
-                  startIcon={<AddOutlinedIcon />}
-                >
-                  Thêm sản phẩm
-                </CustomButton>
               </Stack>
               <Stack
                 component={Paper}
@@ -168,7 +162,13 @@ function Product(props) {
                 }}
                 spacing={"2px"}
               >
-                <SearchSeller />
+                <SearchSeller
+                  value={search}
+                  onChange={setSearch}
+                  onApply={() => {
+                    setButtonClicked(true);
+                  }}
+                />
                 <Box py={2} px={3}>
                   {selectedCategory.length === 0 &&
                     selectedQuantity.length === 0 &&
@@ -250,7 +250,7 @@ function Product(props) {
                   />
                 </Stack>
                 <ProductsTable
-                  count={totalItems}
+                  count={totalItems ? totalItems : 0}
                   items={productItems}
                   onPageChange={handlePageChange}
                   onRowsPerPageChange={handleRowsPerPageChange}

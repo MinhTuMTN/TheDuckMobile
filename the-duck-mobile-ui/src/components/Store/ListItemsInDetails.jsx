@@ -43,12 +43,14 @@ const TieuDeCot = styled(Typography)(({ theme }) => ({
   fontSize: "14.5px !important",
   variant: "body1",
   fontWeight: "600 !important",
+  textAlign: "center",
 }));
 
 const NoiDung = styled(Typography)(({ theme }) => ({
   fontSize: "14.5px !important",
   variant: "body1",
   fontWeight: "400 !important",
+  textAlign: "right",
 }));
 
 const NameContainer = styled.div({
@@ -75,7 +77,10 @@ function ListItemsInDetails(props) {
           <Grid item xs={6}>
             <TieuDeCot>SẢN PHẨM</TieuDeCot>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
+            <TieuDeCot style={{ textAlign: "left" }}>ĐƠN GIÁ</TieuDeCot>
+          </Grid>
+          <Grid item xs={1}>
             <TieuDeCot>SỐ LƯỢNG</TieuDeCot>
           </Grid>
           <Grid item xs={3}>
@@ -94,15 +99,20 @@ function ListItemsInDetails(props) {
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     width: "95%",
+                    textAlign: "left",
                   }}
                 >
                   {item.name}
                 </TieuDeCot>
               </NameContainer>
             </Grid>
-
-            <Grid item xs={3}>
-              <NoiDung>{item.quantity}</NoiDung>
+            <Grid item xs={2}>
+              <NoiDung style={{ textAlign: "left" }}>
+                <FormatCurrency amount={item.price} />
+              </NoiDung>
+            </Grid>
+            <Grid item xs={1}>
+              <NoiDung style={{ textAlign: "center" }}>{item.quantity}</NoiDung>
             </Grid>
             <Grid item xs={3}>
               <NoiDung>

@@ -47,6 +47,9 @@ function SearchProduct(props) {
           totalProducts: response.data.data.totalObjects,
         });
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+
+      // Scroll to top
+      window.scrollTo(0, 0);
     };
 
     handleSearchProducts();

@@ -65,8 +65,9 @@ export default function BasicPopover(props) {
         }}
       >
         <FormGroup sx={{ padding: 1 }}>
-          {props?.options?.map((option) => (
+          {props?.options?.map((option, index) => (
             <FormControlLabel
+              key={`option-${index}-${option.value}`}
               sx={{ padding: 0.75 }} // Đặt padding cho mỗi option
               control={
                 <Checkbox

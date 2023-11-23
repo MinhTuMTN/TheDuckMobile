@@ -4,8 +4,10 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import BasicDetails from "../../components/Store/BasicDetails";
 import ListItemsInDetails from "../../components/Store/ListItemsInDetails";
+import { useNavigate } from "react-router-dom";
 
 function OrderDetails(props) {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -23,6 +25,9 @@ function OrderDetails(props) {
             spacing={0}
             alignItems={"center"}
             marginBottom={3}
+            onClick={() => {
+              navigate(-1);
+            }}
           >
             <IconButton
               aria-label="back"
@@ -39,6 +44,7 @@ function OrderDetails(props) {
               style={{
                 fontSize: "14px",
                 color: "#111927",
+                cursor: "pointer",
               }}
             >
               Danh sách đơn hàng

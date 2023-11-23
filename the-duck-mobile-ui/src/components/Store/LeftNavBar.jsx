@@ -1,3 +1,7 @@
+import styled from "@emotion/styled";
+import HomeIcon from "@mui/icons-material/Home";
+import PersonIcon from "@mui/icons-material/Person";
+import RedeemIcon from "@mui/icons-material/Redeem";
 import {
   Box,
   Drawer,
@@ -12,12 +16,48 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React from "react";
+import { NavLink, useMatch } from "react-router-dom";
 import pic from "../../assets/logo-removebg-preview.jpg";
 
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+const sidebarItems = [
+  {
+    display: "Sản phẩm",
+    icon: <PersonIcon />,
+    to: "/store/products",
+  },
+
+  {
+    display: "Đơn hàng",
+    icon: <HomeIcon />,
+    to: "/store/orders",
+  },
+  {
+    display: "Thống kê",
+    icon: <RedeemIcon />,
+    to: "/store/statistics",
+  },
+];
+
+const CustomListItemButton = styled(ListItemButton)(({ theme, active }) => ({
+  marginRight: theme.spacing(0.5),
+  width: "100%",
+  color: "white",
+
+  "&:hover": {
+    backgroundColor: active === "true" ? "#333860da" : "#3a3d5685",
+  },
+}));
+
+const CustomListItemIcon = styled(ListItemIcon)(({ theme }) => ({
+  padding: `0 0 ${theme.spacing(0.3)} ${theme.spacing(2.5)}`,
+  color: "white",
+  transform: "scale(1.1)",
+}));
+
 function LeftNavBar(props) {
   const { open, onOpenClose } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+  const isIndexPage = useMatch("/store");
   const content = (
     <Box
       sx={{
@@ -48,36 +88,30 @@ function LeftNavBar(props) {
           The Duck Mobile
         </Typography>
       </Box>
-      <List
-        sx={{
-          paddingTop: 0,
-          paddingLeft: 1,
-        }}
-      >
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Sản phẩm"} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Đơn hàng"} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Thống kê"} />
-          </ListItemButton>
-        </ListItem>
+      <List>
+        {sidebarItems.map((item, index) => (
+          <NavLink
+            key={`nav-bar-store-${index}`}
+            style={{ textDecoration: "none" }}
+            to={item.to}
+            className={({ isActive, isPending }) =>
+              isActive || (isIndexPage && item.display === "Sản phẩm")
+                ? "nav-active"
+                : ""
+            }
+          >
+            <ListItem disablePadding key={item.section}>
+              <CustomListItemButton>
+                <CustomListItemIcon>{item.icon}</CustomListItemIcon>
+                <ListItemText
+                  disableTypography
+                  style={{ color: "#b5bac0 !important", fontSize: "14px" }}
+                  primary={item.display}
+                />
+              </CustomListItemButton>
+            </ListItem>
+          </NavLink>
+        ))}
       </List>
     </Box>
   );
@@ -87,7 +121,7 @@ function LeftNavBar(props) {
         anchor="left"
         PaperProps={{
           sx: {
-            background: "linear-gradient(180deg, #FF416C 0%, #f38b57 100%)",
+            background: "linear-gradient(180deg, #000428 0%, #043765 100%)",
             color: "common.white",
             width: 280,
           },

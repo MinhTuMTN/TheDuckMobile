@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Entities;
+using TheDuckMobile_WebAPI.ErrorHandler;
 using TheDuckMobile_WebAPI.Models.Response;
 using TheDuckMobile_WebAPI.Models.Response.Store;
 using TheDuckMobile_WebAPI.Services.Store;
@@ -19,6 +20,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
         }
 
         public async Task<PaginationResponse> GetStoreProducts(Guid staffId,
+            string? search,
             int page,
             int limit,
             List<int>? categoryIds,
@@ -34,6 +36,11 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 .ThenInclude(pv => pv.Product!)
                 .ThenInclude(p => p.Catalog!)
                 .Where(sp => sp.StoreId == store.StoreId);
+
+            if (search != null && search.Trim() != "")
+                storeProducts = storeProducts.Where(sp =>
+                    sp.ProductVersion!.Product!.ProductName!.Contains(search)
+                );
 
             if (categoryIds != null && categoryIds.Count > 0)
             {
@@ -76,6 +83,23 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 Page = page,
                 TotalObjects = total
             };
+        }
+
+        public async Task<bool> UpdateStoreProductQuantity(Guid staffId, Guid storeProductId, int quantity)
+        {
+            var store = await _staffServices.GetStoreByStaffId(staffId);
+            var storeProduct = await _context
+                .StoreProducts
+                .Where(s => s.StoreProductId == storeProductId && s.StoreId == store.StoreId && s.IsDelete == false)
+                .FirstOrDefaultAsync();
+
+            if (storeProduct is null)
+                throw new CustomNotFoundException("Can't found store product");
+
+            storeProduct.Quantity += quantity;
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

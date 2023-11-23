@@ -318,7 +318,7 @@ function Router(props) {
               element: <Orders />,
             },
             {
-              path: "order-details",
+              path: "orders/order-details",
               element: <OrderDetails />,
             },
           ],
