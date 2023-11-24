@@ -14,6 +14,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
         public async Task<object?> GetAllCatalogs()
         {
             var catalogs = await _context.Catalogs
+                .Where(c => c.IsDeleted == false)
                 .Select(c => new { c.CatalogId, c.CatalogName, c.CatalogURL })
                 .ToListAsync();
             return catalogs;

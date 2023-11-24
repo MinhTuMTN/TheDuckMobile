@@ -21,12 +21,31 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         public async Task<IActionResult> AddProductVerion([FromForm] ProductVersionRequest request)
         {
             var productVersion = await _productVersionAdminServices.CreateProductVersion(request);
-            
+
             return Ok(new GenericResponse
             {
                 Success = true,
                 Message = "Product version added successfully.",
                 Data = productVersion
+            });
+        }
+
+        [HttpDelete("{productVersionId}")]
+        public async Task<IActionResult> DeleteProductVersion([FromRoute] Guid productVersionId)
+        {
+            var isDeleted = await _productVersionAdminServices.DeleteProductVersion(productVersionId);
+            if (!isDeleted)
+                return NotFound(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Product version not found",
+                    Data = null
+                });
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Product version deleted successfully",
+                Data = isDeleted
             });
         }
     }
