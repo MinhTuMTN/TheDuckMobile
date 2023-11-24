@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect } from "react";
-import { Box, InputAdornment, TextField } from "@mui/material";
+import React from "react";
+import { Box, InputAdornment, TextField, Button } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import PropTypes from "prop-types";
 
-SearchList.prototype = {
+SearchSeller.prototype = {
   borderRadius: PropTypes.number,
   borderTopLeftRadius: PropTypes.number,
   borderTopRightRadius: PropTypes.number,
@@ -11,37 +11,19 @@ SearchList.prototype = {
   borderBottomRightRadius: PropTypes.number,
 };
 
-function SearchList(props) {
-  const
-  {
+SearchSeller.defaultProps = {
+  onApply: () => {},
+};
+
+function SearchSeller(props) {
+  const {
     borderRadius,
     borderTopLeftRadius,
     borderTopRightRadius,
-    placeholder,
-    searchString,
-    setRowsSearched,
-    dataFetched,
-    setSearchString,
-    setPage
+    onApply,
+    value,
+    onChange,
   } = props;
-
-  const filterRows = useCallback(
-    (searchString) => {
-      setPage(0);
-      if (searchString === "") {
-        return dataFetched;
-      }
-      return dataFetched.filter((row) =>
-        row.brandName.toLowerCase().includes(searchString.toLowerCase())
-      );
-    },
-    [dataFetched, setPage]
-  );
-
-  useEffect(() => {
-    const filtered = filterRows(searchString);
-    setRowsSearched(filtered);
-  }, [searchString, filterRows, setRowsSearched]);
   return (
     <Box
       sx={{
@@ -50,6 +32,8 @@ function SearchList(props) {
         borderTopRightRadius: { borderTopRightRadius },
         borderRadius: { borderRadius },
         borderBottom: "1px solid #e0e0e0",
+        display: "flex",
+        alignItems: "center",
       }}
     >
       <TextField
@@ -59,8 +43,6 @@ function SearchList(props) {
         sx={{
           fontSize: "14px",
         }}
-        value={searchString}
-        onChange={(e) => setSearchString(e.target.value)}
         InputProps={{
           disableUnderline: true,
           startAdornment: (
@@ -69,10 +51,16 @@ function SearchList(props) {
             </InputAdornment>
           ),
         }}
-        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Tìm kiếm sản phẩm"
       />
+
+      <Button color="color4" onClick={onApply} sx={{ flexBasis: "15%" }}>
+        Áp dụng
+      </Button>
     </Box>
   );
 }
 
-export default SearchList;
+export default SearchSeller;

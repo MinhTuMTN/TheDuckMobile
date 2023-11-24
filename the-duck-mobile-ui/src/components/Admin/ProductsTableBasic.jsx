@@ -18,8 +18,9 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FormatDate from "../FormatDate";
 
 const CustomText = styled(Typography)(({ theme }) => ({
   fontSize: "14px !important",
@@ -48,8 +49,8 @@ function useCustomMediaQuery() {
 
 function Row(props) {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const { row } = props;
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const handleClick = (event) => {
@@ -60,11 +61,6 @@ function Row(props) {
     setAnchorEl(null);
   };
 
-  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
-  const formattedDate = new Intl.DateTimeFormat("vi-VN", options).format(
-    new Date(row.createDate)
-  );
-
   const maxWidth = useCustomMediaQuery();
 
   return (
@@ -74,7 +70,7 @@ function Row(props) {
           <Stack direction={"row"} spacing={2} alignItems={"center"}>
             <CardMedia
               component="img"
-              image={row.productImage}
+              image={row.thumbnail}
               alt="Hình ảnh sản phẩm"
               style={{ maxHeight: "5rem", maxWidth: "5rem" }}
             />
@@ -102,23 +98,23 @@ function Row(props) {
                   maxWidth: maxWidth,
                 }}
               >
-                Category {row.category}
+                Category {row.catalogName}
               </CustomText>
             </Stack>
           </Stack>
         </TableCell>
         <TableCell align="left">
-          <CustomText>{formattedDate}</CustomText>
+          <CustomText><FormatDate dateTime={row.createdAt} /></CustomText>
         </TableCell>
         <TableCell align="right">
           <Stack direction={"row"} spacing={1} alignItems={"center"}>
             <CircleIcon
               sx={{
                 fontSize: 10,
-                color: row.status === "Còn bán" ? "#00C58D" : "#c52700",
+                color: row.isDeleted ? "#c52700" : "#00C58D",
               }}
             />
-            <CustomText>{row.status}</CustomText>
+            <CustomText>{row.isDeleted ? "Ngưng bán" : "Còn bán"}</CustomText>
           </Stack>
         </TableCell>
         <TableCell align="right">
@@ -148,7 +144,7 @@ function Row(props) {
                 <ButtonInPopover
                   variant="text"
                   size="medium"
-                  onClick={(e) => {}}
+                  onClick={(e) => { }}
                 >
                   Chỉnh sửa
                 </ButtonInPopover>
@@ -156,7 +152,7 @@ function Row(props) {
                   variant="text"
                   size="medium"
                   onClick={(e) => {
-                    navigate("/admin/product-management/detail", {
+                    navigate(`/admin/product-management/${row.productId}`, {
                       state: {
                         id: row.productId,
                       },
@@ -208,8 +204,8 @@ function ProductsTableBasic(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.slice(0, rowsPerPage).map((row) => (
-                <Row key={row.id} row={row} />
+              {items.slice(0, rowsPerPage).map((row, index) => (
+                <Row key={index} row={row} />
               ))}
             </TableBody>
           </Table>

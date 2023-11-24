@@ -17,9 +17,11 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
         public string? BrandName { get; set; }
         public string? CatalogName { get; set; }
         public string? OSName { get; set; }
-        public string SpecialFeatures { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime LastModifiedAt { get; set; }
+        public ICollection<ProductVersion>? ProductVersions { get; set; }
+        public bool IsDeleted { get; set; }
+
         public ProductDetailResponse(Product product)
         {
             ProductId = product.ProductId;
@@ -34,10 +36,11 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
             BrandName = product.Brand?.BrandName;
             CatalogName = product.Catalog?.CatalogName;
             OSName = product.OS?.OSName;
-            SpecialFeatures = product.SpecialFeatures == null ? "" : string.Join(", ", product.SpecialFeatures.Select(p => p.SpecialFeatureName).ToArray());
+            ProductVersions = product.ProductVersions;
             CreatedAt = product.CreatedAt;
             LastModifiedAt = product.LastModifiedAt;
             NumberOfVotes = product.Votes == null ? 0 : product.Votes.Count;
+            IsDeleted = product.IsDeleted;
         }
     }
 }

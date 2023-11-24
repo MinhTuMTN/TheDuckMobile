@@ -33,7 +33,6 @@ namespace TheDuckMobile_WebAPI.Entities
         //Quan hệ 1-n đến ProductVersion
         public Guid ProductVersionId { get; set; }
         private ProductVersion? _productVersion;
-        [JsonIgnore]
         public virtual ProductVersion? ProductVersion
         {
             get => _lazyLoader.Load(this, ref _productVersion);

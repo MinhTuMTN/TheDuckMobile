@@ -18,7 +18,7 @@ import BrandsTable from "../../../components/Admin/BrandsTables";
 import AddNewBrand from "../../../components/Admin/AddNewBrand";
 import CloseIcon from "@mui/icons-material/Close";
 import { DataContext } from "../../../layouts/AdminLayout";
-import SearchList from "../../../components/Admin/SearchList";
+import SearchBrandList from "../../../components/Admin/SearchBrandList";
 import { addBrand } from "../../../services/Admin/BrandService";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
@@ -162,7 +162,7 @@ function BrandListPage(props) {
             }}
             spacing={"2px"}
           >
-            <SearchList
+            <SearchBrandList
               placeholder="Tìm kiếm thương hiệu"
               searchString={searchString}
               setRowsSearched={setRowsSearched}

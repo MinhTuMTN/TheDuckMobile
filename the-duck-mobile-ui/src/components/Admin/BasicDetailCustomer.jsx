@@ -45,29 +45,37 @@ const NoiDung = styled(Typography)(({ theme }) => ({
 
 function BasicDetailsCustomer(props) {
   const { customer } = props;
-  let status = customer.isDeleted ? 1 : 0;
-  const [editStatus, setEditStatus] = useState(0);
+  let status = customer.isDeleted;
+  const [statusCustomer, setStatusCustomer] = useState(false)
+  const [editStatus, setEditStatus] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
   useEffect(() => {
     setEditStatus(status);
+    setStatusCustomer(status);
   }, [status]);
 
-  const handleChange = (event) => {
+  const handleStatusChange = (event) => {
     setEditStatus(event.target.value);
-    setDisabledButton(false);
+    if (statusCustomer !== event.target.value) {
+      setDisabledButton(false);
+    }
+    else {
+      setDisabledButton(true);
+    }
   };
 
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
   const handleUpdateButtonClick = async () => {
     let response;
-    if (editStatus === 0) {
+    if (statusCustomer) {
       response = await restoreCustomer(customer.userId);
       if (response.success) {
         enqueueSnackbar("Mở khóa khách hàng thành công!", { variant: "success" });
         setDisabledButton(true);
+        setStatusCustomer(editStatus);
       } else {
         enqueueSnackbar("Mở khóa khách hàng thất bại!", { variant: "error" });
       }
@@ -76,6 +84,7 @@ function BasicDetailsCustomer(props) {
       if (response.success) {
         enqueueSnackbar("Khóa khách hàng thành công!", { variant: "success" });
         setDisabledButton(true);
+        setStatusCustomer(editStatus);
       } else {
         enqueueSnackbar("Khóa khách hàng thất bại!", { variant: "error" });
       }
@@ -160,19 +169,19 @@ function BasicDetailsCustomer(props) {
             <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">Trạng thái</InputLabel>
               <Select
-                value={editStatus}
+                value={typeof editStatus === "undefined" ? false : editStatus}
                 label="Trạng thái"
-                onChange={handleChange}
+                onChange={handleStatusChange}
                 className="custom-select"
               >
                 <MenuItem
-                  value={0}
+                  value={false}
                   style={{ fontSize: "14px" }}
                 >
                   Đang hoạt động
                 </MenuItem>
                 <MenuItem
-                  value={1}
+                  value={true}
                   style={{ fontSize: "14px" }}
                 >
                   Đã khóa
@@ -210,13 +219,13 @@ function BasicDetailsCustomer(props) {
             </Button>
             <DialogConfirm
               open={deleteDialog}
-              title={customer.isDeleted ? "Mở khóa khách hàng" : "Khóa khách hàng"}
+              title={statusCustomer ? "Mở khóa khách hàng" : "Khóa khách hàng"}
               content={
-                customer.isDeleted
+                statusCustomer
                   ? "Bạn có chắc chắn muốn mở khóa khách hàng này?"
                   : "Bạn có chắc chắn muốn khóa khách hàng này?"
               }
-              okText={customer.isDeleted ? "Khôi phục" : "Xóa"}
+              okText={statusCustomer ? "Khôi phục" : "Khóa"}
               cancelText={"Hủy"}
               onOk={handleUpdateButtonClick}
               onCancel={() => setDeleteDialog(false)}

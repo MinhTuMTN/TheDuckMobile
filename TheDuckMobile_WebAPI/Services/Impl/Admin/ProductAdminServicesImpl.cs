@@ -22,7 +22,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         public async Task<List<ProductListResponse>> GetAllProducts()
         {
             var products = await _context.Products
-                .Where(p => p.IsDeleted == false)
                 .Include(p => p.Votes)
                 .ToListAsync();
             return products.Select(p => new ProductListResponse(p)).ToList();
@@ -35,8 +34,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 .Include(p => p.Catalog)
                 .Include(p => p.Brand)
                 .Include(p => p.OS)
-                .Include(p => p.SpecialFeatures)
-                .FirstOrDefaultAsync(p => p.ProductId == productId && p.IsDeleted == false);
+                .Include(p => p.ProductVersions)
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
             if (product == null)
                 return null;
             return new ProductDetailResponse(product);
@@ -46,9 +45,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         {
             var product = await _context
                 .Products
-                .FirstOrDefaultAsync(
-                    p => p.ProductId == productId && p.IsDeleted == false
-                );
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
             if (product == null)
                 throw new CustomNotFoundException("Can't found product");
 
@@ -100,10 +97,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         {
             var product = await _context
                 .Products
-                .FirstOrDefaultAsync(
-                    p => p.ProductId == productId &&
-                    p.IsDeleted == false
-                );
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
 
             if (product == null)
                 return null;

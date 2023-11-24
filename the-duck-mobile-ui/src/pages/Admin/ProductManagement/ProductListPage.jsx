@@ -8,12 +8,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useContext, useState } from "react";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import SearchSeller from "../../../components/Store/SearchSeller";
+import SearchProductList from "../../../components/Admin/SearchProductList";
 import Filter from "../../../components/Store/Filter";
 import ProductsTableBasis from "../../../components/Admin/ProductsTableBasic";
 import styled from "@emotion/styled";
+import { DataContext } from "../../../layouts/AdminLayout";
 
 const CustomButton = styled(Button)(({ theme }) => ({
   color: "#fff",
@@ -27,72 +28,11 @@ const CustomButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const items = [
-  {
-    id: "5e887ac47eed253091be10cb",
-    productName: "Điện thoại iPhone 14 Pro Max 128GB",
-    productImage:
-      "https://cdn1.viettelstore.vn/images/Product/ProductImage/medium/iPhone-15-pink1.jpg",
-    createDate: "2021-10-9",
-    quantity: 50,
-    status: "Còn bán",
-    category: "Điện thoại",
-  },
-  {
-    id: "5e887b209c28ac3dd97f6db5",
-    productName: "Laptop Dell XPS 13",
-    productImage:
-      "https://file.hstatic.net/200000722513/file/gearvn-laptop-asus-vivobook-15-oled-a1505za-l1245w-5_9a8ca184f97545c9bbb80529c69735a8.png",
-    createDate: "2021-10-10",
-    quantity: 0,
-    status: "Ngưng bán",
-    category: "Laptop",
-  },
-  {
-    id: "5e86809283e28b96d2d38537",
-    productName: "Điện thoại Samsung Galaxy S21 Ultra 5G 128GB",
-    productImage:
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_75/https://cdn.tgdd.vn/Products/Images/42/290829/samsung-galaxy-s23-plus-3-200x200.jpg",
-    createDate: "2021-10-10",
-    quantity: 100,
-    status: "Còn bán",
-    category: "Điện thoại",
-  },
-  {
-    id: "6e887b203c28ac3dd97f1db5",
-    productName: "Đồng hồ thông minh Apple Watch SE 2022 GPS 40mm",
-    productImage:
-      "https://cdn.tgdd.vn/Products/Images/7077/289612/apple-watch-se-2022-40mm-day-silicone-trang-kem-1.jpg",
-    createDate: "2021-10-10",
-    quantity: 0,
-    status: "Còn bán",
-    category: "Đồng hồ",
-  },
-  {
-    id: "7e887b209c281c3dd97f6db7",
-    productName: "Đồng hồ thông minh Apple Watch SE 2022 LTE 40mm ",
-    productImage:
-      "https://cdn.tgdd.vn/Products/Images/7077/289799/apple-watch-se-2022-lte-40mm-den-xanh-1.jpg",
-    createDate: "2021-10-10",
-    quantity: 0,
-    status: "Ngưng bán",
-    category: "Đồng hồ",
-  },
-  {
-    id: "5e887b202c28ac3dd94f6vb5",
-    productName: "Laptop Apple MacBook Pro 13 inch M2 2022",
-    productImage:
-      "https://cdn.tgdd.vn/ProductListPages/Images/44/282828/apple-macbook-pro-13-inch-m2-2022-1-1.jpg",
-    createDate: "2021-10-10",
-    quantity: 0,
-    status: "Còn bán",
-    category: "Laptop",
-  },
-];
-
 function ProductListPage(props) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const { dataFetched } = useContext(DataContext);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
@@ -100,7 +40,7 @@ function ProductListPage(props) {
     setRowsPerPage(event.target.value);
   };
 
-  const [selectedCategory, setSelectedCategory] = React.useState([]);
+  const [selectedCategory, setSelectedCategory] = useState([]);
   const handleChangeCategoryFilter = (event) => {
     if (event.target.checked) {
       setSelectedCategory((prev) => [...prev, event.target.value]);
@@ -111,7 +51,7 @@ function ProductListPage(props) {
     }
   };
 
-  const [selectedStatus, setSelectedStatus] = React.useState([]);
+  const [selectedStatus, setSelectedStatus] = useState([]);
   const handleChangeStatusFilter = (event) => {
     if (event.target.checked) {
       setSelectedStatus((prev) => [...prev, event.target.value]);
@@ -122,7 +62,7 @@ function ProductListPage(props) {
     }
   };
 
-  const [selectedQuantity, setSelectedQuantity] = React.useState([]);
+  const [selectedQuantity, setSelectedQuantity] = useState([]);
   const handleChangeQuantityFilter = (event) => {
     if (event.target.checked) {
       setSelectedQuantity((prev) => [...prev, event.target.value]);
@@ -132,6 +72,7 @@ function ProductListPage(props) {
       );
     }
   };
+
   return (
     <Box component={"main"} sx={{ flexGrow: 1, py: 4 }}>
       <Container maxWidth={"lg"}>
@@ -159,7 +100,7 @@ function ProductListPage(props) {
             }}
             spacing={"2px"}
           >
-            <SearchSeller />
+            <SearchProductList />
             <Box py={2} px={3}>
               {selectedCategory.length === 0 &&
                 selectedQuantity.length === 0 &&
@@ -239,8 +180,8 @@ function ProductListPage(props) {
               />
             </Stack>
             <ProductsTableBasis
-              count={items.length}
-              items={items}
+              count={dataFetched.length}
+              items={dataFetched}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}

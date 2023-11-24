@@ -14,9 +14,12 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ListProductVersion from "./ListProductVersion";
 import BasicProductInDetailsPage from "./BasicProductInDetailsPage";
+import DialogConfirm from "../DialogConfirm";
+import { deleteProduct, restoreProduct } from "../../services/Admin/ProductService";
+import { enqueueSnackbar } from "notistack";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   paddingLeft: "24px !important",
@@ -46,15 +49,54 @@ const paperStyle = {
 };
 
 function BasicProductDetails(props) {
-  const [statusProduct, setStatusProduct] = React.useState("");
-
-  const handleChangeStatusProduct = (event) => {
-    setStatusProduct(event.target.value);
-  };
-
   const theme = useTheme();
+  const { product } = props;
+  let status = product.isDeleted;
   const isFullWidth = useMediaQuery(theme.breakpoints.up("md"));
   const spacingValue = isFullWidth ? 2 : 0;
+  const [statusProduct, setStatusProduct] = useState(false)
+  const [editStatus, setEditStatus] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(true);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+
+  useEffect(() => {
+    setEditStatus(status);
+    setStatusProduct(status);
+  }, [status]);
+
+  const handleStatusChange = (event) => {
+    setEditStatus(event.target.value);
+    if (statusProduct !== event.target.value) {
+      setDisabledButton(false);
+    }
+    else {
+      setDisabledButton(true);
+    }
+  };
+
+
+  const handleUpdateButtonClick = async () => {
+    let response;
+    if (statusProduct) {
+      response = await restoreProduct(product.productId);
+      if (response.success) {
+        enqueueSnackbar("Mở khóa sản phẩm thành công!", { variant: "success" });
+        setDisabledButton(true);
+        setStatusProduct(editStatus);
+      } else {
+        enqueueSnackbar("Mở khóa sản phẩm thất bại!", { variant: "error" });
+      }
+    } else {
+      response = await deleteProduct(product.productId);
+      if (response.success) {
+        enqueueSnackbar("Khóa sản phẩm thành công!", { variant: "success" });
+        setDisabledButton(true);
+        setStatusProduct(editStatus);
+      } else {
+        enqueueSnackbar("Khóa sản phẩm thất bại!", { variant: "error" });
+      }
+    }
+  };
 
   return (
     <Grid container spacing={spacingValue}>
@@ -90,8 +132,8 @@ function BasicProductDetails(props) {
               <CardMedia
                 component="img"
                 height="fit-content"
-                image="https://static.skyassets.com/contentstack/assets/blt143e20b03d72047e/blt1c33e1158f1c5ecf/6319d97c454b1c2ebb3f4037/Carousel_iPhone14Plus_Purple_Placement01-PreOrder.png"
-                alt="Paella dish"
+                image={product.thumbnail}
+                alt="product-thumbnail"
               />
             </Stack>
           </BoxStyle2>
@@ -117,8 +159,8 @@ function BasicProductDetails(props) {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={statusProduct}
-                  onChange={handleChangeStatusProduct}
+                  value={typeof editStatus === "undefined" ? false : editStatus}
+                  onChange={handleStatusChange}
                   size="small"
                   sx={{
                     borderRadius: "10px !important",
@@ -128,7 +170,7 @@ function BasicProductDetails(props) {
                   }}
                 >
                   <MenuItem
-                    value={1}
+                    value={false}
                     sx={{
                       fontSize: "14px !important",
                     }}
@@ -144,7 +186,7 @@ function BasicProductDetails(props) {
                     Đang bán
                   </MenuItem>
                   <MenuItem
-                    value={2}
+                    value={true}
                     sx={{
                       fontSize: "14px !important",
                     }}
@@ -163,20 +205,38 @@ function BasicProductDetails(props) {
               </FormControl>
               <Button
                 variant="contained"
+                disabled={disabledButton}
                 sx={{
                   fontSize: "14px !important",
                   fontWeight: "500 !important",
                   whiteSpace: "nowrap", // Thêm vào đây
                 }}
+                onClick={(e) => {
+                  setDeleteDialog(true);
+                }}
               >
                 Cập nhật
               </Button>
+              <DialogConfirm
+                open={deleteDialog}
+                title={statusProduct ? "Mở khóa sản phẩm" : "Khóa sản phẩm"}
+                content={
+                  statusProduct
+                    ? "Bạn có chắc chắn muốn mở khóa sản phẩm này?"
+                    : "Bạn có chắc chắn muốn khóa sản phẩm này?"
+                }
+                okText={statusProduct ? "Khôi phục" : "Khóa"}
+                cancelText={"Hủy"}
+                onOk={handleUpdateButtonClick}
+                onCancel={() => setDeleteDialog(false)}
+                onClose={() => setDeleteDialog(false)}
+              />
             </Stack>
           </BoxStyle2>
         </Stack>
       </Grid>
       <Grid item xs={12} md={8.5}>
-        <BasicProductInDetailsPage />
+        <BasicProductInDetailsPage product={product} />
         <Stack component={Paper} elevation={3} sx={paperStyle}>
           <Stack
             sx={{
@@ -210,7 +270,7 @@ function BasicProductDetails(props) {
               </Grid>
             </BoxStyle>
             <Box>
-              <ListProductVersion />
+              <ListProductVersion productVersions={product.productVersions} />
             </Box>
           </Stack>
         </Stack>

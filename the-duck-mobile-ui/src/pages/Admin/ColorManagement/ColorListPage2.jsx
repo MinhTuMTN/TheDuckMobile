@@ -100,7 +100,7 @@ function ColorListPage() {
         if (isDeleted) {
             response = await restoreColor(id);
             if (response.success) {
-                enqueueSnackbar("Khôi phục màu sắc thành công!", {  variant: "success" });
+                enqueueSnackbar("Khôi phục màu sắc thành công!", { variant: "success" });
                 colors[index + page * rowsPerPage].isDeleted = !isDeleted;
                 setRowsSearched(colors);
             } else {
@@ -208,7 +208,7 @@ function ColorListPage() {
                                                 ? "Bạn có chắc chắn muốn khôi phục màu này"
                                                 : "Bạn có chắc chắn muốn xóa màu này?"
                                         }
-                                        okText={isDeleted ? "Khôi phục" : "Xóa"}
+                                        okText={isDeleted ? "Khôi phục" : "Khóa"}
                                         cancelText={"Hủy"}
                                         onOk={handleTrashButtonClick}
                                         onCancel={() => setDeleteDialog(false)}

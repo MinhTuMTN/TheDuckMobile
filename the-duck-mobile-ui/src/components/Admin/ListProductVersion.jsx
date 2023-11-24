@@ -13,28 +13,9 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
-import React from "react";
+import React, { useState } from "react";
 import FormatCurrency from "../FormatCurrency";
-const Items = [
-  {
-    id: 1,
-    name: "Điện thoại SamSung Galaxy M31",
-    creatAt: "20/10/2022",
-    price: 100000000,
-  },
-  {
-    id: 2,
-    name: "Điện thoại iPhone 14 Pro Max 128GB",
-    creatAt: "20/11/2023",
-    price: 27290000,
-  },
-  {
-    id: 3,
-    name: "Laptop Dell Inspiron 14 T7430 i5 1335U/8GB/512GB/Touch/Pen/OfficeHS/Win11 (N7430I58W1) ",
-    creatAt: "12/10/2021",
-    price: 23290000,
-  },
-];
+import FormatDate from "../FormatDate";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   borderBottom: "1px solid #E0E0E0",
@@ -68,7 +49,8 @@ const ButtonInPopover = styled(Button)(({ theme }) => ({
 }));
 
 function ListProductVersion(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const { productVersions } = props;
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -109,8 +91,8 @@ function ListProductVersion(props) {
           </Grid>
         </Grid>
       </BoxStyle>
-      {Items.map((item) => (
-        <BoxStyle key={item.id}>
+      {productVersions?.map((item, index) => (
+        <BoxStyle key={index}>
           <Grid container>
             <Grid item xs={6} sm={7}>
               <NameContainer>
@@ -122,7 +104,7 @@ function ListProductVersion(props) {
                     width: "95%",
                   }}
                 >
-                  {item.name}
+                  {item.versionName}
                 </TieuDeCot>
                 <NoiDung>
                   <FormatCurrency amount={item.price} />
@@ -131,7 +113,7 @@ function ListProductVersion(props) {
             </Grid>
 
             <Grid item xs={3} sm={3} textAlign={"center"}>
-              <NoiDung>{item.creatAt}</NoiDung>
+              <NoiDung><FormatDate dateTime={item.createdAt} /></NoiDung>
             </Grid>
             <Grid item xs={3} sm={2} textAlign={"center"}>
               {isSmallScreen ? (
@@ -169,7 +151,7 @@ function ListProductVersion(props) {
                       <ButtonInPopover
                         variant="text"
                         size="medium"
-                        onClick={(e) => {}}
+                        onClick={(e) => { }}
                       >
                         Xoá
                       </ButtonInPopover>
@@ -179,10 +161,10 @@ function ListProductVersion(props) {
               ) : (
                 // Hiển thị cho màn hình vừa và lớn
                 <>
-                  <IconButton color="black" onClick={(e) => {}}>
+                  <IconButton color="black" onClick={(e) => { }}>
                     <ModeEditIcon color="black" />
                   </IconButton>
-                  <IconButton color="black" onClick={(e) => {}}>
+                  <IconButton color="black" onClick={(e) => { }}>
                     <DeleteOutlinedIcon color="black" />
                   </IconButton>
                 </>

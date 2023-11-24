@@ -18,9 +18,10 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@emotion/react";
+import FormatDateTime from "../FormatDateTime";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   paddingLeft: "24px !important",
@@ -79,11 +80,12 @@ const MultilineText = styled(TextField)(({ theme }) => ({
 }));
 
 function BasicProductInDetailsPage(props) {
-  const [openPopup, setOpenPopup] = React.useState(false);
-  const [catalog, setCatalog] = React.useState("");
-  const [brand, setBrand] = React.useState("");
-  const [OS, setOS] = React.useState("");
-  const [inputValue, setInputValue] = React.useState("");
+  const { product } = props;
+  const [openPopup, setOpenPopup] = useState(false);
+  const [catalog, setCatalog] = useState("");
+  const [brand, setBrand] = useState("");
+  const [OS, setOS] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const isInputEmpty = inputValue.trim() === "";
   const handleChangeBrand = (event) => {
     setBrand(event.target.value);
@@ -145,7 +147,7 @@ function BasicProductInDetailsPage(props) {
             </Grid>
             <Grid item xs={12} sm={9}>
               <Stack direction={"column"} spacing={1} alignItems={"flex-start"}>
-                <NoiDung>24db4b01c26b13fe8e984df0</NoiDung>
+                <NoiDung>{product.productId}</NoiDung>
               </Stack>
             </Grid>
           </Grid>
@@ -157,7 +159,7 @@ function BasicProductInDetailsPage(props) {
             </Grid>
 
             <Grid item xs={12} sm={9}>
-              <NoiDung>Điện thoại iPhone 14 Pro Max 128GB</NoiDung>
+              <NoiDung>{product.productName}</NoiDung>
             </Grid>
           </Grid>
         </BoxStyle>
@@ -167,7 +169,7 @@ function BasicProductInDetailsPage(props) {
               <TieuDeCot>Thương hiệu</TieuDeCot>
             </Grid>
             <Grid item xs={12} sm={9} md={8}>
-              <NoiDung>Apple</NoiDung>
+              <NoiDung>{product.brandName}</NoiDung>
             </Grid>
           </Grid>
         </BoxStyle>
@@ -177,7 +179,7 @@ function BasicProductInDetailsPage(props) {
               <TieuDeCot>Danh mục</TieuDeCot>
             </Grid>
             <Grid item xs={12} sm={9}>
-              <NoiDung>Điện thoại</NoiDung>
+              <NoiDung>{product.catalogName}</NoiDung>
             </Grid>
           </Grid>
         </BoxStyle>
@@ -187,7 +189,7 @@ function BasicProductInDetailsPage(props) {
               <TieuDeCot>Hệ điều hành</TieuDeCot>
             </Grid>
             <Grid item xs={12} sm={9}>
-              <NoiDung>IOS</NoiDung>
+              <NoiDung>{product.osName}</NoiDung>
             </Grid>
           </Grid>
         </BoxStyle>
@@ -197,7 +199,7 @@ function BasicProductInDetailsPage(props) {
               <TieuDeCot>Ngày tạo</TieuDeCot>
             </Grid>
             <Grid item xs={12} sm={9}>
-              <NoiDung>20/10/2023</NoiDung>
+              <NoiDung><FormatDateTime dateTime={product.createdAt} /></NoiDung>
             </Grid>
           </Grid>
         </BoxStyle>
@@ -217,13 +219,7 @@ function BasicProductInDetailsPage(props) {
                   textAlign: "justify",
                 }}
               >
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Reprehenderit commodi pariatur dolores adipisci ipsum cum in
-                possimus a, impedit obcaecati exercitationem? Repellat qui
-                quaerat laboriosam vel suscipit aut quas blanditiis quibusdam
-                recusandae distinctio debitis enim, sed repellendus nostrum
-                corporis fuga molestias sequi minus. Laborum possimus itaque
-                voluptas, expedita eius ullam.
+                {product.productDescription}
               </NoiDung>
             </Grid>
           </Grid>
@@ -231,7 +227,7 @@ function BasicProductInDetailsPage(props) {
       </Stack>
       <BootstrapDialog
         open={openPopup}
-        onOk={() => {}}
+        onOk={() => { }}
         onClose={() => setOpenPopup(false)}
         aria-labelledby="customized-dialog-title"
         sx={{

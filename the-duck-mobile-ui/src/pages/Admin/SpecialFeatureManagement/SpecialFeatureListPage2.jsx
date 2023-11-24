@@ -197,7 +197,7 @@ function SpecialFeatureListPage() {
                                                 ? "Bạn có chắc chắn muốn khôi phục tính năng đặc biệt này"
                                                 : "Bạn có chắc chắn muốn xóa tính năng đặc biệt này?"
                                         }
-                                        okText={isDeleted ? "Khôi phục" : "Xóa"}
+                                        okText={isDeleted ? "Khôi phục" : "Khóa"}
                                         cancelText={"Hủy"}
                                         onOk={handleTrashButtonClick}
                                         onCancel={() => setDeleteDialog(false)}

@@ -196,7 +196,6 @@ function ColorListPage() {
       });
     }
 
-    console.log(error);
     if (!validData) {
       return;
     }

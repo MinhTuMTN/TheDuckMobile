@@ -47,29 +47,37 @@ const NoiDung = styled(Typography)(({ theme }) => ({
 
 function BasicDetailCoupon(props) {
   const { coupon } = props;
-  let status = coupon.isDeleted ? 1 : 0;
-  const [editStatus, setEditStatus] = useState(0);
+  let status = coupon.isDeleted;
+  const [editStatus, setEditStatus] = useState(false);
+  const [statusCoupon, setStatusCoupon] = useState(false)
   const [disabledButton, setDisabledButton] = useState(true);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
   useEffect(() => {
     setEditStatus(status);
+    setStatusCoupon(status);
   }, [status]);
 
-  const handleChange = (event) => {
+  const handleStatusChange = (event) => {
     setEditStatus(event.target.value);
-    setDisabledButton(false);
+    if (statusCoupon !== event.target.value) {
+      setDisabledButton(false);
+    }
+    else {
+      setDisabledButton(true);
+    }
   };
 
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
   const handleUpdateButtonClick = async () => {
     let response;
-    if (editStatus === 0) {
+    if (statusCoupon) {
       response = await restoreCoupon(coupon.couponId);
       if (response.success) {
         enqueueSnackbar("Mở khóa mã giảm giá thành công!", { variant: "success" });
         setDisabledButton(true);
+        setStatusCoupon(editStatus);
       } else {
         enqueueSnackbar("Mở khóa mã giảm giá thất bại!", { variant: "error" });
       }
@@ -78,6 +86,7 @@ function BasicDetailCoupon(props) {
       if (response.success) {
         enqueueSnackbar("Khóa mã giảm giá thành công!", { variant: "success" });
         setDisabledButton(true);
+        setStatusCoupon(editStatus);
       } else {
         enqueueSnackbar("Khóa mã giảm giá thất bại!", { variant: "error" });
       }
@@ -137,7 +146,7 @@ function BasicDetailCoupon(props) {
           </Grid>
 
           <Grid item xs={8} md={9}>
-          <NoiDung><FormatCurrency amount={coupon.maxDiscount} /></NoiDung>
+            <NoiDung><FormatCurrency amount={coupon.maxDiscount} /></NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
@@ -195,19 +204,19 @@ function BasicDetailCoupon(props) {
             <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">Trạng thái</InputLabel>
               <Select
-                value={editStatus}
+                value={typeof editStatus === "undefined" ? false : editStatus}
                 label="Trạng thái"
-                onChange={handleChange}
+                onChange={handleStatusChange}
                 className="custom-select"
               >
                 <MenuItem
-                  value={0}
+                  value={false}
                   style={{ fontSize: "14px" }}
                 >
                   Đang hoạt động
                 </MenuItem>
                 <MenuItem
-                  value={1}
+                  value={true}
                   style={{ fontSize: "14px" }}
                 >
                   Đã khóa
@@ -245,13 +254,13 @@ function BasicDetailCoupon(props) {
             </Button>
             <DialogConfirm
               open={deleteDialog}
-              title={coupon.isDeleted ? "Mở khóa mã giảm giá" : "Khóa mã giảm giá"}
+              title={statusCoupon ? "Mở khóa mã giảm giá" : "Khóa mã giảm giá"}
               content={
-                coupon.isDeleted
+                statusCoupon
                   ? "Bạn có chắc chắn muốn mở khóa mã giảm giá này?"
                   : "Bạn có chắc chắn muốn khóa mã giảm giá này?"
               }
-              okText={coupon.isDeleted ? "Khôi phục" : "Xóa"}
+              okText={statusCoupon ? "Khôi phục" : "Khóa"}
               cancelText={"Hủy"}
               onOk={handleUpdateButtonClick}
               onCancel={() => setDeleteDialog(false)}

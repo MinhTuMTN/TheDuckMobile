@@ -198,7 +198,7 @@ function OSListPage() {
                                                 ? "Bạn có chắc chắn muốn khôi phục hệ điều hành này"
                                                 : "Bạn có chắc chắn muốn xóa hệ điều hành này?"
                                         }
-                                        okText={isDeleted ? "Khôi phục" : "Xóa"}
+                                        okText={isDeleted ? "Khôi phục" : "Khóa"}
                                         cancelText={"Hủy"}
                                         onOk={handleTrashButtonClick}
                                         onCancel={() => setDeleteDialog(false)}

@@ -1,10 +1,28 @@
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import { Box, Container, IconButton, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import BasicProductDetails from "../../../components/Admin/BasicProductDetails";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getProductById } from "../../../services/Admin/ProductService";
+import FormatDateTime from "../../../components/FormatDateTime";
 
 function ProductDetailPage(props) {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const [product, setProduct] = useState({});
+
+  const handleGetProduct = useCallback(async () => {
+    const response = await getProductById(state.id);
+    if (response.success) {
+      setProduct(response.data.data);
+    }
+  }, [state.id]);
+
+  useEffect(() => {
+    handleGetProduct();
+  }, [handleGetProduct]);
+
   return (
     <Box component={"main"} sx={{ flexGrow: 1, pt: 0, pb: 4 }}>
       <Container>
@@ -21,6 +39,9 @@ function ProductDetailPage(props) {
                 padding="0"
                 margin="0"
                 color="#111927"
+                onClick={() => {
+                  navigate("/admin/product-management");
+                }}
               >
                 <ArrowBackIosIcon
                   sx={{
@@ -57,7 +78,7 @@ function ProductDetailPage(props) {
                   fontSize: "14px",
                 }}
               >
-                Tạo lúc{" "}
+                Tạo lúc {" "}
               </Typography>
               <CalendarTodayOutlinedIcon
                 sx={{
@@ -71,10 +92,10 @@ function ProductDetailPage(props) {
                   fontSize: "14px",
                 }}
               >
-                20/10/2021
+                <FormatDateTime dateTime={product.createdAt} />
               </Typography>
             </Stack>
-            <BasicProductDetails />
+            <BasicProductDetails product={product} />
           </Stack>
         </Stack>
       </Container>

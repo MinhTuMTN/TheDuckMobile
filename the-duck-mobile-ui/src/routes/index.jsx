@@ -46,11 +46,11 @@ import { StoreProtectedLayout } from "../layouts/StoreProtectedLayout";
 import CouponDetailPage from "../pages/Admin/CouponManagement/CouponDetailPage";
 
 const LazyLoad = (Component) => (props) =>
-  (
-    <React.Suspense fallback={<Loading />}>
-      <Component {...props} />
-    </React.Suspense>
-  );
+(
+  <React.Suspense fallback={<Loading />}>
+    <Component {...props} />
+  </React.Suspense>
+);
 
 const HomeLazy = LazyLoad(React.lazy(() => import("../pages/Home")));
 const SearchProductLazy = LazyLoad(
@@ -196,7 +196,7 @@ function Router(props) {
           element: <EditProductPage />,
         },
         {
-          path: "product-management/detail",
+          path: "product-management/:productId",
           element: <ProductDetailPage />,
         },
         {
@@ -234,7 +234,7 @@ function Router(props) {
           element: <EditStorePage />,
         },
         {
-          path: "store-management/detail",
+          path: "store-management/:storeId",
           element: <StoreDetailPage />,
         },
         {

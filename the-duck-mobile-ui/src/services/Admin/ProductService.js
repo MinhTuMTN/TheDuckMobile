@@ -1,4 +1,4 @@
-import { get } from "../AxiosInstance";
+import { del, get } from "../AxiosInstance";
 
 export const getAllProducts = () => {
   return get("productadmin");
@@ -9,9 +9,9 @@ export const getProductById = (productId) => {
 };
 
 export const deleteProduct = (productId) => {
-  return get(`productadmin/delete?productId=${productId}`);
+  return del(`productadmin/${productId}`);
 };
 
 export const restoreProduct = (productId) => {
-  return get(`productadmin/restore?productId=${productId}`);
+  return get(`productadmin/restore/${productId}`);
 };
