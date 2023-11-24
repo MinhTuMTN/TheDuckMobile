@@ -74,7 +74,6 @@ function ProductDetailPage(props) {
                 20/10/2021
               </Typography>
             </Stack>
-
             <BasicProductDetails />
           </Stack>
         </Stack>

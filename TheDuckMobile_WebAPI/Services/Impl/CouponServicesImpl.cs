@@ -19,7 +19,9 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 .Coupons
                 .Where(c => c.CouponCode == couponCode
                     && c.IsDeleted == false
-                ).FirstOrDefaultAsync();
+                )
+                .OrderByDescending(c => c.CreatedAt)
+                .FirstOrDefaultAsync();
 
             if (coupon is null)
                 throw new ExceptionWithStatusCode(411, "Coupon is not valid");

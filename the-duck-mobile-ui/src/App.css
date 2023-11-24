@@ -30,6 +30,13 @@ html {
   font-size: 14px !important;
 }
 
+.custom-text-feild input {
+  font-size: 14px !important;
+}
+
+.custom-text-feild label {
+  font-size: 14px !important;
+}
 .loading {
   color: #a31a1a;
   font-size: 45px;
@@ -91,6 +98,11 @@ html {
 
 .custom-select div {
   font-size: 14px !important;
+}
+
+.multiline-text div {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
 }
 
 .nav-active li {

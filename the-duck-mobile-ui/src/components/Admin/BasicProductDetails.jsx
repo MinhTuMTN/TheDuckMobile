@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import ListProductVersion from "./ListProductVersion";
+import BasicProductInDetailsPage from "./BasicProductInDetailsPage";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   paddingLeft: "24px !important",
@@ -37,20 +38,6 @@ const TieuDe = styled(Typography)(({ theme }) => ({
   variant: "subtitle1",
   fontWeight: "700 !important",
   width: "100%",
-}));
-
-const TieuDeCot = styled(Typography)(({ theme }) => ({
-  fontSize: "14.5px !important",
-  variant: "body1",
-  fontWeight: "520 !important",
-
-  color: "  #101828 !important",
-}));
-
-const NoiDung = styled(Typography)(({ theme }) => ({
-  fontSize: "14.5px !important",
-  variant: "body1",
-  fontWeight: "400 !important",
 }));
 
 const paperStyle = {
@@ -146,7 +133,6 @@ function BasicProductDetails(props) {
                       fontSize: "14px !important",
                     }}
                   >
-                    {" "}
                     <CircleIcon
                       style={{
                         color: "#10af4d",
@@ -190,133 +176,7 @@ function BasicProductDetails(props) {
         </Stack>
       </Grid>
       <Grid item xs={12} md={8.5}>
-        <Stack
-          component={Paper}
-          elevation={3}
-          sx={{
-            marginTop: 4,
-            borderRadius: "8px",
-          }}
-        >
-          <Stack
-            sx={{
-              borderRadius: "10px",
-              paddingTop: 0,
-              paddingBottom: 1,
-            }}
-          >
-            <BoxStyle
-              component={Grid}
-              alignItems={"center"}
-              sx={{
-                borderBottom: "1px solid #E0E0E0",
-              }}
-              container
-            >
-              <Grid item xs={6}>
-                <TieuDe>Thông tin cơ bản</TieuDe>
-              </Grid>
-              <Grid item xs={6} textAlign={"right"}>
-                <Button
-                  variant="text"
-                  sx={{
-                    paddingRight: "0px !important",
-                    color: "#4d4f53",
-                    fontWeight: "600 !important",
-                    fontSize: "14px !important",
-                  }}
-                >
-                  Chỉnh sửa
-                </Button>
-              </Grid>
-            </BoxStyle>
-            <BoxStyle>
-              <Grid container>
-                <Grid item xs={12} sm={3}>
-                  <TieuDeCot>ID</TieuDeCot>
-                </Grid>
-                <Grid item xs={12} sm={9}>
-                  <Stack
-                    direction={"column"}
-                    spacing={1}
-                    alignItems={"flex-start"}
-                  >
-                    <NoiDung>24db4b01c26b13fe8e984df0</NoiDung>
-                  </Stack>
-                </Grid>
-              </Grid>
-            </BoxStyle>
-            <BoxStyle>
-              <Grid container>
-                <Grid item xs={12} sm={3}>
-                  <TieuDeCot>Tên sản phẩm</TieuDeCot>
-                </Grid>
-
-                <Grid item xs={12} sm={9}>
-                  <NoiDung>Điện thoại iPhone 14 Pro Max 128GB</NoiDung>
-                </Grid>
-              </Grid>
-            </BoxStyle>
-            <BoxStyle>
-              <Grid container>
-                <Grid item xs={12} sm={3}>
-                  <TieuDeCot>Thương hiệu</TieuDeCot>
-                </Grid>
-                <Grid item xs={12} sm={9} md={8}>
-                  <NoiDung>Apple</NoiDung>
-                </Grid>
-              </Grid>
-            </BoxStyle>
-            <BoxStyle>
-              <Grid container>
-                <Grid item xs={12} sm={3}>
-                  <TieuDeCot>Danh mục</TieuDeCot>
-                </Grid>
-                <Grid item xs={12} sm={9}>
-                  <NoiDung>Điện thoại</NoiDung>
-                </Grid>
-              </Grid>
-            </BoxStyle>
-            <BoxStyle>
-              <Grid container>
-                <Grid item xs={12} sm={3}>
-                  <TieuDeCot>Ngày tạo</TieuDeCot>
-                </Grid>
-                <Grid item xs={12} sm={9}>
-                  <NoiDung>20/10/2023</NoiDung>
-                </Grid>
-              </Grid>
-            </BoxStyle>
-            <BoxStyle>
-              <Grid container>
-                <Grid item xs={12} sm={3}>
-                  <TieuDeCot>Mô tả</TieuDeCot>
-                </Grid>
-
-                <Grid item xs={12} sm={9}>
-                  <NoiDung
-                    sx={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: "4",
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      textAlign: "justify",
-                    }}
-                  >
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Reprehenderit commodi pariatur dolores adipisci ipsum cum in
-                    possimus a, impedit obcaecati exercitationem? Repellat qui
-                    quaerat laboriosam vel suscipit aut quas blanditiis
-                    quibusdam recusandae distinctio debitis enim, sed
-                    repellendus nostrum corporis fuga molestias sequi minus.
-                    Laborum possimus itaque voluptas, expedita eius ullam.
-                  </NoiDung>
-                </Grid>
-              </Grid>
-            </BoxStyle>
-          </Stack>
-        </Stack>
-
+        <BasicProductInDetailsPage />
         <Stack component={Paper} elevation={3} sx={paperStyle}>
           <Stack
             sx={{

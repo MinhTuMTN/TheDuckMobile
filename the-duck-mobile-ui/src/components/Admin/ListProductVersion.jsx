@@ -1,15 +1,20 @@
+import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Box, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import {
+  Box,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import Button from "@mui/material/Button";
+import Popover from "@mui/material/Popover";
 import React from "react";
 import FormatCurrency from "../FormatCurrency";
-import { IconButton } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Popover from "@mui/material/Popover";
-import Button from "@mui/material/Button";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import { useTheme } from "@emotion/react";
-
 const Items = [
   {
     id: 1,
@@ -64,7 +69,6 @@ const ButtonInPopover = styled(Button)(({ theme }) => ({
 
 function ListProductVersion(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [openPopup, setOpenPopup] = React.useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -159,13 +163,7 @@ function ListProductVersion(props) {
                     }}
                   >
                     <Stack direction={"column"} justifyContent={"left"}>
-                      <ButtonInPopover
-                        variant="text"
-                        size="medium"
-                        onClick={(e) => {
-                          setOpenPopup(true);
-                        }}
-                      >
+                      <ButtonInPopover variant="text" size="medium">
                         Chỉnh sửa
                       </ButtonInPopover>
                       <ButtonInPopover
@@ -181,13 +179,7 @@ function ListProductVersion(props) {
               ) : (
                 // Hiển thị cho màn hình vừa và lớn
                 <>
-                  <IconButton
-                    color="black"
-                    onClick={(e) => {
-                      // Xử lý sự kiện cho nút "Chỉnh sửa"
-                      setOpenPopup(true);
-                    }}
-                  >
+                  <IconButton color="black" onClick={(e) => {}}>
                     <ModeEditIcon color="black" />
                   </IconButton>
                   <IconButton color="black" onClick={(e) => {}}>
