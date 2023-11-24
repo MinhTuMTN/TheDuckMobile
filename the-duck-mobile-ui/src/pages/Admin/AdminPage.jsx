@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import { Box } from "@mui/material";
 import AdminSidebar from "../../components/Admin/AdminSidebar";
 import { Outlet } from "react-router-dom";
 import React from "react";
+import { Box } from "@mui/material";
 
 const RootPageUser = styled(Box)(({ theme }) => ({
   display: "flex",

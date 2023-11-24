@@ -1,9 +1,7 @@
-import { Box } from "@mui/material";
-import React from "react";
-import SearchSeller from "./SearchSeller";
-import OrderItem from "./OrderItem";
 import PropTypes from "prop-types";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import OrderItem from "./OrderItem";
 
 ListOrder.propTypes = {
   items: PropTypes.array,

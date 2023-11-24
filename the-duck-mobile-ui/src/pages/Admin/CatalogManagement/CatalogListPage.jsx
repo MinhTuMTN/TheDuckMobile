@@ -30,6 +30,7 @@ import {
   restoreCatalog,
 } from "../../../services/Admin/CatalogService";
 import MuiTextFeild from "../../../components/MuiTextFeild";
+import React from "react";
 
 const RootPageCatalogList = styled(Box)(({ theme }) => ({
   display: "flex",
