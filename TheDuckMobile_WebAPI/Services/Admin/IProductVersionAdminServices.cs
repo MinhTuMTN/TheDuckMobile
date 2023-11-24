@@ -6,5 +6,6 @@ namespace TheDuckMobile_WebAPI.Services.Admin
     public interface IProductVersionAdminServices
     {
         public Task<ProductVersion> CreateProductVersion(ProductVersionRequest request);
+        public Task<bool> DeleteProductVersion(Guid productVersionId);
     }
 }

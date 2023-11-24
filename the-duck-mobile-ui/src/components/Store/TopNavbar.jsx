@@ -12,24 +12,25 @@ import {
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
 import { usePopover } from "../../hooks/use-popover";
-import StorePopover from "./StorePopover";
 import { getStoreName } from "../../services/Store/StoreManagementService";
+import StorePopover from "./StorePopover";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
 function TopNavbar(props) {
-  const { onDrawerClick } = props;
+  const { onDrawerClick, isAdmin } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg")); // Sử dụng useMediaQuery để lấy ra giá trị của màn hình hiện tại
   const accountPopover = usePopover(); // Sử dụng usePopover để lấy ra giá trị của popover
   const [storeName, setStoreName] = React.useState("Cửa hàng The Duck Mobile");
   useEffect(() => {
+    if (isAdmin) return;
     const handleGetStoreName = async () => {
       const response = await getStoreName();
       if (response.success) setStoreName(response.data.data);
     };
     handleGetStoreName();
-  }, []);
+  }, [isAdmin]);
   return (
     <>
       <Box

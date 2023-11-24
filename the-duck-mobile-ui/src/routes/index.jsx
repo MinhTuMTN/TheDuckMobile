@@ -12,7 +12,6 @@ import DistrictListPage from "../pages/Admin/AddressManagement/DistrictManagemen
 import ProvinceListPage from "../pages/Admin/AddressManagement/ProvinceManagement/ProvinceListPage";
 import WardListPage from "../pages/Admin/AddressManagement/WardManagement/WardListPage";
 import BrandListPage from "../pages/Admin/BrandManagement/BrandListPage";
-import AddCatalogPage from "../pages/Admin/CatalogManagement/AddCatalogPage";
 import CatalogListPage from "../pages/Admin/CatalogManagement/CatalogListPage";
 import EditCatalogPage from "../pages/Admin/CatalogManagement/EditCatalogPage";
 import AddColorPage from "../pages/Admin/ColorManagement/AddColorPage";
@@ -176,10 +175,6 @@ function Router(props) {
         {
           path: "catalog-management",
           element: <CatalogListPage />,
-        },
-        {
-          path: "catalog-management/add",
-          element: <AddCatalogPage />,
         },
         {
           path: "catalog-management/:catalogId",

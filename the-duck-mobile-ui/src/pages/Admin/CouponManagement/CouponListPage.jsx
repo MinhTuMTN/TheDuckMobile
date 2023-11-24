@@ -56,8 +56,8 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({}));
 
 const CustomDatePicker = styled(DatePicker)(({ theme }) => ({
   width: "100%",
-  '& input': {
-    height: '55px',
+  "& input": {
+    height: "55px",
   },
 }));
 
@@ -155,6 +155,9 @@ function CouponListPage() {
     let response;
     let startDateParse = dayjs(couponRequest.startDate);
     let endDateParse = dayjs(couponRequest.endDate);
+    let endDateRequest = new Date(endDateParse.format("YYYY-MM-DD"));
+    endDateRequest.setUTCHours(23, 59, 59, 0);
+
     if (addNew) {
       response = await addCoupon({
         couponCode: couponRequest.couponCode,
@@ -162,8 +165,8 @@ function CouponListPage() {
         minPrice: parseFloat(couponRequest.minPrice),
         maxDiscount: parseFloat(couponRequest.maxDiscount),
         maxUse: parseInt(couponRequest.maxUse),
-        startDate: startDateParse.utc().format(),
-        endDate: endDateParse.utc().format(),
+        startDate: new Date(startDateParse.format("YYYY-MM-DD")),
+        endDate: endDateRequest,
         currentUse: 0,
       });
 
@@ -174,24 +177,25 @@ function CouponListPage() {
         window.location.reload();
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     } else {
-
       response = await updateCoupon(couponId, {
         couponCode: couponRequest.couponCode,
         discount: parseInt(couponRequest.discount),
         minPrice: parseFloat(couponRequest.minPrice),
         maxDiscount: parseFloat(couponRequest.maxDiscount),
         maxUse: parseInt(couponRequest.maxUse),
-        startDate: startDateParse.utc().format(),
-        endDate: endDateParse.utc().format(),
+        startDate: new Date(startDateParse.format("YYYY-MM-DD")),
+        endDate: endDateRequest,
         currentUse: parseInt(couponRequest.currentUse),
       });
       console.log(couponRequest.endDate);
-      console.log(endDateParse.format('YYYY-MM-DD HH:mm:ss'));
+      console.log(endDateParse.format("YYYY-MM-DD HH:mm:ss"));
       console.log(response);
       if (response.success) {
-        enqueueSnackbar("Chỉnh sửa mã giảm giá thành công", { variant: "success" });
+        enqueueSnackbar("Chỉnh sửa mã giảm giá thành công", {
+          variant: "success",
+        });
         setOpenPopup(false);
-        window.location.reload();
+        navigate(0);
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     }
   };
@@ -311,9 +315,9 @@ function CouponListPage() {
               <TableBody>
                 {(rowsPerPage > 0
                   ? rowsSearched.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
@@ -382,7 +386,7 @@ function CouponListPage() {
                                   paddingY: 1,
                                   textAlign: "left",
                                 }}
-                                onClick={(e) => { }}
+                                onClick={(e) => {}}
                               >
                                 Xem
                               </Button>
@@ -392,18 +396,16 @@ function CouponListPage() {
                                 onClick={(e) => {
                                   setOpenPopup(true);
                                   setCouponId(row.couponId);
-                                  setCouponRequest(
-                                    {
-                                      couponCode: row.couponCode,
-                                      discount: row.discount,
-                                      minPrice: row.minPrice,
-                                      maxDiscount: row.maxDiscount,
-                                      maxUse: row.maxUse,
-                                      startDate: row.startDate,
-                                      endDate: row.endDate,
-                                      currentUse: row.currentUse,
-                                    }
-                                  );
+                                  setCouponRequest({
+                                    couponCode: row.couponCode,
+                                    discount: row.discount,
+                                    minPrice: row.minPrice,
+                                    maxDiscount: row.maxDiscount,
+                                    maxUse: row.maxUse,
+                                    startDate: row.startDate,
+                                    endDate: row.endDate,
+                                    currentUse: row.currentUse,
+                                  });
                                   setAddNew(false);
                                 }}
                                 sx={{
@@ -420,10 +422,7 @@ function CouponListPage() {
                       ) : (
                         // Hiển thị cho màn hình vừa và lớn
                         <>
-                          <IconButton
-                            color="black"
-                            onClick={(e) => { }}
-                          >
+                          <IconButton color="black" onClick={(e) => {}}>
                             <InfoOutlinedIcon color="black" />
                           </IconButton>
                           <IconButton
@@ -432,18 +431,16 @@ function CouponListPage() {
                               // Xử lý sự kiện cho nút "Chỉnh sửa"
                               setOpenPopup(true);
                               setCouponId(row.couponId);
-                              setCouponRequest(
-                                {
-                                  couponCode: row.couponCode,
-                                  discount: row.discount,
-                                  minPrice: row.minPrice,
-                                  maxDiscount: row.maxDiscount,
-                                  maxUse: row.maxUse,
-                                  startDate: row.startDate,
-                                  endDate: row.endDate,
-                                  currentUse: row.currentUse,
-                                }
-                              );
+                              setCouponRequest({
+                                couponCode: row.couponCode,
+                                discount: row.discount,
+                                minPrice: row.minPrice,
+                                maxDiscount: row.maxDiscount,
+                                maxUse: row.maxUse,
+                                startDate: row.startDate,
+                                endDate: row.endDate,
+                                currentUse: row.currentUse,
+                              });
                               setAddNew(false);
                             }}
                           >
@@ -481,7 +478,7 @@ function CouponListPage() {
       </Grid>
       <BootstrapDialog
         open={openPopup}
-        onOk={() => { }}
+        onOk={() => {}}
         onClose={() => setOpenPopup(false)}
         aria-labelledby="customized-dialog-title"
       >
@@ -512,7 +509,7 @@ function CouponListPage() {
                 setCouponRequest((prev) => {
                   return {
                     ...prev,
-                    couponCode: e.target.value
+                    couponCode: e.target.value,
                   };
                 });
               }}
@@ -529,7 +526,7 @@ function CouponListPage() {
                   setCouponRequest((prev) => {
                     return {
                       ...prev,
-                      discount: e.target.value
+                      discount: e.target.value,
                     };
                   });
                 }}
@@ -545,7 +542,7 @@ function CouponListPage() {
                   setCouponRequest((prev) => {
                     return {
                       ...prev,
-                      maxUse: e.target.value
+                      maxUse: e.target.value,
                     };
                   });
                 }}
@@ -563,7 +560,7 @@ function CouponListPage() {
                   setCouponRequest((prev) => {
                     return {
                       ...prev,
-                      minPrice: e.target.value
+                      minPrice: e.target.value,
                     };
                   });
                 }}
@@ -579,7 +576,7 @@ function CouponListPage() {
                   setCouponRequest((prev) => {
                     return {
                       ...prev,
-                      maxDiscount: e.target.value
+                      maxDiscount: e.target.value,
                     };
                   });
                 }}
@@ -587,7 +584,10 @@ function CouponListPage() {
             </Stack>
 
             <Stack direction={"row"} spacing={1} width={"100%"}>
-              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="en-gb"
+              >
                 <CustomDatePicker
                   label="Ngày bắt đầu"
                   value={dayjs(couponRequest.startDate)}
@@ -595,14 +595,17 @@ function CouponListPage() {
                     setCouponRequest((prev) => {
                       return {
                         ...prev,
-                        startDate: newDate
+                        startDate: newDate,
                       };
                     });
                   }}
                   sx={{ mt: 2 }}
                 />
               </LocalizationProvider>
-              <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="en-gb"
+              >
                 <CustomDatePicker
                   label="Ngày kết thúc"
                   value={dayjs(couponRequest.endDate)}
@@ -610,7 +613,7 @@ function CouponListPage() {
                     setCouponRequest((prev) => {
                       return {
                         ...prev,
-                        endDate: newDate
+                        endDate: newDate,
                       };
                     });
                   }}

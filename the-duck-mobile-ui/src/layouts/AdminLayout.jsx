@@ -119,7 +119,7 @@ function AdminLayout(props) {
   return (
     <DataContext.Provider value={{ dataFetched }}>
       <Fragment>
-        <TopNavbar onDrawerClick={setOpen} />
+        <TopNavbar onDrawerClick={setOpen} isAdmin />
         <AdminSidebar open={open} onOpenClose={setOpen} />
         <RootPageUser>
           <LayoutContainer>
