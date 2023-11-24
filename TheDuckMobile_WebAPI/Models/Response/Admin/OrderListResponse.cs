@@ -1,4 +1,5 @@
-﻿using TheDuckMobile_WebAPI.Entities;
+﻿using TheDuckMobile_WebAPI.Common;
+using TheDuckMobile_WebAPI.Entities;
 
 namespace TheDuckMobile_WebAPI.Models.Response.Admin
 {
@@ -9,6 +10,7 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
         public string? StaffName { get; set; }
         public string? CustomerName { get; set; }
         public string? CouponCode { get; set; }
+        public OrderState OrderState { get; set; }
 
         public OrderListResponse(Order order)
         {
@@ -17,6 +19,7 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
             StaffName = order.Staff == null ? "" : order.Staff.FullName;
             CustomerName = order.Customer == null ? "" : order.Customer.FullName;
             CouponCode = order.Coupon == null ? "" : order.Coupon.CouponCode;
+            OrderState = order.OrderState;
         }
     }
 }

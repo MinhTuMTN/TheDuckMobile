@@ -86,6 +86,12 @@ function OSListPage() {
   const [index, setIndex] = useState(0);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [name, setName] = useState("");
+  const [error, setError] = useState({
+    status: false,
+    errorMessage: {
+      osName: "",
+    },
+  });
 
   useEffect(() => {
     setRowsSearched(dataFetched);
@@ -136,6 +142,39 @@ function OSListPage() {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Điều này sẽ kiểm tra nếu màn hình lớn hơn hoặc bằng lg breakpoint
 
   const handleSendOSRequest = async () => {
+    let validData = true;
+    if (!name || name.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            osName: "Tên hệ điều hành không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            osName: "",
+          }
+        };
+      });
+    }
+
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        specialFeatureName: "",
+      }
+    });
+
     let response;
     if (addNew) {
       response = await addOS({
@@ -183,6 +222,17 @@ function OSListPage() {
       }
     }
   };
+
+  const handlePopupClose = () => {
+    setOpenPopup(false);
+    setError({
+      error: false,
+      errorMessage: {
+        specialFeatureName: "",
+      }
+    });
+  }
+
   return (
     <Grid
       container
@@ -214,6 +264,7 @@ function OSListPage() {
             size="medium"
             startIcon={<AddOutlinedIcon />}
             onClick={() => {
+              setAddNew(true);
               setOpenPopup(true);
               setName("");
             }}
@@ -358,6 +409,12 @@ function OSListPage() {
                                   setOSId(row.osId);
                                   setName(row.osName);
                                   setAddNew(false);
+                                  setError({
+                                    error: false,
+                                    errorMessage: {
+                                      osName: "",
+                                    }
+                                  });
                                 }}
                                 sx={{
                                   paddingX: 2,
@@ -398,6 +455,12 @@ function OSListPage() {
                               setOSId(row.osId);
                               setName(row.osName);
                               setAddNew(false);
+                              setError({
+                                error: false,
+                                errorMessage: {
+                                  osName: "",
+                                }
+                              });
                             }}
                           >
                             <ModeEditIcon color="black" />
@@ -462,8 +525,7 @@ function OSListPage() {
 
       <BootstrapDialog
         open={openPopup}
-        onOk={() => { }}
-        onClose={() => setOpenPopup(false)}
+        onClose={handlePopupClose}
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
@@ -471,7 +533,7 @@ function OSListPage() {
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={() => setOpenPopup(false)}
+          onClick={handlePopupClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -487,7 +549,11 @@ function OSListPage() {
             value={name}
             margin="normal"
             autoFocus
-            required
+            style={{
+              minWidth: "300px",
+            }}
+            error={error.status && error.errorMessage.osName?.length !== 0}
+            helperText={error.errorMessage.osName}
             onChange={(e) => {
               setName(e.target.value);
             }}

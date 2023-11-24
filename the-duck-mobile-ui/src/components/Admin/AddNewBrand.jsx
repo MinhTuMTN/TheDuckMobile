@@ -12,7 +12,7 @@ const CustomImage = styled(Avatar)(({ theme }) => ({
   maxWidth: "250px",
 }));
 function AddNewBrand(props) {
-  const { setBrandAdd } = props;
+  const { setBrandAdd, error } = props;
   const [imageSelected, setImageSelected] = useState(null);
   const [urlImage, setUrlImage] = useState("");
 
@@ -63,7 +63,11 @@ function AddNewBrand(props) {
         label="Tên thương hiệu"
         variant="outlined"
         autoFocus
-        required
+        style={{
+          minWidth: "300px",
+        }}
+        error={error.status && error.errorMessage.brandName.length !== 0}
+        helperText={error.errorMessage.brandName}
         onChange={(e) => {
           setBrandAdd((prev) => ({
               ...prev,

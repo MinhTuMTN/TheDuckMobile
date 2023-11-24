@@ -13,9 +13,11 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import FormatDate from "../FormatDate";
-import { deleteCustomer, restoreCustomer } from "../../services/Admin/CustomerService";
 import { enqueueSnackbar } from "notistack";
 import DialogConfirm from "../DialogConfirm";
+import { deleteCoupon, restoreCoupon } from "../../services/Admin/CouponService";
+import FormatCurrency from "../FormatCurrency";
+
 const BoxStyle = styled(Box)(({ theme }) => ({
   borderBottom: "1px solid #E0E0E0",
   paddingLeft: "24px !important",
@@ -43,9 +45,9 @@ const NoiDung = styled(Typography)(({ theme }) => ({
   fontWeight: "400 !important",
 }));
 
-function BasicDetailsCustomer(props) {
-  const { customer } = props;
-  let status = customer.isDeleted ? 1 : 0;
+function BasicDetailCoupon(props) {
+  const { coupon } = props;
+  let status = coupon.isDeleted ? 1 : 0;
   const [editStatus, setEditStatus] = useState(0);
   const [disabledButton, setDisabledButton] = useState(true);
   const [deleteDialog, setDeleteDialog] = useState(false);
@@ -64,20 +66,20 @@ function BasicDetailsCustomer(props) {
   const handleUpdateButtonClick = async () => {
     let response;
     if (editStatus === 0) {
-      response = await restoreCustomer(customer.userId);
+      response = await restoreCoupon(coupon.couponId);
       if (response.success) {
-        enqueueSnackbar("Mở khóa khách hàng thành công!", { variant: "success" });
+        enqueueSnackbar("Mở khóa mã giảm giá thành công!", { variant: "success" });
         setDisabledButton(true);
       } else {
-        enqueueSnackbar("Mở khóa khách hàng thất bại!", { variant: "error" });
+        enqueueSnackbar("Mở khóa mã giảm giá thất bại!", { variant: "error" });
       }
     } else {
-      response = await deleteCustomer(customer.userId);
+      response = await deleteCoupon(coupon.couponId);
       if (response.success) {
-        enqueueSnackbar("Khóa khách hàng thành công!", { variant: "success" });
+        enqueueSnackbar("Khóa mã giảm giá thành công!", { variant: "success" });
         setDisabledButton(true);
       } else {
-        enqueueSnackbar("Khóa khách hàng thất bại!", { variant: "error" });
+        enqueueSnackbar("Khóa mã giảm giá thất bại!", { variant: "error" });
       }
     }
   };
@@ -90,17 +92,17 @@ function BasicDetailsCustomer(props) {
       }}
     >
       <BoxStyle>
-        <TieuDe>Thông tin cơ bản</TieuDe>
+        <TieuDe>Thông tin chi tiết mã giảm giá</TieuDe>
       </BoxStyle>
 
       <BoxStyle>
         <Grid container>
           <Grid item xs={4} md={3}>
-            <TieuDeCot>Họ tên</TieuDeCot>
+            <TieuDeCot>Mã giảm giá</TieuDeCot>
           </Grid>
           <Grid item xs={8} md={9}>
             <Stack direction={"column"} spacing={1} alignItems={"flex-start"}>
-              <TieuDeCot>{customer.fullName}</TieuDeCot>
+              <TieuDeCot>{coupon.couponCode}</TieuDeCot>
             </Stack>
           </Grid>
         </Grid>
@@ -109,44 +111,77 @@ function BasicDetailsCustomer(props) {
       <BoxStyle>
         <Grid container>
           <Grid item xs={4} md={3}>
-            <TieuDeCot>Ngày sinh</TieuDeCot>
+            <TieuDeCot>Giảm giá</TieuDeCot>
           </Grid>
 
           <Grid item xs={8} md={9}>
-            <NoiDung><FormatDate dateTime={customer.dateOfBirth} /></NoiDung>
+            <NoiDung>{coupon.discount}%</NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
       <BoxStyle>
         <Grid container>
           <Grid item xs={4} md={3}>
-            <TieuDeCot>Giới tính</TieuDeCot>
+            <TieuDeCot>Đơn tối thiểu</TieuDeCot>
           </Grid>
 
           <Grid item xs={8} md={9}>
-            <NoiDung>{customer.gender === "Male" ? "Nam" : customer.gender === "Female" ? "Nữ" : "Khác"}</NoiDung>
+            <NoiDung><FormatCurrency amount={coupon.minPrice} /></NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
       <BoxStyle>
         <Grid container>
           <Grid item xs={4} md={3}>
-            <TieuDeCot>Số điện thoại</TieuDeCot>
+            <TieuDeCot>Giảm giá tối đa</TieuDeCot>
           </Grid>
 
           <Grid item xs={8} md={9}>
-            <NoiDung>{customer.phone}</NoiDung>
+          <NoiDung><FormatCurrency amount={coupon.maxDiscount} /></NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
       <BoxStyle>
         <Grid container>
           <Grid item xs={4} md={3}>
-            <TieuDeCot>Điểm tích luỹ</TieuDeCot>
+            <TieuDeCot>Số lượng tối đa</TieuDeCot>
           </Grid>
 
           <Grid item xs={8} md={9}>
-            <NoiDung>{customer.point}</NoiDung>
+            <NoiDung>{coupon.maxUse}</NoiDung>
+          </Grid>
+        </Grid>
+      </BoxStyle>
+      <BoxStyle>
+        <Grid container>
+          <Grid item xs={4} md={3}>
+            <TieuDeCot>Số lượng đã được áp dụng</TieuDeCot>
+          </Grid>
+
+          <Grid item xs={8} md={9}>
+            <NoiDung>{coupon.currentUse}</NoiDung>
+          </Grid>
+        </Grid>
+      </BoxStyle>
+      <BoxStyle>
+        <Grid container>
+          <Grid item xs={4} md={3}>
+            <TieuDeCot>Ngày bắt đầu</TieuDeCot>
+          </Grid>
+
+          <Grid item xs={8} md={9}>
+            <NoiDung><FormatDate dateTime={coupon.startDate} /></NoiDung>
+          </Grid>
+        </Grid>
+      </BoxStyle>
+      <BoxStyle>
+        <Grid container>
+          <Grid item xs={4} md={3}>
+            <TieuDeCot>Ngày kết thúc</TieuDeCot>
+          </Grid>
+
+          <Grid item xs={8} md={9}>
+            <NoiDung><FormatDate dateTime={coupon.endDate} /></NoiDung>
           </Grid>
         </Grid>
       </BoxStyle>
@@ -210,13 +245,13 @@ function BasicDetailsCustomer(props) {
             </Button>
             <DialogConfirm
               open={deleteDialog}
-              title={customer.isDeleted ? "Mở khóa khách hàng" : "Khóa khách hàng"}
+              title={coupon.isDeleted ? "Mở khóa mã giảm giá" : "Khóa mã giảm giá"}
               content={
-                customer.isDeleted
-                  ? "Bạn có chắc chắn muốn mở khóa khách hàng này?"
-                  : "Bạn có chắc chắn muốn khóa khách hàng này?"
+                coupon.isDeleted
+                  ? "Bạn có chắc chắn muốn mở khóa mã giảm giá này?"
+                  : "Bạn có chắc chắn muốn khóa mã giảm giá này?"
               }
-              okText={customer.isDeleted ? "Khôi phục" : "Xóa"}
+              okText={coupon.isDeleted ? "Khôi phục" : "Xóa"}
               cancelText={"Hủy"}
               onOk={handleUpdateButtonClick}
               onCancel={() => setDeleteDialog(false)}
@@ -229,4 +264,4 @@ function BasicDetailsCustomer(props) {
   );
 }
 
-export default BasicDetailsCustomer;
+export default BasicDetailCoupon;

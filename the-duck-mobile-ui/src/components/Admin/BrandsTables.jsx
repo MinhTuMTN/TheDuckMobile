@@ -24,13 +24,15 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import MuiTextField from "../MuiTextFeild";
 import { enqueueSnackbar } from "notistack";
 import { updateBrand } from "../../services/Admin/BrandService";
+import { useNavigate } from "react-router-dom";
 
 const ButtonCustom = styled(Button)`
   border-radius: 0.7rem;
   padding: 0.6rem 1.2rem;
 `;
 function Row(props) {
-  const { row } = props;
+  const { row, error, setError } = props;
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [imageSelected, setImageSelected] = useState(null);
   const [urlImage, setUrlImage] = useState("");
@@ -81,6 +83,39 @@ function Row(props) {
   }, [row]);
 
   const handleEditBrand = async () => {
+    let validData = true;
+    if (!brand.brandName || brand.brandName.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            brandName: "Tên thương hiệu không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            brandName: "",
+          }
+        };
+      });
+    }
+
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        brandName: "",
+      }
+    });
+
     const formData = new FormData();
     formData.append('brandName', brand.brandName);
     formData.append('image', brand.image);
@@ -91,7 +126,7 @@ function Row(props) {
 
     if (response.success) {
       enqueueSnackbar("Chỉnh sửa thương hiệu thành công", { variant: "success" });
-      window.location.reload();
+      navigate(0);
     } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
   };
 
@@ -200,6 +235,8 @@ function Row(props) {
                       type="text"
                       size="medium"
                       value={brand.brandName}
+                      error={brand.brandName?.length === 0}
+                      helperText={brand.brandName?.length === 0 && error.errorMessage.brandName}
                       onChange={(e) => {
                         setBrand((prev) => ({
                           ...prev,
@@ -280,7 +317,7 @@ function Row(props) {
 }
 
 function BrandsTable(props) {
-  const { count, onPageChange, onRowsPerPageChange, page, rowsPerPage, items } =
+  const { count, onPageChange, onRowsPerPageChange, page, rowsPerPage, items, error, setError } =
     props;
 
   return (
@@ -302,7 +339,7 @@ function BrandsTable(props) {
             </TableHead>
             <TableBody>
               {items.slice(0, rowsPerPage).map((row, index) => (
-                <Row key={index} row={row} />
+                <Row key={index} row={row} error={error} setError={setError}/>
               ))}
             </TableBody>
           </Table>

@@ -86,6 +86,12 @@ function SpecialFeatureListPage() {
   const [index, setIndex] = useState(0);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [name, setName] = useState("");
+  const [error, setError] = useState({
+    status: false,
+    errorMessage: {
+      specialFeatureName: "",
+    },
+  });
 
   useEffect(() => {
     setRowsSearched(dataFetched);
@@ -136,6 +142,39 @@ function SpecialFeatureListPage() {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Điều này sẽ kiểm tra nếu màn hình lớn hơn hoặc bằng lg breakpoint
 
   const handleSendRequest = async () => {
+    let validData = true;
+    if (!name || name.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            specialFeatureName: "Tên tính năng không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            specialFeatureName: "",
+          }
+        };
+      });
+    }
+
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        specialFeatureName: "",
+      }
+    });
+
     let response;
     if (addNew) {
       response = await addSpecialFeature({
@@ -183,6 +222,17 @@ function SpecialFeatureListPage() {
       }
     }
   };
+
+  const handlePopupClose = () => {
+    setOpenPopup(false);
+    setError({
+      error: false,
+      errorMessage: {
+        specialFeatureName: "",
+      }
+    });
+  }
+
   return (
     <Grid
       container
@@ -214,8 +264,15 @@ function SpecialFeatureListPage() {
             size="medium"
             startIcon={<AddOutlinedIcon />}
             onClick={() => {
+              setAddNew(true);
               setOpenPopup(true);
               setName("");
+              setError({
+                error: false,
+                errorMessage: {
+                  specialFeatureName: "",
+                }
+              });
             }}
           >
             Thêm tính năng mới
@@ -358,6 +415,12 @@ function SpecialFeatureListPage() {
                                   setSpecialFeatureId(row.specialFeatureId);
                                   setName(row.specialFeatureName);
                                   setAddNew(false);
+                                  setError({
+                                    error: false,
+                                    errorMessage: {
+                                      specialFeatureName: "",
+                                    }
+                                  });
                                 }}
                                 sx={{
                                   paddingX: 2,
@@ -398,6 +461,12 @@ function SpecialFeatureListPage() {
                               setSpecialFeatureId(row.specialFeatureId);
                               setName(row.specialFeatureName);
                               setAddNew(false);
+                              setError({
+                                error: false,
+                                errorMessage: {
+                                  specialFeatureName: "",
+                                }
+                              });
                             }}
                           >
                             <ModeEditIcon color="black" />
@@ -463,7 +532,7 @@ function SpecialFeatureListPage() {
       <BootstrapDialog
         open={openPopup}
         onOk={() => { }}
-        onClose={() => setOpenPopup(false)}
+        onClose={handlePopupClose}
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
@@ -471,7 +540,7 @@ function SpecialFeatureListPage() {
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={() => setOpenPopup(false)}
+          onClick={handlePopupClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -487,7 +556,11 @@ function SpecialFeatureListPage() {
             value={name}
             margin="normal"
             autoFocus
-            required
+            style={{
+              minWidth: "300px",
+            }}
+            error={error.status && error.errorMessage.specialFeatureName?.length !== 0}
+            helperText={error.errorMessage.specialFeatureName}
             onChange={(e) => {
               setName(e.target.value);
             }}

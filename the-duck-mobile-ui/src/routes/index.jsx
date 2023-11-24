@@ -18,9 +18,7 @@ import EditCatalogPage from "../pages/Admin/CatalogManagement/EditCatalogPage";
 import AddColorPage from "../pages/Admin/ColorManagement/AddColorPage";
 import ColorListPage from "../pages/Admin/ColorManagement/ColorListPage";
 import EditColorPage from "../pages/Admin/ColorManagement/EditColorPage";
-import AddCouponPage from "../pages/Admin/CouponManagement/AddCouponPage";
 import CouponListPage from "../pages/Admin/CouponManagement/CouponListPage";
-import EditCouponPage from "../pages/Admin/CouponManagement/EditCouponPage";
 import CustomerDetailPage from "../pages/Admin/CustomerManagement/CustomerDetailPage";
 import CustomerListPage from "../pages/Admin/CustomerManagement/CustomerListPage";
 import FeedbackListPage from "../pages/Admin/FeedbackManagement/FeedbackListPage";
@@ -46,6 +44,7 @@ import OrderDetails from "../pages/Seller/OrderDetails";
 import Orders from "../pages/Seller/Orders";
 import Product from "../pages/Seller/Product";
 import { StoreProtectedLayout } from "../layouts/StoreProtectedLayout";
+import CouponDetailPage from "../pages/Admin/CouponManagement/CouponDetailPage";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -268,12 +267,8 @@ function Router(props) {
           element: <CouponListPage />,
         },
         {
-          path: "coupon-management/add",
-          element: <AddCouponPage />,
-        },
-        {
-          path: "coupon-management/edit",
-          element: <EditCouponPage />,
+          path: "coupon-management/:couponId",
+          element: <CouponDetailPage />,
         },
         {
           path: "feedback-management",

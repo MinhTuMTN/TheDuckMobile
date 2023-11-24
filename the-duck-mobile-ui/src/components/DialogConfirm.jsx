@@ -48,6 +48,7 @@ function DialogConfirm(props) {
       keepMounted
       onClose={props.onClose}
       aria-describedby="alert-dialog-slide-description"
+      style={{ zIndex: 1000000 }}
     >
       <DialogTitle>
         <span style={{ fontSize: "1.5rem" }}>{props.title}</span>

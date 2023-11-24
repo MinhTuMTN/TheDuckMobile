@@ -40,6 +40,7 @@ import { DataContext } from "../../../layouts/AdminLayout";
 import { addColor, deleteColor, restoreColor, updateColor } from "../../../services/Admin/ColorService";
 import { enqueueSnackbar } from "notistack";
 import DialogConfirm from "../../../components/DialogConfirm";
+import { useNavigate } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -77,6 +78,7 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 
 function ColorListPage() {
   const { dataFetched } = useContext(DataContext);
+  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsSearched, setRowsSearched] = useState([]);
@@ -89,6 +91,13 @@ function ColorListPage() {
   const [colorRequest, setColorRequest] = useState({
     colorName: "",
     colorCode: "",
+  });
+  const [error, setError] = useState({
+    status: false,
+    errorMessage: {
+      colorName: "",
+      colorCode: "",
+    },
   });
 
   useEffect(() => {
@@ -140,6 +149,66 @@ function ColorListPage() {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Điều này sẽ kiểm tra nếu màn hình lớn hơn hoặc bằng lg breakpoint
 
   const handleSendColorRequest = async () => {
+    let validData = true;
+    if (!colorRequest.colorName || colorRequest.colorName.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            colorName: "Tên màu không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            colorName: "",
+          }
+        };
+      });
+    }
+
+    if (!colorRequest.colorCode || colorRequest.colorCode.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            colorCode: "Mã màu không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            colorCode: "",
+          }
+        };
+      });
+    }
+
+    console.log(error);
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        colorName: "",
+        colorCode: "",
+      }
+    });
+
     let response;
     if (addNew) {
       response = await addColor({
@@ -150,7 +219,7 @@ function ColorListPage() {
       if (response.success) {
         enqueueSnackbar("Thêm màu sắc thành công", { variant: "success" });
         setOpenPopup(false);
-        window.location.reload();
+        navigate(0);
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     } else {
       response = await updateColor(colorId, {
@@ -161,7 +230,7 @@ function ColorListPage() {
       if (response.success) {
         enqueueSnackbar("Chỉnh sửa màu sắc thành công", { variant: "success" });
         setOpenPopup(false);
-        window.location.reload();
+        navigate(0);
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     }
   };
@@ -189,6 +258,18 @@ function ColorListPage() {
       }
     }
   };
+
+  const handlePopupClose = () => {
+    setOpenPopup(false);
+    setError({
+      error: false,
+      errorMessage: {
+        colorCode: "",
+        colorName: "",
+      }
+    });
+  }
+
   return (
     <Grid
       container
@@ -220,10 +301,18 @@ function ColorListPage() {
             size="medium"
             startIcon={<AddOutlinedIcon />}
             onClick={() => {
+              setAddNew(true);
               setOpenPopup(true);
               setColorRequest({
                 colorName: "",
                 colorCode: "",
+              });
+              setError({
+                error: false,
+                errorMessage: {
+                  colorCode: "",
+                  colorName: "",
+                }
               });
             }}
           >
@@ -389,6 +478,13 @@ function ColorListPage() {
                                     }
                                   );
                                   setAddNew(false);
+                                  setError({
+                                    error: false,
+                                    errorMessage: {
+                                      colorCode: "",
+                                      colorName: "",
+                                    }
+                                  });
                                 }}
                                 sx={{
                                   paddingX: 2,
@@ -434,6 +530,13 @@ function ColorListPage() {
                                 }
                               );
                               setAddNew(false);
+                              setError({
+                                error: false,
+                                errorMessage: {
+                                  colorCode: "",
+                                  colorName: "",
+                                }
+                              });
                             }}
                           >
                             <ModeEditIcon color="black" />
@@ -445,7 +548,7 @@ function ColorListPage() {
                               setColorId(row.colorId);
                               setIsDeleted(row.isDeleted);
                               setDeleteDialog(true);
-                          }}
+                            }}
                           >
                             {row.isDeleted ? <RestoreFromTrashIcon color="black" /> : <DeleteIcon color="black" />}
                           </IconButton>
@@ -497,8 +600,7 @@ function ColorListPage() {
 
       <BootstrapDialog
         open={openPopup}
-        onOk={() => { }}
-        onClose={() => setOpenPopup(false)}
+        onClose={handlePopupClose}
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
@@ -506,7 +608,7 @@ function ColorListPage() {
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={() => setOpenPopup(false)}
+          onClick={handlePopupClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -523,7 +625,8 @@ function ColorListPage() {
               value={colorRequest.colorName}
               margin="normal"
               autoFocus
-              required
+              error={error.status && error.errorMessage.colorName?.length !== 0}
+              helperText={error.errorMessage.colorName}
               onChange={(e) => {
                 setColorRequest((prev) => {
                   return {
@@ -537,7 +640,8 @@ function ColorListPage() {
               label="Mã màu"
               value={colorRequest.colorCode}
               margin="normal"
-              required
+              error={error.status && error.errorMessage.colorCode?.length !== 0}
+              helperText={error.errorMessage.colorCode}
               onChange={(e) => {
                 setColorRequest((prev) => {
                   return {
