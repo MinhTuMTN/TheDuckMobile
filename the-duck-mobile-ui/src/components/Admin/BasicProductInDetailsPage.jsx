@@ -227,7 +227,6 @@ function BasicProductInDetailsPage(props) {
       </Stack>
       <BootstrapDialog
         open={openPopup}
-        onOk={() => { }}
         onClose={() => setOpenPopup(false)}
         aria-labelledby="customized-dialog-title"
         sx={{

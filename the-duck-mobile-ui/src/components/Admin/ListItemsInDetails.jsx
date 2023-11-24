@@ -38,7 +38,6 @@ const NameContainer = styled.div({
 
 function ListItemsInDetails(props) {
   const { items } = props;
-  console.log(items);
   return (
     <Stack
       sx={{

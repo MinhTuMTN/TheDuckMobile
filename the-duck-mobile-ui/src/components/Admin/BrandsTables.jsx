@@ -67,7 +67,6 @@ function Row(props) {
         isDeleted: event.target.value
       };
     });
-    console.log(brand.isDeleted);
   };
 
   useEffect(() => {
@@ -339,7 +338,7 @@ function BrandsTable(props) {
             </TableHead>
             <TableBody>
               {items.slice(0, rowsPerPage).map((row, index) => (
-                <Row key={index} row={row} error={error} setError={setError}/>
+                <Row key={index} row={row} error={error} setError={setError} />
               ))}
             </TableBody>
           </Table>

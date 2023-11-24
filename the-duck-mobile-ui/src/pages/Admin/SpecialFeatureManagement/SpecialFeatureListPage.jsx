@@ -531,7 +531,6 @@ function SpecialFeatureListPage() {
 
       <BootstrapDialog
         open={openPopup}
-        onOk={() => { }}
         onClose={handlePopupClose}
         aria-labelledby="customized-dialog-title"
       >
