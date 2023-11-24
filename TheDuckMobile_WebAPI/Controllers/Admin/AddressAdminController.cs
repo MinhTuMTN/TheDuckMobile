@@ -16,7 +16,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             _addressServices = addressServices;
         }
 
-        [HttpGet("province/list")]
+        [HttpGet("province")]
         [AllowAnonymous]
         /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllProvinces()
@@ -27,6 +27,32 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Success = true,
                 Data = provinces,
                 Message = "Successfully retrieved all provinces"
+            });
+        }
+
+        [HttpGet("district")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllDistricts([FromQuery] int provinceId)
+        {
+            var districts = await _addressServices.GetAllDistricts(provinceId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = districts,
+                Message = "Successfully retrieved all districts"
+            });
+        }
+
+        [HttpGet("ward")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllWards([FromQuery] int districtId)
+        {
+            var wards = await _addressServices.GetAllWards(districtId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = wards,
+                Message = "Successfully retrieved all wards"
             });
         }
     }

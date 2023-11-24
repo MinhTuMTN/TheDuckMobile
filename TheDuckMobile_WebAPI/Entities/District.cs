@@ -33,6 +33,8 @@ namespace TheDuckMobile_WebAPI.Entities
             set => _wards = value;
         }
 
+        public bool IsDeleted { get; set; }
+
         public District()
         {
 

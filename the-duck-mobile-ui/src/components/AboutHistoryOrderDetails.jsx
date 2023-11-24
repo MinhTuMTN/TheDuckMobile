@@ -1,10 +1,10 @@
+import styled from "@emotion/styled";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Box, Button, Card, Stack, Typography } from "@mui/material";
 import React from "react";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import styled from "@emotion/styled";
-import Unit from "./Unit";
-import ProductInformation from "./ProductInformation";
 import CustomLink from "./CustomLink";
+import FormatCurrency from "./FormatCurrency";
+import ProductInformation from "./ProductInformation";
 
 const LeftText = styled(Typography)`
   flex-basis: 85%;
@@ -18,6 +18,7 @@ const RightText = styled(Typography)`
 `;
 
 function AboutHistoryOrderDetails(props) {
+  const { orderDetails } = props;
   return (
     <Card
       sx={{
@@ -48,7 +49,13 @@ function AboutHistoryOrderDetails(props) {
             </Typography>
           </Stack>
 
-          <ProductInformation color={"#000"} fontWeight={"500"} />
+          {orderDetails?.orderItems?.map((orderItem, index) => (
+            <ProductInformation
+              key={`order-item-${orderDetails?.orderId}-${index}`}
+              product={orderItem}
+              fontWeight={"500"}
+            />
+          ))}
         </Stack>
         <Box>
           <Stack direction={"column"} spacing={3}>
@@ -72,9 +79,58 @@ function AboutHistoryOrderDetails(props) {
                     fontSize: "14px",
                   }}
                 >
-                  309.000.000
+                  <FormatCurrency
+                    amount={
+                      orderDetails?.order?.total -
+                      20000 +
+                      orderDetails?.order?.discount
+                    }
+                  />
                 </RightText>
-                <Unit />
+              </Stack>
+              <Stack
+                direction={"row"}
+                spacing={0.5}
+                justifyContent={"flex-end"}
+              >
+                <LeftText
+                  variant={"body1"}
+                  style={{
+                    fontSize: "14px",
+                  }}
+                >
+                  Phí vận chuyển:{" "}
+                </LeftText>
+                <RightText
+                  variant={"body1"}
+                  style={{
+                    fontSize: "14px",
+                  }}
+                >
+                  <FormatCurrency amount={20000} />
+                </RightText>
+              </Stack>
+              <Stack
+                direction={"row"}
+                spacing={0.5}
+                justifyContent={"flex-end"}
+              >
+                <LeftText
+                  variant={"body1"}
+                  style={{
+                    fontSize: "14px",
+                  }}
+                >
+                  Giảm giá:{" "}
+                </LeftText>
+                <RightText
+                  variant={"body1"}
+                  style={{
+                    fontSize: "14px",
+                  }}
+                >
+                  <FormatCurrency amount={orderDetails?.order?.discount} />
+                </RightText>
               </Stack>
               <Stack direction={"row"} spacing={0.5} justifyContent={"end"}>
                 <LeftText
@@ -91,9 +147,8 @@ function AboutHistoryOrderDetails(props) {
                     fontSize: "14px",
                   }}
                 >
-                  39.000.000
+                  <FormatCurrency amount={orderDetails?.order?.total} />
                 </RightText>
-                <Unit />
               </Stack>
               <Stack direction={"row"} spacing={0.5} justifyContent={"end"}>
                 <LeftText
@@ -113,9 +168,14 @@ function AboutHistoryOrderDetails(props) {
                     color: "#f44336",
                   }}
                 >
-                  2.319.000.000
+                  <FormatCurrency
+                    amount={
+                      orderDetails?.order?.orderState === 3
+                        ? orderDetails?.order?.total
+                        : 0
+                    }
+                  />
                 </RightText>
-                <Unit color={"#f44336"} />
               </Stack>
             </Stack>
             <CustomLink

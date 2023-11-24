@@ -78,5 +78,53 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Message = "Successfully retrieved catalog attributes"
             });
         }
+
+        [HttpPut("{catalogId}")]
+        public async Task<IActionResult> EditCatalog([FromRoute] int catalogId, [FromBody] AddCatalogRequest request)
+        {
+            var catalog = await _catalogServices.EditCatalog(catalogId, request);
+
+            if (catalog == null)
+                throw new BadHttpRequestException("Catalog could not be edited.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Catalog edited successfully.",
+                Data = catalog
+            });
+        }
+
+        [HttpDelete("{catalogId}")]
+        public async Task<IActionResult> DeleteCatalog([FromRoute] int catalogId)
+        {
+            var success = await _catalogServices.DeleteCatalog(catalogId);
+
+            if (!success)
+                throw new BadHttpRequestException("Catalog could not be deleted.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Color deleted successfully.",
+                Data = null
+            });
+        }
+
+        [HttpGet("restore/{catalogId}")]
+        public async Task<IActionResult> RestoreColor([FromRoute] int catalogId)
+        {
+            var catalog = await _catalogServices.RestoreCatalog(catalogId);
+
+            if (catalog == null)
+                throw new BadHttpRequestException("Catalog could not be restored.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Catalog restored successfully.",
+                Data = catalog
+            });
+        }
     }
 }

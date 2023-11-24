@@ -79,6 +79,27 @@ namespace TheDuckMobile_WebAPI.Controllers
             });
         }
 
+        [HttpPost("anonymous")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AddAddressAnonymous([FromBody] UserAddAddressRequest request)
+        {
+            var result = await _addressServices.AddUserAddressAnonymous(request);
+            if (result == null)
+            {
+                return BadRequest(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Add address failed"
+                });
+            }
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = result
+            });
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetUserAddresses()

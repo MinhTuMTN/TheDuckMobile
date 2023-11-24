@@ -43,17 +43,27 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return os.IsDeleted;
         }
 
-        public async Task<ICollection<OS>> GetAllOS()
+        public async Task<OS?> RestoreOS(int osId)
         {
-            var oss = await _context.OSs.Where(o => o.IsDeleted == false).ToListAsync();
+            var os = await GetOSById(osId);
+
+            os.IsDeleted = false;
+            os.LastModifiedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return os;
+        }
+
+        public async Task<List<OS>> GetAllOSs()
+        {
+            var oss = await _context.OSs.ToListAsync();
 
             return oss;
         }
 
         public async Task<OS> GetOSById(int id)
         {
-            var os = await _context.OSs.FirstOrDefaultAsync
-                (o => o.OSId == id && o.IsDeleted == false);
+            var os = await _context.OSs.FirstOrDefaultAsync(o => o.OSId == id);
 
             if (os == null)
                 throw new CustomNotFoundException("Can't found OS");

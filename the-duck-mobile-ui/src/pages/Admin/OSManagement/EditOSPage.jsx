@@ -2,6 +2,10 @@ import { Box, Paper, Typography, styled } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import MuiButton from "../../../components/MuiButton";
 import FlexContainer from "../../../components/FlexContainer";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { updateOS } from "../../../services/Admin/OSService";
+import { enqueueSnackbar } from "notistack";
 
 const RootPageEditOS = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -28,14 +32,46 @@ const EditButton = styled(MuiButton)(({ theme }) => ({
 }));
 
 function EditOSPage(props) {
+    const navigate = useNavigate();
+    const { editOS } = useLocation().state;
+    const [os, setOS] = useState({
+        osName: ""
+    });
+
+    useEffect(() => {
+        setOS((prev) => {
+            return {
+                ...prev,
+                osName: editOS.osName
+            };
+        });
+    }, [editOS]);
+
+    const handleEditOS = async () => {
+        const response = await updateOS(editOS.osId, {
+            osName: os.osName
+        });
+
+        if (response.success) {
+            enqueueSnackbar("Chỉnh sửa hệ điều hành thành công", { variant: "success" });
+            navigate("/admin/os-management");
+        } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    };
     return (
         <RootPageEditOS>
             <FormEditOS>
-                <Typography variant="h3">Chỉnh sửa thông tin hệ điều hành "{}"</Typography>
+                <Typography variant="h3">Chỉnh sửa thông tin hệ điều hành "{ }"</Typography>
                 <MuiTextFeild
                     label="Tên hệ điều hành"
                     margin="normal"
                     autoFocus
+                    value={os.osName}
+                    onChange={(e) => {
+                        setOS((prev) => ({
+                            ...prev,
+                            osName: e.target.value,
+                        }));
+                    }}
                     required
                 />
                 {/* <MuiTextFeild
@@ -44,7 +80,11 @@ function EditOSPage(props) {
                     required
                 /> */}
                 <FlexContainer justifyContent="center">
-                    <EditButton variant="contained" color="color1">
+                    <EditButton
+                        variant="contained"
+                        color="color1"
+                        onClick={handleEditOS}
+                    >
                         <Typography color={"white"}>Cập Nhật</Typography>
                     </EditButton>
                 </FlexContainer>

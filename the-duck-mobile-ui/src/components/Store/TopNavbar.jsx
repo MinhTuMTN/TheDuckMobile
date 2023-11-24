@@ -1,3 +1,5 @@
+import { HomeWork } from "@mui/icons-material";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   Box,
   IconButton,
@@ -7,12 +9,11 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
-import MenuIcon from "@mui/icons-material/Menu";
 import PropTypes from "prop-types";
-import { HomeWork } from "@mui/icons-material";
+import React, { useEffect } from "react";
 import { usePopover } from "../../hooks/use-popover";
 import StorePopover from "./StorePopover";
+import { getStoreName } from "../../services/Store/StoreManagementService";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -21,6 +22,14 @@ function TopNavbar(props) {
   const { onDrawerClick } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg")); // Sử dụng useMediaQuery để lấy ra giá trị của màn hình hiện tại
   const accountPopover = usePopover(); // Sử dụng usePopover để lấy ra giá trị của popover
+  const [storeName, setStoreName] = React.useState("Cửa hàng The Duck Mobile");
+  useEffect(() => {
+    const handleGetStoreName = async () => {
+      const response = await getStoreName();
+      if (response.success) setStoreName(response.data.data);
+    };
+    handleGetStoreName();
+  }, []);
   return (
     <>
       <Box
@@ -65,9 +74,10 @@ function TopNavbar(props) {
               border={"400"}
               style={{
                 fontSize: "1rem",
+                fontWeight: "bold",
               }}
             >
-              Cửa hàng The Duck Mobile
+              {storeName}
             </Typography>
             <Tooltip title={"Cửa hàng"}>
               <IconButton

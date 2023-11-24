@@ -35,14 +35,14 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllOS()
+        public async Task<IActionResult> GetAllOSs()
         {
-            var os = await _osServices.GetAllOS();
+            var osList = await _osServices.GetAllOSs();
             return Ok(new GenericResponse
             {
                 Success = true,
-                Data = os,
-                Message = "Successfully retrieved all OS"
+                Data = osList,
+                Message = "Successfully retrieved all OSs"
             });
         }
 
@@ -81,15 +81,31 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         [HttpDelete("{osId}")]
         public async Task<IActionResult> DeleteOS([FromRoute] int osId)
         {
-            var os = await _osServices.DeleteOS(osId);
+            var success = await _osServices.DeleteOS(osId);
 
-            if (os == false)
+            if (success == false)
                 throw new Exception("OS could not be deleted.");
 
             return Ok(new GenericResponse
             {
                 Success = true,
                 Message = "OS deleted successfully.",
+                Data = null
+            });
+        }
+
+        [HttpGet("restore/{osId}")]
+        public async Task<IActionResult> RestoreOS([FromRoute] int osId)
+        {
+            var os = await _osServices.RestoreOS(osId);
+
+            if (os == null)
+                throw new BadHttpRequestException("OS could not be restored.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "OS restored successfully.",
                 Data = os
             });
         }

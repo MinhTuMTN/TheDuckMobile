@@ -37,6 +37,28 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             return addresses.Select(a => new UserAddressResponse(a)).ToList();
         }
 
+        public async Task<ICollection<UserAddressResponse>?> AddUserAddressAnonymous(UserAddAddressRequest request)
+        {
+            var ward = await _dataContext.Wards.FindAsync(request.WardId);
+            if (ward == null)
+                return null;
+
+            var address = new Address
+            {
+                StreetName = request.Street,
+                Ward = ward,
+                Store = null
+            };
+            await _dataContext.Addresss.AddAsync(address);
+            await _dataContext.SaveChangesAsync();
+
+            var addresses = await _dataContext
+                .Addresss
+                .Where(a => a.AddressId == address.AddressId)
+                .ToListAsync();
+            return addresses.Select(a => new UserAddressResponse(a)).ToList();
+        }
+
         public async Task<ICollection<UserAddressResponse>?> DeleteUserAddress(Guid userId, Guid addressId)
         {
             var address = await _dataContext.Addresss.FindAsync(addressId);
@@ -70,13 +92,20 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
         public async Task<ICollection<District>> GetDistricts(int provineId)
         {
-            var districts = await _dataContext.Districts.Where(d => d.ProvineId == provineId).ToListAsync();
+            var districts = await _dataContext
+                .Districts
+                .Where(d => d.ProvineId == provineId && d.IsDeleted == false)
+                .OrderBy(d => d.DistrictName)
+                .ToListAsync();
             return districts;
         }
 
         public async Task<ICollection<Provine>> GetProvines()
         {
-            var provines = await _dataContext.Provines.ToListAsync();
+            var provines = await _dataContext.Provines
+                .Where(p => p.IsDeleted == false)
+                .OrderBy(p => p.ProvineName)
+                .ToListAsync();
             return provines;
         }
 
@@ -88,7 +117,11 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
         public async Task<ICollection<Ward>> GetWards(int districtId)
         {
-            var wards = await _dataContext.Wards.Where(w => w.DistrictId == districtId).ToListAsync();
+            var wards = await _dataContext
+                .Wards
+                .Where(w => w.DistrictId == districtId && w.IsDeleted == false)
+                .OrderBy(w => w.WardName)
+                .ToListAsync();
             return wards;
         }
     }

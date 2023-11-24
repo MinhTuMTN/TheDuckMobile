@@ -11,7 +11,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import { useSearchParams } from "react-router-dom";
 import CustomBreadcrumb from "../components/CustomBreadcrumb";
 import FormatCurrency from "../components/FormatCurrency";
@@ -26,6 +31,8 @@ import {
   getProductsRelatedTo,
 } from "../services/ProductService";
 import { getVotesByProductId } from "../services/VoteServices";
+import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
 const Wrapper = styled.div``;
 const ShopArea = styled.div`
@@ -41,18 +48,6 @@ const Container = styled.div`
   padding-right: 15px;
   margin: 0 auto;
   overflow: hidden;
-
-  /* @media (min-width: 960px) {
-    max-width: 1100px;
-  }
-
-  @media (max-width: 959px) and (min-width: 720px) {
-    max-width: 720px;
-  }
-
-  @media (max-width: 719px) and (min-width: 540px) {
-    max-width: 540px;
-  } */
 `;
 const PageContainer = styled.div`
   width: 100%;
@@ -98,44 +93,52 @@ function ProductDetails(props) {
   const [selectedImage, setSelectedImage] = React.useState("");
   const [productsRelative, setProductsRelative] = React.useState([]);
   const [votes, setVotes] = React.useState([]);
-  const [info, setInfo] = useState({});
+  const [info, setInfo] = useState(null);
   const [colors, setColors] = useState([]);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedVersion, setSelectedVersion] = useState({});
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
 
   const handleGetProductDetails = useCallback(async () => {
     const response = await getProductDetails(searchParams.get("id"));
+
     if (response.success) {
       setInfo(response.data.data);
 
       const colors = response.data.data.productColorVersions;
       setColors(colors);
 
+      // Scroll to top
+      window.scrollTo(0, 0);
+
       const selectedVersion = colors[0]?.productVersions[0];
       setSelectedVersion(selectedVersion);
-    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
-  }, [searchParams, enqueueSnackbar]);
+    } else navigate("/not-found");
+  }, [searchParams, navigate]);
 
   const handleGetProductRelative = useCallback(async () => {
     const response = await getProductsRelatedTo(searchParams.get("id"));
     if (response.success) {
       setProductsRelative(response.data.data);
-    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
-  }, [searchParams, enqueueSnackbar]);
+    }
+  }, [searchParams]);
 
   const handleGetVotes = useCallback(async () => {
     const response = await getVotesByProductId(searchParams.get("id"));
     if (response.success) {
       setVotes(response.data.data);
-    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
-  }, [searchParams, enqueueSnackbar]);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
-    handleGetProductDetails();
     handleGetProductRelative();
     handleGetVotes();
-  }, [handleGetProductDetails, handleGetProductRelative, handleGetVotes]);
+  }, [handleGetProductRelative, handleGetVotes]);
+
+  useLayoutEffect(() => {
+    handleGetProductDetails();
+  }, [handleGetProductDetails]);
 
   useEffect(() => {
     if (selectedVersion?.images) {
@@ -171,6 +174,8 @@ function ProductDetails(props) {
     enqueueSnackbar("Thêm vào giỏ hàng thành công", { variant: "success" });
   };
 
+  if (!info) return <Loading />;
+
   return (
     <Wrapper>
       <CustomBreadcrumb
@@ -185,7 +190,7 @@ function ProductDetails(props) {
           },
           {
             url: null,
-            text: `${info && info.productName}`,
+            text: `${info?.productName}`,
           },
         ]}
       />
@@ -255,7 +260,7 @@ function ProductDetails(props) {
                   }}
                 >
                   <Typography variant={"h4"} color={"#0c0b0bc9"}>
-                    {info && info.productName}
+                    {info?.productName}
                   </Typography>
                   <Box margin={"0.5% 0 3%"}>
                     <span
@@ -288,8 +293,8 @@ function ProductDetails(props) {
                   </Box>
 
                   <ProductDetailsRating
-                    rating={info.rate}
-                    numReviews={info.votes?.length}
+                    rating={info?.rate}
+                    numReviews={info?.votes?.length}
                   />
 
                   <ProductDetailsShortDesc />

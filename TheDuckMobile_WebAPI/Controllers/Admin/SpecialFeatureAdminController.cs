@@ -10,9 +10,9 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
     [ApiController]
     public class SpecialFeatureAdminController : ControllerBase
     {
-        private readonly ISpecialFeatureServices _specialFeatureServices;
+        private readonly ISpecialFeatureAdminServices _specialFeatureServices;
 
-        public SpecialFeatureAdminController(ISpecialFeatureServices specialFeatureServices)
+        public SpecialFeatureAdminController(ISpecialFeatureAdminServices specialFeatureServices)
         {
             _specialFeatureServices = specialFeatureServices;
         }
@@ -69,6 +69,22 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Success = true,
                 Message = "Success",
                 Data = await _specialFeatureServices.DeleteSpecialFeature(id)
+            });
+        }
+
+        [HttpGet("restore/{id}")]
+        public async Task<IActionResult> RestoreColor([FromRoute] int id)
+        {
+            var specialFeature = await _specialFeatureServices.RestoreSpecialFeature(id);
+
+            if (specialFeature == null)
+                throw new BadHttpRequestException("Special Feature could not be restored.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Special Feature restored successfully.",
+                Data = specialFeature
             });
         }
     }

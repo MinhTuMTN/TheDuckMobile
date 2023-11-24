@@ -1,6 +1,4 @@
 import { Search } from "@mui/icons-material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
 import {
   Box,
@@ -21,7 +19,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import MuiButton from "../../../components/MuiButton";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import TablePaginationActions from "../../../components/TablePaginationActions";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DataContext } from "../../../layouts/AdminLayout";
 
 const RootPageOrderList = styled(Box)(({ theme }) => ({
@@ -36,6 +34,7 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function OrderListPage() {
+  const navigate = useNavigate();
   const { dataFetched } = useContext(DataContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -44,6 +43,7 @@ function OrderListPage() {
 
   const filterRows = useCallback(
     (searchString) => {
+      setPage(0);
       if (searchString === "") {
         return dataFetched;
       }
@@ -58,10 +58,6 @@ function OrderListPage() {
     const filtered = filterRows(searchString);
     setRowsSearched(filtered);
   }, [searchString, filterRows]);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -113,8 +109,8 @@ function OrderListPage() {
                 page * rowsPerPage + rowsPerPage
               )
               : rowsSearched
-            ).map((row) => (
-              <TableRow key={row.orderId}>
+            ).map((row, i) => (
+              <TableRow key={i}>
                 <TableCell style={{ minWidth: 200 }} align="center">
                   {row.orderId}
                 </TableCell>
@@ -131,23 +127,22 @@ function OrderListPage() {
                   {row.couponCode}
                 </TableCell>
                 <TableCell style={{ minWidth: 200 }} align="center">
-                  <MuiButton component={Link} color="oldPrimary" to="/admin/order-management/detail">
+                  <MuiButton
+                    color="oldPrimary"
+                    onClick={() => {
+                      navigate(`/admin/order-management/${row.orderId}`, {
+                        state: {
+                          prevURL: "/admin/order-management",
+                          id: row.orderId
+                        }
+                      });
+                    }}
+                  >
                     <InfoIcon />
-                  </MuiButton>
-                  <MuiButton color="teal">
-                    <EditIcon />
-                  </MuiButton>
-                  <MuiButton color="color1">
-                    <DeleteIcon />
                   </MuiButton>
                 </TableCell>
               </TableRow>
             ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={7} />
-              </TableRow>
-            )}
           </TableBody>
           <TableFooter>
             <TableRow>

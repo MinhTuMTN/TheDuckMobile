@@ -16,7 +16,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             _customerServices = customerServices;
         }
 
-        [HttpGet("list")]
+        [HttpGet]
         [AllowAnonymous]
         /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllCustomers()
@@ -27,6 +27,52 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Success = true,
                 Data = customers,
                 Message = "Successfully retrieved all customers"
+            });
+        }
+
+        [HttpGet("{customerId}")]
+        [AllowAnonymous]
+        /*[Authorize(Roles = "admin")]*/
+        public async Task<IActionResult> GetCustomerById([FromRoute] Guid customerId)
+        {
+            var customer = await _customerServices.GetCustomerById(customerId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = customer,
+                Message = "Successfully retrieved customer"
+            });
+        }
+
+        [HttpDelete("{customerId}")]
+        public async Task<IActionResult> DeleteCustomer([FromRoute] string customerId)
+        {
+            var success = await _customerServices.DeleteCustomer(customerId);
+
+            if (success == false)
+                throw new Exception("Customer could not be deleted.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Customer deleted successfully.",
+                Data = null,
+            });
+        }
+
+        [HttpGet("restore/{customerId}")]
+        public async Task<IActionResult> RestoreCustomer([FromRoute] string customerId)
+        {
+            var customer = await _customerServices.RestoreCustomer(customerId);
+
+            if (customer == null)
+                throw new BadHttpRequestException("Customer could not be restored.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Customer restored successfully.",
+                Data = customer
             });
         }
     }

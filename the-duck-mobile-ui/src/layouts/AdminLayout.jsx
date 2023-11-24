@@ -50,124 +50,20 @@ const DataContext = createContext();
 function AdminLayout(props) {
   const [open, setOpen] = React.useState(false);
   const pathname = useLocation().pathname;
-  const [dataFetched, setDataFected] = useState([]);
-
-  // const handleGetProducts = async () => {
-  //   const productsResponse = await getAllProducts();
-  //   if (productsResponse.success) {
-  //     setAllProducts(productsResponse.data.data);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (pathname === "/admin/product-management/list") {
-  //     handleGetProducts();
-  //   }
-  // }, [pathname]);
-
-  // const fetchData = async () => {
-  //   var response;
-  //   if (pathname === "/admin/product-management/list") {
-  //     response = await getAllProducts();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/customer-management/list") {
-  //     response = await getAllCustomers();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/staff-management/list") {
-  //     response = await getAllStaffs();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/address-management/province/list") {
-  //     response = await getAllProvinces();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/catalog-management/list") {
-  //     response = await getAllCatalogs();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/brand-management/list") {
-  //     response = await getAllBrands();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/color-management/list") {
-  //     response = await getAllColors();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/special-feature-management/list") {
-  //     response = await getAllSpecialFeatures();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/store-management/list") {
-  //     response = await getAllStores();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/os-management/list") {
-  //     response = await getAllOSs();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/coupon-management/list") {
-  //     response = await getAllCoupons();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   } else if (pathname === "/admin/feedback-management/list") {
-  //     response = await getAllFeedbacks();
-  //     if (response.success) {
-  //       setDataFected(response.data.data);
-  //     } else {
-  //       enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [fetchData]);
+  const editedPath = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+  const [dataFetched, setDataFetched] = useState([]);
 
   const [searchParams] = useSearchParams();
 
   const fetchData = useCallback(async () => {
     let response;
 
-    switch (pathname) {
-      case "/admin/product-management/list":
+    switch (editedPath) {
+      case "/admin/product-management":
         response = await getAllProducts();
         break;
-      case "/admin/customer-management/list":
+      case "/admin/customer-management":
+      case "/admin":
         response = await getAllCustomers();
         break;
       case "/admin/address-management/province":
@@ -176,31 +72,31 @@ function AdminLayout(props) {
       case "/admin/address-management/province/detail":
         response = await getAllDistricts(searchParams.get("provinceId"));
         break;
-      case "/admin/catalog-management/list":
+      case "/admin/catalog-management":
         response = await getAllCatalogs();
         break;
       case "/admin/brand-management":
         response = await getAllBrands();
         break;
-      case "/admin/color-management/list":
+      case "/admin/color-management":
         response = await getAllColors();
         break;
-      case "/admin/special-feature-management/list":
+      case "/admin/special-feature-management":
         response = await getAllSpecialFeatures();
         break;
-      case "/admin/store-management/list":
+      case "/admin/store-management":
         response = await getAllStores();
         break;
-      case "/admin/os-management/list":
+      case "/admin/os-management":
         response = await getAllOSs();
         break;
-      case "/admin/coupon-management/list":
+      case "/admin/coupon-management":
         response = await getAllCoupons();
         break;
-      case "/admin/feedback-management/list":
+      case "/admin/feedback-management":
         response = await getAllFeedbacks();
         break;
-      case "/admin/order-management/list":
+      case "/admin/order-management":
         response = await getAllOrders();
         break;
       default:
@@ -208,11 +104,13 @@ function AdminLayout(props) {
     }
 
     if (response?.success) {
-      setDataFected(response.data.data);
+      setDataFetched(response.data.data);
     } else {
-      enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      if (typeof response !== "undefined") {
+        enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      }
     }
-  }, [pathname]);
+  }, [editedPath, searchParams]);
 
   useEffect(() => {
     fetchData();

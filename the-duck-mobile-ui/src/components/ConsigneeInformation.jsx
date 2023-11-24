@@ -1,8 +1,28 @@
 import { Card, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useMemo } from "react";
 import PersonPinIcon from "@mui/icons-material/PersonPin";
 
+const days = [
+  "Chủ Nhật",
+  "Thứ Hai",
+  "Thứ Ba",
+  "Thứ Tư",
+  "Thứ Năm",
+  "Thứ Sáu",
+  "Thứ Bảy",
+];
+
 function ConsigneeInformation(props) {
+  const { orderDetails } = props;
+  const dateReceive = new Date(orderDetails?.order?.createdAt);
+  dateReceive.setDate(dateReceive.getDate() + 2);
+
+  const formatDate = () => {
+    return `${dateReceive.getDate()}/${
+      dateReceive.getMonth() + 1
+    }/${dateReceive.getFullYear()}`;
+  };
+
   return (
     <Card
       sx={{
@@ -41,7 +61,7 @@ function ConsigneeInformation(props) {
               width: "80%",
             }}
           >
-            Nguyễn Văn A
+            {orderDetails?.receiverName}
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={0.5}>
@@ -62,8 +82,7 @@ function ConsigneeInformation(props) {
               width: "80%",
             }}
           >
-            Siêu thị 583 Trần Phú, Phường B'Lao, Thành phố Bảo Lộc, Tỉnh Lâm
-            Đồng
+            {`${orderDetails?.address?.street}, ${orderDetails?.address?.wardName}, ${orderDetails?.address?.districtName}, ${orderDetails?.address?.provinceName}`}
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={0.5}>
@@ -84,7 +103,8 @@ function ConsigneeInformation(props) {
               width: "80%",
             }}
           >
-            Trước 21:58 - Thứ Bảy (18/12)
+            Trước {dateReceive.getHours()}:{dateReceive.getMinutes()} -{" "}
+            {days[dateReceive.getDay()]} ({formatDate()})
           </Typography>
         </Stack>
       </Stack>

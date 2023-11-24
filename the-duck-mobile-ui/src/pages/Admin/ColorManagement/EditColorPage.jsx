@@ -2,6 +2,10 @@ import { Box, Paper, Typography, styled } from "@mui/material";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import MuiButton from "../../../components/MuiButton";
 import FlexContainer from "../../../components/FlexContainer";
+import { useEffect, useState } from "react";
+import { enqueueSnackbar } from "notistack";
+import { updateColor } from "../../../services/Admin/ColorService";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const RootPageEditColor = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -28,23 +32,69 @@ const EditButton = styled(MuiButton)(({ theme }) => ({
 }));
 
 function EditColorPage(props) {
+    const navigate = useNavigate();
+    const { editColor } = useLocation().state;
+    const [color, setColor] = useState({
+        colorName: "",
+        colorCode: "",
+    });
+
+    useEffect(() => {
+        setColor((prev) => {
+            return {
+                ...prev,
+                colorName: editColor.colorName,
+                colorCode: editColor.colorCode,
+            };
+        });
+    }, [editColor]);
+
+    const handleEditColor = async () => {
+        const response = await updateColor(editColor.colorId, {
+            colorName: color.colorName,
+            colorCode: color.colorCode,
+        });
+
+        if (response.success) {
+            enqueueSnackbar("Chỉnh sửa màu sắc thành công", { variant: "success" });
+            navigate("/admin/color-management");
+        } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    };
     return (
         <RootPageEditColor>
             <FormEditColor>
-                <Typography variant="h3">Chỉnh sửa thông tin màu sắc "{}"</Typography>
+                <Typography variant="h3">Chỉnh sửa thông tin màu sắc "{ }"</Typography>
                 <MuiTextFeild
                     label="Tên màu sắc"
                     margin="normal"
+                    value={color.colorName}
+                    onChange={(e) => {
+                        setColor((prev) => ({
+                            ...prev,
+                            colorName: e.target.value,
+                        }));
+                    }}
                     autoFocus
                     required
                 />
                 <MuiTextFeild
                     label="Mã màu"
                     margin="normal"
+                    value={color.colorCode}
+                    onChange={(e) => {
+                        setColor((prev) => ({
+                            ...prev,
+                            colorCode: e.target.value,
+                        }));
+                    }}
                     required
                 />
                 <FlexContainer justifyContent="center">
-                    <EditButton variant="contained" color="color1">
+                    <EditButton
+                        variant="contained"
+                        color="color1"
+                        onClick={handleEditColor}
+                    >
                         <Typography color={"white"}>Cập Nhật</Typography>
                     </EditButton>
                 </FlexContainer>

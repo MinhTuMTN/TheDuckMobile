@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import {
   Box,
@@ -22,6 +22,8 @@ import {
 import PropTypes from "prop-types";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import MuiTextField from "../MuiTextFeild";
+import { enqueueSnackbar } from "notistack";
+import { updateBrand } from "../../services/Admin/BrandService";
 
 const ButtonCustom = styled(Button)`
   border-radius: 0.7rem;
@@ -30,10 +32,76 @@ const ButtonCustom = styled(Button)`
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = useState(false);
-  const [status, setStatus] = useState(10);
-  const handleChange = (event) => {
-    setStatus(event.target.value);
+  const [imageSelected, setImageSelected] = useState(null);
+  const [urlImage, setUrlImage] = useState("");
+  const [brand, setBrand] = useState({
+    brandName: "",
+    image: null,
+    isDeleted: false,
+  });
+
+  const handleImageChange = (event) => {
+    setImageSelected(event.target.files[0])
   };
+
+  useEffect(() => {
+    if (imageSelected === null)
+      return;
+    const url = URL.createObjectURL(imageSelected);
+    setUrlImage(url);
+    setBrand((prev) => {
+      return {
+        ...prev,
+        image: imageSelected,
+      };
+    });
+    return () => URL.revokeObjectURL(url);
+  }, [imageSelected]);
+
+  const handleStatusChange = (event) => {
+    setBrand((prev) => {
+      return {
+        ...prev,
+        isDeleted: event.target.value
+      };
+    });
+    console.log(brand.isDeleted);
+  };
+
+  useEffect(() => {
+    setBrand((prev) => {
+      return {
+        ...prev,
+        brandName: row.brandName,
+        image: row.image,
+        isDeleted: row.isDeleted
+      };
+    });
+    setUrlImage(row.image);
+  }, [row]);
+
+  const handleEditBrand = async () => {
+    const formData = new FormData();
+    formData.append('brandName', brand.brandName);
+    formData.append('image', brand.image);
+    formData.append('isDeleted', brand.isDeleted);
+
+    enqueueSnackbar("Đang cập nhật thông tin...", { variant: "info" });
+    const response = await updateBrand(row.brandId, formData);
+
+    if (response.success) {
+      enqueueSnackbar("Chỉnh sửa thương hiệu thành công", { variant: "success" });
+      window.location.reload();
+    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+  };
+
+  const handleImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const fileInputRef = React.createRef();
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "" } }}>
@@ -50,7 +118,7 @@ function Row(props) {
           <Stack direction={"row"} spacing={2} alignItems={"center"}>
             <CardMedia
               component="img"
-              image={row.brandImage}
+              image={row.image}
               alt="Hình ảnh sản phẩm"
               style={{ maxHeight: "5rem", maxWidth: "5rem" }}
             />
@@ -67,8 +135,8 @@ function Row(props) {
             </Typography>
           </Stack>
         </TableCell>
-        <TableCell align="right">{row.quantity}</TableCell>
-        <TableCell align="right">{row.status}</TableCell>
+        <TableCell align="right">{row.numberOfProducts}</TableCell>
+        <TableCell align="right">{row.isDeleted ? "Khóa" : "Đang hoạt động"}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell
@@ -80,9 +148,9 @@ function Row(props) {
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box
-              fullWidth
               sx={{
                 marginY: "1rem",
+                fullWidth: true
               }}
             >
               <Stack
@@ -115,38 +183,59 @@ function Row(props) {
                 >
                   <CardMedia
                     component="img"
-                    image={row.brandImage}
+                    image={urlImage}
                     alt="Hình ảnh sản phẩm"
-                    style={{ maxHeight: "8rem", maxWidth: "8rem" }}
+                    style={{ maxHeight: "8rem", maxWidth: "8rem", cursor: 'pointer' }}
+                    onClick={handleImageClick}
+                  />
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={handleImageChange}
                   />
                   <Stack direction={"column"} spacing={2} width={"100%"}>
                     <MuiTextField
-                      variant="filled"
                       label="Tên thương hiệu"
                       type="text"
                       size="medium"
-                      color="color5"
-                      value={row.brandName}
+                      value={brand.brandName}
+                      onChange={(e) => {
+                        setBrand((prev) => ({
+                          ...prev,
+                          brandName: e.target.value,
+                        }));
+                      }}
                       style={{
                         fullWidth: true,
                       }}
                     />
-                    <FormControl fullWidth size="small">
+                    <FormControl
+                      sx={{
+                        fullWidth: true,
+                      }}
+                      size="small"
+                    >
                       <InputLabel id="demo-simple-select-label">
                         Trạng thái
                       </InputLabel>
                       <Select
-                        value={row.status}
+                        value={brand.isDeleted}
                         label="Trạng thái"
-                        onChange={handleChange}
+                        onChange={handleStatusChange}
                       >
                         <MenuItem
-                          value={"Đang hoạt động"}
+                          value={false}
                           style={{ fontSize: "14px" }}
+                          key="Đang hoạt động"
                         >
                           Đang hoạt động
                         </MenuItem>
-                        <MenuItem value={"Khoá"} style={{ fontSize: "14px" }}>
+                        <MenuItem
+                          value={true}
+                          style={{ fontSize: "14px" }}
+                          key="Khóa"
+                        >
                           Khóa
                         </MenuItem>
                       </Select>
@@ -166,6 +255,7 @@ function Row(props) {
                     sx={{
                       color: "#fff",
                     }}
+                    onClick={handleEditBrand}
                   >
                     Cập nhật
                   </ButtonCustom>
@@ -177,9 +267,9 @@ function Row(props) {
                     Huỷ
                   </ButtonCustom>
                 </Stack>
-                <ButtonCustom variant="text" color="color5">
+                {/* <ButtonCustom variant="text" color="color5">
                   Xoá thương hiệu
-                </ButtonCustom>
+                </ButtonCustom> */}
               </Stack>
             </Box>
           </Collapse>
@@ -188,15 +278,6 @@ function Row(props) {
     </React.Fragment>
   );
 }
-
-Row.propTypes = {
-  row: PropTypes.shape({
-    brandName: PropTypes.string.isRequired,
-    brandImage: PropTypes.string.isRequired,
-    quantity: PropTypes.number.isRequired,
-    status: PropTypes.string.isRequired,
-  }).isRequired,
-};
 
 function BrandsTable(props) {
   const { count, onPageChange, onRowsPerPageChange, page, rowsPerPage, items } =
@@ -220,8 +301,8 @@ function BrandsTable(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.slice(0, rowsPerPage).map((row) => (
-                <Row key={row.id} row={row} />
+              {items.slice(0, rowsPerPage).map((row, index) => (
+                <Row key={index} row={row} />
               ))}
             </TableBody>
           </Table>

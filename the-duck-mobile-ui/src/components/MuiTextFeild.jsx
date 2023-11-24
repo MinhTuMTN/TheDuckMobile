@@ -22,16 +22,21 @@ MuiTextFeild.propTypes = {
   name: PropTypes.string,
   size: PropTypes.string,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func,
   error: PropTypes.bool,
+  multiline: PropTypes.bool,
+  color: PropTypes.string,
   children: PropTypes.node,
   fullWidth: PropTypes.bool,
+  helperText: PropTypes.string,
 };
 
 MuiTextFeild.defaultProps = {
   multiline: false,
   fullWidth: false,
+  error: false,
+  helperText: "",
 };
 
 function MuiTextFeild(props) {
@@ -42,7 +47,8 @@ function MuiTextFeild(props) {
     size,
     multiline,
     onChange,
-    error = null,
+    error,
+    helperText,
     children,
     color,
     fullWidth,
@@ -52,6 +58,8 @@ function MuiTextFeild(props) {
   return (
     <CustomTextField
       variant="outlined"
+      error={error}
+      helperText={helperText}
       label={label}
       name={name}
       size={size}
@@ -60,7 +68,6 @@ function MuiTextFeild(props) {
       onChange={onChange}
       style={props.style}
       color={color}
-      {...(error && { error: true, helperText: error })}
       InputProps={{ style: { fontSize: props.fontSize } }}
       fullWidth={fullWidth}
       {...others}

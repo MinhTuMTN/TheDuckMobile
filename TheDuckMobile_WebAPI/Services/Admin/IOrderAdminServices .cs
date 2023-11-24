@@ -5,5 +5,6 @@ namespace TheDuckMobile_WebAPI.Services.Admin
     public interface IOrderAdminServices
     {
         public Task<List<OrderListResponse>> GetAllOrders();
+        public Task<OrderDetailResponse> GetOrderById(string orderId);
     }
 }

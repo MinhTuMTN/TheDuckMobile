@@ -1,9 +1,11 @@
 import { Autocomplete, Stack, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useRef } from "react";
+import { useAuth } from "../auth/AuthProvider";
 import {
   addAddress,
+  addAddressAnonymous,
   getDistricts,
   getProvines,
   getWards,
@@ -20,9 +22,20 @@ UserAddAddress.propTypes = {
   setEditAddress: PropTypes.func,
 };
 
+UserAddAddress.defaultProps = {
+  open: false,
+  setOpen: null,
+  editAddress: null,
+  onChangeAddress: () => {},
+  setEditAddress: () => {},
+};
+
 function UserAddAddress(props) {
   const { open, setOpen, editAddress, onChangeAddress, setEditAddress } = props;
   const { enqueueSnackbar } = useSnackbar();
+  const districtInput = useRef(null);
+  const wardInput = useRef(null);
+
   const [address, setAddress] = React.useState({
     province: "",
     district: "",
@@ -32,6 +45,7 @@ function UserAddAddress(props) {
   const [province, setProvince] = React.useState([]);
   const [district, setDistrict] = React.useState([]);
   const [ward, setWard] = React.useState([]);
+  const { token } = useAuth();
 
   useEffect(() => {
     if (!editAddress) return;
@@ -67,6 +81,7 @@ function UserAddAddress(props) {
   }, [address.province, enqueueSnackbar]);
 
   useEffect(() => {
+    wardInput.current?.querySelector("button")?.click();
     const handleGetWard = async () => {
       const response = await getWards(address.district);
       if (response.success) {
@@ -77,10 +92,18 @@ function UserAddAddress(props) {
   }, [address.district, enqueueSnackbar]);
 
   const handleAddAddress = async () => {
-    const response = await addAddress({
-      street: address.street,
-      wardId: address.ward,
-    });
+    let response;
+    if (token) {
+      response = await addAddress({
+        street: address.street,
+        wardId: address.ward,
+      });
+    } else {
+      response = await addAddressAnonymous({
+        street: address.street,
+        wardId: address.ward,
+      });
+    }
 
     if (response.success) {
       enqueueSnackbar("Thêm địa chỉ thành công", { variant: "success" });
@@ -135,9 +158,13 @@ function UserAddAddress(props) {
             }
             value={province.find((item) => item.provineId === address.province)}
             onChange={(event, newValue) => {
+              districtInput.current?.querySelector("button")?.click();
+              wardInput.current?.querySelector("button")?.click();
               setAddress((prev) => ({
                 ...prev,
                 province: newValue ? newValue.provinceId : "",
+                district: "",
+                ward: "",
               }));
             }}
             isOptionEqualToValue={(option, value) =>
@@ -147,7 +174,9 @@ function UserAddAddress(props) {
             renderOption={(props, option) => {
               return (
                 <li {...props}>
-                  <Typography>{option.provineName}</Typography>
+                  <Typography style={{ fontSize: "14px" }}>
+                    {option.provineName}
+                  </Typography>
                 </li>
               );
             }}
@@ -157,7 +186,11 @@ function UserAddAddress(props) {
                 style={{
                   height: "100%",
                 }}
-                inputProps={{ ...inputProps, readOnly: true }}
+                inputProps={{
+                  ...inputProps,
+                  readOnly: true,
+                  style: { fontSize: "14px" },
+                }}
                 label="Tỉnh/Thành phố"
               />
             )}
@@ -171,6 +204,7 @@ function UserAddAddress(props) {
                 districtName: editAddress.districtName,
               }
             }
+            ref={districtInput}
             value={district.find(
               (item) => item.districtId === address.district
             )}
@@ -179,6 +213,7 @@ function UserAddAddress(props) {
               setAddress((prev) => ({
                 ...prev,
                 district: newValue ? newValue.districtId : "",
+                ward: "",
               }));
             }}
             isOptionEqualToValue={(option, value) =>
@@ -188,7 +223,9 @@ function UserAddAddress(props) {
             renderOption={(props, option) => {
               return (
                 <li {...props}>
-                  <Typography>{option.districtName}</Typography>
+                  <Typography style={{ fontSize: "14px" }}>
+                    {option.districtName}
+                  </Typography>
                 </li>
               );
             }}
@@ -198,7 +235,11 @@ function UserAddAddress(props) {
                 style={{
                   height: "100%",
                 }}
-                inputProps={{ ...inputProps, readOnly: true }}
+                inputProps={{
+                  ...inputProps,
+                  readOnly: true,
+                  style: { fontSize: "14px" },
+                }}
                 label="Quận/Huyện"
               />
             )}
@@ -224,11 +265,14 @@ function UserAddAddress(props) {
           isOptionEqualToValue={(option, value) =>
             option.wardId === value.wardId
           }
+          ref={wardInput}
           getOptionLabel={(option) => option.wardName}
           renderOption={(props, option) => {
             return (
               <li {...props}>
-                <Typography>{option.wardName}</Typography>
+                <Typography style={{ fontSize: "14px" }}>
+                  {option.wardName}
+                </Typography>
               </li>
             );
           }}
@@ -238,7 +282,11 @@ function UserAddAddress(props) {
               style={{
                 height: "100%",
               }}
-              inputProps={{ ...inputProps, readOnly: true }}
+              inputProps={{
+                ...inputProps,
+                readOnly: true,
+                style: { fontSize: "14px" },
+              }}
               label="Phường/Xã"
             />
           )}
@@ -252,6 +300,9 @@ function UserAddAddress(props) {
               ...prev,
               street: e.target.value,
             }));
+          }}
+          inputProps={{
+            style: { fontSize: "14px" },
           }}
         />
       </Stack>

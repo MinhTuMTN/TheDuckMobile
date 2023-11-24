@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MuiTextFeild from "../MuiTextFeild";
-import { Avatar, Stack, TextField, Typography } from "@mui/material";
+import { Avatar, Stack } from "@mui/material";
 import styled from "@emotion/styled";
 
 const CustomImage = styled(Avatar)(({ theme }) => ({
@@ -12,10 +12,29 @@ const CustomImage = styled(Avatar)(({ theme }) => ({
   maxWidth: "250px",
 }));
 function AddNewBrand(props) {
-  const [image, setImage] = useState();
+  const { setBrandAdd } = props;
+  const [imageSelected, setImageSelected] = useState(null);
+  const [urlImage, setUrlImage] = useState("");
+
   const handleImageChange = (event) => {
-    setImage(URL.createObjectURL(event.target.files[0]));
+    setImageSelected(event.target.files[0]);
   };
+
+  useEffect(() => {
+    if (imageSelected === null)
+      return;
+    const url = URL.createObjectURL(imageSelected);
+    setUrlImage(url);
+    setBrandAdd((prev) => {
+      return {
+        ...prev,
+        image: imageSelected,
+      };
+    });
+    return () => URL.revokeObjectURL(url);
+  }, [imageSelected, setBrandAdd]);
+
+  
   return (
     <Stack direction={"row"} spacing={2}>
       <Stack direction={"column"}>
@@ -23,7 +42,7 @@ function AddNewBrand(props) {
           sx={{
             mb: 1,
           }}
-          src={image}
+          src={urlImage}
         />
 
         <MuiTextFeild
@@ -45,6 +64,12 @@ function AddNewBrand(props) {
         variant="outlined"
         autoFocus
         required
+        onChange={(e) => {
+          setBrandAdd((prev) => ({
+              ...prev,
+              brandName: e.target.value,
+          }));
+      }}
         sx={{
           marginTop: 2,
         }}

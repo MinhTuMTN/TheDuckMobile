@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using TheDuckMobile_WebAPI.Config;
 using TheDuckMobile_WebAPI.Entities;
@@ -170,6 +172,34 @@ namespace TheDuckMobile_WebAPI.Controllers
                 Success = true,
                 Message = "Success",
                 Data = token
+            });
+        }
+
+        [HttpGet("check-token")]
+        [Authorize]
+        public async Task<IActionResult> CheckToken()
+        {
+            // Get user id from token
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var user = await _userServices.FindUserByUserId(Guid.Parse(id!));
+
+            if (user == null)
+            {
+                return Unauthorized(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Invalid Token",
+                    Data = null
+                });
+            }
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = user is Customer ? "Customer" : (user is Entities.Admin ? "Admin" : "Staff")
             });
         }
     }

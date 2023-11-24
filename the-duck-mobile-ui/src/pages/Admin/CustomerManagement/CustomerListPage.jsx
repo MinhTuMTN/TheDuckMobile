@@ -50,6 +50,7 @@ function CustomerListPage() {
 
   const filterRows = useCallback(
     (searchString) => {
+      setPage(0);
       if (searchString === "") {
         return dataFetched;
       }
@@ -64,10 +65,6 @@ function CustomerListPage() {
     const filtered = filterRows(searchString);
     setRowsSearched(filtered);
   }, [searchString, filterRows]);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -175,7 +172,7 @@ function CustomerListPage() {
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
-                    key={row.userId}
+                    key={i}
                     sx={{
                       paddingY: "0",
                     }}
@@ -207,9 +204,9 @@ function CustomerListPage() {
                       <IconButton
                         color="black"
                         onClick={(e) => {
-                          navigate("/admin/customer-management/detail", {
+                          navigate(`/admin/customer-management/${row.userId}`, {
                             state: {
-                              id: row.customerId,
+                              id: row.userId,
                             },
                           });
                         }}
@@ -219,11 +216,6 @@ function CustomerListPage() {
                     </CellBody>
                   </TableRow>
                 ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={11} />
-                  </TableRow>
-                )}
               </TableBody>
               <TableFooter>
                 <TableRow>

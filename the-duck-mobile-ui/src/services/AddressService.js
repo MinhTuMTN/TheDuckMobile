@@ -20,6 +20,10 @@ export const addAddress = (data) => {
   return post("address", data);
 };
 
+export const addAddressAnonymous = (data) => {
+  return post("address/anonymous", data);
+};
+
 export const deleteAddress = (addressId) => {
   return del(`address?addressId=${addressId}`);
 };

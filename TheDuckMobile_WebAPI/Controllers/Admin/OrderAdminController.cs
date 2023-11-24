@@ -16,9 +16,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             _orderAdminServices = orderAdminServices;
         }
 
-        [HttpGet("list")]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
+        [HttpGet]
         public async Task<IActionResult> GetAllOrders()
         {
             var orders = await _orderAdminServices.GetAllOrders();
@@ -27,6 +25,22 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Success = true,
                 Data = orders,
                 Message = "Successfully retrieved all orders"
+            });
+        }
+
+        [HttpGet("{orderId}")]
+        public async Task<IActionResult> GetOrderById([FromRoute] string orderId)
+        {
+            var order = await _orderAdminServices.GetOrderById(orderId);
+
+            if (order == null)
+                throw new BadHttpRequestException("Order could not be retrieved.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Order retrieved successfully.",
+                Data = order
             });
         }
     }

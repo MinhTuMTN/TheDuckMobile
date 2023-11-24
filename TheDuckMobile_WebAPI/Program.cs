@@ -9,6 +9,8 @@ using TheDuckMobile_WebAPI.Services;
 using TheDuckMobile_WebAPI.Services.Impl;
 using TheDuckMobile_WebAPI.Services.Admin;
 using TheDuckMobile_WebAPI.Services.Impl.Admin;
+using TheDuckMobile_WebAPI.Services.Store;
+using TheDuckMobile_WebAPI.Services.Impl.Store;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +55,8 @@ builder.Services.AddScoped<ICloudinaryServices, CloudinaryServicesImpl>();
 builder.Services.AddScoped<IJsonServices, JsonServicesImpl>();
 builder.Services.AddScoped<IVoteServices, VoteServicesImpl>();
 builder.Services.AddScoped<ICouponServices, CouponServicesImpl>();
+builder.Services.AddScoped<IStoreServices, StoreServicesImpl>();
+builder.Services.AddScoped<IOrderServices, OrderServicesImpl>();
 
 // Admin
 builder.Services.AddScoped<IProductAdminServices, ProductAdminServicesImpl>();
@@ -66,11 +70,21 @@ builder.Services.AddScoped<IStoreAdminServices, StoreAdminServicesImpl>();
 builder.Services.AddScoped<IOrderAdminServices, OrderAdminServicesImpl>();
 builder.Services.AddScoped<ICouponAdminServices, CouponAdminServicesImpl>();
 builder.Services.AddScoped<IFeedbackAdminServices, FeedbackAdminServicesImpl>();
-builder.Services.AddScoped<ISpecialFeatureServices, SpecialFeatureServicesImpl>();
+builder.Services.AddScoped<ISpecialFeatureAdminServices, SpecialFeatureAdminServicesImpl>();
 builder.Services.AddScoped<ICatalogAttributeServices, CatalogAttributeServicesImpl>();
 builder.Services.AddScoped<IOSAdminServices, OSAdminServicesImpl>();
 builder.Services.AddScoped<IColorAdminServices, ColorAdminServicesImpl>();
 builder.Services.AddScoped<IProductVersionAdminServices, ProductVersionAdminServicesImpl>();
+builder.Services.AddScoped<IProvinceAdminServices, ProvinceAdminServicesImpl>();
+builder.Services.AddScoped<IDistrictAdminServices, DistrictAdminServicesImpl>();
+builder.Services.AddScoped<IWardAdminServices, WardAdminServicesImpl>();
+
+// Store
+builder.Services.AddScoped<IStaffServices, StaffServicesImpl>();
+builder.Services.AddScoped<IStoreProductServices, StoreProductServicesImpl>();
+builder.Services.AddScoped<IStoreCatalogServices, StoreCatalogServicesImpl>();
+builder.Services.AddScoped<IStoreManagementServices, StoreManagementServicesImpl>();
+builder.Services.AddScoped<IStoreOrderServices, StoreOrderServicesImpl>();
 #endregion
 
 var app = builder.Build();

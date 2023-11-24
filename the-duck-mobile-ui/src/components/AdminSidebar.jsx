@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import BadgeIcon from "@mui/icons-material/Badge";
 import BrandingWatermarkIcon from "@mui/icons-material/BrandingWatermark";
 import CategoryIcon from "@mui/icons-material/Category";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
@@ -26,10 +25,10 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import PropTypes from "prop-types";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import CustomLink from "./CustomLink";
-import PropTypes from "prop-types";
 
 const CustomListItemButton = styled(ListItemButton)(({ theme, active }) => ({
   backgroundColor: active === "true" ? "#333860da" : "",
@@ -52,7 +51,7 @@ const sidebarItems = [
   {
     display: "Khách Hàng",
     icon: <PersonIcon />,
-    to: "/admin/customer-management/list",
+    to: "/admin/customer-management",
     section: "customer-management",
   },
 
@@ -65,13 +64,13 @@ const sidebarItems = [
   {
     display: "Sản Phẩm",
     icon: <RedeemIcon />,
-    to: "/admin/product-management/list",
+    to: "/admin/product-management",
     section: "product-management",
   },
   {
     display: "Danh Mục",
     icon: <CategoryIcon />,
-    to: "/admin/catalog-management/list",
+    to: "/admin/catalog-management",
     section: "catalog-management",
   },
   {
@@ -83,43 +82,43 @@ const sidebarItems = [
   {
     display: "Màu Sắc",
     icon: <ColorLensIcon />,
-    to: "/admin/color-management/list",
+    to: "/admin/color-management",
     section: "color-management",
   },
   {
     display: "Tính Năng Đặc Biệt",
     icon: <SettingsSuggestIcon />,
-    to: "/admin/special-feature-management/list",
+    to: "/admin/special-feature-management",
     section: "special-feature-management",
   },
   {
     display: "Chi Nhánh",
     icon: <StoreIcon />,
-    to: "/admin/store-management/list",
+    to: "/admin/store-management",
     section: "store-management",
   },
   {
     display: "Hệ Điều Hành",
     icon: <DevicesIcon />,
-    to: "/admin/os-management/list",
+    to: "/admin/os-management",
     section: "os-management",
   },
   {
     display: "Đơn Hàng",
     icon: <ShoppingBagIcon />,
-    to: "/admin/order-management/list",
+    to: "/admin/order-management",
     section: "order-management",
   },
   {
     display: "Mã Giảm Giá",
     icon: <DiscountIcon />,
-    to: "/admin/coupon-management/list",
+    to: "/admin/coupon-management",
     section: "coupon-management",
   },
   {
     display: "Phản Hồi",
     icon: <FeedbackIcon />,
-    to: "/admin/feedback-management/list",
+    to: "/admin/feedback-management",
     section: "feedback-management",
   },
 ];
@@ -129,9 +128,11 @@ function AdminSidebar(props) {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
 
   const location = useLocation();
-  const currentSection = location.pathname
+  let currentSection = location.pathname
     .split("/")
     .filter((part) => part !== "")[1];
+
+  if (currentSection === undefined) currentSection = "customer-management";
   const activeSection = sidebarItems.find(
     (item) => item.section === currentSection
   )?.section;

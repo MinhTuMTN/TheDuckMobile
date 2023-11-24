@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TheDuckMobile_WebAPI.Entities
 {
@@ -9,6 +10,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         [Range(minimum: 0, maximum: double.MaxValue)]
         public double Price { get; set; }
+        public double PromotionPrice { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -16,14 +18,12 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public bool IsDeleted { get; set; }
 
-        public Guid PromotionId { get; set; }
-        public virtual Promotion? Promotion { get; set; }
-
         public Guid StoreProductId;
         public virtual StoreProduct? StoreProduct { get; set; }
 
 
         public Guid OrderId;
+        [JsonIgnore]
         public virtual Order? Order { get; set; }
     }
 }

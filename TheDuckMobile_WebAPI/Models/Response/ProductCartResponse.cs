@@ -1,4 +1,6 @@
-﻿namespace TheDuckMobile_WebAPI.Models.Response
+﻿using TheDuckMobile_WebAPI.Entities;
+
+namespace TheDuckMobile_WebAPI.Models.Response
 {
     public class ProductCartResponse
     {
@@ -12,5 +14,23 @@
         public int Quantity { get; set; }
         public string? ColorName { get; set; }
         public string? ColorCode { get; set; }
+
+        public ProductCartResponse()
+        {
+        }
+
+        public ProductCartResponse(OrderItem orderItem)
+        {
+            ProductVersionId = orderItem.StoreProduct!.ProductVersionId;
+            ProductId = orderItem.StoreProduct!.ProductVersion!.ProductId;
+            ProductName = orderItem.StoreProduct!.ProductVersion!.Product!.ProductName;
+            VersionName = orderItem.StoreProduct!.ProductVersion!.VersionName;
+            Thumbnail = orderItem.StoreProduct!.ProductVersion!.Product!.Thumbnail;
+            Price = orderItem.Price;
+            PromotionPrice = orderItem.PromotionPrice;
+            Quantity = orderItem.Quantity;
+            ColorName = orderItem.StoreProduct!.ProductVersion!.Color!.ColorName;
+            ColorCode = orderItem.StoreProduct!.ProductVersion!.Color!.ColorCode;
+        }
     }
 }

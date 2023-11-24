@@ -29,6 +29,8 @@ namespace TheDuckMobile_WebAPI.Entities
         [JsonIgnore]
         public virtual ICollection<Address>? Addresses { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public Ward()
         {
 

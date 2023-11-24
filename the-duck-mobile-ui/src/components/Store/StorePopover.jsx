@@ -1,14 +1,18 @@
 import { MenuItem, MenuList, Popover } from "@mui/material";
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { useAuth } from "../../auth/AuthProvider";
 function StorePopover(props) {
   const { anchorEl, onClose, open } = props;
-  const handleSignOut = () => {
+
+  const { setToken } = useAuth();
+  const handleLogout = useCallback(() => {
     onClose?.();
-    console.log("Đăng xuất");
-  };
+    setToken(null);
+    window.location.href = "/";
+  }, [setToken, onClose]);
 
   return (
     <Popover
@@ -46,7 +50,7 @@ function StorePopover(props) {
           Thông tin
         </MenuItem>
         <MenuItem
-          onClick={handleSignOut}
+          onClick={handleLogout}
           style={{
             fontSize: "14px",
             fontWeight: "400",

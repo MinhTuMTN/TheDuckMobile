@@ -41,6 +41,7 @@ function FeedbackListPage() {
 
   const filterRows = useCallback(
     (searchString) => {
+      setPage(0);
       if (searchString === "") {
         return dataFetched;
       }
@@ -110,8 +111,8 @@ function FeedbackListPage() {
                 page * rowsPerPage + rowsPerPage
               )
               : rowsSearched
-            ).map((row) => (
-              <TableRow key={row.feedbackId}>
+            ).map((row, i) => (
+              <TableRow key={i}>
                 <TableCell style={{ minWidth: 200 }} align="center">
                   {row.feedbackId}
                 </TableCell>

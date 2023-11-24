@@ -11,3 +11,7 @@ export const getAllDistricts = (provinceId) => {
 export const getAllWards = (districtId) => {
   return get(`/addressadmin/ward?districtId=${districtId}`);
 };
+
+export const getAddresses = () => {
+  return get("addressadmin");
+};

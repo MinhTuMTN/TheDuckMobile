@@ -37,6 +37,8 @@ namespace TheDuckMobile_WebAPI.Entities
         public DateTime LastModifiedAt { get; set; }
         public bool IsDeleted { get; set; }
 
+        public virtual ICollection<Provine>? Provines { get; set; }
+
         public Store()
         {
             this.OpenHours = 8;

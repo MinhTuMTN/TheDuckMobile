@@ -100,7 +100,7 @@ function AddProductVersionPage(props) {
                             <Button
                             component={Link}
                             onClick={handleNext}
-                            to={activeStep === steps.length - 1 ? "/admin/product-management/list" : ""}
+                            to={activeStep === steps.length - 1 ? "/admin/product-management" : ""}
                             state={activeStep === steps.length - 2 ? data : {}}
                             >
                                 {activeStep === steps.length - 1 ? "Thêm mới" : "Tiếp theo"}

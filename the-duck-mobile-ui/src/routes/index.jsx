@@ -45,6 +45,7 @@ import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
 import OrderDetails from "../pages/Seller/OrderDetails";
 import Orders from "../pages/Seller/Orders";
 import Product from "../pages/Seller/Product";
+import { StoreProtectedLayout } from "../layouts/StoreProtectedLayout";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -92,7 +93,7 @@ function Router(props) {
           element: <CartLazy />,
         },
         {
-          path: "/buy-product",
+          path: "/payment",
           element: <BuyProduct />,
         },
         {
@@ -110,6 +111,10 @@ function Router(props) {
         {
           path: "/login",
           element: <LoginLazy />,
+        },
+        {
+          path: "*",
+          element: <NotFound />,
         },
       ],
     },
@@ -130,20 +135,10 @@ function Router(props) {
               element: <OrderHistory />,
             },
             {
-              path: "order-history-details",
+              path: "order-details",
               element: <OrderHistoryDetails />,
             },
           ],
-        },
-      ],
-    },
-    {
-      path: "*",
-      element: <MainLayout />,
-      children: [
-        {
-          path: "*",
-          element: <NotFound />,
         },
       ],
     },
@@ -167,19 +162,19 @@ function Router(props) {
         },
 
         {
-          path: "color-management/list",
+          path: "color-management",
           element: <ColorListPage />,
         },
         {
-          path: "color-management/add",
+          path: "color-management",
           element: <AddColorPage />,
         },
         {
-          path: "color-management/edit",
+          path: "color-management/:colorId",
           element: <EditColorPage />,
         },
         {
-          path: "catalog-management/list",
+          path: "catalog-management",
           element: <CatalogListPage />,
         },
         {
@@ -187,11 +182,11 @@ function Router(props) {
           element: <AddCatalogPage />,
         },
         {
-          path: "catalog-management/edit",
+          path: "catalog-management/:catalogId",
           element: <EditCatalogPage />,
         },
         {
-          path: "product-management/list",
+          path: "product-management",
           element: <ProductListPage />,
         },
         {
@@ -215,12 +210,15 @@ function Router(props) {
           element: <EditProductVersionPage />,
         },
         {
-          path: "customer-management/list",
+          path: "customer-management",
           element: <CustomerListPage />,
         },
-
         {
-          path: "customer-management/detail",
+          element: <CustomerListPage />,
+          index: true,
+        },
+        {
+          path: "customer-management/:customerId",
           element: <CustomerDetailPage />,
         },
 
@@ -230,7 +228,7 @@ function Router(props) {
         },
 
         {
-          path: "store-management/list",
+          path: "store-management",
           element: <StoreListPage />,
         },
         {
@@ -246,7 +244,7 @@ function Router(props) {
           element: <StoreDetailPage />,
         },
         {
-          path: "os-management/list",
+          path: "os-management",
           element: <OSListPage />,
         },
         {
@@ -254,19 +252,19 @@ function Router(props) {
           element: <AddOSPage />,
         },
         {
-          path: "os-management/edit",
+          path: "os-management/:osId",
           element: <EditOSPage />,
         },
         {
-          path: "order-management/list",
+          path: "order-management",
           element: <OrderListPage />,
         },
         {
-          path: "order-management/detail",
+          path: "order-management/:orderId",
           element: <OrderDetailPage />,
         },
         {
-          path: "coupon-management/list",
+          path: "coupon-management",
           element: <CouponListPage />,
         },
         {
@@ -278,11 +276,11 @@ function Router(props) {
           element: <EditCouponPage />,
         },
         {
-          path: "feedback-management/list",
+          path: "feedback-management",
           element: <FeedbackListPage />,
         },
         {
-          path: "special-feature-management/list",
+          path: "special-feature-management",
           element: <SpecialFeatureListPage />,
         },
         {
@@ -290,34 +288,36 @@ function Router(props) {
           element: <AddSpecialFeaturePage />,
         },
         {
-          path: "special-feature-management/edit",
+          path: "special-feature-management/:specialFeature",
           element: <EditSpecialFeaturePage />,
-        },
-        {
-          path: "order-details",
-          element: <OrderDetails />,
         },
       ],
     },
     {
-      path: "loading",
-      element: <Loading />,
-    },
-    {
-      path: "/store",
-      element: <StoreLayout />,
+      path: "/",
+      element: <StoreProtectedLayout />,
       children: [
         {
-          path: "products",
-          element: <Product />,
-        },
-        {
-          path: "orders",
-          element: <Orders />,
-        },
-        {
-          path: "order-details",
-          element: <OrderDetails />,
+          path: "/store",
+          element: <StoreLayout />,
+          children: [
+            {
+              element: <Product />,
+              index: true,
+            },
+            {
+              path: "products",
+              element: <Product />,
+            },
+            {
+              path: "orders",
+              element: <Orders />,
+            },
+            {
+              path: "orders/order-details",
+              element: <OrderDetails />,
+            },
+          ],
         },
       ],
     },

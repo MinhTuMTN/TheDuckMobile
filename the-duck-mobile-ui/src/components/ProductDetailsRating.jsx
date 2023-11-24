@@ -26,7 +26,7 @@ function ProductDetailsRating(props) {
         name="rating"
         precision={0.1}
         size="medium"
-        value={rating}
+        value={rating ? rating : 5}
         readOnly
       />
       <span style={{ marginLeft: "10px" }}>({numReviews} Reviews)</span>

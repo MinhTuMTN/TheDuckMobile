@@ -1,22 +1,24 @@
-import React, { useState } from "react";
 import styled from "@emotion/styled";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import {
   Box,
+  Button,
+  CardMedia,
+  Collapse,
+  IconButton,
+  Stack,
   Table,
+  TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Collapse,
-  IconButton,
   Typography,
-  TableBody,
-  CardMedia,
-  Stack,
-  Button,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import React, { useState } from "react";
+import { UpdateStoreProductQuantity } from "../../services/Store/StoreProductService";
 import FormatCurrency from "../FormatCurrency";
 import MuiTextField from "../MuiTextFeild";
 
@@ -27,6 +29,24 @@ const ButtonCustom = styled(Button)`
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = useState(false);
+  const [quantity, setQuantity] = useState(row?.quantity || 0);
+  const [updateQuantity, setUpdateQuantity] = useState(1);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleUpdateQuantity = async () => {
+    if (updateQuantity <= 0) return;
+
+    const response = await UpdateStoreProductQuantity(row.storeProductId, {
+      quantity: updateQuantity,
+    });
+    if (response.success) {
+      enqueueSnackbar("Cập nhật số lượng thành công", { variant: "success" });
+      setQuantity((prev) => prev + updateQuantity);
+    } else {
+      enqueueSnackbar("Cập nhật số lượng thất bại", { variant: "error" });
+    }
+  };
+
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "" } }}>
@@ -43,7 +63,7 @@ function Row(props) {
           <Stack direction={"row"} spacing={2} alignItems={"center"}>
             <CardMedia
               component="img"
-              image={row.productImage}
+              image={row.thumbnail}
               alt="Hình ảnh sản phẩm"
               style={{ maxHeight: "5rem", maxWidth: "5rem" }}
             />
@@ -57,7 +77,7 @@ function Row(props) {
                   maxWidth: "300px", // Điều chỉnh chiều rộng tối đa
                 }}
               >
-                {row.productName}
+                {row.productName} - {row.productVersionName}
               </Typography>
               <Typography
                 variant="subtitle1"
@@ -67,16 +87,29 @@ function Row(props) {
                 }}
               >
                 {" "}
-                Category {row.category}
+                Category {row.catalogName}
               </Typography>
             </Stack>
           </Stack>
         </TableCell>
-        <TableCell align="right">
-          <FormatCurrency amount={row.price} />
+        <TableCell
+          align="right"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography>
+            <FormatCurrency amount={row.price} />
+          </Typography>
+          <Typography>
+            <FormatCurrency amount={row.promotionPrice} />
+          </Typography>
         </TableCell>
-        <TableCell align="right">{row.quantity}</TableCell>
-        <TableCell align="right">{row.status}</TableCell>
+        <TableCell align="right">{quantity}</TableCell>
+        <TableCell align="right">
+          {!row.isDeleted ? "Đang bán" : "Ngưng bán"}
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell
@@ -88,7 +121,6 @@ function Row(props) {
         >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box
-              fullWidth
               sx={{
                 marginY: "1rem",
               }}
@@ -114,14 +146,19 @@ function Row(props) {
                   variant="filled"
                   label="Số lượng"
                   type="number"
+                  error={updateQuantity <= 0}
+                  helperText={
+                    updateQuantity <= 0 ? "Số lượng không hợp lệ" : ""
+                  }
                   size="medium"
-                  color="color5"
                   style={{
                     width: "40%",
                   }}
+                  color={"color4"}
+                  value={updateQuantity}
+                  onChange={(e) => setUpdateQuantity(e.target.value)}
                   InputLabelProps={{
                     shrink: true,
-                    disableUnderline: true,
                   }}
                 />
               </Stack>
@@ -132,6 +169,8 @@ function Row(props) {
               >
                 <Stack direction={"row"} spacing={2}>
                   <ButtonCustom
+                    onClick={handleUpdateQuantity}
+                    disabled={updateQuantity <= 0}
                     variant="contained"
                     color="color1"
                     sx={{
@@ -148,9 +187,6 @@ function Row(props) {
                     Huỷ
                   </ButtonCustom>
                 </Stack>
-                <ButtonCustom variant="text" color="color5">
-                  Xoá sản phẩm
-                </ButtonCustom>
               </Stack>
             </Box>
           </Collapse>
@@ -162,12 +198,12 @@ function Row(props) {
 
 Row.propTypes = {
   row: PropTypes.shape({
-    productName: PropTypes.string.isRequired,
-    productImage: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    quantity: PropTypes.number.isRequired,
-    status: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
+    productName: PropTypes.string,
+    productImage: PropTypes.string,
+    price: PropTypes.number,
+    quantity: PropTypes.number,
+    status: PropTypes.string,
+    category: PropTypes.string,
   }).isRequired,
 };
 
@@ -191,8 +227,8 @@ function ProductsTable(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.slice(0, rowsPerPage).map((row) => (
-                <Row key={row.id} row={row} />
+              {items.slice(0, rowsPerPage).map((row, index) => (
+                <Row key={`row-${index}-${row.productVersionId}`} row={row} />
               ))}
             </TableBody>
           </Table>
@@ -203,9 +239,9 @@ function ProductsTable(props) {
         count={count}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
+        page={page - 1}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[1, 5, 10, 25]}
       />
     </>
   );

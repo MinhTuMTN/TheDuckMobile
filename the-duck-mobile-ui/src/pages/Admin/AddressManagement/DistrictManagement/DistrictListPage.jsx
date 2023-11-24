@@ -87,6 +87,7 @@ function DistrictListPage() {
 
   const filterRows = useCallback(
     (searchString) => {
+      setPage(0);
       if (searchString === "") {
         return dataFetched;
       }
@@ -277,7 +278,7 @@ function DistrictListPage() {
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
-                    key={row.districtId}
+                    key={i}
                     sx={{
                       paddingY: "0",
                     }}
