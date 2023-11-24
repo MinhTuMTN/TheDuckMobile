@@ -100,6 +100,11 @@ html {
   font-size: 14px !important;
 }
 
+.multiline-text div {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
 .nav-active li {
   background-color: #333860da;
 }
