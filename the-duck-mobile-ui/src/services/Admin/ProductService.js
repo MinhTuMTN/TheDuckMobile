@@ -1,4 +1,4 @@
-import { del, get, put } from "../AxiosInstance";
+import { del, get, post, put } from "../AxiosInstance";
 
 export const getAllProducts = () => {
   return get("productadmin");
@@ -18,12 +18,19 @@ export const restoreProduct = (productId) => {
 
 export const updateProduct = (productId, data) => {
   return put(`productadmin/${productId}`, data);
-}
+};
 
 export const GetFilteredProducts = (params) => {
   return get("productadmin/filtered", params);
 };
 
 export const updateProductThumbnail = (productId, data) => {
-  return put(`productadmin/thumbnail/${productId}`, data, { "Content-Type": "multipart/form-data" });
+  return put(`productadmin/thumbnail/${productId}`, data, {
+    "Content-Type": "multipart/form-data",
+  });
+};
+export const createProduct = (data) => {
+  return post("productadmin", data, {
+    "Content-Type": "multipart/form-data",
+  });
 };

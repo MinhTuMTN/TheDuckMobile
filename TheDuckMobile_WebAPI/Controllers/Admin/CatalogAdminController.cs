@@ -20,9 +20,9 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         [HttpGet]
         [AllowAnonymous]
         /*[Authorize(Roles = "admin")]*/
-        public async Task<IActionResult> GetAllCatalogs()
+        public async Task<IActionResult> GetAllCatalogs([FromQuery] bool isDeletedFilter)
         {
-            var catalogs = await _catalogServices.GetAllCatalogs();
+            var catalogs = await _catalogServices.GetAllCatalogs(isDeletedFilter);
             return Ok(new GenericResponse
             {
                 Success = true,

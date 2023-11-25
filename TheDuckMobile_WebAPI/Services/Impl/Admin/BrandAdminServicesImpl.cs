@@ -40,12 +40,19 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return new BrandResponse(brand);
         }
 
-        public async Task<List<BrandListResponse>> GetAllBrands()
+        public async Task<List<BrandListResponse>> GetAllBrands(bool isDeletedFilter)
         {
-            var brands = await _context.Brands
+            var brands = _context
+                .Brands
                 .Include(b => b.Products)
-                .ToListAsync();
-            return brands.Select(b => new BrandListResponse(b)).ToList();
+                .AsQueryable();
+
+            if (isDeletedFilter)
+                brands = brands.Where(b => b.IsDeleted == false);
+
+            var result = await brands.ToListAsync();
+
+            return result.Select(b => new BrandListResponse(b)).ToList();
         }
 
         public async Task<List<BrandListResponse>> GetActiveBrands()

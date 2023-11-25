@@ -35,9 +35,9 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllOSs()
+        public async Task<IActionResult> GetAllOSs([FromQuery] bool isDeletedFilter = false)
         {
-            var osList = await _osServices.GetAllOSs();
+            var osList = await _osServices.GetAllOSs(isDeletedFilter);
             return Ok(new GenericResponse
             {
                 Success = true,

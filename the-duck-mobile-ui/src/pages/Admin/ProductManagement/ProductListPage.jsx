@@ -121,8 +121,8 @@ function ProductListPage(props) {
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     };
     if (catalogs.length === 0) {
-      handleGetCatalogs()
-    };
+      handleGetCatalogs();
+    }
   }, [catalogs]);
 
   const handleGetFilteredProduct = useCallback(async () => {
@@ -225,7 +225,9 @@ function ProductListPage(props) {
                   {selectedCategory.map((item, index) => (
                     <Chip
                       color="primary"
-                      label={catalogs.find((c) => c.catalogId === item)?.catalogName}
+                      label={
+                        catalogs.find((c) => c.catalogId === item)?.catalogName
+                      }
                       key={index}
                       onDelete={() =>
                         setSelectedCategory((prev) =>
@@ -241,7 +243,9 @@ function ProductListPage(props) {
                       label={statusOptions.find((i) => i.value === item)?.name}
                       key={index}
                       onDelete={() =>
-                        setSelectedStatus((prev) => prev.filter((i) => i !== item))
+                        setSelectedStatus((prev) =>
+                          prev.filter((i) => i !== item)
+                        )
                       }
                     />
                   ))}
@@ -249,7 +253,9 @@ function ProductListPage(props) {
                   {selectedQuantity.map((item, index) => (
                     <Chip
                       color="warning"
-                      label={quantityOptions.find((i) => i.value === item)?.name}
+                      label={
+                        quantityOptions.find((i) => i.value === item)?.name
+                      }
                       key={index}
                       onDelete={() =>
                         setSelectedQuantity((prev) =>
