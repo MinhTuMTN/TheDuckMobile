@@ -18,10 +18,16 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@emotion/react";
 import FormatDateTime from "../FormatDateTime";
+import { getActiveBrands } from "../../services/Admin/BrandService";
+import { enqueueSnackbar } from "notistack";
+import { getActiveCatalogs } from "../../services/Admin/CatalogService";
+import { getActiveOSs } from "../../services/Admin/OSService";
+import { updateProduct } from "../../services/Admin/ProductService";
+import { useNavigate } from "react-router-dom";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   paddingLeft: "24px !important",
@@ -80,24 +86,134 @@ const MultilineText = styled(TextField)(({ theme }) => ({
 }));
 
 function BasicProductInDetailsPage(props) {
+  const navigate = useNavigate();
   const { product } = props;
-  const [openPopup, setOpenPopup] = useState(false);
-  const [catalog, setCatalog] = useState("");
-  const [brand, setBrand] = useState("");
-  const [OS, setOS] = useState("");
-  const [inputValue, setInputValue] = useState("");
-  const isInputEmpty = inputValue.trim() === "";
-  const handleChangeBrand = (event) => {
-    setBrand(event.target.value);
-  };
-  const handleChangeCatalog = (event) => {
-    setCatalog(event.target.value);
-  };
-  const handleChangeOS = (event) => {
-    setOS(event.target.value);
-  };
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const [openPopup, setOpenPopup] = useState(false);
+  const [catalogs, setCatalogs] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [oss, setOSs] = useState([]);
+  const [editProduct, setEditProduct] = useState({
+    osId: 1,
+    brandId: 1,
+    catalogId: 1,
+    productName: "",
+    productDescription: "",
+    quantity: 1,
+  })
+  const handleChangeBrand = (event) => {
+    setEditProduct((prev) => {
+      return {
+        ...prev,
+        brandId: event.target.value
+      };
+    });
+  };
+  const handleChangeCatalog = (event) => {
+    setEditProduct((prev) => {
+      return {
+        ...prev,
+        catalogId: event.target.value
+      };
+    });
+  };
+  const handleChangeOS = (event) => {
+    setEditProduct((prev) => {
+      return {
+        ...prev,
+        osId: event.target.value
+      };
+    });
+  };
+
+  useEffect(() => {
+    const handleGetBrands = async () => {
+      const response = await getActiveBrands();
+      if (response.success) {
+        setBrands(response.data.data);
+      } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    };
+    if (brands.length === 0) {
+      handleGetBrands()
+    };
+  }, [brands]);
+
+  useEffect(() => {
+    const handleGetCatalogs = async () => {
+      const response = await getActiveCatalogs();
+      if (response.success) {
+        setCatalogs(response.data.data);
+      } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    };
+    if (catalogs.length === 0) {
+      handleGetCatalogs()
+    };
+  }, [catalogs]);
+
+  useEffect(() => {
+    const handleGetOSs = async () => {
+      const response = await getActiveOSs();
+      if (response.success) {
+        setOSs(response.data.data);
+      } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    };
+    if (oss.length === 0) {
+      handleGetOSs();
+    }
+  }, [oss]);
+
+  const handleEditButtonClick = () => {
+    setOpenPopup(true);
+    setEditProduct({
+      osId: product.os?.osId,
+      brandId: product.brand?.brandId,
+      catalogId: product.catalog?.catalogId,
+      productName: product.productName,
+      productDescription: product.productDescription,
+      quantity: product.quantity,
+    })
+  };
+
+  const handleUpdateProduct = async () => {
+    if (editProduct.productName.trim().length === 0) {
+      return;
+    }
+
+    if (!editProduct.quantity) {
+      return;
+    }
+
+    if (!editProduct.brandId) {
+      return;
+    }
+
+    if (!editProduct.catalogId) {
+      return;
+    }
+
+    if (!editProduct.osId) {
+      return;
+    }
+
+    console.log(editProduct);
+    let response = await updateProduct(product.productId, {
+      productName: editProduct.productName,
+      productDescription: editProduct.productDescription,
+      brandId: editProduct.brandId,
+      osId: editProduct.osId,
+      catalogId: editProduct.catalogId,
+      quantity: editProduct.quantity,
+    });
+
+    if (response.success) {
+      enqueueSnackbar("Chỉnh sửa sản phẩm thành công!", { variant: "success" });
+      setOpenPopup(false);
+      navigate(0);
+    } else {
+      enqueueSnackbar("Chỉnh sửa sản phẩm thất bại!", { variant: "error" });
+    }
+  }
   return (
     <Stack
       component={Paper}
@@ -134,7 +250,7 @@ function BasicProductInDetailsPage(props) {
                 fontWeight: "600 !important",
                 fontSize: "14px !important",
               }}
-              onClick={() => setOpenPopup(true)}
+              onClick={handleEditButtonClick}
             >
               Chỉnh sửa
             </Button>
@@ -169,7 +285,7 @@ function BasicProductInDetailsPage(props) {
               <TieuDeCot>Thương hiệu</TieuDeCot>
             </Grid>
             <Grid item xs={12} sm={9} md={8}>
-              <NoiDung>{product.brandName}</NoiDung>
+              <NoiDung>{product.brand?.brandName}</NoiDung>
             </Grid>
           </Grid>
         </BoxStyle>
@@ -179,7 +295,7 @@ function BasicProductInDetailsPage(props) {
               <TieuDeCot>Danh mục</TieuDeCot>
             </Grid>
             <Grid item xs={12} sm={9}>
-              <NoiDung>{product.catalogName}</NoiDung>
+              <NoiDung>{product.catalog?.catalogName}</NoiDung>
             </Grid>
           </Grid>
         </BoxStyle>
@@ -189,7 +305,7 @@ function BasicProductInDetailsPage(props) {
               <TieuDeCot>Hệ điều hành</TieuDeCot>
             </Grid>
             <Grid item xs={12} sm={9}>
-              <NoiDung>{product.osName}</NoiDung>
+              <NoiDung>{product.os?.osName}</NoiDung>
             </Grid>
           </Grid>
         </BoxStyle>
@@ -235,9 +351,11 @@ function BasicProductInDetailsPage(props) {
       >
         <DialogTitle sx={{ m: 0, px: 4, py: 2 }} id="customized-dialog-title">
           <Typography
-            variant="h6"
             style={{
               fontSize: "24px",
+            }}
+            sx={{
+              fontWeight: 700,
             }}
           >
             Chỉnh sửa
@@ -262,36 +380,84 @@ function BasicProductInDetailsPage(props) {
           }}
         >
           <Stack direction={"column"} spacing={2}>
-            <Box>
-              <Typography
-                variant="body1"
-                style={{
-                  fontSize: "14px",
-                  marginBottom: "4px",
-                  color: isInputEmpty ? "#f44336" : "#111927",
-                }}
-              >
-                Tên sản phẩm
-              </Typography>
-              <InputText
-                sx={{
-                  size: "small",
-                  padding: "0 !important",
-                  fontSize: "14px !important",
-                  borderColor: isInputEmpty ? "red" : "inherit",
-                }}
-                autoFocus
-                required
-                fullWidth
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-              />
-              {isInputEmpty && (
-                <FormHelperText style={{ color: "red" }}>
-                  Tên sản phẩm không được bỏ trống
-                </FormHelperText>
-              )}
-            </Box>
+            <Grid container spacing={1}>
+              <Grid item xs={12} md={8}>
+                <Box>
+                  <Typography
+                    variant="body1"
+                    style={{
+                      fontSize: "14px",
+                      marginBottom: "4px",
+                      color: !editProduct.productName.trim() ? "#f44336" : "#111927",
+                    }}
+                  >
+                    Tên sản phẩm
+                  </Typography>
+                  <InputText
+                    sx={{
+                      size: "small",
+                      padding: "0 !important",
+                      fontSize: "14px !important",
+                      fieldset: { borderColor: !editProduct.productName.trim() ? "red !important" : "inherit" }
+                    }}
+                    autoFocus
+                    required
+                    fullWidth
+                    value={editProduct.productName}
+                    onChange={(e) => setEditProduct((prev) => {
+                      return {
+                        ...prev,
+                        productName: e.target.value
+                      };
+                    })}
+                  />
+                  {!editProduct.productName.trim() && (
+                    <FormHelperText style={{ color: "red" }}>
+                      Tên sản phẩm không được bỏ trống
+                    </FormHelperText>
+                  )}
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Box>
+                  <Typography
+                    variant="body1"
+                    style={{
+                      fontSize: "14px",
+                      marginBottom: "4px",
+                      color: !editProduct.quantity ? "#f44336" : "#111927",
+                    }}
+                  >
+                    Số lượng
+                  </Typography>
+                  <InputText
+                    type="number"
+                    InputProps={{ inputProps: { min: 1 } }}
+                    sx={{
+                      size: "small",
+                      padding: "0 !important",
+                      fontSize: "14px !important",
+                      fieldset: { borderColor: !editProduct.quantity ? "red !important" : "inherit" }
+                    }}
+                    autoFocus
+                    required
+                    fullWidth
+                    value={editProduct.quantity}
+                    onChange={(e) => setEditProduct((prev) => {
+                      return {
+                        ...prev,
+                        quantity: e.target.value,
+                      };
+                    })}
+                  />
+                  {!editProduct.quantity && (
+                    <FormHelperText style={{ color: "red" }}>
+                      Số lượng không được bỏ trống
+                    </FormHelperText>
+                  )}
+                </Box>
+              </Grid>
+            </Grid>
             <Grid container spacing={1}>
               <Grid item xs={12} md={4}>
                 <Box>
@@ -307,7 +473,7 @@ function BasicProductInDetailsPage(props) {
 
                   <FormControl fullWidth>
                     <Select
-                      value={brand}
+                      value={editProduct.brandId}
                       onChange={handleChangeBrand}
                       displayEmpty
                       required
@@ -317,21 +483,13 @@ function BasicProductInDetailsPage(props) {
                       }}
                       inputProps={{ "aria-label": "Without label" }}
                     >
-                      <MenuItem value={1}>
-                        <Typography style={{ fontSize: "14px" }}>
-                          Samsung
-                        </Typography>
-                      </MenuItem>
-                      <MenuItem value={2}>
-                        <Typography style={{ fontSize: "14px" }}>
-                          Samsung
-                        </Typography>
-                      </MenuItem>
-                      <MenuItem value={3}>
-                        <Typography style={{ fontSize: "14px" }}>
-                          Samsung
-                        </Typography>
-                      </MenuItem>
+                      {brands.map((item, index) => (
+                        <MenuItem value={item.brandId} key={index} >
+                          <Typography style={{ fontSize: "14px" }}>
+                            {item.brandName}
+                          </Typography>
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Box>
@@ -350,7 +508,7 @@ function BasicProductInDetailsPage(props) {
 
                   <FormControl fullWidth>
                     <Select
-                      value={catalog}
+                      value={editProduct.catalogId}
                       onChange={handleChangeCatalog}
                       displayEmpty
                       required
@@ -360,26 +518,13 @@ function BasicProductInDetailsPage(props) {
                       }}
                       inputProps={{ "aria-label": "Without label" }}
                     >
-                      <MenuItem value={1}>
-                        <Typography style={{ fontSize: "14px" }}>
-                          Điện thoại
-                        </Typography>
-                      </MenuItem>
-                      <MenuItem value={2}>
-                        <Typography style={{ fontSize: "14px" }}>
-                          Laptop
-                        </Typography>
-                      </MenuItem>
-                      <MenuItem
-                        value={3}
-                        sx={{
-                          width: "auto",
-                        }}
-                      >
-                        <Typography style={{ fontSize: "14px" }}>
-                          Máy tính bảng
-                        </Typography>
-                      </MenuItem>
+                      {catalogs.map((item, index) => (
+                        <MenuItem value={item.catalogId} key={index} >
+                          <Typography style={{ fontSize: "14px" }}>
+                            {item.catalogName}
+                          </Typography>
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Box>
@@ -398,7 +543,7 @@ function BasicProductInDetailsPage(props) {
 
                   <FormControl fullWidth>
                     <Select
-                      value={OS}
+                      value={editProduct.osId}
                       onChange={handleChangeOS}
                       displayEmpty
                       required
@@ -408,26 +553,13 @@ function BasicProductInDetailsPage(props) {
                       }}
                       inputProps={{ "aria-label": "Without label" }}
                     >
-                      <MenuItem value={1}>
-                        <Typography style={{ fontSize: "14px" }}>
-                          IOS
-                        </Typography>
-                      </MenuItem>
-                      <MenuItem value={2}>
-                        <Typography style={{ fontSize: "14px" }}>
-                          Android
-                        </Typography>
-                      </MenuItem>
-                      <MenuItem
-                        value={3}
-                        sx={{
-                          width: "auto",
-                        }}
-                      >
-                        <Typography style={{ fontSize: "14px" }}>
-                          Windows
-                        </Typography>
-                      </MenuItem>
+                      {oss.map((item, index) => (
+                        <MenuItem value={item.osId} key={index}>
+                          <Typography style={{ fontSize: "14px" }}>
+                            {item.osName}
+                          </Typography>
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Box>
@@ -448,12 +580,21 @@ function BasicProductInDetailsPage(props) {
                 multiline
                 rows={4}
                 fullWidth
+                value={editProduct.productDescription}
+                onChange={(e) => {
+                  setEditProduct((prev) => {
+                    return {
+                      ...prev,
+                      productDescription: e.target.value,
+                    };
+                  })
+                }}
               />
             </Box>
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => setOpenPopup(false)}>
+          <Button autoFocus onClick={handleUpdateProduct}>
             Cập nhật
           </Button>
         </DialogActions>

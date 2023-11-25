@@ -40,6 +40,7 @@ import { DataContext } from "../../../layouts/AdminLayout";
 import { enqueueSnackbar } from "notistack";
 import DialogConfirm from "../../../components/DialogConfirm";
 import { addSpecialFeature, deleteSpecialFeature, restoreSpecialFeature, updateSpecialFeature } from "../../../services/Admin/SpecialFeatureService";
+import { useNavigate } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -75,6 +76,7 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function SpecialFeatureListPage() {
+  const navigate = useNavigate();
   const { dataFetched } = useContext(DataContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -184,7 +186,7 @@ function SpecialFeatureListPage() {
       if (response.success) {
         enqueueSnackbar("Thêm tính năng thành công", { variant: "success" });
         setOpenPopup(false);
-        window.location.reload();
+        navigate(0);
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     } else {
       response = await updateSpecialFeature(specialFeatureId, {

@@ -4,6 +4,10 @@ export const getAllOSs = () => {
   return get("osadmin");
 };
 
+export const getActiveOSs = () => {
+  return get("osadmin/active");
+};
+
 export const addOS = (data) => {
   return post("osadmin", data);
 };

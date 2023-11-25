@@ -46,6 +46,18 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             });
         }
 
+        [HttpGet("active")]
+        public async Task<IActionResult> GetActiveOSs()
+        {
+            var osList = await _osServices.GetActiveOSs();
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = osList,
+                Message = "Successfully retrieved active OSs"
+            });
+        }
+
         // Get by id
         [HttpGet("{osId}")]
         public async Task<IActionResult> GetOSById([FromRoute] int osId)

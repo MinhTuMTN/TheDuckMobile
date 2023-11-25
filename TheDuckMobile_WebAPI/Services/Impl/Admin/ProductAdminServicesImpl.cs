@@ -65,12 +65,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             if (brand == null)
                 throw new CustomNotFoundException("Can't found brand");
 
-            if (request.Thumbnail != null)
-            {
-                var thumbnail = await _cloudinaryServices.UploadImage(request.Thumbnail);
-                product.Thumbnail = thumbnail;
-            }
-
             // Catalog
             var catalog = await _context
                 .Catalogs
@@ -123,7 +117,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return product;
         }
 
-        public async Task<Product?> AddProduct(EditProductRequest request)
+        public async Task<Product?> AddProduct(AddProductRequest request)
         {
             // OS
             var os = await _context

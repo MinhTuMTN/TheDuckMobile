@@ -31,6 +31,20 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             });
         }
 
+        [HttpGet("active")]
+        [AllowAnonymous]
+        /*[Authorize(Roles = "admin")]*/
+        public async Task<IActionResult> GetActiveBrands()
+        {
+            var brands = await _brandServices.GetActiveBrands();
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = brands,
+                Message = "Successfully retrieved active brands"
+            });
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddBrand([FromForm] BrandRequest request)
         {

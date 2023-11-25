@@ -4,6 +4,10 @@ export const getAllCatalogs = () => {
   return get("catalogadmin");
 };
 
+export const getActiveCatalogs = () => {
+  return get("catalogadmin/active");
+};
+
 export const addCatalog = (data) => {
   return post("catalogadmin", data);
 };

@@ -11,6 +11,6 @@ namespace TheDuckMobile_WebAPI.Services.Admin
         public Task<Product?> EditProduct(Guid productId, EditProductRequest request);
         public Task<Product?> DeleteProduct(Guid productId);
         public Task<Product?> RestoreProduct(Guid productId);
-        public Task<Product?> AddProduct(EditProductRequest request);
+        public Task<Product?> AddProduct(AddProductRequest request);
     }
 }

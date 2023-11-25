@@ -2,7 +2,7 @@
 
 namespace TheDuckMobile_WebAPI.Models.Request.Admin
 {
-    public class EditProductRequest
+    public class AddProductRequest
     {
         [Required(ErrorMessage = "Product name is required")]
         public string? ProductName { get; set; }
@@ -16,5 +16,7 @@ namespace TheDuckMobile_WebAPI.Models.Request.Admin
         public int BrandId { get; set; }
         [Required(ErrorMessage = "Catalog is required")]
         public int CatalogId { get; set; }
+
+        public IFormFile? Thumbnail { get; set; }   
     }
 }

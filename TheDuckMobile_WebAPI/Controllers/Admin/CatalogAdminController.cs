@@ -31,6 +31,20 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             });
         }
 
+        [HttpGet("active")]
+        [AllowAnonymous]
+        /*[Authorize(Roles = "admin")]*/
+        public async Task<IActionResult> GetActiveCatalogs()
+        {
+            var catalogs = await _catalogServices.GetActiveCatalogs();
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = catalogs,
+                Message = "Successfully retrieved active catalogs"
+            });
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddCatalog([FromBody] AddCatalogRequest request)
         {

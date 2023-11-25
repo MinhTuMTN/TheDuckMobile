@@ -16,5 +16,6 @@ namespace TheDuckMobile_WebAPI.Services.Admin
         public Task<Catalog?> EditCatalog(int catalogId, AddCatalogRequest request);
         public Task<bool> DeleteCatalog(int catalogId);
         public Task<Catalog?> RestoreCatalog(int catalogId);
+        public Task<List<CatalogListResponse>> GetActiveCatalogs();
     }
 }

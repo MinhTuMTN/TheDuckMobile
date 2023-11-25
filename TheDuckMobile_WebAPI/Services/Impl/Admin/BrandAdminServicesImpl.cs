@@ -48,6 +48,15 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return brands.Select(b => new BrandListResponse(b)).ToList();
         }
 
+        public async Task<List<BrandListResponse>> GetActiveBrands()
+        {
+            var brands = await _context.Brands
+                .Include(b => b.Products)
+                .Where(b => b.IsDeleted == false)
+                .ToListAsync();
+            return brands.Select(b => new BrandListResponse(b)).ToList();
+        }
+
         public async Task<BrandResponse> EditBrand(int brandId, BrandRequest request)
         {
             var brand = await _context.Brands

@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import CircleIcon from "@mui/icons-material/Circle";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useTheme } from "@emotion/react";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import {
   Box,
   Button,
@@ -25,12 +27,7 @@ import FormatDate from "../FormatDate";
 const CustomText = styled(Typography)(({ theme }) => ({
   fontSize: "14px !important",
 }));
-const ButtonInPopover = styled(Button)(({ theme }) => ({
-  color: "#101828",
-  paddingX: 3,
-  paddingY: 1,
-  justifyContent: "flex-start",
-}));
+
 
 function useCustomMediaQuery() {
   const isLargeScreen = useMediaQuery("(min-width: 850px)");
@@ -53,6 +50,9 @@ function Row(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -119,38 +119,57 @@ function Row(props) {
         </TableCell>
         <TableCell align="right">
           <>
-            <IconButton
-              color="black"
-              aria-describedby={id}
-              onClick={handleClick}
-            >
-              <MoreVertIcon color="black" />
-            </IconButton>
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-            >
-              <Stack direction={"column"} paddingX={1}>
-                <ButtonInPopover
-                  variant="text"
-                  size="medium"
-                  onClick={(e) => { }}
+            {isSmallScreen ? (
+              // Hiển thị cho màn hình nhỏ
+              <>
+                <IconButton
+                  color="black"
+                  aria-describedby={id}
+                  onClick={handleClick}
                 >
-                  Chỉnh sửa
-                </ButtonInPopover>
-                <ButtonInPopover
-                  variant="text"
-                  size="medium"
+                  <MoreVertIcon color="black" />
+                </IconButton>
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                >
+                  <Stack direction={"column"}>
+                    <Button
+                      variant="text"
+                      size="medium"
+                      sx={{
+                        paddingX: 2,
+                        paddingY: 1,
+                        textAlign: "left",
+                      }}
+                      onClick={(e) => {
+                        navigate(`/admin/product-management/${row.productId}`, {
+                          state: {
+                            id: row.productId,
+                          },
+                        });
+                      }}
+                    >
+                      Xem
+                    </Button>
+                  </Stack>
+                </Popover>
+              </>
+            ) : (
+              // Hiển thị cho màn hình vừa và lớn
+              <>
+                <IconButton
+                  color="black"
                   onClick={(e) => {
                     navigate(`/admin/product-management/${row.productId}`, {
                       state: {
@@ -159,10 +178,10 @@ function Row(props) {
                     });
                   }}
                 >
-                  Xem
-                </ButtonInPopover>
-              </Stack>
-            </Popover>
+                  <InfoOutlinedIcon color="black" />
+                </IconButton>
+              </>
+            )}
           </>
         </TableCell>
       </TableRow>

@@ -4,6 +4,10 @@ export const getAllBrands = () => {
   return get("brandadmin");
 };
 
+export const getActiveBrands = () => {
+  return get("brandadmin/active");
+};
+
 export const addBrand = (data) => {
   return post(`brandadmin`, data, { "Content-Type": "multipart/form-data" });
 };

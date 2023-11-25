@@ -85,7 +85,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromForm] EditProductRequest request)
+        public async Task<IActionResult> AddProduct([FromForm] AddProductRequest request)
         {
             var product = await _productServices.AddProduct(request);
 
@@ -101,7 +101,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPut("{productId}")]
-        public async Task<IActionResult> EditProduct([FromRoute] Guid productId, [FromForm] EditProductRequest request)
+        public async Task<IActionResult> EditProduct([FromRoute] Guid productId, [FromBody] EditProductRequest request)
         {
             var product = await _productServices.EditProduct(productId, request);
 

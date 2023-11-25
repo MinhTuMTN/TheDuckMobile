@@ -11,5 +11,6 @@ namespace TheDuckMobile_WebAPI.Services.Admin
         public Task<OS> UpdateOS(int id, OSRequest request);
         public Task<OS?> RestoreOS(int osId);
         public Task<bool> DeleteOS(int id);
+        public Task<List<OS>> GetActiveOSs();
     }
 }
