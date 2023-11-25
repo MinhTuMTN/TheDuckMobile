@@ -23,7 +23,13 @@ import {
   styled,
   useMediaQuery,
 } from "@mui/material";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import TablePaginationActions from "../../../components/TablePaginationActions";
 
 import { useTheme } from "@emotion/react";
@@ -46,6 +52,7 @@ import {
   restoreColor,
   updateColor,
 } from "../../../services/Admin/ColorService";
+import ColorButton from "../../../components/ColorButton";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -95,8 +102,9 @@ function ColorListPage() {
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [colorRequest, setColorRequest] = useState({
     colorName: "",
-    colorCode: "",
+    colorCode: "#fff",
   });
+  const inputColor = useRef(null);
   const [error, setError] = useState({
     status: false,
     errorMessage: {
@@ -163,7 +171,7 @@ function ColorListPage() {
           errorMessage: {
             ...prev.errorMessage,
             colorName: "Tên màu không được để trống",
-          }
+          },
         };
       });
     } else {
@@ -173,7 +181,7 @@ function ColorListPage() {
           errorMessage: {
             ...prev.errorMessage,
             colorName: "",
-          }
+          },
         };
       });
     }
@@ -186,7 +194,7 @@ function ColorListPage() {
           errorMessage: {
             ...prev.errorMessage,
             colorCode: "Mã màu không được để trống",
-          }
+          },
         };
       });
     } else {
@@ -196,7 +204,7 @@ function ColorListPage() {
           errorMessage: {
             ...prev.errorMessage,
             colorCode: "",
-          }
+          },
         };
       });
     }
@@ -210,7 +218,7 @@ function ColorListPage() {
       errorMessage: {
         colorName: "",
         colorCode: "",
-      }
+      },
     });
 
     let response;
@@ -270,9 +278,9 @@ function ColorListPage() {
       errorMessage: {
         colorCode: "",
         colorName: "",
-      }
+      },
     });
-  }
+  };
 
   return (
     <Grid
@@ -316,7 +324,7 @@ function ColorListPage() {
                 errorMessage: {
                   colorCode: "",
                   colorName: "",
-                }
+                },
               });
             }}
           >
@@ -405,9 +413,9 @@ function ColorListPage() {
               <TableBody>
                 {(rowsPerPage > 0
                   ? rowsSearched.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
@@ -426,7 +434,38 @@ function ColorListPage() {
                       }}
                       align="center"
                     >
-                      {row.colorCode}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography variant="subtitle2">
+                          {row.colorCode}
+                        </Typography>
+
+                        <Box
+                          sx={{
+                            marginLeft: "0.5rem",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+
+                            borderRadius: "50%",
+                            width: "1rem",
+                            height: "1rem",
+
+                            border: "1px solid #000",
+                          }}
+                        >
+                          <ColorButton
+                            width="1rem"
+                            height="1rem"
+                            color={row.colorCode}
+                          />
+                        </Box>
+                      </Box>
                     </CellBody>
                     <CellBody style={{ width: "30%" }} align="center">
                       {row.isDeleted ? "Khóa" : "Còn hoạt động"}
@@ -467,6 +506,7 @@ function ColorListPage() {
                                 variant="text"
                                 size="medium"
                                 onClick={(e) => {
+                                  console.log("click");
                                   setOpenPopup(true);
                                   setColorId(row.colorId);
                                   setColorRequest({
@@ -479,7 +519,7 @@ function ColorListPage() {
                                     errorMessage: {
                                       colorCode: "",
                                       colorName: "",
-                                    }
+                                    },
                                   });
                                 }}
                                 sx={{
@@ -529,7 +569,7 @@ function ColorListPage() {
                                 errorMessage: {
                                   colorCode: "",
                                   colorName: "",
-                                }
+                                },
                               });
                             }}
                           >
@@ -617,12 +657,24 @@ function ColorListPage() {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <Stack direction={"column"} spacing={1} width={"100%"}>
+          <Stack
+            direction={"row"}
+            spacing={1}
+            width={"100%"}
+            style={{
+              display: "flex",
+              width: "20rem",
+            }}
+          >
             <MuiTextFeild
               label="Tên màu"
               value={colorRequest.colorName}
-              margin="normal"
+              size={"small"}
+              className="custom-text-feild"
               autoFocus
+              style={{
+                flex: 1,
+              }}
               error={error.status && error.errorMessage.colorName?.length !== 0}
               helperText={error.errorMessage.colorName}
               onChange={(e) => {
@@ -634,21 +686,31 @@ function ColorListPage() {
                 });
               }}
             />
-            <MuiTextFeild
-              label="Mã màu"
-              value={colorRequest.colorCode}
-              margin="normal"
-              error={error.status && error.errorMessage.colorCode?.length !== 0}
-              helperText={error.errorMessage.colorCode}
-              onChange={(e) => {
-                setColorRequest((prev) => {
-                  return {
-                    ...prev,
-                    colorCode: e.target.value,
-                  };
-                });
-              }}
-            />
+            <div className="color-container">
+              <label for="colorPicker">
+                <ColorButton
+                  width="2rem"
+                  height="2rem"
+                  color={colorRequest.colorCode}
+                />
+              </label>
+              <input
+                id="colorPicker"
+                style={{ visibility: "none" }}
+                ref={inputColor}
+                className="color-picker"
+                type="color"
+                value={colorRequest.colorCode}
+                onChange={(e) => {
+                  setColorRequest((prev) => {
+                    return {
+                      ...prev,
+                      colorCode: e.target.value,
+                    };
+                  });
+                }}
+              />
+            </div>
           </Stack>
         </DialogContent>
         <DialogActions>

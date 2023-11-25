@@ -28,7 +28,6 @@ const CustomText = styled(Typography)(({ theme }) => ({
   fontSize: "14px !important",
 }));
 
-
 function useCustomMediaQuery() {
   const isLargeScreen = useMediaQuery("(min-width: 850px)");
   const isMediumScreen = useMediaQuery("(min-width: 750px)");
@@ -72,7 +71,11 @@ function Row(props) {
               component="img"
               image={row.thumbnail}
               alt="Hình ảnh sản phẩm"
-              style={{ maxHeight: "5rem", maxWidth: "5rem" }}
+              style={{
+                maxHeight: "5rem",
+                maxWidth: "5rem",
+                objectFit: "contain",
+              }}
             />
             <Stack direction={"column"} spacing={0.5}>
               <CustomText
@@ -104,7 +107,9 @@ function Row(props) {
           </Stack>
         </TableCell>
         <TableCell align="left">
-          <CustomText><FormatDate dateTime={row.createdAt} /></CustomText>
+          <CustomText>
+            <FormatDate dateTime={row.createdAt} />
+          </CustomText>
         </TableCell>
         <TableCell align="right">
           <Stack direction={"row"} spacing={1} alignItems={"center"}>
