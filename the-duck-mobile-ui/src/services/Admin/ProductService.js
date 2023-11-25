@@ -19,3 +19,7 @@ export const restoreProduct = (productId) => {
 export const updateProduct = (productId, data) => {
   return put(`productadmin/${productId}`, data);
 }
+
+export const GetFilteredProducts = (params) => {
+  return get("productadmin/filtered", params);
+};

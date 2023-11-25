@@ -3,7 +3,7 @@ import { Box, InputAdornment, TextField, Button } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import PropTypes from "prop-types";
 
-SearchSeller.prototype = {
+SearchProductList.prototype = {
   borderRadius: PropTypes.number,
   borderTopLeftRadius: PropTypes.number,
   borderTopRightRadius: PropTypes.number,
@@ -11,11 +11,11 @@ SearchSeller.prototype = {
   borderBottomRightRadius: PropTypes.number,
 };
 
-SearchSeller.defaultProps = {
-  onApply: () => {},
+SearchProductList.defaultProps = {
+  onApply: () => { },
 };
 
-function SearchSeller(props) {
+function SearchProductList(props) {
   const {
     borderRadius,
     borderTopLeftRadius,
@@ -63,4 +63,4 @@ function SearchSeller(props) {
   );
 }
 
-export default SearchSeller;
+export default SearchProductList;

@@ -223,7 +223,7 @@ function ProductsTableBasic(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.slice(0, rowsPerPage).map((row, index) => (
+              {items?.slice(0, rowsPerPage).map((row, index) => (
                 <Row key={index} row={row} />
               ))}
             </TableBody>
@@ -235,9 +235,9 @@ function ProductsTableBasic(props) {
         count={count}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
+        page={page - 1}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[1, 5, 10, 25]}
       />
     </>
   );

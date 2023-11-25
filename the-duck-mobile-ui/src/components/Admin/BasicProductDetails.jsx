@@ -74,7 +74,6 @@ function BasicProductDetails(props) {
     }
   };
 
-
   const handleUpdateButtonClick = async () => {
     let response;
     if (statusProduct) {

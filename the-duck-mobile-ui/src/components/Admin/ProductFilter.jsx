@@ -7,19 +7,19 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import PropTypes from "prop-types";
 
-BasicPopover.propTypes = {
+ProductFilter.propTypes = {
   options: PropTypes.array,
   label: PropTypes.string,
-  value: PropTypes.array,
+  selectedValues: PropTypes.array,
   onChange: PropTypes.func,
 };
 
-BasicPopover.defaultProps = {
-  value: [],
+ProductFilter.defaultProps = {
+  selectedValues: [],
   onChange: () => { },
 };
 
-export default function BasicPopover(props) {
+export default function ProductFilter(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -67,14 +67,14 @@ export default function BasicPopover(props) {
         <FormGroup sx={{ padding: 1 }}>
           {props?.options?.map((option, index) => (
             <FormControlLabel
-              key={`option-${index}-${option.value}`}
+              key={index}
               sx={{ padding: 0.75 }} // Đặt padding cho mỗi option
               control={
                 <Checkbox
                   icon={icon}
-                  checked={props.value.includes(option.value)}
+                  checked={props.selectedValues.includes(typeof option.value !== "undefined" ? option.value : option.catalogId)}
                   checkedIcon={checkedIcon}
-                  name={option.name}
+                  name={option.name ? option.name : option.catalogName}
                   sx={{
                     color: "#D80032",
                     "&.Mui-checked": {
@@ -82,10 +82,10 @@ export default function BasicPopover(props) {
                     },
                   }}
                   onChange={props.onChange}
-                  value={option.value}
+                  value={typeof option.value !== "undefined" ? option.value : option.catalogId}
                 />
               }
-              label={option.name}
+              label={option.name ? option.name : option.catalogName}
             />
           ))}
         </FormGroup>

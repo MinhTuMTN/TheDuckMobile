@@ -115,5 +115,34 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Data = product
             });
         }
+
+        [HttpGet("filtered")]
+        /*[Authorize(Roles = "Admin")]*/
+        public async Task<IActionResult> GetFilteredProducts(
+            [FromQuery] string? search = "",
+            [FromQuery] int page = 0,
+            [FromQuery] int limit = 1,
+            [FromQuery] List<int>? catalogIds = null,
+            [FromQuery] List<bool>? productStatus = null,
+            [FromQuery] List<int>? productQuantity = null
+        )
+        {
+            var result = await _productServices
+                .GetFilteredProducts(
+                    search,
+                    page,
+                    limit,
+                    catalogIds,
+                    productStatus,
+                    productQuantity
+                );
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = result
+            });
+        }
     }
 }
