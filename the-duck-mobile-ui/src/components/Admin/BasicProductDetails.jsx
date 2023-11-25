@@ -18,7 +18,11 @@ import React, { useEffect, useState } from "react";
 import ListProductVersion from "./ListProductVersion";
 import BasicProductInDetailsPage from "./BasicProductInDetailsPage";
 import DialogConfirm from "../DialogConfirm";
-import { deleteProduct, restoreProduct, updateProductThumbnail } from "../../services/Admin/ProductService";
+import {
+  deleteProduct,
+  restoreProduct,
+  updateProductThumbnail,
+} from "../../services/Admin/ProductService";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 
@@ -56,7 +60,7 @@ function BasicProductDetails(props) {
   let status = product.isDeleted;
   const isFullWidth = useMediaQuery(theme.breakpoints.up("md"));
   const spacingValue = isFullWidth ? 2 : 0;
-  const [statusProduct, setStatusProduct] = useState(false)
+  const [statusProduct, setStatusProduct] = useState(false);
   const [editStatus, setEditStatus] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
   const [deleteDialog, setDeleteDialog] = useState(false);
@@ -73,22 +77,20 @@ function BasicProductDetails(props) {
     setEditStatus(event.target.value);
     if (statusProduct !== event.target.value) {
       setDisabledButton(false);
-    }
-    else {
+    } else {
       setDisabledButton(true);
     }
   };
 
   useEffect(() => {
-    if (!imageSelected)
-      return;
+    if (!imageSelected) return;
     const url = URL.createObjectURL(imageSelected);
     setImage(url);
     return () => URL.revokeObjectURL(url);
   }, [imageSelected]);
 
   const handleImageChange = (event) => {
-    setImageSelected(event.target.files[0])
+    setImageSelected(event.target.files[0]);
   };
   const handleUpdateButtonClick = async () => {
     let response;
@@ -177,7 +179,7 @@ function BasicProductDetails(props) {
               <input
                 type="file"
                 ref={fileInputRef}
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
                 onChange={handleImageChange}
               />
             </Stack>
@@ -308,6 +310,9 @@ function BasicProductDetails(props) {
                     color: "#4d4f53",
                     fontWeight: "600 !important",
                     fontSize: "14px !important",
+                  }}
+                  onClick={() => {
+                    navigate("/admin/product-management/add-product-version");
                   }}
                 >
                   Thêm
