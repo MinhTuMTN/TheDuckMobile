@@ -70,7 +70,8 @@ function BrandListPage(props) {
     setPage(newPage);
   };
   const handleRowsPerPageChange = (event) => {
-    setRowsPerPage(event.target.value);
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const handleAddBrand = async () => {
@@ -178,6 +179,12 @@ function BrandListPage(props) {
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
               rowsPerPage={rowsPerPage}
+              rowsPerPageOptions={[
+                5,
+                10,
+                25,
+                { label: "All", value: -1 },
+              ]}
               error={error}
               setError={setError}
             />

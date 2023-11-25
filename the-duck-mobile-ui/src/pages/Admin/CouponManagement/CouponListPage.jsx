@@ -472,7 +472,7 @@ function CouponListPage() {
                   >
                     Giảm giá
                   </CellHead>
-                  <CellHead align="right">Đã dùng</CellHead>
+                  <CellHead align="right">Còn lại</CellHead>
                   <CellHead
                     align="right"
                     sx={{
@@ -516,7 +516,7 @@ function CouponListPage() {
                     </CellBody>
 
                     <CellBody style={{ minWidth: 50 }} align="right">
-                      {row.currentUse == null ? 0 : row.currentUse}
+                      {row.remain == null ? 0 : row.remain}
                     </CellBody>
                     <CellBody style={{ minWidth: 50 }} align="right">
                       <FormatDate dateTime={row.startDate} />

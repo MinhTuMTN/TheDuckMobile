@@ -25,6 +25,7 @@ import MuiTextField from "../MuiTextFeild";
 import { enqueueSnackbar } from "notistack";
 import { updateBrand } from "../../services/Admin/BrandService";
 import { useNavigate } from "react-router-dom";
+import TablePaginationActions from "../TablePaginationActions";
 
 const ButtonCustom = styled(Button)`
   border-radius: 0.7rem;
@@ -316,7 +317,7 @@ function Row(props) {
 }
 
 function BrandsTable(props) {
-  const { count, onPageChange, onRowsPerPageChange, page, rowsPerPage, items, error, setError } =
+  const { count, onPageChange, onRowsPerPageChange, page, rowsPerPage, items, error, setError, rowsPerPageOptions } =
     props;
 
   return (
@@ -337,7 +338,13 @@ function BrandsTable(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.slice(0, rowsPerPage).map((row, index) => (
+              {(rowsPerPage > 0
+                ? items.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+                : items
+              ).map((row, index) => (
                 <Row key={index} row={row} error={error} setError={setError} />
               ))}
             </TableBody>
@@ -351,7 +358,8 @@ function BrandsTable(props) {
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={rowsPerPageOptions}
+        ActionsComponent={TablePaginationActions}
       />
     </>
   );
@@ -365,6 +373,7 @@ BrandsTable.propTypes = {
   page: PropTypes.number,
   rowsPerPage: PropTypes.number,
   selected: PropTypes.array,
+  rowsPerPageOptions: PropTypes.array,
 };
 
 export default BrandsTable;
