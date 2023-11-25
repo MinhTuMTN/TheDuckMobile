@@ -132,6 +132,25 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             catalog.IsDeleted = true;
             catalog.LastModifiedAt = DateTime.Now;
 
+            var catalogAttributes = catalog.CatalogAttributes;
+            if(catalogAttributes != null)
+            {
+                foreach (var attribute in catalogAttributes)
+                {
+                    attribute.IsDeleted = true;
+                }
+            }
+
+            var products = catalog.Products;
+            if (products != null)
+            {
+                foreach (var product in products)
+                {
+                    product.IsDeleted = true;
+                    product.LastModifiedAt = DateTime.Now;
+                }
+            }
+
             await _context.SaveChangesAsync();
             return catalog.IsDeleted;
         }
@@ -147,6 +166,26 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
             catalog.IsDeleted = false;
             catalog.LastModifiedAt = DateTime.Now;
+
+            var catalogAttributes = catalog.CatalogAttributes;
+            if (catalogAttributes != null)
+            {
+                foreach (var attribute in catalogAttributes)
+                {
+                    attribute.IsDeleted = false;
+                }
+            }
+
+            var products = catalog.Products;
+            if (products != null)
+            {
+                foreach (var product in products)
+                {
+                    product.IsDeleted = false;
+                    product.LastModifiedAt = DateTime.Now;
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return catalog;
@@ -157,16 +196,15 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             // 1: Find Special Feature in Catalog and 2: Find Special Feature not in Catalog
             var catalog = await _context.Catalogs
                 .Include(c => c.SpecialFeatures)
-                .FirstOrDefaultAsync(c => c.CatalogId == catalogId && c.IsDeleted == false);
+                .FirstOrDefaultAsync(c => c.CatalogId == catalogId);
 
             if (catalog == null)
                 throw new CustomNotFoundException("Can't found catalog");
 
             var specialFeatures = await _context.SpecialFeatures
-                .Where(sf => sf.IsDeleted == false)
                 .ToListAsync();
 
-            var availableSpecialFeatures = catalog.SpecialFeatures!.Where(s => s.IsDeleted == false).ToList();
+            var availableSpecialFeatures = catalog.SpecialFeatures!.ToList();
             var notAvailableSpecialFeatures = specialFeatures.Except(availableSpecialFeatures).ToList();
 
             return new CatalogSpecialFeaturesResponse
@@ -188,13 +226,13 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         {
             var catalog = await _context.Catalogs
                 .Include(c => c.SpecialFeatures)
-                .FirstOrDefaultAsync(c => c.CatalogId == catalogId && c.IsDeleted == false);
+                .FirstOrDefaultAsync(c => c.CatalogId == catalogId);
 
             if (catalog == null)
                 throw new CustomNotFoundException("Can't found catalog");
 
             var specialFeature = await _context.SpecialFeatures
-                .FirstOrDefaultAsync(sf => sf.SpecialFeatureId == specialFeatureId && sf.IsDeleted == false);
+                .FirstOrDefaultAsync(sf => sf.SpecialFeatureId == specialFeatureId);
 
             if (specialFeature == null || !catalog.SpecialFeatures!.Contains(specialFeature))
                 throw new CustomNotFoundException("Can't found special feature");

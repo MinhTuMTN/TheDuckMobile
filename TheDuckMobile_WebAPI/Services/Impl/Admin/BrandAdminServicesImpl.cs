@@ -76,8 +76,29 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 brand.BrandName = request.BrandName;
 
             brand.IsDeleted = request.IsDeleted;
-
             brand.LastModifiedAt = DateTime.Now;
+
+            var products = brand.Products;
+
+            if (products != null && products.Count > 0)
+            {
+                if (brand.IsDeleted)
+                {
+                    foreach (var product in products)
+                    {
+                        product.IsDeleted = true;
+                        product.LastModifiedAt = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    foreach (var product in products)
+                    {
+                        product.IsDeleted = false;
+                        product.LastModifiedAt = DateTime.Now;
+                    }
+                }
+            }
 
             await _context.SaveChangesAsync();
 
@@ -94,6 +115,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 throw new CustomNotFoundException("Brand can't be found");
 
             brand.IsDeleted = true;
+            brand.LastModifiedAt = DateTime.Now;
 
             await _context.SaveChangesAsync();
             return true;

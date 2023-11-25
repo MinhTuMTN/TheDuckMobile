@@ -92,6 +92,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         {
             var product = await _context
                 .Products
+                .Include(p => p.ProductVersions)
                 .FirstOrDefaultAsync(p => p.ProductId == productId);
 
             if (product == null)
@@ -99,6 +100,16 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
             product.IsDeleted = true;
             product.LastModifiedAt = DateTime.Now;
+
+            var productVersions = product.ProductVersions;
+            if (productVersions != null)
+            {
+                foreach (var productVersion in productVersions)
+                {
+                    productVersion.IsDeleted = true;
+                    productVersion.LastModifiredAt = DateTime.Now;
+                }
+            }
             await _context.SaveChangesAsync();
 
             return product;
@@ -106,13 +117,27 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
         public async Task<Product?> RestoreProduct(Guid productId)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == productId);
+            var product = await _context
+                .Products
+                .Include(p => p.ProductVersions)
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
 
             if (product == null)
                 return null;
 
             product.IsDeleted = false;
             product.LastModifiedAt = DateTime.Now;
+
+            var productVersions = product.ProductVersions;
+            if (productVersions != null)
+            {
+                foreach (var productVersion in productVersions)
+                {
+                    productVersion.IsDeleted = false;
+                    productVersion.LastModifiredAt = DateTime.Now;
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return product;

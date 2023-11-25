@@ -146,7 +146,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPut("thumbnail/{productId}")]
-        public async Task<IActionResult> EditBrand([FromRoute] Guid productId, [FromForm] ProductThumbnailRequest request)
+        public async Task<IActionResult> EditProductThumbnail([FromRoute] Guid productId, [FromForm] ProductThumbnailRequest request)
         {
             var result = await _productServices.EditProductThumbnail(productId, request);
             return Ok(new GenericResponse

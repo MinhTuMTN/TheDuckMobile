@@ -38,6 +38,16 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             os.IsDeleted = true;
             os.LastModifiedAt = DateTime.Now;
 
+            var products = os.Products;
+            if (products != null)
+            {
+                foreach (var product in products)
+                {
+                    product.IsDeleted = true;
+                    product.LastModifiedAt = DateTime.Now;
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return os.IsDeleted;
@@ -49,6 +59,17 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
             os.IsDeleted = false;
             os.LastModifiedAt = DateTime.Now;
+
+            var products = os.Products;
+            if (products != null)
+            {
+                foreach (var product in products)
+                {
+                    product.IsDeleted = false;
+                    product.LastModifiedAt = DateTime.Now;
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return os;
@@ -73,7 +94,10 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
         public async Task<OS> GetOSById(int id)
         {
-            var os = await _context.OSs.FirstOrDefaultAsync(o => o.OSId == id);
+            var os = await _context
+                .OSs
+                .Include(o => o.Products)
+                .FirstOrDefaultAsync(o => o.OSId == id);
 
             if (os == null)
                 throw new CustomNotFoundException("Can't found OS");
