@@ -144,14 +144,17 @@ function ColorListPage() {
     setPage(0);
   };
 
+  const [anchorId, setAnchorId] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openPopup, setOpenPopup] = React.useState(false);
 
-  const handleClick = (event) => {
+  const openPopover = id => (event) => {
+    setAnchorId(id);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
+    setAnchorId(null);
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
@@ -413,9 +416,9 @@ function ColorListPage() {
               <TableBody>
                 {(rowsPerPage > 0
                   ? rowsSearched.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
@@ -483,13 +486,13 @@ function ColorListPage() {
                           <IconButton
                             color="black"
                             aria-describedby={id}
-                            onClick={handleClick}
+                            onClick={openPopover(row.colorId)}
                           >
                             <MoreVertIcon color="black" />
                           </IconButton>
                           <Popover
                             id={id}
-                            open={open}
+                            open={anchorId === row.colorId}
                             anchorEl={anchorEl}
                             onClose={handleClose}
                             anchorOrigin={{
@@ -506,7 +509,6 @@ function ColorListPage() {
                                 variant="text"
                                 size="medium"
                                 onClick={(e) => {
-                                  console.log("click");
                                   setOpenPopup(true);
                                   setColorId(row.colorId);
                                   setColorRequest({

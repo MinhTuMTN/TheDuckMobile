@@ -54,6 +54,7 @@ function OrderListPage() {
   const [rowsSearched, setRowsSearched] = useState([]);
   const [searchString, setSearchString] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorId, setAnchorId] = useState(null);
 
   const statusOptions = {
     0: {
@@ -85,11 +86,13 @@ function OrderListPage() {
   const isFullScreen = useMediaQuery(theme.breakpoints.up("lg"));
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Điều này sẽ kiểm tra nếu màn hình lớn hơn hoặc bằng lg breakpoint
 
-  const handleClick = (event) => {
+  const openPopover = id => (event) => {
+    setAnchorId(id);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
+    setAnchorId(null);
     setAnchorEl(null);
   };
 
@@ -313,13 +316,13 @@ function OrderListPage() {
                           <IconButton
                             color="black"
                             aria-describedby={id}
-                            onClick={handleClick}
+                            onClick={openPopover(row.orderId)}
                           >
                             <MoreVertIcon color="black" />
                           </IconButton>
                           <Popover
                             id={id}
-                            open={open}
+                            open={anchorId === row.orderId}
                             anchorEl={anchorEl}
                             onClose={handleClose}
                             anchorOrigin={{

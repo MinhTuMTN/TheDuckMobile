@@ -91,6 +91,7 @@ function CouponListPage() {
   const [rowsSearched, setRowsSearched] = useState([]);
   const [searchString, setSearchString] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorId, setAnchorId] = useState(null);
   const [openPopup, setOpenPopup] = useState(false);
   const [addNew, setAddNew] = useState(true);
   const [existDialog, setExistDialog] = useState(false);
@@ -150,11 +151,13 @@ function CouponListPage() {
     setPage(0);
   };
 
-  const handleClick = (event) => {
+  const openPopover = id => (event) => {
+    setAnchorId(id);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
+    setAnchorId(null);
     setAnchorEl(null);
   };
 
@@ -540,13 +543,13 @@ function CouponListPage() {
                           <IconButton
                             color="black"
                             aria-describedby={id}
-                            onClick={handleClick}
+                            onClick={openPopover(row.couponId)}
                           >
                             <MoreVertIcon color="black" />
                           </IconButton>
                           <Popover
                             id={id}
-                            open={open}
+                            open={anchorId === row.couponId}
                             anchorEl={anchorEl}
                             onClose={handleClose}
                             anchorOrigin={{
