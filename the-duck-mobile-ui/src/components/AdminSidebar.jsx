@@ -302,7 +302,9 @@ function AdminSidebar(props) {
             {sidebarItems.map((item, index) => (
               <ListItem disablePadding key={item.section}>
                 <CustomLink to={item.to} width={"100%"}>
-                  <CustomListItemButton active={activeSection === item.section}>
+                  <CustomListItemButton
+                    active={activeSection === item.section ? "true" : "false"}
+                  >
                     <CustomListItemIcon>{item.icon}</CustomListItemIcon>
                     <ListItemText
                       disableTypography

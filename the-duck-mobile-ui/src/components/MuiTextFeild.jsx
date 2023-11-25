@@ -30,6 +30,7 @@ MuiTextFeild.propTypes = {
   children: PropTypes.node,
   fullWidth: PropTypes.bool,
   helperText: PropTypes.string,
+  required: PropTypes.bool,
 };
 
 MuiTextFeild.defaultProps = {
@@ -59,6 +60,7 @@ function MuiTextFeild(props) {
     <CustomTextField
       autoComplete="off"
       variant="outlined"
+      required={props.required}
       error={error}
       helperText={helperText}
       label={label}

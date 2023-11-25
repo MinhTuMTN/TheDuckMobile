@@ -23,3 +23,17 @@ export const deleteCatalog = (catalogId) => {
 export const restoreCatalog = (catalogId) => {
   return get(`catalogadmin/restore/${catalogId}`);
 };
+
+export const getCatalogSpecialFeatures = (catalogId) => {
+  return get(`catalogadmin/${catalogId}/special-features`);
+};
+
+export const addCatalogSpecialFeatures = (catalogId, specialFeatureId) => {
+  return post(`catalogadmin/${catalogId}/special-features`, {
+    specialFeatureId,
+  });
+};
+
+export const deleteCatalogSpecialFeatures = (catalogId, specialFeatureId) => {
+  return del(`catalogadmin/${catalogId}/special-features/${specialFeatureId}`);
+};
