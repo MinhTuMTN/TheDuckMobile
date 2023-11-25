@@ -22,6 +22,7 @@ import MuiTextFeild from "../../../components/MuiTextFeild";
 import { useReponsive } from "../../../hooks/useReponsive";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearIcon from "@mui/icons-material/Clear";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
 const CustomTypography = styled(Typography)(({ theme }) => ({
   fontSize: "14px !important",
@@ -282,11 +283,11 @@ function AddProductVersionPage() {
               paddingY: "0.5rem !important",
             }}
           >
-            <Grid item xs={6}>
+            <Grid item xs={7} sm={6}>
               <Typography
                 variant="body1"
                 style={{
-                  fontSize: ["16px !im", "20px"],
+                  fontSize: ["16px !important", "20px !important"],
                   fontWeight: "600",
                   borderRadius: "25px 25px 0 0 ",
                 }}
@@ -296,7 +297,8 @@ function AddProductVersionPage() {
             </Grid>
             <Grid
               item
-              xs={6}
+              xs={5}
+              sm={6}
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
@@ -339,43 +341,69 @@ function AddProductVersionPage() {
               paddingX: "0.5rem !important",
               paddingY: "1rem !important",
               width: "100%",
+              alignItems: "center",
             }}
           >
-            <List component={Grid} container>
-              {imageURL.map((url, index) => (
-                <Grid item xs={6} sm={4} md={3} key={index}>
-                  <ListItem>
-                    <CardMedia
-                      component="img"
-                      height="200px"
-                      style={{
-                        objectFit: "contain",
-                      }}
-                      image={url}
-                      alt={`Hình ảnh sản phẩm ${index}`}
-                    />
-                    <IconButton
-                      size="small"
-                      style={{
-                        position: "absolute",
+            {imageURL.length === 0 ? (
+              <Stack
+                direction={"row"}
+                spacing={1}
+                sx={{
+                  width: "100%",
+                  paddingX: "1rem !important",
+                  paddingY: ["1rem !important", "2rem !important"],
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontSize: "20px !important",
+                  }}
+                >
+                  Chọn hình ảnh cho sản phẩm
+                </Typography>
+                <AddPhotoAlternateIcon />
+              </Stack>
+            ) : (
+              <List component={Grid} container>
+                {imageURL.map((url, index) => (
+                  <Grid item xs={6} sm={4} md={3} key={index}>
+                    <ListItem>
+                      <CardMedia
+                        component="img"
+                        height="200px"
+                        style={{
+                          objectFit: "contain",
+                        }}
+                        image={url}
+                        alt={`Hình ảnh sản phẩm ${index}`}
+                      />
+                      <IconButton
+                        size="small"
+                        style={{
+                          position: "absolute",
 
-                        top: 0,
-                        right: 0,
-                        background: "white",
-                      }}
-                      onClick={() => {
-                        const newImages = images.filter(
-                          (image, i) => i !== index
-                        );
-                        setImages(newImages);
-                      }}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </ListItem>
-                </Grid>
-              ))}
-            </List>
+                          top: 0,
+                          right: 0,
+                          background: "white",
+                        }}
+                        onClick={() => {
+                          const newImages = images.filter(
+                            (image, i) => i !== index
+                          );
+                          setImages(newImages);
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </ListItem>
+                  </Grid>
+                ))}
+              </List>
+            )}
           </Grid>
         </Stack>
       </Grid>
