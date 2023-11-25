@@ -14,6 +14,7 @@ import SearchSeller from "../../../components/Store/SearchSeller";
 import Filter from "../../../components/Store/Filter";
 import ProductsTableBasis from "../../../components/Admin/ProductsTableBasic";
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
 
 const CustomButton = styled(Button)(({ theme }) => ({
   color: "#fff",
@@ -132,6 +133,8 @@ function ProductListPage(props) {
       );
     }
   };
+
+  const navigate = useNavigate();
   return (
     <Box component={"main"} sx={{ flexGrow: 1, py: 4 }}>
       <Container maxWidth={"lg"}>
@@ -146,7 +149,13 @@ function ProductListPage(props) {
             >
               Danh sách sản phẩm
             </Typography>
-            <CustomButton variant="contained" startIcon={<AddOutlinedIcon />}>
+            <CustomButton
+              variant="contained"
+              startIcon={<AddOutlinedIcon />}
+              onClick={() => {
+                navigate("/admin/product-management/add");
+              }}
+            >
               Thêm
             </CustomButton>
           </Stack>

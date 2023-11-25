@@ -17,6 +17,7 @@ import {
 import React from "react";
 import ListProductVersion from "./ListProductVersion";
 import BasicProductInDetailsPage from "./BasicProductInDetailsPage";
+import { useNavigate } from "react-router-dom";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   paddingLeft: "24px !important",
@@ -56,6 +57,7 @@ function BasicProductDetails(props) {
   const isFullWidth = useMediaQuery(theme.breakpoints.up("md"));
   const spacingValue = isFullWidth ? 2 : 0;
 
+  const navigate = useNavigate();
   return (
     <Grid container spacing={spacingValue}>
       <Grid item xs={12} md={3.5}>
@@ -204,6 +206,9 @@ function BasicProductDetails(props) {
                     color: "#4d4f53",
                     fontWeight: "600 !important",
                     fontSize: "14px !important",
+                  }}
+                  onClick={() => {
+                    navigate("/admin/product-management/add-product-version");
                   }}
                 >
                   Thêm
