@@ -14,6 +14,7 @@ import TopNavbar from "../components/Store/TopNavbar";
 import {
   getAllDistricts,
   getAllProvinces,
+  getAllWards,
 } from "../services/Admin/AddressService";
 import { getAllBrands } from "../services/Admin/BrandService";
 import { getAllCatalogs } from "../services/Admin/CatalogService";
@@ -67,6 +68,9 @@ function AdminLayout(props) {
         break;
       case "/admin/address-management/province/detail":
         response = await getAllDistricts(searchParams.get("provinceId"));
+        break;
+      case "/admin/address-management/province/district/detail":
+        response = await getAllWards(searchParams.get("districtId"));
         break;
       case "/admin/catalog-management":
         response = await getAllCatalogs();
