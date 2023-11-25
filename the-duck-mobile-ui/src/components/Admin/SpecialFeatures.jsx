@@ -89,7 +89,7 @@ function SpecialFeatures(props) {
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             size="small"
-            value={selectedSpecialFeature}
+            value={selectedSpecialFeature === -1 ? "" : selectedSpecialFeature}
             onChange={(e) => setSelectedSpecialFeature(e.target.value)}
             sx={{
               borderRadius: "10px !important",

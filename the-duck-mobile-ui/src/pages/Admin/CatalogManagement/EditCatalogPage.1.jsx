@@ -102,7 +102,7 @@ export function EditCatalogPage(props) {
       </FormEditCatalog>
 
       <SpecialFeatures catalogId={editCatalog?.catalogId} />
-      <CatalogAttributes />
+      <CatalogAttributes catalogId={editCatalog?.catalogId} />
     </RootPageEditCatalog>
   );
 }
