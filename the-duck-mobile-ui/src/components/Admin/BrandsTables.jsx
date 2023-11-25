@@ -47,7 +47,7 @@ function Row(props) {
   };
 
   useEffect(() => {
-    if (imageSelected === null)
+    if (!imageSelected)
       return;
     const url = URL.createObjectURL(imageSelected);
     setUrlImage(url);

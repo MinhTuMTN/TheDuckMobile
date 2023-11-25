@@ -18,8 +18,9 @@ import React, { useEffect, useState } from "react";
 import ListProductVersion from "./ListProductVersion";
 import BasicProductInDetailsPage from "./BasicProductInDetailsPage";
 import DialogConfirm from "../DialogConfirm";
-import { deleteProduct, restoreProduct } from "../../services/Admin/ProductService";
+import { deleteProduct, restoreProduct, updateProductThumbnail } from "../../services/Admin/ProductService";
 import { enqueueSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   paddingLeft: "24px !important",
@@ -49,6 +50,7 @@ const paperStyle = {
 };
 
 function BasicProductDetails(props) {
+  const navigate = useNavigate();
   const theme = useTheme();
   const { product } = props;
   let status = product.isDeleted;
@@ -58,11 +60,14 @@ function BasicProductDetails(props) {
   const [editStatus, setEditStatus] = useState(false);
   const [disabledButton, setDisabledButton] = useState(true);
   const [deleteDialog, setDeleteDialog] = useState(false);
+  const [imageSelected, setImageSelected] = useState(null);
+  const [image, setImage] = useState("");
 
   useEffect(() => {
     setEditStatus(status);
     setStatusProduct(status);
-  }, [status]);
+    setImage(product.thumbnail);
+  }, [status, product.thumbnail]);
 
   const handleStatusChange = (event) => {
     setEditStatus(event.target.value);
@@ -74,6 +79,17 @@ function BasicProductDetails(props) {
     }
   };
 
+  useEffect(() => {
+    if (!imageSelected)
+      return;
+    const url = URL.createObjectURL(imageSelected);
+    setImage(url);
+    return () => URL.revokeObjectURL(url);
+  }, [imageSelected]);
+
+  const handleImageChange = (event) => {
+    setImageSelected(event.target.files[0])
+  };
   const handleUpdateButtonClick = async () => {
     let response;
     if (statusProduct) {
@@ -95,6 +111,27 @@ function BasicProductDetails(props) {
         enqueueSnackbar("Khóa sản phẩm thất bại!", { variant: "error" });
       }
     }
+  };
+
+  const handleImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const fileInputRef = React.createRef();
+
+  const handleEditThumbnail = async () => {
+    const formData = new FormData();
+    formData.append("thumbnail", imageSelected);
+
+    enqueueSnackbar("Đang cập nhật thông tin...", { variant: "info" });
+    const response = await updateProductThumbnail(product.productId, formData);
+
+    if (response.success) {
+      enqueueSnackbar("Chỉnh sửa hình ảnh thành công", { variant: "success" });
+      navigate(0);
+    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
   };
 
   return (
@@ -121,6 +158,7 @@ function BasicProductDetails(props) {
                   fontWeight: "600 !important",
                   fontSize: "14px !important",
                 }}
+                onClick={handleEditThumbnail}
               >
                 Chỉnh sửa
               </Button>
@@ -129,10 +167,18 @@ function BasicProductDetails(props) {
           <BoxStyle2>
             <Stack direction={"row"} spacing={1} alignItems={"center"}>
               <CardMedia
-                component="img"
                 height="fit-content"
-                image={product.thumbnail}
+                component="img"
+                image={image}
                 alt="product-thumbnail"
+                style={{ cursor: "pointer" }}
+                onClick={handleImageClick}
+              />
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
               />
             </Stack>
           </BoxStyle2>

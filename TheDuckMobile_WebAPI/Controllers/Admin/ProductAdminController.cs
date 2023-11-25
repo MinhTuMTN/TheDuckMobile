@@ -144,5 +144,17 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Data = result
             });
         }
+
+        [HttpPut("thumbnail/{productId}")]
+        public async Task<IActionResult> EditBrand([FromRoute] Guid productId, [FromForm] ProductThumbnailRequest request)
+        {
+            var result = await _productServices.EditProductThumbnail(productId, request);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = result,
+                Message = "Successfully edited product thumbnail"
+            });
+        }
     }
 }

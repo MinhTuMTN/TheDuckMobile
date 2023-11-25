@@ -23,3 +23,7 @@ export const updateProduct = (productId, data) => {
 export const GetFilteredProducts = (params) => {
   return get("productadmin/filtered", params);
 };
+
+export const updateProductThumbnail = (productId, data) => {
+  return put(`productadmin/thumbnail/${productId}`, data, { "Content-Type": "multipart/form-data" });
+};

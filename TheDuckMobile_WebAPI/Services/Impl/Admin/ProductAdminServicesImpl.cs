@@ -239,5 +239,27 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 TotalObjects = total
             };
         }
+
+        public async Task<ProductThumbnailResponse> EditProductThumbnail(Guid productId, ProductThumbnailRequest request)
+        {
+            var product = await _context.Products
+                .Where(p => p.ProductId == productId)
+                .FirstOrDefaultAsync();
+
+            if (product == null)
+                throw new CustomNotFoundException("Product can't be found");
+
+            if (request.Thumbnail != null)
+            {
+                var uploadImageURL = _cloudinaryServices.UploadImage(request.Thumbnail);
+                product.Thumbnail = uploadImageURL.Result;
+            }
+
+            product.LastModifiedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return new ProductThumbnailResponse(product);
+        }
     }
 }

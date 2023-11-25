@@ -21,5 +21,6 @@ namespace TheDuckMobile_WebAPI.Services.Admin
             List<bool>? productStatus,
             List<int>? productQuantity
         );
+        public Task<ProductThumbnailResponse> EditProductThumbnail(Guid productId, ProductThumbnailRequest request);
     }
 }
