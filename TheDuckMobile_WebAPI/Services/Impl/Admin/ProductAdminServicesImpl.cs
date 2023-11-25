@@ -86,7 +86,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
             product.ProductName = request.ProductName;
             product.ProductDescription = request.ProductDescription;
-            product.Quantity = request.Quantity;
             product.OS = os;
             product.Catalog = catalog;
             product.Brand = brand;
@@ -158,7 +157,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             var catalog = await _context
                 .Catalogs
                 .FirstOrDefaultAsync(
-                    c => c.CatalogId == request.CatalogId 
+                    c => c.CatalogId == request.CatalogId
                     && c.IsDeleted == false
             );
             if (catalog == null)
@@ -168,7 +167,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             {
                 ProductName = request.ProductName,
                 ProductDescription = request.ProductDescription,
-                Quantity = request.Quantity,
                 OS = os,
                 Brand = brand,
                 Catalog = catalog,

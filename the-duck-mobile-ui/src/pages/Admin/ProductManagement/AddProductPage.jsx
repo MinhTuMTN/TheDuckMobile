@@ -11,13 +11,21 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
+import styled from "@emotion/styled";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import pic from "../../../assets/upload.png";
+import CustomTextarea from "../../../components/CustomTextarea";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { useReponsive } from "../../../hooks/useReponsive";
-import styled from "@emotion/styled";
+import { getAllOSs } from "../../../services/Admin/OSService";
+import { getAllBrands } from "../../../services/Admin/BrandService";
+import { getAllCatalogs } from "../../../services/Admin/CatalogService";
+import { useSnackbar } from "notistack";
+import { createProduct } from "../../../services/Admin/ProductService";
 
 const CustomTypography = styled(Typography)(({ theme }) => ({
   fontSize: "14px !important",
@@ -34,27 +42,101 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 function AddProductPage() {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const [file, setFile] = React.useState(null); // file to be uploaded
+  const [imageURL, setImageURL] = React.useState(null);
+  const inputFile = useRef(null);
+  const [brand, setBrand] = React.useState([]);
+  const [catalog, setCatalog] = React.useState([]);
+  const [OS, setOS] = React.useState([]);
 
-  const [brand, setBrand] = React.useState("");
-  const [catalog, setCatalog] = React.useState("");
-  const [OS, setOS] = React.useState("");
+  const [info, setInfo] = useState({
+    productName: "",
+    productDescription: "",
+    brandId: -1,
+    catalogId: -1,
+    osId: -1,
+  });
 
-  const handleChangeBrand = (event) => {
-    setBrand(event.target.value);
-  };
+  const handleGetInfo = useCallback(async () => {
+    const osResponse = await getAllOSs(true);
+    if (osResponse.success) setOS(osResponse.data.data);
 
-  const handleChangeCatalog = (event) => {
-    setCatalog(event.target.value);
-  };
+    const barndResponse = await getAllBrands(true);
+    if (barndResponse.success) setBrand(barndResponse.data.data);
 
-  const handleChangeOS = (event) => {
-    setOS(event.target.value);
-  };
+    const catalogResponse = await getAllCatalogs(true);
+    if (catalogResponse.success) setCatalog(catalogResponse.data.data);
+  }, []);
+
+  useEffect(() => {
+    handleGetInfo();
+  }, [handleGetInfo]);
 
   const { isMediumScreen, isFullScreen } = useReponsive();
 
-  const [inputValue, setInputValue] = React.useState("");
-  const [inputDescription, setInputDescription] = React.useState("");
+  useEffect(() => {
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    setImageURL(url);
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [file]);
+
+  const handleCreateProduct = async () => {
+    // Validation
+    if (info.productName?.trim() === "") {
+      enqueueSnackbar("Tên sản phẩm không được để trống", { variant: "error" });
+      return;
+    }
+
+    if (info.productDescription?.trim() === "") {
+      enqueueSnackbar("Mô tả sản phẩm không được để trống", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (info.brandId === -1) {
+      enqueueSnackbar("Thương hiệu không được để trống", { variant: "error" });
+      return;
+    }
+
+    if (info.catalogId === -1) {
+      enqueueSnackbar("Danh mục không được để trống", { variant: "error" });
+      return;
+    }
+
+    if (info.osId === -1) {
+      enqueueSnackbar("Hệ điều hành không được để trống", { variant: "error" });
+      return;
+    }
+
+    if (!file) {
+      enqueueSnackbar("Hình ảnh sản phẩm không được để trống", {
+        variant: "error",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("productName", info.productName);
+    formData.append("productDescription", info.productDescription);
+    formData.append("brandId", info.brandId);
+    formData.append("catalogId", info.catalogId);
+    formData.append("osId", info.osId);
+    formData.append("thumbnail", file);
+
+    const response = await createProduct(formData);
+    if (response.success) {
+      enqueueSnackbar("Tạo sản phẩm thành công", { variant: "success" });
+      navigate(`/admin/product-management`);
+    } else {
+      enqueueSnackbar("Tạo sản phẩm thất bại", { variant: "error" });
+    }
+  };
 
   return (
     <Grid
@@ -126,7 +208,7 @@ function AddProductPage() {
               xs={12}
               md={4}
               sx={{
-                padding: isFullScreen ? "1rem !important" : "0.5rem !important",
+                padding: isFullScreen ? "1.5rem !important" : "1rem !important",
                 borderRight: isMediumScreen ? "1px solid #e0e0e0" : "none",
                 borderBottom: isMediumScreen ? "none" : "1px solid #e0e0e0",
               }}
@@ -135,21 +217,27 @@ function AddProductPage() {
                 alignItems={"center"}
                 justifyContent={"center"}
                 sx={{
+                  height: "100%",
                   display: "flex",
                   flexDirection: "column",
                 }}
               >
                 <CardMedia
                   component="img"
-                  height="100%"
-                  image="https://static.skyassets.com/contentstack/assets/blt143e20b03d72047e/blt1c33e1158f1c5ecf/6319d97c454b1c2ebb3f4037/Carousel_iPhone14Plus_Purple_Placement01-PreOrder.png"
+                  style={{
+                    flexBasis: "90%",
+                    width: "100%",
+                  }}
+                  image={imageURL ? imageURL : pic}
                   alt="Hình ảnh sản phẩm"
                 />
                 <Button
                   sx={{
+                    marginTop: 1,
                     display: "flex",
                     alignItems: "center",
                   }}
+                  onClick={() => inputFile.current.click()}
                 >
                   <CloudUploadIcon
                     sx={{
@@ -167,6 +255,14 @@ function AddProductPage() {
                   >
                     Tải ảnh lên
                   </Typography>
+                  <input
+                    onChange={(e) => {
+                      setFile(e.target.files[0]);
+                    }}
+                    ref={inputFile}
+                    type="file"
+                    style={{ display: "none" }}
+                  />
                 </Button>
               </Box>
             </Grid>
@@ -189,14 +285,16 @@ function AddProductPage() {
                     label="Tên sản phẩm"
                     placeholder="Nhập tên sản phẩm"
                     required
-                    error={inputValue?.trim() === ""}
+                    error={info.productName?.trim() === ""}
                     helperText={
-                      inputValue?.trim() === "" &&
+                      info.productName?.trim() === "" &&
                       "Tên sản phẩm không được để trống"
                     }
-                    value={inputValue}
+                    value={info.productName}
                     fullWidth
-                    onChange={(e) => setInputValue(e.target.value)}
+                    onChange={(e) =>
+                      setInfo({ ...info, productName: e.target.value })
+                    }
                     sx={{
                       "& .MuiInputBase-input": {
                         fontSize: "14px !important",
@@ -206,24 +304,20 @@ function AddProductPage() {
                   />
                 </Box>
 
-                <MuiTextFeild
-                  multiline
-                  rows={4}
+                <CustomTextarea
+                  value={info.productDescription}
+                  onChange={(e) =>
+                    setInfo({ ...info, productDescription: e.target.value })
+                  }
                   label="Mô tả sản phẩm"
                   placeholder="Nhập mô tả sản phẩm"
+                  error={info?.productDescription?.trim() === ""}
                   required
-                  error={inputDescription?.trim() === ""}
                   helperText={
-                    inputDescription?.trim() === "" &&
-                    "Mô tả sản phẩm không được để trống"
+                    info?.productDescription?.trim() === ""
+                      ? "Mô tả sản phẩm không được để trống"
+                      : ""
                   }
-                  value={inputDescription}
-                  onChange={(e) => setInputDescription(e.target.value)}
-                  sx={{
-                    "& .MuiInputBase-input": {
-                      fontSize: "14px !important",
-                    },
-                  }}
                 />
                 <Grid container spacing={1.5}>
                   <Grid item xs={12} md={4}>
@@ -234,8 +328,10 @@ function AddProductPage() {
 
                       <FormControl fullWidth>
                         <Select
-                          value={brand}
-                          onChange={handleChangeBrand}
+                          value={info.brandId === -1 ? "" : info.brandId}
+                          onChange={(e) =>
+                            setInfo({ ...info, brandId: e.target.value })
+                          }
                           displayEmpty
                           required
                           size="small"
@@ -244,21 +340,16 @@ function AddProductPage() {
                           }}
                           inputProps={{ "aria-label": "Without label" }}
                         >
-                          <MenuItem value={1}>
-                            <Typography style={{ fontSize: "14px" }}>
-                              Samsung
-                            </Typography>
-                          </MenuItem>
-                          <MenuItem value={2}>
-                            <Typography style={{ fontSize: "14px" }}>
-                              Iphone
-                            </Typography>
-                          </MenuItem>
-                          <MenuItem value={3}>
-                            <Typography style={{ fontSize: "14px" }}>
-                              ViVo
-                            </Typography>
-                          </MenuItem>
+                          {brand?.map((item, index) => (
+                            <MenuItem
+                              key={`brand-${index}`}
+                              value={item.brandId}
+                            >
+                              <Typography style={{ fontSize: "14px" }}>
+                                {item.brandName}
+                              </Typography>
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </Box>
@@ -271,8 +362,10 @@ function AddProductPage() {
 
                       <FormControl fullWidth>
                         <Select
-                          value={catalog}
-                          onChange={handleChangeCatalog}
+                          value={info.catalogId === -1 ? "" : info.catalogId}
+                          onChange={(e) =>
+                            setInfo({ ...info, catalogId: e.target.value })
+                          }
                           displayEmpty
                           required
                           size="small"
@@ -281,26 +374,16 @@ function AddProductPage() {
                           }}
                           inputProps={{ "aria-label": "Without label" }}
                         >
-                          <MenuItem value={1}>
-                            <Typography style={{ fontSize: "14px" }}>
-                              Điện thoại
-                            </Typography>
-                          </MenuItem>
-                          <MenuItem value={2}>
-                            <Typography style={{ fontSize: "14px" }}>
-                              Laptop
-                            </Typography>
-                          </MenuItem>
-                          <MenuItem
-                            value={3}
-                            sx={{
-                              width: "auto",
-                            }}
-                          >
-                            <Typography style={{ fontSize: "14px" }}>
-                              Máy tính bảng
-                            </Typography>
-                          </MenuItem>
+                          {catalog?.map((item, index) => (
+                            <MenuItem
+                              key={`catalog-${index}`}
+                              value={item.catalogId}
+                            >
+                              <Typography style={{ fontSize: "14px" }}>
+                                {item.catalogName}
+                              </Typography>
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </Box>
@@ -313,8 +396,10 @@ function AddProductPage() {
 
                       <FormControl fullWidth>
                         <Select
-                          value={OS}
-                          onChange={handleChangeOS}
+                          value={info.osId === -1 ? "" : info.osId}
+                          onChange={(e) =>
+                            setInfo({ ...info, osId: e.target.value })
+                          }
                           displayEmpty
                           required
                           size="small"
@@ -323,26 +408,13 @@ function AddProductPage() {
                           }}
                           inputProps={{ "aria-label": "Without label" }}
                         >
-                          <MenuItem value={1}>
-                            <Typography style={{ fontSize: "14px" }}>
-                              IOS
-                            </Typography>
-                          </MenuItem>
-                          <MenuItem value={2}>
-                            <Typography style={{ fontSize: "14px" }}>
-                              Android
-                            </Typography>
-                          </MenuItem>
-                          <MenuItem
-                            value={3}
-                            sx={{
-                              width: "auto",
-                            }}
-                          >
-                            <Typography style={{ fontSize: "14px" }}>
-                              Windows
-                            </Typography>
-                          </MenuItem>
+                          {OS?.map((item, index) => (
+                            <MenuItem key={`os-${index}`} value={item.osId}>
+                              <Typography style={{ fontSize: "14px" }}>
+                                {item.osName}
+                              </Typography>
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </Box>
@@ -359,8 +431,12 @@ function AddProductPage() {
           <CustomButton variant="text" size="large">
             Huỷ
           </CustomButton>
-          <CustomButton variant="contained" size="large">
-            Cập nhật
+          <CustomButton
+            variant="contained"
+            size="large"
+            onClick={handleCreateProduct}
+          >
+            Tạo mới
           </CustomButton>
         </Stack>
       </Grid>

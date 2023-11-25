@@ -7,7 +7,7 @@ namespace TheDuckMobile_WebAPI.Services.Admin
 {
     public interface ICatalogAdminServices
     {
-        public Task<List<CatalogListResponse>> GetAllCatalogs();
+        public Task<List<CatalogListResponse>> GetAllCatalogs(bool isDeletedFilter);
         public Task<CatalogDetailUserResponse> AddCatalog(AddCatalogRequest request);
         public Task<CatalogDetailUserResponse> AddBrandToCatalog(int catalogId, AddBrandToCatalogRequest request);
         public Task<CatalogDetailUserResponse> AddSpecialFeatureToCatalog(int catalogId, AddSpecialFeatureToCatalogRequest request);

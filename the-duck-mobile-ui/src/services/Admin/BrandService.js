@@ -1,7 +1,7 @@
 import { get, post, put } from "../AxiosInstance";
 
-export const getAllBrands = () => {
-  return get("brandadmin");
+export const getAllBrands = (isDeletedFilter = false) => {
+  return get(`brandadmin?isDeletedFilter=${isDeletedFilter}`);
 };
 
 export const addBrand = (data) => {
@@ -9,5 +9,7 @@ export const addBrand = (data) => {
 };
 
 export const updateBrand = (brandId, data) => {
-  return put(`brandadmin/${brandId}`, data, { "Content-Type": "multipart/form-data" });
+  return put(`brandadmin/${brandId}`, data, {
+    "Content-Type": "multipart/form-data",
+  });
 };

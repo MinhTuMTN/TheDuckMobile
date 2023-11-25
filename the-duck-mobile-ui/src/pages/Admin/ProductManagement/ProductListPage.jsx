@@ -14,6 +14,7 @@ import SearchSeller from "../../../components/Store/SearchSeller";
 import Filter from "../../../components/Store/Filter";
 import ProductsTableBasis from "../../../components/Admin/ProductsTableBasic";
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
 
 const CustomButton = styled(Button)(({ theme }) => ({
   color: "#fff",
@@ -91,6 +92,7 @@ const items = [
 ];
 
 function ProductListPage(props) {
+  const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const handlePageChange = (event, newPage) => {
@@ -146,7 +148,11 @@ function ProductListPage(props) {
             >
               Danh sách sản phẩm
             </Typography>
-            <CustomButton variant="contained" startIcon={<AddOutlinedIcon />}>
+            <CustomButton
+              variant="contained"
+              startIcon={<AddOutlinedIcon />}
+              onClick={() => navigate("add")}
+            >
               Thêm
             </CustomButton>
           </Stack>

@@ -1,7 +1,7 @@
 import { del, get, post, put } from "../AxiosInstance";
 
-export const getAllCatalogs = () => {
-  return get("catalogadmin");
+export const getAllCatalogs = (isDeletedFilter = false) => {
+  return get(`catalogadmin?isDeletedFilter=${isDeletedFilter}`);
 };
 
 export const addCatalog = (data) => {

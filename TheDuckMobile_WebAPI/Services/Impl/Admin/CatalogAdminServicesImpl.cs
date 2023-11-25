@@ -77,12 +77,17 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return new CatalogDetailUserResponse(catalog);
         }
 
-        public async Task<List<CatalogListResponse>> GetAllCatalogs()
+        public async Task<List<CatalogListResponse>> GetAllCatalogs(bool isDeletedFilter)
         {
-            var catalogs = await _context.Catalogs
+            var catalogs = _context.Catalogs
                 .Include(c => c.Products)
-                .ToListAsync();
-            return catalogs.Select(c => new CatalogListResponse(c)).ToList();
+                .AsQueryable();
+
+            if (isDeletedFilter)
+                catalogs = catalogs.Where(c => c.IsDeleted == false);
+
+            var results = await catalogs.ToListAsync();
+            return results.Select(c => new CatalogListResponse(c)).ToList();
         }
 
         public async Task<ICollection<CatalogAttribute>> GetCatalogAttributes(int catalogId)

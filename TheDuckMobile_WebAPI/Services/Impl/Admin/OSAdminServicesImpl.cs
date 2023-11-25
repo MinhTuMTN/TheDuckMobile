@@ -54,11 +54,16 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return os;
         }
 
-        public async Task<List<OS>> GetAllOSs()
+        public async Task<List<OS>> GetAllOSs(bool isDeletedFilter)
         {
-            var oss = await _context.OSs.ToListAsync();
+            var oss = _context.OSs.AsQueryable();
 
-            return oss;
+            if (isDeletedFilter)
+                oss = oss.Where(o => o.IsDeleted == false);
+
+            var result = await oss.ToListAsync();
+
+            return result;
         }
 
         public async Task<OS> GetOSById(int id)

@@ -1,7 +1,7 @@
 import { del, get, post, put } from "../AxiosInstance";
 
-export const getAllOSs = () => {
-  return get("osadmin");
+export const getAllOSs = (isDeletedFilter = false) => {
+  return get(`osadmin?isDeletedFilter=${isDeletedFilter}`);
 };
 
 export const addOS = (data) => {
