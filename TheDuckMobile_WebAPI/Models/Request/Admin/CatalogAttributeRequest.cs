@@ -9,6 +9,5 @@ namespace TheDuckMobile_WebAPI.Models.Request.Admin
         public string? Type { get; set; }
         public int? CatalogId { get; set; }
         public bool IsRequired { get; set; }
-        public List<string>? SelectionValues { get; set; }
     }
 }

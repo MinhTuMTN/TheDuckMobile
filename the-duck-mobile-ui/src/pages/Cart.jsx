@@ -52,7 +52,7 @@ function Cart(props) {
       )
     );
     setSelectedProducts(newSelectedProducts);
-  }, [products]);
+  }, [products, selectedProducts]);
 
   return (
     <Stack mt={10} mb={10} width={"100%"} alignItems={"center"}>

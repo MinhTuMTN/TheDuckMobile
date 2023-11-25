@@ -28,18 +28,23 @@ import TablePaginationActions from "../../../components/TablePaginationActions";
 
 import { useTheme } from "@emotion/react";
 import { Search } from "@mui/icons-material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 
-import MuiTextFeild from "../../../components/MuiTextFeild";
-import { DataContext } from "../../../layouts/AdminLayout";
-import { addColor, deleteColor, restoreColor, updateColor } from "../../../services/Admin/ColorService";
 import { enqueueSnackbar } from "notistack";
 import DialogConfirm from "../../../components/DialogConfirm";
+import MuiTextFeild from "../../../components/MuiTextFeild";
+import { DataContext } from "../../../layouts/AdminLayout";
+import {
+  addColor,
+  deleteColor,
+  restoreColor,
+  updateColor,
+} from "../../../services/Admin/ColorService";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -289,7 +294,7 @@ function ColorListPage() {
                       width: "20%",
                     }}
                   >
-                    Mã  màu
+                    Mã màu
                   </CellHead>
                   <CellHead
                     align="center"
@@ -312,9 +317,9 @@ function ColorListPage() {
               <TableBody>
                 {(rowsPerPage > 0
                   ? rowsSearched.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
@@ -323,25 +328,19 @@ function ColorListPage() {
                       paddingY: "0",
                     }}
                   >
-                    <CellBody
-                      style={{ width: "30%" }}
-                      align="center"
-                    >
+                    <CellBody style={{ width: "30%" }} align="center">
                       {row.colorName}
                     </CellBody>
                     <CellBody
                       style={{
                         width: "20%",
-                        textTransform: "uppercase"
+                        textTransform: "uppercase",
                       }}
                       align="center"
                     >
                       {row.colorCode}
                     </CellBody>
-                    <CellBody
-                      style={{ width: "30%" }}
-                      align="center"
-                    >
+                    <CellBody style={{ width: "30%" }} align="center">
                       {row.isDeleted ? "Khóa" : "Còn hoạt động"}
                     </CellBody>
                     <CellBody
@@ -382,12 +381,10 @@ function ColorListPage() {
                                 onClick={(e) => {
                                   setOpenPopup(true);
                                   setColorId(row.colorId);
-                                  setColorRequest(
-                                    {
-                                      colorName: row.colorName,
-                                      colorCode: row.colorCode
-                                    }
-                                  );
+                                  setColorRequest({
+                                    colorName: row.colorName,
+                                    colorCode: row.colorCode,
+                                  });
                                   setAddNew(false);
                                 }}
                                 sx={{
@@ -427,12 +424,10 @@ function ColorListPage() {
                               // Xử lý sự kiện cho nút "Chỉnh sửa"
                               setOpenPopup(true);
                               setColorId(row.colorId);
-                              setColorRequest(
-                                {
-                                  colorName: row.colorName,
-                                  colorCode: row.colorCode
-                                }
-                              );
+                              setColorRequest({
+                                colorName: row.colorName,
+                                colorCode: row.colorCode,
+                              });
                               setAddNew(false);
                             }}
                           >
@@ -445,9 +440,13 @@ function ColorListPage() {
                               setColorId(row.colorId);
                               setIsDeleted(row.isDeleted);
                               setDeleteDialog(true);
-                          }}
+                            }}
                           >
-                            {row.isDeleted ? <RestoreFromTrashIcon color="black" /> : <DeleteIcon color="black" />}
+                            {row.isDeleted ? (
+                              <RestoreFromTrashIcon color="black" />
+                            ) : (
+                              <DeleteIcon color="black" />
+                            )}
                           </IconButton>
                         </>
                       )}
@@ -497,7 +496,7 @@ function ColorListPage() {
 
       <BootstrapDialog
         open={openPopup}
-        onOk={() => { }}
+        onOk={() => {}}
         onClose={() => setOpenPopup(false)}
         aria-labelledby="customized-dialog-title"
       >
@@ -528,7 +527,7 @@ function ColorListPage() {
                 setColorRequest((prev) => {
                   return {
                     ...prev,
-                    colorName: e.target.value
+                    colorName: e.target.value,
                   };
                 });
               }}
@@ -542,7 +541,7 @@ function ColorListPage() {
                 setColorRequest((prev) => {
                   return {
                     ...prev,
-                    colorCode: e.target.value
+                    colorCode: e.target.value,
                   };
                 });
               }}

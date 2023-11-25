@@ -2,11 +2,8 @@ import styled from "@emotion/styled";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Tab, TablePagination, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
-import PropTypes from "prop-types";
-import ListOrder from "./ListOrder";
 import { getStoreOrder } from "../../services/Store/StoreOrderService";
-import Loading from "../Loading";
+import ListOrder from "./ListOrder";
 
 const CustomTabList = styled(TabList)(({ theme }) => ({
   borderBottom: "1px solid #e0e0e0",
@@ -18,45 +15,6 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   color: "#6c737f",
 }));
 
-const items = [
-  {
-    id: "091be10cb",
-    date: "2021-05-30",
-    status: "Đã huỷ",
-    total: 10000000,
-  },
-  {
-    id: "091be10cb",
-    date: "2021-11-10",
-
-    status: "Đã hoàn thành",
-    total: 1000000,
-  },
-  {
-    id: "091be10cb",
-    date: "2021-10-10",
-    status: "Chờ xác nhận",
-    total: 12200000,
-  },
-  {
-    id: "vv1be10cb",
-    date: "2021-12-12",
-    status: "Đang giao hàng",
-    total: 77000000,
-  },
-  {
-    id: "294be10cb",
-    date: "2021-11-11",
-    status: "Đã hoàn thành",
-    total: 56000000,
-  },
-  {
-    id: "461be1bg2",
-    date: "2021-10-10",
-    status: "Đã hoàn thành",
-    total: 33222000,
-  },
-];
 function TabOrderStore(props) {
   const [orders, setOrders] = useState([]);
   const [pagination, setPagination] = useState({
@@ -65,7 +23,6 @@ function TabOrderStore(props) {
     orderState: 5,
   });
   const [count, setCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleChangeTab = (event, newTab) => {
     setPagination((prev) => ({
@@ -83,7 +40,6 @@ function TabOrderStore(props) {
         orderState: pagination.orderState,
       });
 
-      setIsLoading(true);
       if (response.success) {
         const result = response.data.data;
         setOrders(result.objects);
@@ -94,7 +50,6 @@ function TabOrderStore(props) {
         }));
         setCount(result.totalObjects);
       } else console.log(response.message);
-      setIsLoading(false);
     };
     getOrders();
   }, [pagination.page, pagination.limit, pagination.orderState]);

@@ -126,5 +126,33 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Data = catalog
             });
         }
+
+        [HttpGet("{catalogId}/special-features")]
+        public async Task<IActionResult> GetCatalogSpecialFeatures([FromRoute] int catalogId)
+        {
+            var catalogSpecialFeatures = await _catalogServices.GetCatalogSpecialFeatures(catalogId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = catalogSpecialFeatures,
+                Message = "Successfully retrieved catalog special features"
+            });
+        }
+
+        [HttpDelete("{catalogId}/special-features/{specialFeatureId}")]
+        public async Task<IActionResult> DeleteCatalogSpecialFeature([FromRoute] int catalogId, [FromRoute] int specialFeatureId)
+        {
+            var success = await _catalogServices.DeleteCatalogSpecialFeature(catalogId, specialFeatureId);
+
+            if (!success)
+                throw new BadHttpRequestException("Catalog special feature could not be deleted.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Catalog special feature deleted successfully.",
+                Data = null
+            });
+        }
     }
 }

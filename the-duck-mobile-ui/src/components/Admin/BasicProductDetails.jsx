@@ -135,7 +135,6 @@ function BasicProductDetails(props) {
                       fontSize: "14px !important",
                     }}
                   >
-                    {" "}
                     <CircleIcon
                       style={{
                         color: "#10af4d",
