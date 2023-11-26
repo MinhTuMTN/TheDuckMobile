@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Entities;
 using TheDuckMobile_WebAPI.ErrorHandler;
 using TheDuckMobile_WebAPI.Models.Request.Admin;
+using TheDuckMobile_WebAPI.Models.Response.Admin;
 using TheDuckMobile_WebAPI.Services.Admin;
 
 namespace TheDuckMobile_WebAPI.Services.Impl.Admin
@@ -37,7 +38,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             // Specification
             var catalogAttributes = await _context
                 .CatalogAttributes
-                .Where(ca => ca.CatalogId == product.CatalogId)
+                .Where(ca => ca.CatalogId == product.CatalogId && ca.IsDeleted == false)
                 .ToListAsync();
 
             IDictionary<string, object> specification = await _jsonServices
@@ -75,9 +76,9 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 Specification = _jsonServices.SerializeObject(specification),
                 Price = request.Price,
                 Color = color,
-                PromotionPrice = request.PromotionPrice == 0 ? request.Price : request.PromotionPrice,
-                ReleaseTime = request.ReleaseTime,
-                Quantity = request.Quantity,
+                PromotionPrice = request.Price,
+                ReleaseTime = DateTime.Now,
+                Quantity = 0,
                 Images = imageUrls.ToArray(),
                 CreatedAt = DateTime.UtcNow,
                 LastModifiredAt = DateTime.UtcNow,
@@ -88,20 +89,18 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             await _context.ProductVersions.AddAsync(productVersion);
             await _context.SaveChangesAsync();
 
-            if (request.Price > 0 && request.Price < product.ProductPrice)
+            if ((request.Price > 0 && request.Price < product.ProductPrice) || product.ProductPrice == 0)
             {
                 product.ProductPrice = request.Price;
                 await _context.SaveChangesAsync();
             }
 
-            // Update product quantity
-            product.Quantity += request.Quantity;
             await _context.SaveChangesAsync();
 
             // Update Promotion Price
-            if (request.PromotionPrice > 0 && request.PromotionPrice < product.PromotionPrice)
+            if ((request.Price > 0 && request.Price < product.PromotionPrice) || product.PromotionPrice == 0)
             {
-                product.PromotionPrice = request.PromotionPrice;
+                product.PromotionPrice = request.Price;
                 await _context.SaveChangesAsync();
             }
 
@@ -156,6 +155,77 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
             await _context.SaveChangesAsync();
             return productVersion.IsDeleted;
+        }
+
+        public async Task<ICollection<ProductVersionAttributesResponse>> GetProductVersionAttributes(Guid productId)
+        {
+            var product = await _context
+                .Products
+                .Include(p => p.Catalog)
+                .Where(p => p.ProductId == productId && p.IsDeleted == false)
+                .FirstOrDefaultAsync();
+
+            if (product == null || product.Catalog == null)
+                throw new CustomNotFoundException("Product not found");
+
+            var catalogAttributes = await _context
+                .CatalogAttributes
+                .Include(ca => ca.SelectionValues)
+                .Where(ca => ca.CatalogId == product.CatalogId && ca.IsDeleted == false)
+                .ToListAsync();
+
+            if (catalogAttributes == null)
+                throw new CustomNotFoundException("Catalog attributes not found");
+
+            var productVersionAttributes = new List<ProductVersionAttributesResponse>();
+            foreach (var catalogAttribute in catalogAttributes)
+            {
+                var productVersionAttribute = new ProductVersionAttributesResponse
+                {
+                    Id = catalogAttribute.CatalogAttributeId,
+                    Key = catalogAttribute.Key,
+                    DisplayName = catalogAttribute.DisplayName,
+                    Type = catalogAttribute.Type,
+                    SelectionValues = new List<string>(),
+                    IsRequired = catalogAttribute.IsRequired,
+                };
+
+                if (catalogAttribute.SelectionValues != null)
+                    foreach (var selectionValue in catalogAttribute.SelectionValues)
+                        productVersionAttribute.SelectionValues.Add(selectionValue.Value!);
+
+                productVersionAttributes.Add(productVersionAttribute);
+            }
+
+            return productVersionAttributes;
+        }
+
+        public async Task<bool> RestoreProductVersion(Guid productVersionId)
+        {
+            // Set ProductVersion IsDeleted = false and Store Product IsDelete = false
+            var productVersion = await _context
+                .ProductVersions
+                .Include(pv => pv.StoreProducts)
+                .FirstOrDefaultAsync(pv => pv.ProductVersionId == productVersionId);
+
+            // Check if product version is null
+            if (productVersion == null)
+                throw new CustomNotFoundException("Product version not found");
+
+            // Set IsDeleted = false
+            productVersion.IsDeleted = false;
+
+            // Set Store Product IsDelete = false
+            if (productVersion.StoreProducts != null)
+            {
+                foreach (var storeProduct in productVersion.StoreProducts)
+                {
+                    storeProduct.IsDelete = false;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

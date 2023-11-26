@@ -48,5 +48,44 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Data = isDeleted
             });
         }
+
+        [HttpGet("attributes")]
+        public async Task<IActionResult> GetProductVersionAttributes([FromQuery] Guid productId)
+        {
+            var productVersionAttributes = await _productVersionAdminServices.GetProductVersionAttributes(productId);
+            if (productVersionAttributes == null)
+                return NotFound(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Product version not found",
+                    Data = null
+                });
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Product version attributes retrieved successfully",
+                Data = productVersionAttributes
+            });
+        }
+
+        [HttpGet("{productVersionId}/restore")]
+        public async Task<IActionResult> RestoreProductVersion([FromRoute] Guid productVersionId)
+        {
+           var result = await _productVersionAdminServices.RestoreProductVersion(productVersionId);
+            if (!result)
+                return NotFound(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Product version not found",
+                    Data = null
+                });
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Product version restored successfully",
+                Data = result
+            });
+        }
     }
 }

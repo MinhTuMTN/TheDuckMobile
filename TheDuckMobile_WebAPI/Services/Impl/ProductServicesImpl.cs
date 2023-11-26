@@ -122,7 +122,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
             // Product Color
             var colors = await _context.ProductVersions
-                .Where(pv => pv.ProductId == productId)
+                .Where(pv => pv.ProductId == productId && pv.IsDeleted == false)
                 .Select(pv => pv.Color)
                 .Distinct()
                 .ToListAsync();
@@ -134,7 +134,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                     continue;
 
                 var productVersions = await _context.ProductVersions
-                    .Where(pv => pv.ProductId == productId && pv.Color == color)
+                    .Where(pv => pv.ProductId == productId && pv.Color == color && pv.IsDeleted == false)
                     .ToListAsync();
 
                 colorVersions.Add(new ProductColorVersions(color, productVersions));

@@ -28,8 +28,7 @@ import OrderDetailPage from "../pages/Admin/OrderManagement/OrderDetailPage";
 import OrderListPage from "../pages/Admin/OrderManagement/OrderListPage";
 import AddProductPage from "../pages/Admin/ProductManagement/AddProductPage";
 import AddProductVersionPage from "../pages/Admin/ProductManagement/AddProductVersionPage";
-import EditProductPage from "../pages/Admin/ProductManagement/EditProductPage";
-import EditProductVersionPage from "../pages/Admin/ProductManagement/EditProductVersionPage";
+
 import ProductDetailPage from "../pages/Admin/ProductManagement/ProductDetailPage";
 import ProductListPage from "../pages/Admin/ProductManagement/ProductListPage";
 import AddSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/AddSpecialFeaturePage";
@@ -191,18 +190,12 @@ function Router(props) {
           path: "product-management/add-product-version",
           element: <AddProductVersionPage />,
         },
-        {
-          path: "product-management/edit",
-          element: <EditProductPage />,
-        },
+
         {
           path: "product-management/:productId",
           element: <ProductDetailPage />,
         },
-        {
-          path: "product-management/edit/product-version",
-          element: <EditProductVersionPage />,
-        },
+
         {
           path: "customer-management",
           element: <CustomerListPage />,

@@ -1,130 +1,586 @@
+import styled from "@emotion/styled";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {
   Box,
   Button,
-  Step,
-  StepLabel,
-  Stepper,
+  CardMedia,
+  FormControl,
+  Grid,
+  IconButton,
+  InputAdornment,
+  List,
+  ListItem,
+  MenuItem,
+  Paper,
+  Select,
+  Stack,
   Typography,
 } from "@mui/material";
-import { Fragment, useState } from "react";
-import Step1 from "./AddProductVersionSteps/Step1";
-import Step2Laptop from "./AddProductVersionSteps/Step2Laptop";
-import { Link, useLocation } from "react-router-dom";
-import Step2Tablet from "./AddProductVersionSteps/Step2Tablet";
-import Step2SmartWatch from "./AddProductVersionSteps/Step2SmartWatch";
-import Step2MobilePhone from "./AddProductVersionSteps/Step2MobilePhone";
-import styled from "@emotion/styled";
+import React, { useCallback, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import MuiTextFeild from "../../../components/MuiTextFeild";
+import { useReponsive } from "../../../hooks/useReponsive";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import ClearIcon from "@mui/icons-material/Clear";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import ProductVersionSpecification from "../../../components/Store/ProductVersionSpecification";
+import {
+  addProductVersion,
+  getProductVersionAttributes,
+} from "../../../services/Admin/ProductVersionService";
+import { useSnackbar } from "notistack";
+import { getAllColors } from "../../../services/Admin/ColorService";
+import ColorButton from "../../../components/ColorButton";
+import Loading from "../../../components/Loading";
 
-const steps = ["Phiên Bản Sản Phẩm", "Tính Năng Theo Danh Mục"];
-
-const RootPageAddProductVersion = styled(Box)(({ theme }) => ({
-  display: "flex",
-  width: "100%",
-  flexDirection: "column",
-  padding: `0 ${theme.spacing(5)} ${theme.spacing(5)} ${theme.spacing(5)}`,
+const CustomTypography = styled(Typography)(({ theme }) => ({
+  fontSize: "14px !important",
+  marginBottom: "2px !important",
 }));
 
-function AddProductVersionPage(props) {
-  const location = useLocation();
-  const data = location.state ? location.state : {};
+const CustomButton = styled(Button)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  fontSize: "14px !important",
+  borderRadius: "16px !important",
+  width: "7.5rem !important",
+}));
 
-  console.log(data.category);
-  const [activeStep, setActiveStep] = useState(0);
-  const [formValues, setFormValues] = useState({
-    valueStep1: "",
-    valueStep2: "",
-    valueStep3: "",
+function AddProductVersionPage() {
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const { isFullScreen } = useReponsive();
+  const { state } = useLocation();
+  const inputImgaes = React.useRef(null);
+  const [images, setImages] = React.useState([]);
+  const [imageURL, setImageURL] = React.useState([]);
+  const [attributes, setAttributes] = React.useState([]);
+  const [specifications, setSpecifications] = React.useState({});
+  const [colors, setColors] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const [info, setInfo] = React.useState({
+    productId: state?.productId,
+    colorId: "",
+    price: "0",
+    versisonName: "",
   });
+  // Preview images
+  React.useEffect(() => {
+    const listImages = [];
+    images.forEach((image) => {
+      const url = URL.createObjectURL(image);
+      listImages.push(url);
+    });
+    setImageURL(listImages);
 
-  const handleStepChange = (step, value) => {
-    setFormValues({ ...formValues, [`valueStep${step}`]: value });
-  };
+    return () => {
+      listImages.forEach((url) => {
+        URL.revokeObjectURL(url);
+      });
+    };
+  }, [images]);
 
-  const getStepContent = (step) => {
-    switch (step) {
-      case 0:
-        return <Step1 value={formValues} onChange={handleStepChange} />;
-      case 1:
-        if (data.category === "laptop")
-          return <Step2Laptop value={formValues} onChange={handleStepChange} />;
-        else if (data.category === "tablet")
-          return <Step2Tablet value={formValues} onChange={handleStepChange} />;
-        else if (data.category === "smartwatch")
-          return (
-            <Step2SmartWatch value={formValues} onChange={handleStepChange} />
-          );
-        else
-          return (
-            <Step2MobilePhone value={formValues} onChange={handleStepChange} />
-          );
-      default:
-        throw new Error("Unknown step");
+  const handleGetAttributes = useCallback(async () => {
+    if (!state?.productId) {
+      enqueueSnackbar("Đã có lỗi xảy ra khi tải các thông tin sản phẩm", {
+        variant: "error",
+      });
+      return;
     }
+
+    const response = await getProductVersionAttributes(state?.productId);
+    if (response.success) {
+      setAttributes(response.data.data);
+      response.data.data.forEach((attribute) => {
+        if (attribute.type === 0) {
+          setSpecifications((prev) => ({
+            ...prev,
+            [attribute.key]: "",
+          }));
+        }
+        if (attribute.type === 1) {
+          setSpecifications((prev) => ({
+            ...prev,
+            [attribute.key]: attribute.selectionValues[0],
+          }));
+        }
+        if (attribute.type === 2) {
+          setSpecifications((prev) => ({
+            ...prev,
+            [attribute.key]: false,
+          }));
+        }
+      });
+    } else
+      enqueueSnackbar("Đã có lỗi xảy ra khi tải các thông tin sản phẩm", {
+        variant: "error",
+      });
+  }, [state?.productId, enqueueSnackbar]);
+
+  const handleGetColors = useCallback(async () => {
+    const response = await getAllColors();
+
+    if (response.success) {
+      setColors(response.data.data);
+    } else
+      enqueueSnackbar("Đã có lỗi xảy ra khi tải các thông tin sản phẩm", {
+        variant: "error",
+      });
+  }, [enqueueSnackbar]);
+
+  useEffect(() => {
+    handleGetAttributes();
+    handleGetColors();
+  }, [handleGetAttributes, handleGetColors]);
+
+  const handleAddProductVersion = async () => {
+    if (
+      info?.versisonName?.trim() === "" ||
+      info?.price?.trim() === "" ||
+      info?.colorId?.trim() === ""
+    ) {
+      enqueueSnackbar("Vui lòng nhập đầy đủ thông tin", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (images.length === 0) {
+      enqueueSnackbar("Vui lòng chọn ảnh cho sản phẩm", {
+        variant: "error",
+      });
+      return;
+    }
+
+    attributes.forEach((attribute) => {
+      if (attribute.isRequired && !specifications[attribute.key]) {
+        enqueueSnackbar(`Vui lòng nhập ${attribute.displayName}`, {
+          variant: "error",
+        });
+        return;
+      }
+    });
+
+    if (!state?.productId) {
+      enqueueSnackbar("Đã có lỗi xảy ra", {
+        variant: "error",
+      });
+      return;
+    }
+
+    // try to cast price to number. If error, enqueueSnackbar and return
+    let price = 0;
+    try {
+      price = parseFloat(info?.price.replace(/,/g, ""));
+      if (isNaN(price)) {
+        enqueueSnackbar("Giá tiền không hợp lệ", {
+          variant: "error",
+        });
+        return;
+      }
+    } catch (error) {
+      enqueueSnackbar("Giá tiền không hợp lệ", {
+        variant: "error",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("productId", state?.productId);
+    formData.append("colorId", info?.colorId);
+    formData.append("Price", price);
+    formData.append("VersionName", info?.versisonName);
+    formData.append("Specification", JSON.stringify(specifications));
+
+    images.forEach((image) => {
+      formData.append("Images", image);
+    });
+
+    setIsLoading(true);
+    const response = await addProductVersion(formData);
+    if (response.success) {
+      enqueueSnackbar("Tạo phiên bản thành công", {
+        variant: "success",
+      });
+      navigate(`/admin/product-management/${state?.productId}`);
+    } else {
+      enqueueSnackbar("Đã có lỗi xảy ra", {
+        variant: "error",
+      });
+    }
+    setIsLoading(false);
   };
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
+  if (isLoading) return <Loading />;
   return (
-    <RootPageAddProductVersion>
-      <Box sx={{ width: "100%" }}>
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map((label, index) => {
-            const stepProps = {};
-            const labelProps = {};
+    <Grid
+      container
+      sx={{
+        pt: 3,
+        pb: 4.5,
+        px: isFullScreen ? 8 : 3,
+      }}
+    >
+      <Grid item xs={12}>
+        <Stack direction={"row"} alignItems={"center"}>
+          <IconButton onClick={() => navigate(`/admin/product-management`)}>
+            <ArrowBackIosIcon
+              sx={{
+                fontSize: ["14px", "18px"],
+              }}
+            />
+          </IconButton>
+          <Typography
+            variant="body1"
+            sx={{
+              fontSize: "16px !important",
+            }}
+          >
+            Trang sản phẩm
+          </Typography>
+        </Stack>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography
+          variant="body1"
+          sx={{
+            fontSize: ["20px", "28px"],
+          }}
+          fontWeight="700"
+          paddingX={2}
+          paddingTop={4}
+          paddingBottom={3}
+        >
+          Tạo phiên bản mới cho {state?.productName}
+        </Typography>
+      </Grid>
 
-            return (
-              <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-        {/* {activeStep === steps.length ? (
-                    <Fragment>
-                        <Typography sx={{ mt: 2, mb: 1 }}>
-                            All steps completed - you&apos;re finished
-                        </Typography>
-                    </Fragment>
-                ) : ( */}
-        <Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-
-          {getStepContent(activeStep)}
-
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
+      <Grid item xs={12}>
+        <Stack
+          component={Paper}
+          elevation={2}
+          sx={{
+            borderRadius: "25px",
+          }}
+        >
+          <Typography
+            variant="body1"
+            paddingX={3}
+            paddingY={2}
+            style={{
+              fontSize: "20px",
+              fontWeight: "600",
+              borderRadius: "25px 25px 0 0 ",
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            Thông tin sản phẩm
+          </Typography>
+          <Grid
+            container
+            sx={{
+              paddingX: "0.5rem !important",
+              paddingY: "1rem !important",
+              width: "100%",
+            }}
+          >
+            <Stack
+              spacing={2.5}
+              paddingY={2}
+              paddingX={{
+                xs: "1rem !important",
+                md: "1.5rem !important",
+              }}
+              sx={{ width: "100%" }}
             >
-              Trở lại
-            </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
+              <Grid container spacing={2.5} alignItems={"flex-start"}>
+                <Grid
+                  item
+                  xs={12}
+                  md={8}
+                  component={Box}
+                  sx={{
+                    width: "100%",
+                  }}
+                >
+                  <MuiTextFeild
+                    label="Tên phiên bản"
+                    placeholder="Nhập tên phiên bản"
+                    required
+                    error={info?.versisonName?.trim() === ""}
+                    helperText={
+                      info?.versisonName?.trim() === "" &&
+                      "Tên phiên bản không được để trống"
+                    }
+                    value={info?.versisonName}
+                    fullWidth
+                    size={"small !important"}
+                    onChange={(e) =>
+                      setInfo({ ...info, versisonName: e.target.value })
+                    }
+                    sx={{
+                      "& .MuiInputBase-input": {
+                        fontSize: "14px !important",
+                        padding: "18px 12px !important",
+                      },
+                    }}
+                  />
+                </Grid>
 
-            <Button
-              component={Link}
-              onClick={handleNext}
-              to={
-                activeStep === steps.length - 1
-                  ? "/admin/product-management"
-                  : ""
-              }
-              state={activeStep === steps.length - 2 ? data : {}}
+                <Grid item xs={12} md={4} component={Box}>
+                  <Box
+                    sx={{
+                      width: "100%",
+                    }}
+                  >
+                    <MuiTextFeild
+                      label="Giá tiền"
+                      placeholder="Nhập giá tiền"
+                      required
+                      type="text"
+                      error={info?.price?.trim() === ""}
+                      helperText={
+                        info?.price?.trim() === "" &&
+                        "Giá tiền không được để trống"
+                      }
+                      value={info?.price}
+                      fullWidth
+                      onChange={(e) => {
+                        let nums = e.target.value.replace(/,/g, "");
+                        if (nums === "") nums = "0";
+                        if (!nums || nums.endsWith(".")) return;
+                        const value = parseFloat(nums).toLocaleString("vn");
+                        setInfo({ ...info, price: value });
+                      }}
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontSize: "14px !important",
+                          padding: "18px 12px !important",
+                        },
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">VNĐ</InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={2.5} alignItems={"center"}>
+                <Grid item xs={12}>
+                  <Box>
+                    <CustomTypography variant="body1">Màu sắc</CustomTypography>
+
+                    <FormControl fullWidth>
+                      <Select
+                        value={info?.colorId}
+                        onChange={(e) =>
+                          setInfo({ ...info, colorId: e.target.value })
+                        }
+                        displayEmpty
+                        required
+                        size="small"
+                        sx={{
+                          fontSize: "14px !important",
+                        }}
+                        inputProps={{ "aria-label": "Without label" }}
+                      >
+                        {colors.map((color) => (
+                          <MenuItem value={color.colorId} key={color.colorId}>
+                            <Stack
+                              direction={"row"}
+                              spacing={1}
+                              display={"flex"}
+                              alignItems={"center"}
+                            >
+                              <ColorButton color={color.colorCode} />
+                              <Typography style={{ fontSize: "14px" }}>
+                                {color.colorName}
+                              </Typography>
+                            </Stack>
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Stack>
+          </Grid>
+        </Stack>
+      </Grid>
+
+      <Grid item xs={12} marginTop={3}>
+        <Stack
+          component={Paper}
+          elevation={2}
+          sx={{
+            borderRadius: "25px",
+          }}
+        >
+          <Grid
+            container
+            justifyContent={"space-between"}
+            sx={{
+              borderBottom: "1px solid #e0e0e0",
+              alignItems: "center",
+              paddingX: "1rem !important",
+              paddingY: "0.5rem !important",
+            }}
+          >
+            <Grid item xs={7} sm={6}>
+              <Typography
+                variant="body1"
+                style={{
+                  fontSize: ["16px !important", "20px !important"],
+                  fontWeight: "600",
+                  borderRadius: "25px 25px 0 0 ",
+                }}
+              >
+                Danh sách hình ảnh
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              xs={5}
+              sm={6}
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
             >
-              {activeStep === steps.length - 1 ? "Thêm mới" : "Tiếp theo"}
-            </Button>
-          </Box>
-        </Fragment>
-        {/* )} */}
-      </Box>
-    </RootPageAddProductVersion>
+              <Button
+                size="medium"
+                sx={{
+                  fontSize: "16px !important",
+                  borderRadius: "10px !important",
+                  color: "#242323",
+                }}
+                onClick={() => inputImgaes.current.click()}
+              >
+                <CloudUploadIcon
+                  sx={{
+                    fontSize: "24px",
+                    color: "#242323",
+                    marginRight: "0.5rem",
+                  }}
+                />
+                Tải ảnh
+              </Button>
+              <input
+                type="file"
+                style={{
+                  display: "none",
+                }}
+                ref={inputImgaes}
+                multiple
+                onChange={(e) => {
+                  setImages([...images, ...e.target.files]);
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            sx={{
+              paddingX: "0.5rem !important",
+              paddingY: "1rem !important",
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            {imageURL.length === 0 ? (
+              <Stack
+                direction={"row"}
+                spacing={1}
+                sx={{
+                  width: "100%",
+                  paddingX: "1rem !important",
+                  paddingY: ["1rem !important", "2rem !important"],
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontSize: "20px !important",
+                  }}
+                >
+                  Chọn hình ảnh cho sản phẩm
+                </Typography>
+                <AddPhotoAlternateIcon />
+              </Stack>
+            ) : (
+              <List component={Grid} container>
+                {imageURL.map((url, index) => (
+                  <Grid item xs={6} sm={4} md={3} key={index}>
+                    <ListItem>
+                      <CardMedia
+                        component="img"
+                        height="200px"
+                        style={{
+                          objectFit: "contain",
+                        }}
+                        image={url}
+                        alt={`Hình ảnh sản phẩm ${index}`}
+                      />
+                      <IconButton
+                        size="small"
+                        style={{
+                          position: "absolute",
+
+                          top: 0,
+                          right: 0,
+                          background: "white",
+                        }}
+                        onClick={() => {
+                          const newImages = images.filter(
+                            (image, i) => i !== index
+                          );
+                          setImages(newImages);
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </ListItem>
+                  </Grid>
+                ))}
+              </List>
+            )}
+          </Grid>
+        </Stack>
+      </Grid>
+
+      <ProductVersionSpecification
+        attributes={attributes}
+        specifications={specifications}
+        setSpecifications={setSpecifications}
+      />
+
+      <Grid item xs={12} marginTop={3}>
+        <Stack direction={"row"} justifyContent={"flex-end"} spacing={2}>
+          <CustomButton
+            variant="text"
+            size="large"
+            onClick={() => navigate(-1)}
+          >
+            Huỷ
+          </CustomButton>
+          <CustomButton
+            variant="contained"
+            size="large"
+            onClick={handleAddProductVersion}
+          >
+            Tạo mới
+          </CustomButton>
+        </Stack>
+      </Grid>
+    </Grid>
   );
 }
 
