@@ -16,13 +16,22 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useCallback, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { useReponsive } from "../../../hooks/useReponsive";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import ProductVersionSpecification from "../../../components/Store/ProductVersionSpecification";
+import {
+  addProductVersion,
+  getProductVersionAttributes,
+} from "../../../services/Admin/ProductVersionService";
+import { useSnackbar } from "notistack";
+import { getAllColors } from "../../../services/Admin/ColorService";
+import ColorButton from "../../../components/ColorButton";
+import Loading from "../../../components/Loading";
 
 const CustomTypography = styled(Typography)(({ theme }) => ({
   fontSize: "14px !important",
@@ -39,23 +48,24 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 function AddProductVersionPage() {
   const navigate = useNavigate();
-
+  const { enqueueSnackbar } = useSnackbar();
   const { isFullScreen } = useReponsive();
-
-  const [OS, setOS] = React.useState("");
-
-  const handleChangeOS = (event) => {
-    setOS(event.target.value);
-  };
-
+  const { state } = useLocation();
   const inputImgaes = React.useRef(null);
-
-  const [inputValue, setInputValue] = React.useState("");
-  const [inputPrice, setInputPrice] = React.useState("");
-
   const [images, setImages] = React.useState([]);
   const [imageURL, setImageURL] = React.useState([]);
+  const [attributes, setAttributes] = React.useState([]);
+  const [specifications, setSpecifications] = React.useState({});
+  const [colors, setColors] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
+  const [info, setInfo] = React.useState({
+    productId: state?.productId,
+    colorId: "",
+    price: "0",
+    versisonName: "",
+  });
+  // Preview images
   React.useEffect(() => {
     const listImages = [];
     images.forEach((image) => {
@@ -71,6 +81,138 @@ function AddProductVersionPage() {
     };
   }, [images]);
 
+  const handleGetAttributes = useCallback(async () => {
+    if (!state?.productId) {
+      enqueueSnackbar("Đã có lỗi xảy ra khi tải các thông tin sản phẩm", {
+        variant: "error",
+      });
+      return;
+    }
+
+    const response = await getProductVersionAttributes(state?.productId);
+    if (response.success) {
+      setAttributes(response.data.data);
+      response.data.data.forEach((attribute) => {
+        if (attribute.type === 0) {
+          setSpecifications((prev) => ({
+            ...prev,
+            [attribute.key]: "",
+          }));
+        }
+        if (attribute.type === 1) {
+          setSpecifications((prev) => ({
+            ...prev,
+            [attribute.key]: attribute.selectionValues[0],
+          }));
+        }
+        if (attribute.type === 2) {
+          setSpecifications((prev) => ({
+            ...prev,
+            [attribute.key]: false,
+          }));
+        }
+      });
+    } else
+      enqueueSnackbar("Đã có lỗi xảy ra khi tải các thông tin sản phẩm", {
+        variant: "error",
+      });
+  }, [state?.productId, enqueueSnackbar]);
+
+  const handleGetColors = useCallback(async () => {
+    const response = await getAllColors();
+
+    if (response.success) {
+      setColors(response.data.data);
+    } else
+      enqueueSnackbar("Đã có lỗi xảy ra khi tải các thông tin sản phẩm", {
+        variant: "error",
+      });
+  }, [enqueueSnackbar]);
+
+  useEffect(() => {
+    handleGetAttributes();
+    handleGetColors();
+  }, [handleGetAttributes, handleGetColors]);
+
+  const handleAddProductVersion = async () => {
+    if (
+      info?.versisonName?.trim() === "" ||
+      info?.price?.trim() === "" ||
+      info?.colorId?.trim() === ""
+    ) {
+      enqueueSnackbar("Vui lòng nhập đầy đủ thông tin", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (images.length === 0) {
+      enqueueSnackbar("Vui lòng chọn ảnh cho sản phẩm", {
+        variant: "error",
+      });
+      return;
+    }
+
+    attributes.forEach((attribute) => {
+      if (attribute.isRequired && !specifications[attribute.key]) {
+        enqueueSnackbar(`Vui lòng nhập ${attribute.displayName}`, {
+          variant: "error",
+        });
+        return;
+      }
+    });
+
+    if (!state?.productId) {
+      enqueueSnackbar("Đã có lỗi xảy ra", {
+        variant: "error",
+      });
+      return;
+    }
+
+    // try to cast price to number. If error, enqueueSnackbar and return
+    let price = 0;
+    try {
+      price = parseFloat(info?.price.replace(/,/g, ""));
+      if (isNaN(price)) {
+        enqueueSnackbar("Giá tiền không hợp lệ", {
+          variant: "error",
+        });
+        return;
+      }
+    } catch (error) {
+      enqueueSnackbar("Giá tiền không hợp lệ", {
+        variant: "error",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("productId", state?.productId);
+    formData.append("colorId", info?.colorId);
+    formData.append("Price", price);
+    formData.append("VersionName", info?.versisonName);
+    formData.append("Specification", JSON.stringify(specifications));
+
+    images.forEach((image) => {
+      formData.append("Images", image);
+    });
+
+    setIsLoading(true);
+    const response = await addProductVersion(formData);
+    if (response.success) {
+      enqueueSnackbar("Tạo phiên bản thành công", {
+        variant: "success",
+      });
+      navigate(`/admin/product-management/${state?.productId}`);
+    } else {
+      enqueueSnackbar("Đã có lỗi xảy ra", {
+        variant: "error",
+      });
+    }
+    setIsLoading(false);
+  };
+
+  if (isLoading) return <Loading />;
   return (
     <Grid
       container
@@ -110,7 +252,7 @@ function AddProductVersionPage() {
           paddingTop={4}
           paddingBottom={3}
         >
-          Tạo phiên bản mới cho Iphone 15 Pro Max
+          Tạo phiên bản mới cho {state?.productName}
         </Typography>
       </Grid>
 
@@ -152,7 +294,7 @@ function AddProductVersionPage() {
               }}
               sx={{ width: "100%" }}
             >
-              <Grid container spacing={2.5} alignItems={"center"}>
+              <Grid container spacing={2.5} alignItems={"flex-start"}>
                 <Grid
                   item
                   xs={12}
@@ -166,15 +308,17 @@ function AddProductVersionPage() {
                     label="Tên phiên bản"
                     placeholder="Nhập tên phiên bản"
                     required
-                    error={inputValue?.trim() === ""}
+                    error={info?.versisonName?.trim() === ""}
                     helperText={
-                      inputValue?.trim() === "" &&
+                      info?.versisonName?.trim() === "" &&
                       "Tên phiên bản không được để trống"
                     }
-                    value={inputValue}
+                    value={info?.versisonName}
                     fullWidth
                     size={"small !important"}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    onChange={(e) =>
+                      setInfo({ ...info, versisonName: e.target.value })
+                    }
                     sx={{
                       "& .MuiInputBase-input": {
                         fontSize: "14px !important",
@@ -194,14 +338,21 @@ function AddProductVersionPage() {
                       label="Giá tiền"
                       placeholder="Nhập giá tiền"
                       required
-                      error={inputPrice?.trim() === ""}
+                      type="text"
+                      error={info?.price?.trim() === ""}
                       helperText={
-                        inputPrice?.trim() === "" &&
+                        info?.price?.trim() === "" &&
                         "Giá tiền không được để trống"
                       }
-                      value={inputPrice}
+                      value={info?.price}
                       fullWidth
-                      onChange={(e) => setInputPrice(e.target.value)}
+                      onChange={(e) => {
+                        let nums = e.target.value.replace(/,/g, "");
+                        if (nums === "") nums = "0";
+                        if (!nums || nums.endsWith(".")) return;
+                        const value = parseFloat(nums).toLocaleString("vn");
+                        setInfo({ ...info, price: value });
+                      }}
                       sx={{
                         "& .MuiInputBase-input": {
                           fontSize: "14px !important",
@@ -225,8 +376,10 @@ function AddProductVersionPage() {
 
                     <FormControl fullWidth>
                       <Select
-                        value={OS}
-                        onChange={handleChangeOS}
+                        value={info?.colorId}
+                        onChange={(e) =>
+                          setInfo({ ...info, colorId: e.target.value })
+                        }
                         displayEmpty
                         required
                         size="small"
@@ -235,26 +388,21 @@ function AddProductVersionPage() {
                         }}
                         inputProps={{ "aria-label": "Without label" }}
                       >
-                        <MenuItem value={1}>
-                          <Typography style={{ fontSize: "14px" }}>
-                            IOS
-                          </Typography>
-                        </MenuItem>
-                        <MenuItem value={2}>
-                          <Typography style={{ fontSize: "14px" }}>
-                            Android
-                          </Typography>
-                        </MenuItem>
-                        <MenuItem
-                          value={3}
-                          sx={{
-                            width: "auto",
-                          }}
-                        >
-                          <Typography style={{ fontSize: "14px" }}>
-                            Windows
-                          </Typography>
-                        </MenuItem>
+                        {colors.map((color) => (
+                          <MenuItem value={color.colorId} key={color.colorId}>
+                            <Stack
+                              direction={"row"}
+                              spacing={1}
+                              display={"flex"}
+                              alignItems={"center"}
+                            >
+                              <ColorButton color={color.colorCode} />
+                              <Typography style={{ fontSize: "14px" }}>
+                                {color.colorName}
+                              </Typography>
+                            </Stack>
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Box>
@@ -408,12 +556,26 @@ function AddProductVersionPage() {
         </Stack>
       </Grid>
 
+      <ProductVersionSpecification
+        attributes={attributes}
+        specifications={specifications}
+        setSpecifications={setSpecifications}
+      />
+
       <Grid item xs={12} marginTop={3}>
         <Stack direction={"row"} justifyContent={"flex-end"} spacing={2}>
-          <CustomButton variant="text" size="large">
+          <CustomButton
+            variant="text"
+            size="large"
+            onClick={() => navigate(-1)}
+          >
             Huỷ
           </CustomButton>
-          <CustomButton variant="contained" size="large">
+          <CustomButton
+            variant="contained"
+            size="large"
+            onClick={handleAddProductVersion}
+          >
             Tạo mới
           </CustomButton>
         </Stack>

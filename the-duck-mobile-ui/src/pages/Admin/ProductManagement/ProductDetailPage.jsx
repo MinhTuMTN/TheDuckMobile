@@ -2,22 +2,22 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import { Box, Container, IconButton, Stack, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import BasicProductDetails from "../../../components/Admin/BasicProductDetails";
-import { useLocation, useNavigate } from "react-router-dom";
-import { getProductById } from "../../../services/Admin/ProductService";
 import FormatDateTime from "../../../components/FormatDateTime";
+import { getProductById } from "../../../services/Admin/ProductService";
 
 function ProductDetailPage(props) {
-  const { state } = useLocation();
+  const params = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState({});
 
   const handleGetProduct = useCallback(async () => {
-    const response = await getProductById(state.id);
+    const response = await getProductById(params.productId);
     if (response.success) {
       setProduct(response.data.data);
     }
-  }, [state.id]);
+  }, [params.productId]);
 
   useEffect(() => {
     handleGetProduct();
@@ -78,7 +78,7 @@ function ProductDetailPage(props) {
                   fontSize: "14px",
                 }}
               >
-                Tạo lúc {" "}
+                Tạo lúc{" "}
               </Typography>
               <CalendarTodayOutlinedIcon
                 sx={{

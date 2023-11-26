@@ -312,7 +312,12 @@ function BasicProductDetails(props) {
                     fontSize: "14px !important",
                   }}
                   onClick={() => {
-                    navigate("/admin/product-management/add-product-version");
+                    navigate("/admin/product-management/add-product-version", {
+                      state: {
+                        productId: product.productId,
+                        productName: product.productName,
+                      },
+                    });
                   }}
                 >
                   Thêm
