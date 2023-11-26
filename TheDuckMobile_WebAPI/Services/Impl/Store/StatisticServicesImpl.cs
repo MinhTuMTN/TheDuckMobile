@@ -2,43 +2,49 @@
 using TheDuckMobile_WebAPI.Common;
 using TheDuckMobile_WebAPI.Entities;
 using TheDuckMobile_WebAPI.ErrorHandler;
-using TheDuckMobile_WebAPI.Models.Response.Admin;
-using TheDuckMobile_WebAPI.Services.Admin;
+using TheDuckMobile_WebAPI.Models.Response.Store;
+using TheDuckMobile_WebAPI.Services.Store;
 
 
-namespace TheDuckMobile_WebAPI.Services.Impl.Admin
+namespace TheDuckMobile_WebAPI.Services.Impl.Store
 {
-    public class StatisticAdminServicesImpl : IStatisticAdminServices
+    public class StatisticServicesImpl : IStatisticServices
     {
         private readonly DataContext _context;
 
-        public StatisticAdminServicesImpl(DataContext context)
+        public StatisticServicesImpl(DataContext context)
         {
             _context = context;
         }
 
-        public async Task<StatisticResponse> Statistic(DateTime startDate, DateTime endDate)
+        public async Task<StatisticResponse> Statistic(
+            DateTime startDate,
+            DateTime endDate,
+            Guid storeId)
         {
-            var totalOrders = await _context.Orders.CountAsync();
+            var totalOrders = await _context
+                .Orders
+                .Where(o => o.StoreId == storeId)
+                .CountAsync();
 
             var totalDeliveredOrders = await _context
                 .Orders
-                .Where(o => o.OrderState == OrderState.Delivered)
+                .Where(o =>
+                o.OrderState == OrderState.Delivered &&
+                o.StoreId == storeId)
                 .CountAsync();
 
             var totalStaffs = await _context
                 .Staffs
-                .Where(s => s.IsDeleted == false)
+                .Where(s => s.StoreId == storeId &&
+                s.IsDeleted == false)
                 .CountAsync();
 
-            var totalCustomer = await _context
-                .Customers
-                .Where(c => c.IsDeleted == false)
-                .CountAsync();
-
-            var totalProductVersions = await _context
-                .ProductVersions
-                .Where(pv => pv.IsDeleted == false)
+            var totalStoreProducts = await _context
+                .StoreProducts
+                .Where(sp =>
+                sp.IsDelete == false &&
+                sp.StoreId == storeId)
                 .CountAsync();
 
             var statisticOrders = await _context
@@ -46,7 +52,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 .Where(o =>
                 o.CreatedAt.Date >= startDate &&
                 o.CreatedAt.Date <= endDate &&
-                o.OrderState == OrderState.Delivered)
+                o.OrderState == OrderState.Delivered &&
+                o.StoreId == storeId)
                 .GroupBy(o => o.CreatedAt.Date)
                 .Select(g => new Statistic
                 {
@@ -57,10 +64,9 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
             return new StatisticResponse(
                 totalStaffs,
-                totalCustomer,
                 totalOrders,
                 totalDeliveredOrders,
-                totalProductVersions,
+                totalStoreProducts,
                 statisticOrders);
         }
     }

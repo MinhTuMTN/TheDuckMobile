@@ -1,5 +1,4 @@
-﻿using TheDuckMobile_WebAPI.Models.Request.Admin;
-using TheDuckMobile_WebAPI.Models.Response.Admin;
+﻿using TheDuckMobile_WebAPI.Models.Response.Admin;
 
 namespace TheDuckMobile_WebAPI.Services.Admin
 {

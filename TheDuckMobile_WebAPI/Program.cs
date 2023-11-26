@@ -86,6 +86,8 @@ builder.Services.AddScoped<IStoreProductServices, StoreProductServicesImpl>();
 builder.Services.AddScoped<IStoreCatalogServices, StoreCatalogServicesImpl>();
 builder.Services.AddScoped<IStoreManagementServices, StoreManagementServicesImpl>();
 builder.Services.AddScoped<IStoreOrderServices, StoreOrderServicesImpl>();
+builder.Services.AddScoped<IStatisticServices, StatisticServicesImpl>();
+
 #endregion
 
 var app = builder.Build();

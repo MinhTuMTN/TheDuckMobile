@@ -1,28 +1,30 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TheDuckMobile_WebAPI.Models.Request.Admin;
 using TheDuckMobile_WebAPI.Models.Response;
-using TheDuckMobile_WebAPI.Services.Admin;
+using TheDuckMobile_WebAPI.Services.Store;
 
-namespace TheDuckMobile_WebAPI.Controllers.Admin
+namespace TheDuckMobile_WebAPI.Controllers.Store
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StatisticAdminController : ControllerBase
+    public class StoreStatisticController : ControllerBase
     {
-        private readonly IStatisticAdminServices _statisticServices;
-        public StatisticAdminController(IStatisticAdminServices statisticServices)
+        private readonly IStatisticServices _statisticServices;
+        public StoreStatisticController(IStatisticServices statisticServices)
         {
             _statisticServices = statisticServices;
         }
 
-        [HttpGet()]
+        [HttpGet("{storeId}")]
         [AllowAnonymous]
         /*[Authorize(Roles = "admin")]*/
-        public async Task<IActionResult> Statistic([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        public async Task<IActionResult> Statistic(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,
+            [FromRoute] Guid storeId)
         {
-            var statistic = await _statisticServices.Statistic(startDate, endDate);
+            var statistic = await _statisticServices.Statistic(startDate, endDate, storeId);
             return Ok(new GenericResponse
             {
                 Success = true,
