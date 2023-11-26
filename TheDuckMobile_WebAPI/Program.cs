@@ -78,6 +78,7 @@ builder.Services.AddScoped<IProductVersionAdminServices, ProductVersionAdminServ
 builder.Services.AddScoped<IProvinceAdminServices, ProvinceAdminServicesImpl>();
 builder.Services.AddScoped<IDistrictAdminServices, DistrictAdminServicesImpl>();
 builder.Services.AddScoped<IWardAdminServices, WardAdminServicesImpl>();
+builder.Services.AddScoped<IStatisticAdminServices, StatisticAdminServicesImpl>();
 
 // Store
 builder.Services.AddScoped<IStaffServices, StaffServicesImpl>();
