@@ -199,5 +199,33 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
             return productVersionAttributes;
         }
+
+        public async Task<bool> RestoreProductVersion(Guid productVersionId)
+        {
+            // Set ProductVersion IsDeleted = false and Store Product IsDelete = false
+            var productVersion = await _context
+                .ProductVersions
+                .Include(pv => pv.StoreProducts)
+                .FirstOrDefaultAsync(pv => pv.ProductVersionId == productVersionId);
+
+            // Check if product version is null
+            if (productVersion == null)
+                throw new CustomNotFoundException("Product version not found");
+
+            // Set IsDeleted = false
+            productVersion.IsDeleted = false;
+
+            // Set Store Product IsDelete = false
+            if (productVersion.StoreProducts != null)
+            {
+                foreach (var storeProduct in productVersion.StoreProducts)
+                {
+                    storeProduct.IsDelete = false;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
