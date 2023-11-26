@@ -306,7 +306,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             editProductVersion.Specification = _jsonServices.SerializeObject(specification);
             editProductVersion.Price = request.Price;
             editProductVersion.Color = color;
-            editProductVersion.PromotionPrice = request.Price;
+            editProductVersion.PromotionPrice = request.PromotionPrice;
             editProductVersion.LastModifiredAt = DateTime.UtcNow;
             editProductVersion.Images = newImagesUrl.ToArray();
 

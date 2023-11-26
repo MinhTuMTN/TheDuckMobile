@@ -478,46 +478,50 @@ function AddProductVersionPage() {
                   </Box>
                 </Grid>
 
-                <Grid item xs={12} md={12} component={Box}>
-                  <Box
-                    sx={{
-                      width: "100%",
-                    }}
-                  >
-                    <MuiTextFeild
-                      label="Giá sau khi giảm giá"
-                      placeholder="Nhập giá tiền sau khi giảm giá"
-                      required
-                      type="text"
-                      error={promotionPrice?.trim() === ""}
-                      helperText={
-                        info?.price?.trim() === ""
-                          ? "Giá tiền không được để trống"
-                          : ""
-                      }
-                      value={promotionPrice}
-                      fullWidth
-                      onChange={(e) => {
-                        let nums = e.target.value.replace(/,/g, "");
-                        if (nums === "") nums = "0";
-                        if (!nums || nums.endsWith(".")) return;
-                        const value = parseFloat(nums).toLocaleString("vn");
-                        setPromotionPrice(value);
-                      }}
+                {productVersionId && (
+                  <Grid item xs={12} md={12} component={Box}>
+                    <Box
                       sx={{
-                        "& .MuiInputBase-input": {
-                          fontSize: "14px !important",
-                          padding: "18px 12px !important",
-                        },
+                        width: "100%",
                       }}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">VNĐ</InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Box>
-                </Grid>
+                    >
+                      <MuiTextFeild
+                        label="Giá sau khi giảm giá"
+                        placeholder="Nhập giá tiền sau khi giảm giá"
+                        required
+                        type="text"
+                        error={promotionPrice?.trim() === ""}
+                        helperText={
+                          info?.price?.trim() === ""
+                            ? "Giá tiền không được để trống"
+                            : ""
+                        }
+                        value={promotionPrice}
+                        fullWidth
+                        onChange={(e) => {
+                          let nums = e.target.value.replace(/,/g, "");
+                          if (nums === "") nums = "0";
+                          if (!nums || nums.endsWith(".")) return;
+                          const value = parseFloat(nums).toLocaleString("vn");
+                          setPromotionPrice(value);
+                        }}
+                        sx={{
+                          "& .MuiInputBase-input": {
+                            fontSize: "14px !important",
+                            padding: "18px 12px !important",
+                          },
+                        }}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              VNĐ
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Box>
+                  </Grid>
+                )}
               </Grid>
 
               <Grid container spacing={2.5} alignItems={"center"}>
