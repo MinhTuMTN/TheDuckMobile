@@ -10,5 +10,7 @@ namespace TheDuckMobile_WebAPI.Services.Admin
         public Task<bool> DeleteProductVersion(Guid productVersionId);
         public Task<ICollection<ProductVersionAttributesResponse>> GetProductVersionAttributes(Guid productId);
         public Task<bool> RestoreProductVersion(Guid productVersionId);
+        public Task<ProductVersion> UpdateProductVersion(Guid productVersionId, ProductVersionEditRequest request);
+        public Task<ProductVersion> GetProductVersion(Guid productVersionId);
     }
 }

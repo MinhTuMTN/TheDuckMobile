@@ -77,6 +77,12 @@ namespace TheDuckMobile_WebAPI.Entities
 
 
             #region One to Many
+            // Quan hệ Customer - Coupon
+            modelBuilder.Entity<Coupon>()
+                .HasOne(coupon => coupon.Customer)
+                .WithMany(customer => customer.Coupons)
+                .HasForeignKey(coupon => coupon.CustomerId);
+
             // Quan hệ Store - Province Process
             modelBuilder.Entity<Provine>()
                 .HasOne(p => p.Store)

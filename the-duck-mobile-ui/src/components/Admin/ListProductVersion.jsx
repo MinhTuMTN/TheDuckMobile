@@ -193,7 +193,20 @@ function ListProductVersion(props) {
                     }}
                   >
                     <Stack direction={"column"} justifyContent={"left"}>
-                      <ButtonInPopover variant="text" size="medium">
+                      <ButtonInPopover
+                        variant="text"
+                        size="medium"
+                        onClick={() => {
+                          navigate(
+                            `/admin/product-management/product-version/${item.productVersionId}`,
+                            {
+                              state: {
+                                productId: item.productId,
+                              },
+                            }
+                          );
+                        }}
+                      >
                         Chỉnh sửa
                       </ButtonInPopover>
                       <ButtonInPopover
@@ -215,7 +228,19 @@ function ListProductVersion(props) {
               ) : (
                 // Hiển thị cho màn hình vừa và lớn
                 <>
-                  <IconButton color="black" onClick={(e) => {}}>
+                  <IconButton
+                    color="black"
+                    onClick={(e) => {
+                      navigate(
+                        `/admin/product-management/product-version/${item.productVersionId}`,
+                        {
+                          state: {
+                            productId: item.productId,
+                          },
+                        }
+                      );
+                    }}
+                  >
                     <ModeEditIcon color="black" />
                   </IconButton>
                   <IconButton

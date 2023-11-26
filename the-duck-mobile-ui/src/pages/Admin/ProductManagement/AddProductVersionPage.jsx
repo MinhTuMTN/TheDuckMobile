@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { useReponsive } from "../../../hooks/useReponsive";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -26,7 +26,9 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import ProductVersionSpecification from "../../../components/Store/ProductVersionSpecification";
 import {
   addProductVersion,
+  getProductVersion,
   getProductVersionAttributes,
+  updateProductVersion,
 } from "../../../services/Admin/ProductVersionService";
 import { useSnackbar } from "notistack";
 import { getAllColors } from "../../../services/Admin/ColorService";
@@ -58,6 +60,9 @@ function AddProductVersionPage() {
   const [specifications, setSpecifications] = React.useState({});
   const [colors, setColors] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const { productVersionId } = useParams();
+  const [oldImages, setOldImages] = React.useState([]);
+  const [promotionPrice, setPromotionPrice] = React.useState("");
 
   const [info, setInfo] = React.useState({
     productId: state?.productId,
@@ -83,7 +88,7 @@ function AddProductVersionPage() {
 
   const handleGetAttributes = useCallback(async () => {
     if (!state?.productId) {
-      enqueueSnackbar("Đã có lỗi xảy ra khi tải các thông tin sản phẩm", {
+      enqueueSnackbar("Đã có lỗi xảy ra khi tải các thông tin sản phẩm 1", {
         variant: "error",
       });
       return;
@@ -129,12 +134,41 @@ function AddProductVersionPage() {
       });
   }, [enqueueSnackbar]);
 
+  const handleGetOldProductVersion = useCallback(async () => {
+    const response = await getProductVersion(productVersionId);
+
+    if (response.success) {
+      const productVersion = response.data.data;
+      setInfo({
+        productId: productVersion.productId,
+        colorId: productVersion.colorId,
+        price: productVersion.price.toLocaleString("vn"),
+        versisonName: productVersion.versionName,
+      });
+      setOldImages(productVersion.images);
+      setPromotionPrice(productVersion.promotionPrice.toLocaleString("vn"));
+      setSpecifications(JSON.parse(productVersion.specification));
+    } else
+      enqueueSnackbar("Đã có lỗi xảy ra khi tải các thông tin sản phẩm", {
+        variant: "error",
+      });
+  }, [enqueueSnackbar, productVersionId]);
+
+  // Init data
   useEffect(() => {
     handleGetAttributes();
     handleGetColors();
-  }, [handleGetAttributes, handleGetColors]);
+    if (productVersionId) {
+      handleGetOldProductVersion();
+    }
+  }, [
+    handleGetAttributes,
+    handleGetColors,
+    productVersionId,
+    handleGetOldProductVersion,
+  ]);
 
-  const handleAddProductVersion = async () => {
+  const handleCheckProperties = () => {
     if (
       info?.versisonName?.trim() === "" ||
       info?.price?.trim() === "" ||
@@ -143,14 +177,14 @@ function AddProductVersionPage() {
       enqueueSnackbar("Vui lòng nhập đầy đủ thông tin", {
         variant: "error",
       });
-      return;
+      return false;
     }
 
-    if (images.length === 0) {
+    if (images.length === 0 && !productVersionId) {
       enqueueSnackbar("Vui lòng chọn ảnh cho sản phẩm", {
         variant: "error",
       });
-      return;
+      return false;
     }
 
     attributes.forEach((attribute) => {
@@ -158,7 +192,7 @@ function AddProductVersionPage() {
         enqueueSnackbar(`Vui lòng nhập ${attribute.displayName}`, {
           variant: "error",
         });
-        return;
+        return false;
       }
     });
 
@@ -166,9 +200,14 @@ function AddProductVersionPage() {
       enqueueSnackbar("Đã có lỗi xảy ra", {
         variant: "error",
       });
-      return;
+      return false;
     }
 
+    return true;
+  };
+
+  const handleAddProductVersion = async () => {
+    if (!handleCheckProperties()) return;
     // try to cast price to number. If error, enqueueSnackbar and return
     let price = 0;
     try {
@@ -201,6 +240,75 @@ function AddProductVersionPage() {
     const response = await addProductVersion(formData);
     if (response.success) {
       enqueueSnackbar("Tạo phiên bản thành công", {
+        variant: "success",
+      });
+      navigate(`/admin/product-management/${state?.productId}`);
+    } else {
+      enqueueSnackbar("Đã có lỗi xảy ra", {
+        variant: "error",
+      });
+    }
+    setIsLoading(false);
+  };
+
+  const handleUpdateProductVersion = async () => {
+    if (!handleCheckProperties()) return;
+    // try to cast price to number. If error, enqueueSnackbar and return
+    let price = 0;
+    try {
+      price = parseFloat(info?.price.replace(/,/g, ""));
+      if (isNaN(price)) {
+        enqueueSnackbar("Giá tiền không hợp lệ", {
+          variant: "error",
+        });
+        return;
+      }
+    } catch (error) {
+      enqueueSnackbar("Giá tiền không hợp lệ", {
+        variant: "error",
+      });
+      return;
+    }
+
+    // try to cast promotionPrice to number. If error, enqueueSnackbar and return
+    let promotionPriceRequest = 0;
+    try {
+      promotionPriceRequest = parseFloat(promotionPrice?.replace(/,/g, ""));
+      if (isNaN(promotionPriceRequest)) {
+        enqueueSnackbar("Giá khuyến mãi không hợp lệ 1", {
+          variant: "error",
+        });
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar("Giá khuyến mãi không hợp lệ 2", {
+        variant: "error",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("productId", state?.productId);
+    formData.append("colorId", info?.colorId);
+    formData.append("Price", price);
+    formData.append("VersionName", info?.versisonName);
+    formData.append("Specification", JSON.stringify(specifications));
+    formData.append("promotionPrice", promotionPriceRequest);
+    formData.append("promotionPrice", promotionPrice);
+
+    images.forEach((image) => {
+      formData.append("NewImages", image);
+    });
+
+    oldImages.forEach((image) => {
+      formData.append("OldImagesUrl", image);
+    });
+
+    setIsLoading(true);
+    const response = await updateProductVersion(productVersionId, formData);
+    if (response.success) {
+      enqueueSnackbar("Cập nhật phiên bản thành công", {
         variant: "success",
       });
       navigate(`/admin/product-management/${state?.productId}`);
@@ -310,8 +418,9 @@ function AddProductVersionPage() {
                     required
                     error={info?.versisonName?.trim() === ""}
                     helperText={
-                      info?.versisonName?.trim() === "" &&
-                      "Tên phiên bản không được để trống"
+                      info?.versisonName?.trim() === ""
+                        ? "Tên phiên bản không được để trống"
+                        : ""
                     }
                     value={info?.versisonName}
                     fullWidth
@@ -341,8 +450,9 @@ function AddProductVersionPage() {
                       type="text"
                       error={info?.price?.trim() === ""}
                       helperText={
-                        info?.price?.trim() === "" &&
-                        "Giá tiền không được để trống"
+                        info?.price?.trim() === ""
+                          ? "Giá tiền không được để trống"
+                          : ""
                       }
                       value={info?.price}
                       fullWidth
@@ -367,6 +477,51 @@ function AddProductVersionPage() {
                     />
                   </Box>
                 </Grid>
+
+                {productVersionId && (
+                  <Grid item xs={12} md={12} component={Box}>
+                    <Box
+                      sx={{
+                        width: "100%",
+                      }}
+                    >
+                      <MuiTextFeild
+                        label="Giá sau khi giảm giá"
+                        placeholder="Nhập giá tiền sau khi giảm giá"
+                        required
+                        type="text"
+                        error={promotionPrice?.trim() === ""}
+                        helperText={
+                          info?.price?.trim() === ""
+                            ? "Giá tiền không được để trống"
+                            : ""
+                        }
+                        value={promotionPrice}
+                        fullWidth
+                        onChange={(e) => {
+                          let nums = e.target.value.replace(/,/g, "");
+                          if (nums === "") nums = "0";
+                          if (!nums || nums.endsWith(".")) return;
+                          const value = parseFloat(nums).toLocaleString("vn");
+                          setPromotionPrice(value);
+                        }}
+                        sx={{
+                          "& .MuiInputBase-input": {
+                            fontSize: "14px !important",
+                            padding: "18px 12px !important",
+                          },
+                        }}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              VNĐ
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Box>
+                  </Grid>
+                )}
               </Grid>
 
               <Grid container spacing={2.5} alignItems={"center"}>
@@ -492,7 +647,7 @@ function AddProductVersionPage() {
               alignItems: "center",
             }}
           >
-            {imageURL.length === 0 ? (
+            {imageURL.length === 0 && oldImages?.length === 0 ? (
               <Stack
                 direction={"row"}
                 spacing={1}
@@ -517,6 +672,39 @@ function AddProductVersionPage() {
               </Stack>
             ) : (
               <List component={Grid} container>
+                {oldImages.map((image, index) => (
+                  <Grid item xs={6} sm={4} md={3} key={`old-${index}`}>
+                    <ListItem>
+                      <CardMedia
+                        component="img"
+                        height="200px"
+                        style={{
+                          objectFit: "contain",
+                        }}
+                        image={image}
+                        alt={`Hình ảnh sản phẩm ${index}`}
+                      />
+                      <IconButton
+                        size="small"
+                        style={{
+                          position: "absolute",
+
+                          top: 0,
+                          right: 0,
+                          background: "white",
+                        }}
+                        onClick={() => {
+                          const newImages = oldImages.filter(
+                            (image, i) => i !== index
+                          );
+                          setOldImages(newImages);
+                        }}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </ListItem>
+                  </Grid>
+                ))}
                 {imageURL.map((url, index) => (
                   <Grid item xs={6} sm={4} md={3} key={index}>
                     <ListItem>
@@ -574,9 +762,13 @@ function AddProductVersionPage() {
           <CustomButton
             variant="contained"
             size="large"
-            onClick={handleAddProductVersion}
+            onClick={
+              productVersionId
+                ? handleUpdateProductVersion
+                : handleAddProductVersion
+            }
           >
-            Tạo mới
+            {productVersionId ? "Cập nhật" : "Tạo mới"}
           </CustomButton>
         </Stack>
       </Grid>

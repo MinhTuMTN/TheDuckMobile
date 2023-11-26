@@ -157,6 +157,20 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return productVersion.IsDeleted;
         }
 
+        public async Task<ProductVersion> GetProductVersion(Guid productVersionId)
+        {
+            var productVersion = await _context
+                .ProductVersions
+                .Include(pv => pv.Product)
+                .Include(pv => pv.Color)
+                .FirstOrDefaultAsync(pv => pv.ProductVersionId == productVersionId);
+
+            if (productVersion == null)
+                throw new CustomNotFoundException("Product version not found");
+
+            return productVersion;
+        }
+
         public async Task<ICollection<ProductVersionAttributesResponse>> GetProductVersionAttributes(Guid productId)
         {
             var product = await _context
@@ -226,6 +240,96 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
             await _context.SaveChangesAsync();
             return true;
+        }
+        public async Task<ProductVersion> UpdateProductVersion(Guid productVersionId, ProductVersionEditRequest request)
+        {
+            var editProductVersion = await _context
+                .ProductVersions
+                .Include(pv => pv.Product)
+                .Include(pv => pv.Color)
+                .FirstOrDefaultAsync(pv => pv.ProductVersionId == productVersionId);
+
+            if (editProductVersion == null)
+                throw new CustomNotFoundException("Product version not found");
+
+            // Check Promotion Price
+            if (request.PromotionPrice > request.Price)
+                throw new BadHttpRequestException("Promotion price can't be greater than price");
+
+            // Product
+            var product = await _context
+                .Products
+                .Include(p => p.Catalog)
+                .FirstOrDefaultAsync(p => p.ProductId == request.ProductId);
+
+            if (product == null)
+                throw new CustomNotFoundException("Product not found");
+
+            // Specification
+            var catalogAttributes = await _context
+                .CatalogAttributes
+                .Where(ca => ca.CatalogId == product.CatalogId && ca.IsDeleted == false)
+                .ToListAsync();
+
+            IDictionary<string, object> specification = await _jsonServices
+                .DeserializeObject(request.Specification!, catalogAttributes);
+
+            // Color
+            var color = await _context
+                .Colors
+                .FirstOrDefaultAsync(c => c.ColorId == Guid.Parse(request.ColorId!));
+
+            if (color == null)
+                throw new CustomNotFoundException("Color not found");
+
+            if (request.VersionName == null || request.VersionName.Trim().Length == 0)
+                throw new BadHttpRequestException("Version name can't be empty");
+
+            // Images
+            // Create string array to store Image URLs
+            List<string> newImagesUrl = new List<string>();
+            foreach (var image in request.NewImages!)
+            {
+                var uploadResult = await _cloudinaryServices.UploadImage(image);
+
+                if (uploadResult == null)
+                    throw new BadHttpRequestException("Can't upload image");
+
+                newImagesUrl.Add(uploadResult);
+            }
+
+            if (request.OldImagesUrl != null)
+                newImagesUrl.AddRange(request.OldImagesUrl);
+
+            // Update Product Version
+            editProductVersion.VersionName = request.VersionName;
+            editProductVersion.Specification = _jsonServices.SerializeObject(specification);
+            editProductVersion.Price = request.Price;
+            editProductVersion.Color = color;
+            editProductVersion.PromotionPrice = request.PromotionPrice;
+            editProductVersion.LastModifiredAt = DateTime.UtcNow;
+            editProductVersion.Images = newImagesUrl.ToArray();
+
+            await _context.SaveChangesAsync();
+
+            // Update Product Price
+            if ((request.Price > 0 && request.Price < product.ProductPrice) || product.ProductPrice == 0)
+            {
+                product.ProductPrice = request.Price;
+                await _context.SaveChangesAsync();
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Update Promotion Price
+            if ((request.PromotionPrice > 0 && request.PromotionPrice < product.PromotionPrice) ||
+                product.PromotionPrice == 0)
+            {
+                product.PromotionPrice = request.PromotionPrice;
+                await _context.SaveChangesAsync();
+            }
+
+            return editProductVersion;
         }
     }
 }

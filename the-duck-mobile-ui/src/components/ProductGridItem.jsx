@@ -63,6 +63,8 @@ const ProductGridItem = ({ productInfo, styled }) => {
           alt="Hinh anh san pham"
           sx={{
             cursor: "pointer",
+            maxHeight: "12rem",
+            objectFit: "contain",
             transition: "transform 0.3s ease-in-out",
             "&:hover": {
               transform: "translateY(-8px)", // Điều chỉnh giá trị theo mong muốn của bạn

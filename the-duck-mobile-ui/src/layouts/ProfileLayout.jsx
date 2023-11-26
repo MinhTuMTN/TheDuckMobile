@@ -3,6 +3,7 @@ import {
   LocalShippingOutlined,
   Person2Outlined,
   StoreMallDirectoryOutlined,
+  LoyaltyOutlined,
 } from "@mui/icons-material";
 import {
   Box,
@@ -107,6 +108,14 @@ function ProfileLayout(props) {
               <CustomLink to={"order-history"}>
                 <Typography variant="body1" component="h1">
                   Đơn hàng
+                </Typography>
+              </CustomLink>
+            </Stack>
+            <Stack direction={"row"} spacing={2} mt={1}>
+              <LoyaltyOutlined />
+              <CustomLink to={"points"}>
+                <Typography variant="body1" component="h1">
+                  Điểm tích lũy
                 </Typography>
               </CustomLink>
             </Stack>

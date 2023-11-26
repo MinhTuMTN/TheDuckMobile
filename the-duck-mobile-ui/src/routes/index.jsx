@@ -44,12 +44,14 @@ import Product from "../pages/Seller/Product";
 import { StoreProtectedLayout } from "../layouts/StoreProtectedLayout";
 import CouponDetailPage from "../pages/Admin/CouponManagement/CouponDetailPage";
 
+import Points from "../pages/Points";
+
 const LazyLoad = (Component) => (props) =>
-(
-  <React.Suspense fallback={<Loading />}>
-    <Component {...props} />
-  </React.Suspense>
-);
+  (
+    <React.Suspense fallback={<Loading />}>
+      <Component {...props} />
+    </React.Suspense>
+  );
 
 const HomeLazy = LazyLoad(React.lazy(() => import("../pages/Home")));
 const SearchProductLazy = LazyLoad(
@@ -135,6 +137,10 @@ function Router(props) {
               path: "order-details",
               element: <OrderHistoryDetails />,
             },
+            {
+              path: "points",
+              element: <Points />,
+            },
           ],
         },
       ],
@@ -190,7 +196,10 @@ function Router(props) {
           path: "product-management/add-product-version",
           element: <AddProductVersionPage />,
         },
-
+        {
+          path: "product-management/product-version/:productVersionId",
+          element: <AddProductVersionPage />,
+        },
         {
           path: "product-management/:productId",
           element: <ProductDetailPage />,
