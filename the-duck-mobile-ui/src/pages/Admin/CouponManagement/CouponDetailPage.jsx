@@ -81,7 +81,7 @@ function CouponDetailPage() {
                       fontSize: ["1.5rem", "2rem"],
                     }}
                   >
-                    {coupon.couponCode}
+                    Mã giảm giá "{coupon.couponCode}"
                   </Typography>
                 </Stack>
               </Stack>

@@ -68,7 +68,8 @@ function OrderDetailPage(props) {
                 color: "#111927",
               }}
             >
-              Danh sách đơn hàng
+              {pathSegs[pathSegs.length - 1] !== "order-management" ?
+                "Thông tin khách hàng" : "Danh sách đơn hàng"}
             </Typography>
           </Stack>
           <Typography
