@@ -8,6 +8,7 @@ namespace TheDuckMobile_WebAPI.Models.Response.Store
         public int TotalOrders { get; set; }
         public int TotalDeliveredOrders { get; set; }
         public int TotalStoreProducts { get; set; }
+        /*public List<StoreProduct> TopSoldStoreProducts { get; set; }*/
         public List<Statistic> Statistics { get; set; }
 
         public StatisticResponse(
@@ -15,12 +16,14 @@ namespace TheDuckMobile_WebAPI.Models.Response.Store
             int totalOrders,
             int totalDeliveredOrders,
             int totalStoreProducts,
+            /*List<StoreProduct> topSoldStoreProducts,*/
             List<Statistic> statistics)
         {
             TotalStaffs = totalStaffs;
             TotalOrders = totalOrders;
             TotalDeliveredOrders = totalDeliveredOrders;
             TotalStoreProducts = totalStoreProducts;
+            /*TopSoldStoreProducts = topSoldStoreProducts;*/
             Statistics = statistics;
         }
     }

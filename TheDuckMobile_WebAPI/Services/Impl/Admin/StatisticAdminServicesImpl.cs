@@ -41,6 +41,13 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 .Where(pv => pv.IsDeleted == false)
                 .CountAsync();
 
+            var topSoldProducts = await _context
+                .Products
+                .Where(p => p.IsDeleted == false)
+                .OrderByDescending(p => p.Sold)
+                .Take(5)
+                .ToListAsync();
+
             var statisticOrders = await _context
                 .Orders
                 .Where(o =>
@@ -61,6 +68,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 totalOrders,
                 totalDeliveredOrders,
                 totalProductVersions,
+                topSoldProducts,
                 statisticOrders);
         }
     }
