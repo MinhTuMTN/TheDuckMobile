@@ -18,7 +18,11 @@ function BooleanTypeSpecification(props) {
       >
         {lable} {props.isRequired ? "*" : ""}
       </Typography>
-      <StyledCheckbox size={"small"} checked={value} onChange={onChange} />
+      <StyledCheckbox
+        size={"small"}
+        checked={value ? value : false}
+        onChange={onChange}
+      />
     </Stack>
   );
 }

@@ -74,6 +74,11 @@ function Sliders(props) {
                 width={width}
                 height={height}
                 onClick={onClick}
+                style={{
+                  objectFit: "fill",
+                  maxWidth: "10rem",
+                  maxHeight: "7rem",
+                }}
               />
             );
           })}

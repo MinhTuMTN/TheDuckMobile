@@ -33,6 +33,7 @@ import {
 import { getVotesByProductId } from "../services/VoteServices";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
+import { Helmet } from "react-helmet-async";
 
 const Wrapper = styled.div``;
 const ShopArea = styled.div`
@@ -178,6 +179,9 @@ function ProductDetails(props) {
 
   return (
     <Wrapper>
+      <Helmet>
+        <title>{info?.productName} | The Duck Mobile</title>
+      </Helmet>
       <CustomBreadcrumb
         urls={[
           {
