@@ -44,6 +44,8 @@ import Product from "../pages/Seller/Product";
 import { StoreProtectedLayout } from "../layouts/StoreProtectedLayout";
 import CouponDetailPage from "../pages/Admin/CouponManagement/CouponDetailPage";
 
+import Points from "../pages/Points";
+
 const LazyLoad = (Component) => (props) =>
   (
     <React.Suspense fallback={<Loading />}>
@@ -134,6 +136,10 @@ function Router(props) {
             {
               path: "order-details",
               element: <OrderHistoryDetails />,
+            },
+            {
+              path: "points",
+              element: <Points />,
             },
           ],
         },
