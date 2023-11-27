@@ -8,10 +8,11 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import OptionsInAnalyticPage from "../../components/Admin/OptionsInAnalyticPage";
 import RevenueChart from "../../components/Admin/RevenueChart";
 import TopProduct from "../../components/Admin/TopProduct";
+import { DataContext } from "../../layouts/AdminLayout";
 
 const paperStyle = {
   marginTop: 4,
@@ -19,6 +20,7 @@ const paperStyle = {
 };
 
 function Analytics(props) {
+  const { statistic } = useContext(DataContext);
   const theme = useTheme();
   const isFullWidth = useMediaQuery(theme.breakpoints.up("md"));
   const spacingValue = isFullWidth ? 4 : 0;
@@ -41,7 +43,7 @@ function Analytics(props) {
 
             <Grid container spacing={spacingValue}>
               <Grid item xs={12} md={8}>
-                <OptionsInAnalyticPage />
+                <OptionsInAnalyticPage statisticData={statistic} />
                 <Stack component={Paper} elevation={3} sx={paperStyle}>
                   <Stack
                     sx={{
@@ -49,12 +51,12 @@ function Analytics(props) {
                       paddingTop: 0,
                     }}
                   >
-                    <RevenueChart />
+                    <RevenueChart statisticData={statistic} />
                   </Stack>
                 </Stack>
               </Grid>
               <Grid item xs={12} md={4}>
-                <TopProduct />
+                <TopProduct topProducts={statistic.topSoldProducts} />
               </Grid>
             </Grid>
           </Stack>

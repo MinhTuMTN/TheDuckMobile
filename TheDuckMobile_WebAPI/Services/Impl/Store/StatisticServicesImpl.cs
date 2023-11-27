@@ -56,6 +56,16 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 .Take(5)
                 .ToListAsync();*/
 
+            if (startDate == DateTime.MinValue)
+            {
+                startDate = DateTime.Now.AddDays(-30);
+            }
+
+            if (endDate == DateTime.MinValue)
+            {
+                endDate = DateTime.Now;
+            }
+
             var statisticOrders = await _context
                 .Orders
                 .Where(o =>
@@ -71,12 +81,22 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 })
                 .ToListAsync();
 
+            List<string> labelStatistic = new List<string>();
+            List<double> dataStatistic = new List<double>();
+            foreach (var statistic in statisticOrders)
+            {
+                labelStatistic.Add(statistic.OrderDate.ToString("dd/MM"));
+                dataStatistic.Add(statistic.OrderTotal);
+            }
+
             return new StatisticResponse(
                 totalStaffs,
                 totalOrders,
                 totalDeliveredOrders,
                 totalStoreProducts,
                 /*topSoldStoreProducts,*/
+                labelStatistic,
+                dataStatistic,
                 statisticOrders);
         }
     }

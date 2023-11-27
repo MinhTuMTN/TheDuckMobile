@@ -11,6 +11,7 @@ import RedeemIcon from "@mui/icons-material/Redeem";
 import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import StoreIcon from "@mui/icons-material/Store";
+import AnalyticsIcon from '@mui/icons-material/Analytics';
 import pic from "../assets/logo-removebg-preview.jpg";
 
 import {
@@ -121,6 +122,13 @@ const sidebarItems = [
     to: "/admin/feedback-management",
     section: "feedback-management",
   },
+  {
+    display: "Thống Kê",
+    icon: <AnalyticsIcon />,
+    to: "/admin/analytics",
+    section: "analytics",
+    analytics: true
+  },
 ];
 
 function AdminSidebar(props) {
@@ -132,7 +140,7 @@ function AdminSidebar(props) {
     .split("/")
     .filter((part) => part !== "")[1];
 
-  if (currentSection === undefined) currentSection = "customer-management";
+  if (currentSection === undefined) currentSection = "analytics";
   const activeSection = sidebarItems.find(
     (item) => item.section === currentSection
   )?.section;
@@ -179,11 +187,38 @@ function AdminSidebar(props) {
               The Duck Mobile
             </Typography>
           </Box>
-
           <Typography
             variant="h6"
             paddingX={3}
             paddingTop={4}
+            paddingBottom={1}
+            style={{
+              fontSize: "15px",
+              color: "white",
+              fontWeight: "700",
+            }}
+          >
+            {" "}
+            THỐNG KÊ{" "}
+          </Typography>
+          <ListItem disablePadding key={sidebarItems[sidebarItems.length - 1].section}>
+            <CustomLink to={sidebarItems[sidebarItems.length - 1].to} width={"100%"}>
+              <CustomListItemButton
+                active={activeSection === sidebarItems[sidebarItems.length - 1].section ? "true" : "false"}
+              >
+                <CustomListItemIcon>{sidebarItems[sidebarItems.length - 1].icon}</CustomListItemIcon>
+                <ListItemText
+                  disableTypography
+                  style={{ color: "#b5bac0 !important", fontSize: "14px" }}
+                  primary={sidebarItems[sidebarItems.length - 1].display}
+                />
+              </CustomListItemButton>
+            </CustomLink>
+          </ListItem>
+          <Typography
+            variant="h6"
+            paddingX={3}
+            paddingTop={2}
             style={{
               fontSize: "15px",
               color: "white",
@@ -193,9 +228,9 @@ function AdminSidebar(props) {
             {" "}
             QUẢN LÝ{" "}
           </Typography>
-
           <List>
             {sidebarItems.map((item, index) => (
+              !item.analytics &&
               <ListItem disablePadding key={item.section}>
                 <CustomLink to={item.to} width={"100%"}>
                   <CustomListItemButton
@@ -212,19 +247,6 @@ function AdminSidebar(props) {
               </ListItem>
             ))}
           </List>
-          <Typography
-            variant="h6"
-            paddingX={3}
-            paddingBottom={4}
-            style={{
-              fontSize: "15px",
-              color: "white",
-              fontWeight: "700",
-            }}
-          >
-            {" "}
-            THỐNG KÊ{" "}
-          </Typography>
         </Box>
       </Drawer>
     );

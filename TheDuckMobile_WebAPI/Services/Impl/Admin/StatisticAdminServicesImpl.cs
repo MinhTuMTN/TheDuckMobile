@@ -41,18 +41,34 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 .Where(pv => pv.IsDeleted == false)
                 .CountAsync();
 
+            var totalStores = await _context
+                .Stores
+                .Where(s => s.IsDeleted == false)
+                .CountAsync();
+
             var topSoldProducts = await _context
                 .Products
+                .Include(p => p.Catalog)
                 .Where(p => p.IsDeleted == false)
                 .OrderByDescending(p => p.Sold)
                 .Take(5)
                 .ToListAsync();
 
+            if (startDate == DateTime.MinValue)
+            {
+                startDate = DateTime.Now.AddDays(-30);
+            }
+
+            if (endDate == DateTime.MinValue)
+            {
+                endDate = DateTime.Now;
+            }
+
             var statisticOrders = await _context
                 .Orders
                 .Where(o =>
-                o.CreatedAt.Date >= startDate &&
-                o.CreatedAt.Date <= endDate &&
+                o.CreatedAt.Date >= startDate.Date &&
+                o.CreatedAt.Date <= endDate.Date &&
                 o.OrderState == OrderState.Delivered)
                 .GroupBy(o => o.CreatedAt.Date)
                 .Select(g => new Statistic
@@ -62,13 +78,24 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 })
                 .ToListAsync();
 
+            List<string> labelStatistic = new List<string>();
+            List<double> dataStatistic = new List<double>();
+            foreach (var statistic in statisticOrders)
+            {
+                labelStatistic.Add(statistic.OrderDate.ToString("dd/MM"));
+                dataStatistic.Add(statistic.OrderTotal);
+            }
+
             return new StatisticResponse(
                 totalStaffs,
                 totalCustomer,
                 totalOrders,
                 totalDeliveredOrders,
                 totalProductVersions,
+                totalStores,
                 topSoldProducts,
+                labelStatistic,
+                dataStatistic,
                 statisticOrders);
         }
     }

@@ -55,7 +55,6 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public int? CatalogId { get; set; }
         private Catalog? _catalog;
-        [JsonIgnore]
         public virtual Catalog? Catalog
         {
             get => _lazyLoader.Load(this, ref _catalog);

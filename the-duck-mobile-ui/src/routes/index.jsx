@@ -47,11 +47,11 @@ import CouponDetailPage from "../pages/Admin/CouponManagement/CouponDetailPage";
 import Points from "../pages/Points";
 
 const LazyLoad = (Component) => (props) =>
-  (
-    <React.Suspense fallback={<Loading />}>
-      <Component {...props} />
-    </React.Suspense>
-  );
+(
+  <React.Suspense fallback={<Loading />}>
+    <Component {...props} />
+  </React.Suspense>
+);
 
 const HomeLazy = LazyLoad(React.lazy(() => import("../pages/Home")));
 const SearchProductLazy = LazyLoad(
@@ -214,7 +214,7 @@ function Router(props) {
           element: <CustomerListPage />,
         },
         {
-          element: <CustomerListPage />,
+          element: <Analytics />,
           index: true,
         },
         {

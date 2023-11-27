@@ -158,7 +158,7 @@ function StoreListPage() {
                     </TableHead>
                     <TableBody>
                         {(rowsPerPage > 0
-                            ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            ? rowsSearched?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : rowsSearched
                         ).map((row, i) => (
                             <TableRow key={i}>

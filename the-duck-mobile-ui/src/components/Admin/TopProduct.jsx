@@ -40,6 +40,7 @@ const CustomListItem = styled(ListItem)({
   },
 });
 function TopProduct(props) {
+  const { topProducts } = props;
   return (
     <Stack component={Paper} elevation={3} sx={paperStyle}>
       <BoxStyle
@@ -74,6 +75,17 @@ function TopProduct(props) {
             }}
           >
             <Stack direction={"column"} spacing={2}>
+              {topProducts?.map((product, index) => (
+                <CustomListItem
+                  sx={{
+                    padding: 0,
+                  }}
+                  key={index}
+                >
+                  <TopProductItem product={product} index={index} />
+                </CustomListItem>
+              ))}
+              {/* 
               <CustomListItem
                 sx={{
                   padding: 0,
@@ -101,14 +113,7 @@ function TopProduct(props) {
                 }}
               >
                 <TopProductItem />
-              </CustomListItem>
-              <CustomListItem
-                sx={{
-                  padding: 0,
-                }}
-              >
-                <TopProductItem />
-              </CustomListItem>
+              </CustomListItem> */}
             </Stack>
           </List>
         </Stack>

@@ -4,6 +4,7 @@ import { Box, Grid, IconButton, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
 import orderpic from "../../assets/ordering.png";
 import productpic from "../../assets/product.png";
+import { useNavigate } from "react-router-dom";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   paddingTop: "12px !important",
@@ -27,6 +28,8 @@ const TieuDeCot = styled(Typography)(({ theme }) => ({
 }));
 
 function OptionsInAnalyticPage(props) {
+  const { statisticData } = props;
+  const navigate = useNavigate();
   return (
     <Stack
       spacing={2}
@@ -67,7 +70,7 @@ function OptionsInAnalyticPage(props) {
               />
               <Stack direction={"column"}>
                 <TieuDe>Số Đơn Hàng</TieuDe>
-                <TieuDeCot>500</TieuDeCot>
+                <TieuDeCot>{statisticData.totalOrders}</TieuDeCot>
               </Stack>
             </Stack>
 
@@ -96,6 +99,7 @@ function OptionsInAnalyticPage(props) {
                 style={{
                   fontSize: "14px",
                 }}
+                onClick={() => navigate("/admin/order-management")}
               >
                 <EastIcon
                   sx={{
@@ -135,7 +139,7 @@ function OptionsInAnalyticPage(props) {
               />
               <Stack direction={"column"}>
                 <TieuDe>Số Sản Phẩm</TieuDe>
-                <TieuDeCot>500</TieuDeCot>
+                <TieuDeCot>{statisticData.totalProductVersions}</TieuDeCot>
               </Stack>
             </Stack>
 
@@ -164,6 +168,7 @@ function OptionsInAnalyticPage(props) {
                 style={{
                   fontSize: "14px",
                 }}
+                onClick={() => navigate("/admin/product-management")}
               >
                 <EastIcon
                   sx={{
@@ -202,7 +207,7 @@ function OptionsInAnalyticPage(props) {
               />
               <Stack direction={"column"}>
                 <TieuDe>Số Chi Nhánh</TieuDe>
-                <TieuDeCot>20</TieuDeCot>
+                <TieuDeCot>{statisticData.totalStores}</TieuDeCot>
               </Stack>
             </Stack>
 
@@ -231,6 +236,7 @@ function OptionsInAnalyticPage(props) {
                 style={{
                   fontSize: "14px",
                 }}
+                onClick={() => navigate("/admin/store-management")}
               >
                 <EastIcon
                   sx={{
