@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TheDuckMobile_WebAPI.Models.Request.Admin;
 using TheDuckMobile_WebAPI.Models.Response;
 using TheDuckMobile_WebAPI.Services.Admin;
 
@@ -11,9 +12,11 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
     public class StoreAdminController : ControllerBase
     {
         private readonly IStoreAdminServices _storeAdminServices;
-        public StoreAdminController(IStoreAdminServices storeAdminServices)
+        private readonly IStaffAdminServices _staffAdminServices;
+        public StoreAdminController(IStoreAdminServices storeAdminServices, IStaffAdminServices staffAdminServices)
         {
             _storeAdminServices = storeAdminServices;
+            _staffAdminServices = staffAdminServices;
         }
 
         [HttpGet]
@@ -75,6 +78,38 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Success = true,
                 Message = "Store restored successfully.",
                 Data = store
+            });
+        }
+
+        [HttpPost("{storeId}/staff")]
+        public async Task<IActionResult> AddStaff([FromRoute] Guid storeId, [FromBody] CreateStaffRequest request)
+        {
+            var staff = await _staffAdminServices.CreateStaff(storeId, request);
+
+            if (staff == null)
+                throw new BadHttpRequestException("Staff could not be added.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Staff added successfully.",
+                Data = staff
+            });
+        }
+
+        [HttpGet("{storeId}/staff/{staffId}/reset")]
+        public async Task<IActionResult> ResetStaffPassword([FromRoute] Guid storeId, [FromRoute] Guid staffId)
+        {
+            var staff = await _staffAdminServices.ResetPassword(storeId, staffId);
+
+            if (staff == null)
+                throw new BadHttpRequestException("Staff could not be reset password.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Staff reset password successfully.",
+                Data = staff
             });
         }
     }

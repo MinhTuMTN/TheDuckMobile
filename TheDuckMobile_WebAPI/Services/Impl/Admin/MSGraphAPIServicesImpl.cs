@@ -1,7 +1,9 @@
 ﻿using Azure.Identity;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
+using Microsoft.Graph.Users.Item.AssignLicense;
 using Microsoft.Graph.Users.Item.Authentication.Methods.Item.ResetPassword;
+using Microsoft.Graph.Users.Item.SendMail;
 using TheDuckMobile_WebAPI.ErrorHandler;
 using TheDuckMobile_WebAPI.Services.Admin;
 
@@ -31,14 +33,33 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                     ForceChangePasswordNextSignIn = true,
                     ForceChangePasswordNextSignInWithMfa = false,
                     Password = "HCMUTE@2023"
-                }
+                },
+                UsageLocation = "VN",
             };
             var result = await graphClient.Users.PostAsync(user);
 
             if (result is null)
                 throw new ExceptionWithStatusCode(500, "Cannot create new user");
 
-            return result.Id!;
+            var userId = result.Id;
+
+            var requestBody = new AssignLicensePostRequestBody
+            {
+                AddLicenses = new List<AssignedLicense>
+                {
+                    new AssignedLicense
+                    {
+                        DisabledPlans = new List<Guid?>(),
+                        SkuId = Guid.Parse("c42b9cae-ea4f-4ab7-9717-81576235ccac"),
+                    },
+                },
+                RemoveLicenses = new List<Guid?>(),
+            };
+
+            // To initialize your graphClient, see https://learn.microsoft.com/en-us/graph/sdks/create-client?from=snippets&tabs=csharp
+            await graphClient.Users[userId].AssignLicense.PostAsync(requestBody);
+
+            return userId;
         }
 
         public async Task<string> ResetPassword(string userId)
@@ -116,6 +137,54 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
 
             return graphClient;
+        }
+
+        public async Task<bool> SendEmail(string receiver, string subject, string content)
+        {
+            var requestBody = new SendMailPostRequestBody
+            {
+                Message = new Message
+                {
+                    Subject = subject,
+                    Body = new ItemBody
+                    {
+                        ContentType = BodyType.Text,
+                        Content = content,
+                    },
+                    ToRecipients = new List<Recipient>
+                    {
+                        new Recipient
+                        {
+                            EmailAddress = new EmailAddress
+                            {
+                                Address = receiver,
+                            },
+                        },
+                    },
+                }
+            };
+
+            var graphClient = createClient();
+
+            try
+            {
+                await graphClient
+                     .Users["c1b25c70-ef7f-4247-938d-8f6631cee8cf"]
+                     .SendMail
+                     .PostAsync(requestBody);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> Test()
+        {
+            throw new NotImplementedException();
         }
     }
 }

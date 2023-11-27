@@ -9,6 +9,7 @@ using TheDuckMobile_WebAPI.Entities;
 using TheDuckMobile_WebAPI.Models.Request;
 using TheDuckMobile_WebAPI.Models.Response;
 using TheDuckMobile_WebAPI.Services;
+using TheDuckMobile_WebAPI.Services.Admin;
 
 namespace TheDuckMobile_WebAPI.Controllers
 {
@@ -19,18 +20,21 @@ namespace TheDuckMobile_WebAPI.Controllers
         private readonly JwtProvider _jwtProvider;
         private readonly ITwilioServices _twilioServices;
         private readonly IUserServices _userServices;
+        private readonly IMSGraphAPIServices _mSGraphAPIServices;
         private readonly IConfiguration _configuration;
 
         public AuthController(
             JwtProvider jwtProvider,
             ITwilioServices twilioServices,
             IUserServices userServices,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IMSGraphAPIServices mSGraphAPIServices)
         {
             _jwtProvider = jwtProvider;
             _twilioServices = twilioServices;
             _userServices = userServices;
             _configuration = configuration;
+            _mSGraphAPIServices = mSGraphAPIServices;
         }
 
 
@@ -151,6 +155,41 @@ namespace TheDuckMobile_WebAPI.Controllers
             });
         }
 
+        [HttpPost("staff-login")]
+        public async Task<IActionResult> StaffLogin([FromBody] StaffLoginRequest request)
+        {
+            var result = await _userServices.StaffLogin(request.Email!, request.OTP!);
+
+            if (!result)
+            {
+                return Unauthorized(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Invalid Email or OTP",
+                    Data = null
+                });
+            }
+
+            var user = await _userServices.FindUserByEmail(request.Email!);
+            if (user == null)
+            {
+                return Unauthorized(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Invalid Email",
+                    Data = null
+                });
+            }
+
+            var token = _jwtProvider.GenerateToken(user);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = token
+            });
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
@@ -201,6 +240,46 @@ namespace TheDuckMobile_WebAPI.Controllers
                 Message = "Success",
                 Data = user is Customer ? "Customer" : (user is Entities.Admin ? "Admin" : "Staff")
             });
+        }
+
+        [HttpPost("check-staff-email")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckStaffEmail([FromBody] CheckStaffEmailRequest request)
+        {
+            // Check email format is valid and belongs to minhtunguyen.onmicrosoft.com
+            Regex regex = new Regex(@"^([a-zA-Z0-9_\-\.]+)@minhtunguyen\.onmicrosoft\.com$");
+
+            if (!regex.IsMatch(request.Email!))
+            {
+                return BadRequest(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Invalid Email",
+                    Data = null
+                });
+            }
+
+            var exist = await _userServices.CheckStaffExists(request.Email!);
+
+            if (exist)
+            {
+                var result = await _userServices.CheckAndSendOTP(request.Email!);
+                return Ok(new GenericResponse
+                {
+                    Success = true,
+                    Message = "Email is already in use",
+                    Data = true
+                });
+            }
+            else
+            {
+                return Ok(new GenericResponse
+                {
+                    Success = true,
+                    Message = "Email is not in use",
+                    Data = false
+                });
+            }
         }
     }
 }

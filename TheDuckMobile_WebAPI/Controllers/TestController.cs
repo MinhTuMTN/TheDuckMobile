@@ -23,7 +23,7 @@ namespace TheDuckMobile_WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Test()
         {
-            var user = await _mSGraphAPIServices.ResetPassword("c1b25c70-ef7f-4247-938d-8f6631cee8cf");
+            var user = await _mSGraphAPIServices.Test();
 
             return Ok(new GenericResponse
             {
