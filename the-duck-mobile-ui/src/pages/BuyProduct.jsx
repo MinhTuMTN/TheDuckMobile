@@ -259,6 +259,7 @@ function BuyProduct(props) {
     state?.selectedProducts,
     navigate,
     info,
+    token,
   ]);
   return (
     <Wrapped>

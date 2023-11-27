@@ -4,7 +4,6 @@ import MainLayout from "../layouts/MainLayout";
 import ProfileLayout from "../layouts/ProfileLayout";
 import { ProtectedLayout } from "../layouts/ProtectedLayout";
 import NotFound from "../pages/NotFound";
-
 import Loading from "../components/Loading";
 import AdminLayout from "../layouts/AdminLayout";
 import StoreLayout from "../layouts/StoreLayout";
@@ -30,7 +29,6 @@ import OrderDetailPage from "../pages/Admin/OrderManagement/OrderDetailPage";
 import OrderListPage from "../pages/Admin/OrderManagement/OrderListPage";
 import AddProductPage from "../pages/Admin/ProductManagement/AddProductPage";
 import AddProductVersionPage from "../pages/Admin/ProductManagement/AddProductVersionPage";
-
 import ProductDetailPage from "../pages/Admin/ProductManagement/ProductDetailPage";
 import ProductListPage from "../pages/Admin/ProductManagement/ProductListPage";
 import AddSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/AddSpecialFeaturePage";
@@ -44,6 +42,8 @@ import OrderDetails from "../pages/Seller/OrderDetails";
 import Orders from "../pages/Seller/Orders";
 import Product from "../pages/Seller/Product";
 import { StoreProtectedLayout } from "../layouts/StoreProtectedLayout";
+import Analytics from "../pages/Admin/Analytics";
+import AnalyticsStore from "../pages/Seller/AnalyticsStore";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -144,6 +144,10 @@ function Router(props) {
       path: "/admin",
       element: <AdminLayout />,
       children: [
+        {
+          path: "analytics",
+          element: <Analytics />,
+        },
         {
           path: "address-management/province",
           element: <ProvinceListPage />,
@@ -304,6 +308,10 @@ function Router(props) {
             {
               path: "orders/order-details",
               element: <OrderDetails />,
+            },
+            {
+              path: "analytics",
+              element: <AnalyticsStore />,
             },
           ],
         },
