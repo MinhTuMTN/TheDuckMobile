@@ -2,16 +2,19 @@
 using TheDuckMobile_WebAPI.Common;
 using TheDuckMobile_WebAPI.Entities;
 using TheDuckMobile_WebAPI.Models.Request;
+using TheDuckMobile_WebAPI.Services.Admin;
 
 namespace TheDuckMobile_WebAPI.Services.Impl
 {
     public class UserServicesImpl : IUserServices
     {
         private readonly DataContext _context;
+        private readonly IMSGraphAPIServices mSGraphAPIServices;
 
-        public UserServicesImpl(DataContext context)
+        public UserServicesImpl(DataContext context, IMSGraphAPIServices mSGraphAPIServices)
         {
             _context = context;
+            this.mSGraphAPIServices = mSGraphAPIServices;
         }
 
         public async Task<bool> CheckCustomerExists(string phoneNumber)
@@ -65,8 +68,101 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             var user = await _context
                 .Users
                 .FirstOrDefaultAsync(user => user.UserId == userId && !user.IsDeleted);
-            
+
             return user;
+        }
+
+        public async Task<bool> CheckStaffExists(string email)
+        {
+            var staff = await _context
+                .Staffs
+                .FirstOrDefaultAsync(staff => staff.Email == email && !staff.IsDeleted);
+
+            return staff != null;
+        }
+
+        public async Task<bool?> CheckAndSendOTP(string email)
+        {
+            var staff = await _context
+                .Staffs
+                .Where(staff => staff.Email == email && !staff.IsDeleted)
+                .FirstOrDefaultAsync();
+
+            if (staff is null)
+                return false;
+
+            // Check 3 minutes before aldready sent OTP
+            if ((staff.OTP != null && staff.OTPExpiredAt <= DateTime.Now)
+                || (staff.OTP != null && staff.OTPRetry == 5 && staff.OTPExpiredAt <= DateTime.Now))
+                return null;
+
+            // Create OTP with 6 digits
+            var otp = new Random().Next(100000, 999999);
+
+            // Save to database
+            staff.OTP = otp.ToString();
+            staff.OTPRetry = 0;
+            staff.OTPExpiredAt = DateTime.Now.AddMinutes(3);
+
+            await _context.SaveChangesAsync();
+
+
+            var sentEmail = await mSGraphAPIServices.SendEmail
+                (email,
+                "Xác thực đăng nhập",
+                $"Mã OTP của bạn là {otp}. Vui lòng không chia sẻ mã này cho bất kỳ ai."
+                );
+
+            return sentEmail;
+        }
+
+        public async Task<bool> StaffLogin(string email, string otp)
+        {
+            var staff = await _context
+                .Staffs
+                .Where(staff => staff.Email == email && !staff.IsDeleted)
+                .FirstOrDefaultAsync();
+
+            if (staff is null)
+                return false;
+
+            // Check if OTP is expired
+            if (staff.OTPExpiredAt <= DateTime.Now)
+                return false;
+
+            // Check if OTP is invalid and after 5 times, OTP will be expired
+            if (staff.OTP != otp)
+            {
+                staff.OTPRetry++;
+                if (staff.OTPRetry > 5)
+                {
+                    staff.OTPRetry = 0;
+                    staff.OTP = null;
+                    staff.OTPExpiredAt = DateTime.Now;
+                    await _context.SaveChangesAsync();
+                    return false;
+                }
+                await _context.SaveChangesAsync();
+                return false;
+            }
+
+            // If correct OTP, reset OTP and OTPExpiredAt
+            staff.OTPRetry = 0;
+            staff.OTP = null;
+            staff.OTPExpiredAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<User?> FindUserByEmail(string email)
+        {
+            var staff = await _context
+                .Staffs
+                .Where(staff => staff.Email == email && !staff.IsDeleted)
+                .FirstOrDefaultAsync();
+
+            return staff;
         }
     }
 }

@@ -35,6 +35,10 @@ namespace TheDuckMobile_WebAPI.Entities
 
         public bool IsDeleted { get; set; }
 
+        public string? OTP { get; set; }
+        public DateTime? OTPExpiredAt { get; set; }
+        public int OTPRetry { get; set; }
+
         // Relationship to Address
         private ICollection<Address>? _addresses;
         [JsonIgnore]
