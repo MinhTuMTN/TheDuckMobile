@@ -1,17 +1,7 @@
 import styled from "@emotion/styled";
-import {
-  Box,
-  List,
-  ListItem,
-  Paper,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useThemeProps,
-} from "@mui/material";
-import React from "react";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 import { PieChart } from "@mui/x-charts";
-import { useTheme } from "@emotion/react";
+import React from "react";
 
 const paperStyle = {
   marginTop: 4,
