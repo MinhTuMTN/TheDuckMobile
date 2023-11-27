@@ -1,7 +1,17 @@
 import styled from "@emotion/styled";
-import { Box, List, ListItem, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItem,
+  Paper,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useThemeProps,
+} from "@mui/material";
 import React from "react";
-import TopProductItem from "../../components/Admin/TopProductItem";
+import { PieChart } from "@mui/x-charts";
+import { useTheme } from "@emotion/react";
 
 const paperStyle = {
   marginTop: 4,
@@ -31,14 +41,6 @@ const TieuDe = styled(Typography)(({ theme }) => ({
   width: "100%",
 }));
 
-const CustomListItem = styled(ListItem)({
-  paddingBottom: "16px",
-
-  borderBottom: "1px solid #ccc",
-  "&:last-child": {
-    borderBottom: "none",
-  },
-});
 function OrdersPieChart(props) {
   return (
     <Stack component={Paper} elevation={3} sx={paperStyle}>
@@ -46,71 +48,42 @@ function OrdersPieChart(props) {
         component={Stack}
         direction={"row"}
         alignItems={"center"}
-        spacing={0.5}
+        spacing={0.7}
         sx={{
           borderBottom: "1px solid #E0E0E0",
         }}
       >
         <img
           src={
-            "https://res.cloudinary.com/dsmvlvfy5/image/upload/v1701008463/top-5_suollo.png"
+            "https://res.cloudinary.com/dsmvlvfy5/image/upload/v1701048808/pie-chart_y1a57k.png"
           }
           alt="top-product"
           style={{
             width: "30px",
             height: "30px",
             objectFit: "contain",
-            marginTop: "8px",
           }}
         />
-        <TieuDe>Sản phẩm bán chạy</TieuDe>
+        <TieuDe>Thống kê đơn hàng</TieuDe>
       </BoxStyle>
       <BoxStyle2 className="Hello">
         <Stack direction={"row"} spacing={1} alignItems={"center"}>
-          <List
-            sx={{
-              padding: 0,
-              width: "100%",
-            }}
-          >
-            <Stack direction={"column"} spacing={2}>
-              <CustomListItem
-                sx={{
-                  padding: 0,
-                }}
-              >
-                <TopProductItem />
-              </CustomListItem>
-              <CustomListItem
-                sx={{
-                  padding: 0,
-                }}
-              >
-                <TopProductItem />
-              </CustomListItem>
-              <CustomListItem
-                sx={{
-                  padding: 0,
-                }}
-              >
-                <TopProductItem />
-              </CustomListItem>
-              <CustomListItem
-                sx={{
-                  padding: 0,
-                }}
-              >
-                <TopProductItem />
-              </CustomListItem>
-              <CustomListItem
-                sx={{
-                  padding: 0,
-                }}
-              >
-                <TopProductItem />
-              </CustomListItem>
-            </Stack>
-          </List>
+          <PieChart
+            series={[
+              {
+                data: [
+                  { id: 0, value: 10, label: "Chờ xác nhận" },
+                  { id: 1, value: 15, label: "Đang chuẩn bị" },
+                  { id: 2, value: 20, label: "Đang giao" },
+                  { id: 3, value: 50, label: "Đã hoàn thành" },
+                  { id: 4, value: 5, label: "Bị huỷ" },
+                ],
+                innerRadius: 50,
+              },
+            ]}
+            width={500}
+            height={200}
+          />
         </Stack>
       </BoxStyle2>
     </Stack>
