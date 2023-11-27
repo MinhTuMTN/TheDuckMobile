@@ -103,9 +103,7 @@ function ColorListPage() {
     if (isDeleted) {
       response = await restoreColor(id);
       if (response.success) {
-        enqueueSnackbar("Khôi phục màu sắc thành công!", {
-          variant: "success",
-        });
+        enqueueSnackbar("Khôi phục màu sắc thành công!", { variant: "success" });
         colors[index + page * rowsPerPage].isDeleted = !isDeleted;
         setRowsSearched(colors);
       } else {
@@ -126,13 +124,10 @@ function ColorListPage() {
   return (
     <RootPageColorList>
       <Typography variant="h3">Danh sách màu sắc</Typography>
-      <AddButton
-        component={Link}
-        variant="contained"
-        color="color1"
-        to="/admin/color-management/add"
-      >
-        <Typography color={"white"}>Thêm Màu Sắc Mới</Typography>
+      <AddButton component={Link} variant="contained" color="color1" to="/admin/color-management/add">
+        <Typography color={"white"}>
+          Thêm Màu Sắc Mới
+        </Typography>
       </AddButton>
       <SearchTextField
         type="text"
@@ -166,10 +161,7 @@ function ColorListPage() {
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
-              ? rowsSearched.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
+              ? rowsSearched.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rowsSearched
             ).map((row, i) => (
               <TableRow key={i}>
@@ -186,17 +178,15 @@ function ColorListPage() {
                   {row.isDeleted ? "Ngừng hoạt động" : "Còn hoạt động"}
                 </TableCell>
                 <TableCell style={{ minWidth: 200 }} align="center">
-                  <MuiButton component={Link} color="oldPrimary">
-                    <InfoIcon />
-                  </MuiButton>
+                  <MuiButton component={Link} color="oldPrimary"><InfoIcon /></MuiButton>
                   <MuiButton
                     color="teal"
                     onClick={() => {
                       navigate(`/admin/color-management/${row.colorId}`, {
                         state: {
-                          editColor: row,
-                        },
-                      });
+                          editColor: row
+                        }
+                      })
                     }}
                   >
                     <EditIcon />
@@ -221,7 +211,7 @@ function ColorListPage() {
                         ? "Bạn có chắc chắn muốn khôi phục màu này"
                         : "Bạn có chắc chắn muốn xóa màu này?"
                     }
-                    okText={isDeleted ? "Khôi phục" : "Xóa"}
+                    okText={isDeleted ? "Khôi phục" : "Khóa"}
                     cancelText={"Hủy"}
                     onOk={handleTrashButtonClick}
                     onCancel={() => setDeleteDialog(false)}
@@ -239,7 +229,7 @@ function ColorListPage() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={5}
                 count={rowsSearched.length}
                 rowsPerPage={rowsPerPage}

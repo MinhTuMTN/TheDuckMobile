@@ -33,6 +33,7 @@ import {
 import { getVotesByProductId } from "../services/VoteServices";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
+import { Helmet } from "react-helmet-async";
 
 const Wrapper = styled.div``;
 const ShopArea = styled.div`
@@ -178,6 +179,9 @@ function ProductDetails(props) {
 
   return (
     <Wrapper>
+      <Helmet>
+        <title>{info?.productName} | The Duck Mobile</title>
+      </Helmet>
       <CustomBreadcrumb
         urls={[
           {
@@ -214,11 +218,10 @@ function ProductDetails(props) {
                       sx={{
                         height: "100%",
                         width: "100%",
-                        backgroundImage: `url(${
-                          typeof selectedImage === "string"
-                            ? selectedImage
-                            : selectedImage?.images[selectedImage]
-                        })`,
+                        backgroundImage: `url(${typeof selectedImage === "string"
+                          ? selectedImage
+                          : selectedImage?.images[selectedImage]
+                          })`,
                         backgroundSize: "contain",
                         backgroundPosition: "center",
                         backgroundRepeat: "no-repeat",
@@ -279,7 +282,7 @@ function ProductDetails(props) {
                     </span>
                     {selectedVersion?.promotionPrice &&
                       selectedVersion?.promotionPrice <
-                        selectedVersion?.price && (
+                      selectedVersion?.price && (
                         <span
                           style={{
                             fontSize: "18px",
@@ -340,7 +343,7 @@ function ProductDetails(props) {
                               style={{
                                 border:
                                   selectedVersion.productVersionId ===
-                                  version.productVersionId
+                                    version.productVersionId
                                     ? "2px solid #064374"
                                     : "none",
                               }}
@@ -359,6 +362,14 @@ function ProductDetails(props) {
                           quantity={quantity}
                           onChange={setQuantity}
                         />
+                        <Typography
+                          variant={"body"}
+                          style={{
+                            fontSize: "16px"
+                          }}
+                        >
+                          {selectedVersion?.quantity - selectedVersion?.sold} sản phẩm có sẵn
+                        </Typography>
                       </Stack>
                       <Stack
                         direction={"row"}

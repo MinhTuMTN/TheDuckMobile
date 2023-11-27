@@ -232,6 +232,9 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<int>("CurrentUse")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Discount")
                         .HasColumnType("int");
 
@@ -257,6 +260,8 @@ namespace TheDuckMobile_WebAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("CouponId");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Coupons");
                 });
@@ -298,10 +303,6 @@ namespace TheDuckMobile_WebAPI.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("FeedbackImagesJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FeedbackPersonEmail")
                         .HasColumnType("nvarchar(max)");
@@ -932,6 +933,15 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Navigation("Catalog");
                 });
 
+            modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Coupon", b =>
+                {
+                    b.HasOne("TheDuckMobile_WebAPI.Entities.Customer", "Customer")
+                        .WithMany("Coupons")
+                        .HasForeignKey("CustomerId");
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.District", b =>
                 {
                     b.HasOne("TheDuckMobile_WebAPI.Entities.Provine", "Provine")
@@ -1218,6 +1228,8 @@ namespace TheDuckMobile_WebAPI.Migrations
 
             modelBuilder.Entity("TheDuckMobile_WebAPI.Entities.Customer", b =>
                 {
+                    b.Navigation("Coupons");
+
                     b.Navigation("Orders");
 
                     b.Navigation("Votes");

@@ -78,6 +78,8 @@ builder.Services.AddScoped<IProductVersionAdminServices, ProductVersionAdminServ
 builder.Services.AddScoped<IProvinceAdminServices, ProvinceAdminServicesImpl>();
 builder.Services.AddScoped<IDistrictAdminServices, DistrictAdminServicesImpl>();
 builder.Services.AddScoped<IWardAdminServices, WardAdminServicesImpl>();
+builder.Services.AddScoped<IStatisticAdminServices, StatisticAdminServicesImpl>();
+builder.Services.AddScoped<IMSGraphAPIServices, MSGraphAPIServicesImpl>();
 
 // Store
 builder.Services.AddScoped<IStaffServices, StaffServicesImpl>();
@@ -85,6 +87,8 @@ builder.Services.AddScoped<IStoreProductServices, StoreProductServicesImpl>();
 builder.Services.AddScoped<IStoreCatalogServices, StoreCatalogServicesImpl>();
 builder.Services.AddScoped<IStoreManagementServices, StoreManagementServicesImpl>();
 builder.Services.AddScoped<IStoreOrderServices, StoreOrderServicesImpl>();
+builder.Services.AddScoped<IStatisticServices, StatisticServicesImpl>();
+
 #endregion
 
 var app = builder.Build();

@@ -14,6 +14,7 @@ import TopNavbar from "../components/Store/TopNavbar";
 import {
   getAllDistricts,
   getAllProvinces,
+  getAllWards,
 } from "../services/Admin/AddressService";
 import { getAllBrands } from "../services/Admin/BrandService";
 import { getAllCatalogs } from "../services/Admin/CatalogService";
@@ -23,7 +24,6 @@ import { getAllCustomers } from "../services/Admin/CustomerService";
 import { getAllFeedbacks } from "../services/Admin/FeedbackService";
 import { getAllOSs } from "../services/Admin/OSService";
 import { getAllOrders } from "../services/Admin/OrderService";
-import { getAllProducts } from "../services/Admin/ProductService";
 import { getAllSpecialFeatures } from "../services/Admin/SpecialFeatureService";
 import { getAllStores } from "../services/Admin/StoreService";
 
@@ -59,9 +59,6 @@ function AdminLayout(props) {
     let response;
 
     switch (editedPath) {
-      case "/admin/product-management":
-        response = await getAllProducts();
-        break;
       case "/admin/customer-management":
       case "/admin":
         response = await getAllCustomers();
@@ -71,6 +68,9 @@ function AdminLayout(props) {
         break;
       case "/admin/address-management/province/detail":
         response = await getAllDistricts(searchParams.get("provinceId"));
+        break;
+      case "/admin/address-management/province/district/detail":
+        response = await getAllWards(searchParams.get("districtId"));
         break;
       case "/admin/catalog-management":
         response = await getAllCatalogs();

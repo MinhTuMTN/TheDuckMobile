@@ -13,6 +13,8 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
         public int Sold { get; set; }
         public float Rate { get; set; }
         public int NumberOfVotes { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string? CatalogName { get; set; }
         public bool IsDeleted { get; set; }
 
         public ProductListResponse(Product product)
@@ -25,6 +27,8 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
             Quantity = product.Quantity;
             Sold = product.Sold;
             Rate = product.Rate;
+            CreatedAt = product.CreatedAt;
+            CatalogName = product.Catalog?.CatalogName;
             NumberOfVotes = product.Votes == null ? 0 : product.Votes.Count;
             IsDeleted = product.IsDeleted;
         }

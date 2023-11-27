@@ -42,6 +42,7 @@ import FormatDate from "../../../components/FormatDate";
 import { useTheme } from "@emotion/react";
 import { addCoupon, updateCoupon } from "../../../services/Admin/CouponService";
 import { enqueueSnackbar } from "notistack";
+import DialogConfirm from "../../../components/DialogConfirm";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -90,15 +91,28 @@ function CouponListPage() {
   const [rowsSearched, setRowsSearched] = useState([]);
   const [searchString, setSearchString] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorId, setAnchorId] = useState(null);
   const [openPopup, setOpenPopup] = useState(false);
   const [addNew, setAddNew] = useState(true);
+  const [existDialog, setExistDialog] = useState(false);
   const [couponId, setCouponId] = useState("");
+  const [maxStartDate, setMaxStartDate] = useState(dayjs());
+  const [error, setError] = useState({
+    status: false,
+    errorMessage: {
+      couponCode: "",
+      discount: "",
+      minPrice: "",
+      maxDiscount: "",
+      maxUse: "",
+    },
+  });
   const [couponRequest, setCouponRequest] = useState({
     couponCode: "",
-    discount: 0,
-    minPrice: 0,
-    maxDiscount: 0,
-    maxUse: 0,
+    discount: 1,
+    minPrice: 1000,
+    maxDiscount: 1000,
+    maxUse: 1,
     startDate: dayjs(),
     endDate: dayjs(),
     currentUse: 0,
@@ -137,13 +151,16 @@ function CouponListPage() {
     setPage(0);
   };
 
-  const handleClick = (event) => {
+  const openPopover = id => (event) => {
+    setAnchorId(id);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
+    setAnchorId(null);
     setAnchorEl(null);
   };
+
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
@@ -170,12 +187,13 @@ function CouponListPage() {
         currentUse: 0,
       });
 
-      console.log(response);
       if (response.success) {
         enqueueSnackbar("Thêm mã giảm giá thành công", { variant: "success" });
         setOpenPopup(false);
-        window.location.reload();
-      } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+        navigate(0);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+      }
     } else {
       response = await updateCoupon(couponId, {
         couponCode: couponRequest.couponCode,
@@ -187,18 +205,173 @@ function CouponListPage() {
         endDate: endDateRequest,
         currentUse: parseInt(couponRequest.currentUse),
       });
-      console.log(couponRequest.endDate);
-      console.log(endDateParse.format("YYYY-MM-DD HH:mm:ss"));
-      console.log(response);
       if (response.success) {
         enqueueSnackbar("Chỉnh sửa mã giảm giá thành công", {
           variant: "success",
         });
         setOpenPopup(false);
         navigate(0);
-      } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+      }
     }
   };
+
+  const handleCheckExistCoupon = () => {
+    let validData = true;
+    if (!couponRequest.couponCode || couponRequest.couponCode.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          ...prev,
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            couponCode: "Mã giảm giá không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            couponCode: "",
+          }
+        };
+      });
+    }
+
+    if (!couponRequest.discount) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            discount: "Giảm giá không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            discount: "",
+          }
+        };
+      });
+    }
+
+    if (!couponRequest.minPrice || couponRequest.minPrice.toString().trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            minPrice: "Đơn tối thiểu không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            minPrice: "",
+          }
+        };
+      });
+    }
+
+    if (!couponRequest.maxDiscount || couponRequest.maxDiscount.toString().trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            maxDiscount: "Giảm tối đa không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            maxDiscount: "",
+          }
+        };
+      });
+    }
+
+    if (!couponRequest.maxUse || couponRequest.maxUse.toString().trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            maxUse: "Số lượng không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            maxUse: "",
+          }
+        };
+      });
+    }
+
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        couponCode: "",
+        discount: "",
+        minPrice: "",
+        maxDiscount: "",
+        maxUse: "",
+      }
+    });
+
+    let existCoupon = dataFetched.some(coupon => coupon.couponCode === couponRequest.couponCode);
+    if (existCoupon && addNew) {
+      setExistDialog(existCoupon);
+    } else {
+      handleSendCouponRequest();
+    }
+  };
+
+  const handlePopupClose = () => {
+    setOpenPopup(false);
+    setError({
+      error: false,
+      errorMessage: {
+        couponCode: "",
+        discount: "",
+        minPrice: "",
+        maxDiscount: "",
+        maxUse: "",
+      }
+    });
+  }
+
   return (
     <Grid
       container
@@ -222,15 +395,26 @@ function CouponListPage() {
             size="medium"
             startIcon={<AddOutlinedIcon />}
             onClick={() => {
+              setAddNew(true);
               setOpenPopup(true);
               setCouponRequest({
                 couponCode: "",
-                discount: 0,
-                minPrice: 0,
-                maxDiscount: 0,
-                maxUse: 0,
+                discount: 1,
+                minPrice: 1000,
+                maxDiscount: 1000,
+                maxUse: 1,
                 startDate: dayjs(),
                 endDate: dayjs(),
+              });
+              setError({
+                status: false,
+                errorMessage: {
+                  couponCode: "",
+                  discount: "",
+                  minPrice: "",
+                  maxDiscount: "",
+                  maxUse: "",
+                }
               });
             }}
           >
@@ -291,7 +475,7 @@ function CouponListPage() {
                   >
                     Giảm giá
                   </CellHead>
-                  <CellHead align="right">Đã dùng</CellHead>
+                  <CellHead align="right">Còn lại</CellHead>
                   <CellHead
                     align="right"
                     sx={{
@@ -315,9 +499,9 @@ function CouponListPage() {
               <TableBody>
                 {(rowsPerPage > 0
                   ? rowsSearched.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
@@ -335,7 +519,7 @@ function CouponListPage() {
                     </CellBody>
 
                     <CellBody style={{ minWidth: 50 }} align="right">
-                      {row.currentUse == null ? 0 : row.currentUse}
+                      {row.remain == null ? 0 : row.remain}
                     </CellBody>
                     <CellBody style={{ minWidth: 50 }} align="right">
                       <FormatDate dateTime={row.startDate} />
@@ -359,13 +543,13 @@ function CouponListPage() {
                           <IconButton
                             color="black"
                             aria-describedby={id}
-                            onClick={handleClick}
+                            onClick={openPopover(row.couponId)}
                           >
                             <MoreVertIcon color="black" />
                           </IconButton>
                           <Popover
                             id={id}
-                            open={open}
+                            open={anchorId === row.couponId}
                             anchorEl={anchorEl}
                             onClose={handleClose}
                             anchorOrigin={{
@@ -386,7 +570,13 @@ function CouponListPage() {
                                   paddingY: 1,
                                   textAlign: "left",
                                 }}
-                                onClick={(e) => {}}
+                                onClick={(e) => {
+                                  navigate(`/admin/coupon-management/${row.couponId}`, {
+                                    state: {
+                                      id: row.couponId,
+                                    },
+                                  });
+                                }}
                               >
                                 Xem
                               </Button>
@@ -394,6 +584,7 @@ function CouponListPage() {
                                 variant="text"
                                 size="medium"
                                 onClick={(e) => {
+                                  setAddNew(false);
                                   setOpenPopup(true);
                                   setCouponId(row.couponId);
                                   setCouponRequest({
@@ -406,7 +597,17 @@ function CouponListPage() {
                                     endDate: row.endDate,
                                     currentUse: row.currentUse,
                                   });
-                                  setAddNew(false);
+                                  setError({
+                                    status: false,
+                                    errorMessage: {
+                                      couponCode: "",
+                                      discount: "",
+                                      minPrice: "",
+                                      maxDiscount: "",
+                                      maxUse: "",
+                                    }
+                                  });
+                                  setMaxStartDate(dayjs(row.endDate));
                                 }}
                                 sx={{
                                   paddingX: 2,
@@ -422,13 +623,23 @@ function CouponListPage() {
                       ) : (
                         // Hiển thị cho màn hình vừa và lớn
                         <>
-                          <IconButton color="black" onClick={(e) => {}}>
+                          <IconButton
+                            color="black"
+                            onClick={(e) => {
+                              navigate(`/admin/coupon-management/${row.couponId}`, {
+                                state: {
+                                  id: row.couponId,
+                                },
+                              });
+                            }}
+                          >
                             <InfoOutlinedIcon color="black" />
                           </IconButton>
                           <IconButton
                             color="black"
                             onClick={(e) => {
                               // Xử lý sự kiện cho nút "Chỉnh sửa"
+                              setAddNew(false);
                               setOpenPopup(true);
                               setCouponId(row.couponId);
                               setCouponRequest({
@@ -441,7 +652,17 @@ function CouponListPage() {
                                 endDate: row.endDate,
                                 currentUse: row.currentUse,
                               });
-                              setAddNew(false);
+                              setError({
+                                status: false,
+                                errorMessage: {
+                                  couponCode: "",
+                                  discount: "",
+                                  minPrice: "",
+                                  maxDiscount: "",
+                                  maxUse: "",
+                                }
+                              });
+                              setMaxStartDate(dayjs(row.endDate));
                             }}
                           >
                             <ModeEditIcon color="black" />
@@ -478,8 +699,8 @@ function CouponListPage() {
       </Grid>
       <BootstrapDialog
         open={openPopup}
-        onOk={() => {}}
-        onClose={() => setOpenPopup(false)}
+        onClose={handlePopupClose}
+        onCancel={handlePopupClose}
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
@@ -487,7 +708,7 @@ function CouponListPage() {
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={() => setOpenPopup(false)}
+          onClick={handlePopupClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -504,7 +725,8 @@ function CouponListPage() {
               value={couponRequest.couponCode}
               margin="normal"
               autoFocus
-              required
+              error={error.status && error.errorMessage.couponCode.length !== 0}
+              helperText={error.errorMessage.couponCode}
               onChange={(e) => {
                 setCouponRequest((prev) => {
                   return {
@@ -518,9 +740,11 @@ function CouponListPage() {
               <MuiTextFeild
                 type="number"
                 label="Giảm giá"
-                value={couponRequest.discount.toString()}
+                value={addNew ? couponRequest.discount.toString() : "1"}
                 margin="normal"
-                required
+                InputProps={{ inputProps: { min: 1, max: 99 } }}
+                error={error.status && error.errorMessage.discount.length !== 0}
+                helperText={error.errorMessage.discount}
                 style={{ width: "50%" }}
                 onChange={(e) => {
                   setCouponRequest((prev) => {
@@ -534,9 +758,11 @@ function CouponListPage() {
               <MuiTextFeild
                 type="number"
                 label="Số lượng"
-                value={couponRequest.maxUse.toString()}
+                value={addNew ? couponRequest.maxUse.toString() : "1"}
                 margin="normal"
-                required
+                InputProps={{ inputProps: { min: 1 } }}
+                error={error.status && error.errorMessage.maxUse.length !== 0}
+                helperText={error.errorMessage.maxUse}
                 style={{ width: "50%" }}
                 onChange={(e) => {
                   setCouponRequest((prev) => {
@@ -552,9 +778,11 @@ function CouponListPage() {
               <MuiTextFeild
                 type="number"
                 label="Đơn tối thiểu"
-                value={couponRequest.minPrice.toString()}
+                value={addNew ? couponRequest.minPrice.toString() : "1000"}
                 margin="normal"
-                required
+                InputProps={{ inputProps: { min: 1000 } }}
+                error={error.status && error.errorMessage.minPrice.length !== 0}
+                helperText={error.errorMessage.minPrice}
                 style={{ width: "50%" }}
                 onChange={(e) => {
                   setCouponRequest((prev) => {
@@ -568,9 +796,11 @@ function CouponListPage() {
               <MuiTextFeild
                 type="number"
                 label="Giảm tối đa"
-                value={couponRequest.maxDiscount.toString()}
+                value={addNew ? couponRequest.maxDiscount.toString() : "1000"}
                 margin="normal"
-                required
+                InputProps={{ inputProps: { min: 1000 } }}
+                error={error.status && error.errorMessage.maxDiscount.length !== 0}
+                helperText={error.errorMessage.maxDiscount}
                 style={{ width: "50%" }}
                 onChange={(e) => {
                   setCouponRequest((prev) => {
@@ -591,6 +821,7 @@ function CouponListPage() {
                 <CustomDatePicker
                   label="Ngày bắt đầu"
                   value={dayjs(couponRequest.startDate)}
+                  maxDate={maxStartDate}
                   onChange={(newDate) => {
                     setCouponRequest((prev) => {
                       return {
@@ -609,8 +840,10 @@ function CouponListPage() {
                 <CustomDatePicker
                   label="Ngày kết thúc"
                   value={dayjs(couponRequest.endDate)}
+                  minDate={dayjs(new Date())}
                   onChange={(newDate) => {
                     setCouponRequest((prev) => {
+                      setMaxStartDate(newDate);
                       return {
                         ...prev,
                         endDate: newDate,
@@ -624,11 +857,21 @@ function CouponListPage() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleSendCouponRequest}>
+          <Button autoFocus onClick={handleCheckExistCoupon}>
             {addNew ? "Tạo mới" : "Cập nhật"}
           </Button>
         </DialogActions>
       </BootstrapDialog>
+      <DialogConfirm
+        open={existDialog}
+        title={"Mã giảm giá đã tồn tại"}
+        content={"Mã giảm giá đã tồn tại! Bạn có muốn cập nhật lại thông tin?"}
+        okText={"Cập nhật"}
+        cancelText={"Hủy"}
+        onOk={handleSendCouponRequest}
+        onCancel={() => setExistDialog(false)}
+        onClose={() => setExistDialog(false)}
+      />
     </Grid>
   );
 }

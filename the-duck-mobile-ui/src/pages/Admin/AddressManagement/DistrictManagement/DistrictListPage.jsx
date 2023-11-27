@@ -33,10 +33,12 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MuiTextFeild from "../../../../components/MuiTextFeild";
 import TablePaginationActions from "../../../../components/TablePaginationActions";
 import { DataContext } from "../../../../layouts/AdminLayout";
+import { addDistrict, updateDistrict } from "../../../../services/Admin/AddressService";
+import { enqueueSnackbar } from "notistack";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -73,17 +75,31 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function DistrictListPage() {
+  const { state } = useLocation();
   const { dataFetched } = useContext(DataContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsSearched, setRowsSearched] = useState([]);
   const [searchString, setSearchString] = useState("");
+  const [province, setProvince] = useState({});
+  const [districtRequest, setDistrictRequest] = useState({});
+  const [addNew, setAddNew] = useState(true);
+  const [error, setError] = useState({
+    status: false,
+    errorMessage: {
+      districtName: "",
+    }
+  });
 
   const navigate = useNavigate();
 
   useEffect(() => {
     setRowsSearched(dataFetched);
   }, [dataFetched]);
+
+  useEffect(() => {
+    setProvince(state.province);
+  }, [state.province]);
 
   const filterRows = useCallback(
     (searchString) => {
@@ -92,7 +108,7 @@ function DistrictListPage() {
         return dataFetched;
       }
       return dataFetched.filter((row) =>
-        row.provineName.toLowerCase().includes(searchString.toLowerCase())
+        row.districtName.toLowerCase().includes(searchString.toLowerCase())
       );
     },
     [dataFetched]
@@ -103,9 +119,6 @@ function DistrictListPage() {
     setRowsSearched(filtered);
   }, [searchString, filterRows]);
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -115,15 +128,17 @@ function DistrictListPage() {
     setPage(0);
   };
 
+  const [anchorId, setAnchorId] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openPopup, setOpenPopup] = useState(false);
-  const [editProvice, setEditProvice] = useState("");
 
-  const handleClick = (event) => {
+  const openPopover = id => (event) => {
+    setAnchorId(id);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
+    setAnchorId(null);
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
@@ -132,6 +147,72 @@ function DistrictListPage() {
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.up("lg"));
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+  const handleSendDistrictRequest = async () => {
+    let validData = true;
+    if (!districtRequest.districtName || districtRequest.districtName.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          ...prev,
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            districtName: "Tên quận huyện không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            districtName: "",
+          }
+        };
+      });
+    }
+
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        districtName: ""
+      }
+    });
+
+    let response
+    if (addNew) {
+      response = await addDistrict({
+        districtName: districtRequest.districtName,
+        provinceId: province.provinceId
+      });
+      if (response.success) {
+        enqueueSnackbar("Thêm quận huyện thành công", { variant: "success" });
+        setOpenPopup(false);
+        navigate(0);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+      }
+    } else {
+      response = await updateDistrict(districtRequest.districtId, {
+        districtName: districtRequest.districtName,
+        provinceId: province.provinceId
+      });
+      if (response.success) {
+        enqueueSnackbar("Chỉnh sửa quận huyện thành công", { variant: "success" });
+        setOpenPopup(false);
+        navigate(0);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+      }
+    }
+  };
+
   return (
     <Grid
       container
@@ -152,7 +233,8 @@ function DistrictListPage() {
             aria-label="back"
             size="small"
             color="#111927"
-            onClick={() => navigate("/admin/address-management/province")}
+            onClick={() =>
+              navigate("/admin/address-management/province")}
           >
             <ArrowBackIosIcon />
           </IconButton>
@@ -183,15 +265,24 @@ function DistrictListPage() {
           >
             {isSmallScreen
               ? "Danh sách quận huyện"
-              : "Danh sách quận huyện của Tp Hồ Chí Minh"}
+              : `Danh sách quận huyện của ${province.provineName}`}
           </Typography>
           <CustomButton
             variant="contained"
             size="medium"
             startIcon={<AddOutlinedIcon />}
             onClick={(e) => {
+              setAddNew(true);
               setOpenPopup(true);
-              setEditProvice("");
+              setDistrictRequest({
+                districtName: "",
+              });
+              setError({
+                status: false,
+                errorMessage: {
+                  districtName: "",
+                }
+              });
             }}
           >
             Thêm mới
@@ -272,9 +363,9 @@ function DistrictListPage() {
               <TableBody>
                 {(rowsPerPage > 0
                   ? rowsSearched.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
@@ -302,13 +393,13 @@ function DistrictListPage() {
                           <IconButton
                             color="black"
                             aria-describedby={id}
-                            onClick={handleClick}
+                            onClick={openPopover(row.districtId)}
                           >
                             <MoreVertIcon color="black" />
                           </IconButton>
                           <Popover
                             id={id}
-                            open={open}
+                            open={anchorId === row.districtId}
                             anchorEl={anchorEl}
                             onClose={handleClose}
                             anchorOrigin={{
@@ -325,16 +416,31 @@ function DistrictListPage() {
                                 {
                                   label: "Chỉnh sửa",
                                   action: () => {
+                                    setAddNew(false);
                                     setOpenPopup(true);
-                                    setEditProvice(row.provineName);
+                                    setDistrictRequest({
+                                      districtId: row.districtId,
+                                      districtName: row.districtName,
+                                    });
+                                    setError({
+                                      status: false,
+                                      errorMessage: {
+                                        districtName: "",
+                                      }
+                                    });
                                   },
                                 },
                                 {
                                   label: "Xem",
                                   action: () =>
                                     navigate(
-                                      "/admin/address-management/province/district/detail",
-                                      { state: { id: row.districId } }
+                                      `/admin/address-management/province/district/detail?districtId=${row.districtId}`,
+                                      {
+                                        state: {
+                                          district: row,
+                                          province: province
+                                        }
+                                      }
                                     ),
                                 },
                               ].map((item, index) => (
@@ -361,16 +467,31 @@ function DistrictListPage() {
                             {
                               icon: <ModeEditIcon color="black" />,
                               action: () => {
+                                setAddNew(false);
                                 setOpenPopup(true);
-                                setEditProvice(row.provineName);
+                                setDistrictRequest({
+                                  districtId: row.districtId,
+                                  districtName: row.districtName,
+                                });
+                                setError({
+                                  status: false,
+                                  errorMessage: {
+                                    districtName: "",
+                                  }
+                                });
                               },
                             },
                             {
                               icon: <InfoOutlinedIcon color="black" />,
                               action: () =>
                                 navigate(
-                                  "/admin/address-management/province/district/detail",
-                                  { state: { id: row.provinceId } }
+                                  `/admin/address-management/province/district/detail?districtId=${row.districtId}`,
+                                  {
+                                    state: {
+                                      district: row,
+                                      province: province,
+                                    }
+                                  }
                                 ),
                             },
                           ].map((item, index) => (
@@ -387,11 +508,6 @@ function DistrictListPage() {
                     </CellBody>
                   </TableRow>
                 ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={11} />
-                  </TableRow>
-                )}
               </TableBody>
               <TableFooter>
                 <TableRow>
@@ -419,12 +535,12 @@ function DistrictListPage() {
       </Grid>
       <BootstrapDialog
         open={openPopup}
-        onOk={() => {}}
+        onOk={() => { }}
         onClose={() => setOpenPopup(false)}
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          {editProvice === "" ? "Thêm quận/huyện mới" : "Chỉnh sửa quận/huyện"}
+          {addNew ? "Thêm quận/huyện mới" : "Chỉnh sửa quận/huyện"}
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -441,20 +557,25 @@ function DistrictListPage() {
         <DialogContent dividers>
           <MuiTextFeild
             label="Tên quận/huyện"
-            value={editProvice}
+            value={districtRequest.districtName}
             margin="normal"
             autoFocus
-            required
+            style={{ width: "350px" }}
+            error={error.status && error.errorMessage.districtName.length !== 0}
+            helperText={error.errorMessage.districtName}
             onChange={(e) => {
-              editProvice === ""
-                ? setEditProvice(e.target.value)
-                : setEditProvice(e.target.value);
+              setDistrictRequest((prev) => {
+                return {
+                  ...prev,
+                  districtName: e.target.value,
+                }
+              })
             }}
           />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => setOpenPopup(false)}>
-            {editProvice === "" ? "Tạo mới" : "Cập nhật"}
+          <Button autoFocus onClick={handleSendDistrictRequest}>
+            {addNew ? "Tạo mới" : "Cập nhật"}
           </Button>
         </DialogActions>
       </BootstrapDialog>

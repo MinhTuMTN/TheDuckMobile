@@ -2,6 +2,7 @@
 using TheDuckMobile_WebAPI.Entities;
 using TheDuckMobile_WebAPI.ErrorHandler;
 using TheDuckMobile_WebAPI.Models.Request.Admin;
+using TheDuckMobile_WebAPI.Models.Response;
 using TheDuckMobile_WebAPI.Models.Response.Admin;
 using TheDuckMobile_WebAPI.Services.Admin;
 
@@ -22,33 +23,30 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         public async Task<List<ProductListResponse>> GetAllProducts()
         {
             var products = await _context.Products
-                .Where(p => p.IsDeleted == false)
                 .Include(p => p.Votes)
                 .ToListAsync();
             return products.Select(p => new ProductListResponse(p)).ToList();
         }
 
-        public async Task<ProductDetailResponse?> GetProductById(Guid productId)
+        public async Task<Models.Response.Admin.ProductDetailResponse?> GetProductById(Guid productId)
         {
             var product = await _context.Products
                 .Include(p => p.Votes)
                 .Include(p => p.Catalog)
                 .Include(p => p.Brand)
                 .Include(p => p.OS)
-                .Include(p => p.SpecialFeatures)
-                .FirstOrDefaultAsync(p => p.ProductId == productId && p.IsDeleted == false);
+                .Include(p => p.ProductVersions)
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
             if (product == null)
                 return null;
-            return new ProductDetailResponse(product);
+            return new Models.Response.Admin.ProductDetailResponse(product);
         }
 
         public async Task<Product?> EditProduct(Guid productId, EditProductRequest request)
         {
             var product = await _context
                 .Products
-                .FirstOrDefaultAsync(
-                    p => p.ProductId == productId && p.IsDeleted == false
-                );
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
             if (product == null)
                 throw new CustomNotFoundException("Can't found product");
 
@@ -68,12 +66,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             if (brand == null)
                 throw new CustomNotFoundException("Can't found brand");
 
-            if (request.Thumbnail != null)
-            {
-                var thumbnail = await _cloudinaryServices.UploadImage(request.Thumbnail);
-                product.Thumbnail = thumbnail;
-            }
-
             // Catalog
             var catalog = await _context
                 .Catalogs
@@ -86,7 +78,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
             product.ProductName = request.ProductName;
             product.ProductDescription = request.ProductDescription;
-            product.Quantity = request.Quantity;
             product.OS = os;
             product.Catalog = catalog;
             product.Brand = brand;
@@ -100,16 +91,24 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         {
             var product = await _context
                 .Products
-                .FirstOrDefaultAsync(
-                    p => p.ProductId == productId &&
-                    p.IsDeleted == false
-                );
+                .Include(p => p.ProductVersions)
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
 
             if (product == null)
                 return null;
 
             product.IsDeleted = true;
             product.LastModifiedAt = DateTime.Now;
+
+            var productVersions = product.ProductVersions;
+            if (productVersions != null)
+            {
+                foreach (var productVersion in productVersions)
+                {
+                    productVersion.IsDeleted = true;
+                    productVersion.LastModifiredAt = DateTime.Now;
+                }
+            }
             await _context.SaveChangesAsync();
 
             return product;
@@ -117,19 +116,33 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
 
         public async Task<Product?> RestoreProduct(Guid productId)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == productId);
+            var product = await _context
+                .Products
+                .Include(p => p.ProductVersions)
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
 
             if (product == null)
                 return null;
 
             product.IsDeleted = false;
             product.LastModifiedAt = DateTime.Now;
+
+            var productVersions = product.ProductVersions;
+            if (productVersions != null)
+            {
+                foreach (var productVersion in productVersions)
+                {
+                    productVersion.IsDeleted = false;
+                    productVersion.LastModifiredAt = DateTime.Now;
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return product;
         }
 
-        public async Task<Product?> AddProduct(EditProductRequest request)
+        public async Task<Product?> AddProduct(AddProductRequest request)
         {
             // OS
             var os = await _context
@@ -158,7 +171,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             var catalog = await _context
                 .Catalogs
                 .FirstOrDefaultAsync(
-                    c => c.CatalogId == request.CatalogId 
+                    c => c.CatalogId == request.CatalogId
                     && c.IsDeleted == false
             );
             if (catalog == null)
@@ -168,7 +181,6 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             {
                 ProductName = request.ProductName,
                 ProductDescription = request.ProductDescription,
-                Quantity = request.Quantity,
                 OS = os,
                 Brand = brand,
                 Catalog = catalog,
@@ -185,6 +197,92 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             await _context.SaveChangesAsync();
 
             return product;
+        }
+
+        public async Task<PaginationResponse> GetFilteredProducts(
+            string? search,
+            int page,
+            int limit,
+            List<int>? categoryIds,
+            List<bool>? productStatus,
+            List<int>? productQuantity
+        )
+        {
+
+            var products = await _context.Products.ToListAsync();
+
+            if (search != null && search.Trim() != "")
+                products = products.Where(
+                    p => p.ProductName!.Contains(search)
+                ).ToList();
+
+            if (categoryIds != null && categoryIds.Count > 0)
+            {
+                products = products
+                        .Where(p => categoryIds
+                        .Contains(p.Catalog!.CatalogId))
+                        .ToList();
+            }
+
+            if (productStatus != null && productStatus.Count > 0)
+            {
+                products = products
+                    .Where(p =>
+                    (productStatus.Contains(true) && p.IsDeleted == true) ||
+                    (productStatus.Contains(false) && p.IsDeleted == false))
+                    .ToList();
+            }
+
+            if (productQuantity != null && productQuantity.Count > 0)
+            {
+                products = products
+                    .Where(p =>
+                    (productQuantity.Contains(0) && p.Quantity > 10) ||
+                    (productQuantity.Contains(1) && (p.Quantity <= 10 && p.Quantity > 0)) ||
+                    (productQuantity.Contains(2) && p.Quantity <= 0))
+                    .ToList();
+            }
+
+            //Pagination
+            var total = products.Count();
+            var totalPages = (int)Math.Ceiling((double)total / limit);
+            var offset = page * limit;
+            products = products.Skip(offset).Take(limit).ToList();
+
+            var productList = products
+                .Select(p => new ProductListResponse(p))
+                .ToList();
+
+            return new PaginationResponse
+            {
+                Limit = limit,
+                TotalPages = totalPages,
+                Objects = productList,
+                Page = page,
+                TotalObjects = total
+            };
+        }
+
+        public async Task<ProductThumbnailResponse> EditProductThumbnail(Guid productId, ProductThumbnailRequest request)
+        {
+            var product = await _context.Products
+                .Where(p => p.ProductId == productId)
+                .FirstOrDefaultAsync();
+
+            if (product == null)
+                throw new CustomNotFoundException("Product can't be found");
+
+            if (request.Thumbnail != null)
+            {
+                var uploadImageURL = _cloudinaryServices.UploadImage(request.Thumbnail);
+                product.Thumbnail = uploadImageURL.Result;
+            }
+
+            product.LastModifiedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return new ProductThumbnailResponse(product);
         }
     }
 }

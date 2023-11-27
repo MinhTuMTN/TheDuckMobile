@@ -1,10 +1,28 @@
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import { Box, Container, IconButton, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import BasicProductDetails from "../../../components/Admin/BasicProductDetails";
+import FormatDateTime from "../../../components/FormatDateTime";
+import { getProductById } from "../../../services/Admin/ProductService";
 
 function ProductDetailPage(props) {
+  const params = useParams();
+  const navigate = useNavigate();
+  const [product, setProduct] = useState({});
+
+  const handleGetProduct = useCallback(async () => {
+    const response = await getProductById(params.productId);
+    if (response.success) {
+      setProduct(response.data.data);
+    }
+  }, [params.productId]);
+
+  useEffect(() => {
+    handleGetProduct();
+  }, [handleGetProduct]);
+
   return (
     <Box component={"main"} sx={{ flexGrow: 1, pt: 0, pb: 4 }}>
       <Container>
@@ -21,6 +39,9 @@ function ProductDetailPage(props) {
                 padding="0"
                 margin="0"
                 color="#111927"
+                onClick={() => {
+                  navigate("/admin/product-management");
+                }}
               >
                 <ArrowBackIosIcon
                   sx={{
@@ -71,10 +92,10 @@ function ProductDetailPage(props) {
                   fontSize: "14px",
                 }}
               >
-                20/10/2021
+                <FormatDateTime dateTime={product.createdAt} />
               </Typography>
             </Stack>
-            <BasicProductDetails />
+            <BasicProductDetails product={product} />
           </Stack>
         </Stack>
       </Container>

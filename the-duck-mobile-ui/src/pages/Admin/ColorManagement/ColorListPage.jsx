@@ -23,7 +23,13 @@ import {
   styled,
   useMediaQuery,
 } from "@mui/material";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import TablePaginationActions from "../../../components/TablePaginationActions";
 
 import { useTheme } from "@emotion/react";
@@ -35,16 +41,18 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 
-import { enqueueSnackbar } from "notistack";
 import DialogConfirm from "../../../components/DialogConfirm";
 import MuiTextFeild from "../../../components/MuiTextFeild";
 import { DataContext } from "../../../layouts/AdminLayout";
+import { enqueueSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 import {
   addColor,
   deleteColor,
   restoreColor,
   updateColor,
 } from "../../../services/Admin/ColorService";
+import ColorButton from "../../../components/ColorButton";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -82,6 +90,7 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 
 function ColorListPage() {
   const { dataFetched } = useContext(DataContext);
+  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsSearched, setRowsSearched] = useState([]);
@@ -93,7 +102,15 @@ function ColorListPage() {
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [colorRequest, setColorRequest] = useState({
     colorName: "",
-    colorCode: "",
+    colorCode: "#fff",
+  });
+  const inputColor = useRef(null);
+  const [error, setError] = useState({
+    status: false,
+    errorMessage: {
+      colorName: "",
+      colorCode: "",
+    },
   });
 
   useEffect(() => {
@@ -127,14 +144,17 @@ function ColorListPage() {
     setPage(0);
   };
 
+  const [anchorId, setAnchorId] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openPopup, setOpenPopup] = React.useState(false);
 
-  const handleClick = (event) => {
+  const openPopover = id => (event) => {
+    setAnchorId(id);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
+    setAnchorId(null);
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
@@ -145,6 +165,65 @@ function ColorListPage() {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Điều này sẽ kiểm tra nếu màn hình lớn hơn hoặc bằng lg breakpoint
 
   const handleSendColorRequest = async () => {
+    let validData = true;
+    if (!colorRequest.colorName || colorRequest.colorName.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            colorName: "Tên màu không được để trống",
+          },
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            colorName: "",
+          },
+        };
+      });
+    }
+
+    if (!colorRequest.colorCode || colorRequest.colorCode.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            colorCode: "Mã màu không được để trống",
+          },
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            colorCode: "",
+          },
+        };
+      });
+    }
+
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        colorName: "",
+        colorCode: "",
+      },
+    });
+
     let response;
     if (addNew) {
       response = await addColor({
@@ -155,7 +234,7 @@ function ColorListPage() {
       if (response.success) {
         enqueueSnackbar("Thêm màu sắc thành công", { variant: "success" });
         setOpenPopup(false);
-        window.location.reload();
+        navigate(0);
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     } else {
       response = await updateColor(colorId, {
@@ -166,7 +245,7 @@ function ColorListPage() {
       if (response.success) {
         enqueueSnackbar("Chỉnh sửa màu sắc thành công", { variant: "success" });
         setOpenPopup(false);
-        window.location.reload();
+        navigate(0);
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     }
   };
@@ -194,6 +273,18 @@ function ColorListPage() {
       }
     }
   };
+
+  const handlePopupClose = () => {
+    setOpenPopup(false);
+    setError({
+      error: false,
+      errorMessage: {
+        colorCode: "",
+        colorName: "",
+      },
+    });
+  };
+
   return (
     <Grid
       container
@@ -225,10 +316,18 @@ function ColorListPage() {
             size="medium"
             startIcon={<AddOutlinedIcon />}
             onClick={() => {
+              setAddNew(true);
               setOpenPopup(true);
               setColorRequest({
                 colorName: "",
                 colorCode: "",
+              });
+              setError({
+                error: false,
+                errorMessage: {
+                  colorCode: "",
+                  colorName: "",
+                },
               });
             }}
           >
@@ -317,9 +416,9 @@ function ColorListPage() {
               <TableBody>
                 {(rowsPerPage > 0
                   ? rowsSearched.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
@@ -338,7 +437,38 @@ function ColorListPage() {
                       }}
                       align="center"
                     >
-                      {row.colorCode}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography variant="subtitle2">
+                          {row.colorCode}
+                        </Typography>
+
+                        <Box
+                          sx={{
+                            marginLeft: "0.5rem",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+
+                            borderRadius: "50%",
+                            width: "1rem",
+                            height: "1rem",
+
+                            border: "1px solid #000",
+                          }}
+                        >
+                          <ColorButton
+                            width="1rem"
+                            height="1rem"
+                            color={row.colorCode}
+                          />
+                        </Box>
+                      </Box>
                     </CellBody>
                     <CellBody style={{ width: "30%" }} align="center">
                       {row.isDeleted ? "Khóa" : "Còn hoạt động"}
@@ -356,13 +486,13 @@ function ColorListPage() {
                           <IconButton
                             color="black"
                             aria-describedby={id}
-                            onClick={handleClick}
+                            onClick={openPopover(row.colorId)}
                           >
                             <MoreVertIcon color="black" />
                           </IconButton>
                           <Popover
                             id={id}
-                            open={open}
+                            open={anchorId === row.colorId}
                             anchorEl={anchorEl}
                             onClose={handleClose}
                             anchorOrigin={{
@@ -386,6 +516,13 @@ function ColorListPage() {
                                     colorCode: row.colorCode,
                                   });
                                   setAddNew(false);
+                                  setError({
+                                    error: false,
+                                    errorMessage: {
+                                      colorCode: "",
+                                      colorName: "",
+                                    },
+                                  });
                                 }}
                                 sx={{
                                   paddingX: 2,
@@ -429,6 +566,13 @@ function ColorListPage() {
                                 colorCode: row.colorCode,
                               });
                               setAddNew(false);
+                              setError({
+                                error: false,
+                                errorMessage: {
+                                  colorCode: "",
+                                  colorName: "",
+                                },
+                              });
                             }}
                           >
                             <ModeEditIcon color="black" />
@@ -496,8 +640,7 @@ function ColorListPage() {
 
       <BootstrapDialog
         open={openPopup}
-        onOk={() => {}}
-        onClose={() => setOpenPopup(false)}
+        onClose={handlePopupClose}
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
@@ -505,7 +648,7 @@ function ColorListPage() {
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={() => setOpenPopup(false)}
+          onClick={handlePopupClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -516,13 +659,26 @@ function ColorListPage() {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <Stack direction={"column"} spacing={1} width={"100%"}>
+          <Stack
+            direction={"row"}
+            spacing={1}
+            width={"100%"}
+            style={{
+              display: "flex",
+              width: "20rem",
+            }}
+          >
             <MuiTextFeild
               label="Tên màu"
               value={colorRequest.colorName}
-              margin="normal"
+              size={"small"}
+              className="custom-text-feild"
               autoFocus
-              required
+              style={{
+                flex: 1,
+              }}
+              error={error.status && error.errorMessage.colorName?.length !== 0}
+              helperText={error.errorMessage.colorName}
               onChange={(e) => {
                 setColorRequest((prev) => {
                   return {
@@ -532,20 +688,31 @@ function ColorListPage() {
                 });
               }}
             />
-            <MuiTextFeild
-              label="Mã màu"
-              value={colorRequest.colorCode}
-              margin="normal"
-              required
-              onChange={(e) => {
-                setColorRequest((prev) => {
-                  return {
-                    ...prev,
-                    colorCode: e.target.value,
-                  };
-                });
-              }}
-            />
+            <div className="color-container">
+              <label for="colorPicker">
+                <ColorButton
+                  width="2rem"
+                  height="2rem"
+                  color={colorRequest.colorCode}
+                />
+              </label>
+              <input
+                id="colorPicker"
+                style={{ visibility: "none" }}
+                ref={inputColor}
+                className="color-picker"
+                type="color"
+                value={colorRequest.colorCode}
+                onChange={(e) => {
+                  setColorRequest((prev) => {
+                    return {
+                      ...prev,
+                      colorCode: e.target.value,
+                    };
+                  });
+                }}
+              />
+            </div>
           </Stack>
         </DialogContent>
         <DialogActions>

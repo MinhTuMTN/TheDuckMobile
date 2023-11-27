@@ -107,22 +107,22 @@ function CatalogListPage() {
     if (isDeleted) {
       response = await restoreCatalog(id);
       if (response.success) {
-        enqueueSnackbar("Khôi phục danh mục thành công!", {
+        enqueueSnackbar("Mở khóa danh mục thành công!", {
           variant: "success",
         });
         catalogs[index + page * rowsPerPage].isDeleted = !isDeleted;
         setRowsSearched(catalogs);
       } else {
-        enqueueSnackbar("Khôi phục danh mục thất bại!", { variant: "error" });
+        enqueueSnackbar("Mở khóa danh mục thất bại!", { variant: "error" });
       }
     } else {
       response = await deleteCatalog(id);
       if (response.success) {
-        enqueueSnackbar("Xóa danh mục thành công!", { variant: "success" });
+        enqueueSnackbar("Khóa danh mục thành công!", { variant: "success" });
         catalogs[index + page * rowsPerPage].isDeleted = !isDeleted;
         setRowsSearched(catalogs);
       } else {
-        enqueueSnackbar("Xóa danh mục thất bại!", { variant: "error" });
+        enqueueSnackbar("Khóa danh mục thất bại!", { variant: "error" });
       }
     }
   };
@@ -184,9 +184,9 @@ function CatalogListPage() {
         <TableBody>
           {(rowsPerPage > 0
             ? rowsSearched.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
+              page * rowsPerPage,
+              page * rowsPerPage + rowsPerPage
+            )
             : rowsSearched
           ).map((row, i) => (
             <TableRow key={i}>
@@ -242,13 +242,13 @@ function CatalogListPage() {
                 </MuiButton>
                 <DialogConfirm
                   open={deleteDialog}
-                  title={isDeleted ? "Khôi phục danh mục" : "Xóa danh mục"}
+                  title={isDeleted ? "Khôi phục danh mục" : "Khóa danh mục"}
                   content={
                     isDeleted
                       ? "Bạn có chắc chắn muốn khôi phục danh mục này"
-                      : "Bạn có chắc chắn muốn xóa danh mục này?"
+                      : "Bạn có chắc chắn muốn khóa danh mục này?"
                   }
-                  okText={isDeleted ? "Khôi phục" : "Xóa"}
+                  okText={isDeleted ? "Khôi phục" : "Khóa"}
                   cancelText={"Hủy"}
                   onOk={handleTrashButtonClick}
                   onCancel={() => setDeleteDialog(false)}

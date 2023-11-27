@@ -33,6 +33,9 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import MuiTextFeild from "../../../../components/MuiTextFeild";
 import TablePaginationActions from "../../../../components/TablePaginationActions";
 import { DataContext } from "../../../../layouts/AdminLayout";
+import { useLocation, useNavigate } from "react-router-dom";
+import { addWard, updateWard } from "../../../../services/Admin/AddressService";
+import { enqueueSnackbar } from "notistack";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -69,15 +72,32 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function WardListPage() {
+  const { state } = useLocation();
+  const navigate = useNavigate();
   const { dataFetched } = useContext(DataContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsSearched, setRowsSearched] = useState([]);
   const [searchString, setSearchString] = useState("");
+  const [province, setProvince] = useState({});
+  const [district, setDistrict] = useState({});
+  const [wardRequest, setWardRequest] = useState({});
+  const [addNew, setAddNew] = useState(true);
+  const [error, setError] = useState({
+    status: false,
+    errorMessage: {
+      wardName: "",
+    }
+  });
 
   useEffect(() => {
     setRowsSearched(dataFetched);
   }, [dataFetched]);
+
+  useEffect(() => {
+    setProvince(state.province);
+    setDistrict(state.district)
+  }, [state.province, state.district]);
 
   const filterRows = useCallback(
     (searchString) => {
@@ -86,7 +106,7 @@ function WardListPage() {
         return dataFetched;
       }
       return dataFetched.filter((row) =>
-        row.provineName.toLowerCase().includes(searchString.toLowerCase())
+        row.wardName.toLowerCase().includes(searchString.toLowerCase())
       );
     },
     [dataFetched]
@@ -96,9 +116,6 @@ function WardListPage() {
     const filtered = filterRows(searchString);
     setRowsSearched(filtered);
   }, [searchString, filterRows]);
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowsSearched.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -110,10 +127,75 @@ function WardListPage() {
   };
 
   const [openPopup, setOpenPopup] = useState(false);
-  const [editWard, setEditWard] = useState("");
-
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.up("lg"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+  const handleSendWardRequest = async () => {
+    let validData = true;
+    if (!wardRequest.wardName || wardRequest.wardName.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          ...prev,
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            wardName: "Tên phường xã không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            wardName: "",
+          }
+        };
+      });
+    }
+
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        wardName: ""
+      }
+    });
+
+    let response
+    if (addNew) {
+      response = await addWard({
+        wardName: wardRequest.wardName,
+        districtId: district.districtId
+      });
+      if (response.success) {
+        enqueueSnackbar("Thêm phường xã thành công", { variant: "success" });
+        setOpenPopup(false);
+        navigate(0);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+      }
+    } else {
+      response = await updateWard(wardRequest.wardId, {
+        wardName: wardRequest.wardName,
+        districtId: district.districtId
+      });
+      if (response.success) {
+        enqueueSnackbar("Chỉnh sửa phường xã thành công", { variant: "success" });
+        setOpenPopup(false);
+        navigate(0);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+      }
+    }
+  };
+
   return (
     <Grid
       container
@@ -134,9 +216,13 @@ function WardListPage() {
             aria-label="back"
             size="small"
             color="#111927"
-            onClick={(e) => {
-              // Xử lý sự kiện cho nút "Xem"
-            }}
+            onClick={() =>
+              navigate(`/admin/address-management/province/detail?provinceId=${province.provinceId}`,
+                {
+                  state: {
+                    province: province,
+                  }
+                })}
           >
             <ArrowBackIosIcon />
           </IconButton>
@@ -148,7 +234,9 @@ function WardListPage() {
               color: "#111927",
             }}
           >
-            Danh sách quận huyện
+            {isSmallScreen
+              ? "Danh sách quận huyện"
+              : `Danh sách quận huyện của ${province.provineName}`}
           </Typography>
         </Stack>
         <Stack
@@ -165,15 +253,26 @@ function WardListPage() {
             paddingX={2}
             paddingBottom={2}
           >
-            Danh sách phường xã
+            {isSmallScreen
+              ? "Danh sách phường xã"
+              : `Danh sách phường xã của ${district.districtName}`}
           </Typography>
           <CustomButton
             variant="contained"
             size="medium"
             startIcon={<AddOutlinedIcon />}
             onClick={(e) => {
+              setAddNew(true);
               setOpenPopup(true);
-              setEditWard("");
+              setWardRequest({
+                wardName: "",
+              });
+              setError({
+                status: false,
+                errorMessage: {
+                  wardName: "",
+                }
+              });
             }}
           >
             Thêm mới
@@ -254,9 +353,9 @@ function WardListPage() {
               <TableBody>
                 {(rowsPerPage > 0
                   ? rowsSearched.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
@@ -266,11 +365,11 @@ function WardListPage() {
                     }}
                   >
                     <CellBody style={{ width: "20%" }} align="center">
-                      {row.districtId}
+                      {row.wardId}
                     </CellBody>
 
                     <CellBody style={{ width: "60%" }} align="center">
-                      {row.districtName}
+                      {row.wardName}
                     </CellBody>
                     <CellBody
                       style={{
@@ -284,8 +383,18 @@ function WardListPage() {
                           const item = {
                             icon: <ModeEditIcon color="black" />,
                             action: () => {
+                              setAddNew(false);
                               setOpenPopup(true);
-                              setEditWard(row.provineName);
+                              setWardRequest({
+                                wardId: row.wardId,
+                                wardName: row.wardName,
+                              });
+                              setError({
+                                status: false,
+                                errorMessage: {
+                                  wardName: "",
+                                }
+                              });
                             },
                           };
 
@@ -299,11 +408,6 @@ function WardListPage() {
                     </CellBody>
                   </TableRow>
                 ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={11} />
-                  </TableRow>
-                )}
               </TableBody>
               <TableFooter>
                 <TableRow>
@@ -331,12 +435,12 @@ function WardListPage() {
       </Grid>
       <BootstrapDialog
         open={openPopup}
-        onOk={() => {}}
+        onOk={() => { }}
         onClose={() => setOpenPopup(false)}
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          {editWard === "" ? "Thêm xã/phường mới" : "Chỉnh sửa xã/phường"}
+          {addNew ? "Thêm xã/phường mới" : "Chỉnh sửa xã/phường"}
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -353,24 +457,28 @@ function WardListPage() {
         <DialogContent dividers>
           <MuiTextFeild
             label="Tên xã phường"
-            value={editWard}
+            value={wardRequest.wardName}
             margin="normal"
             autoFocus
-            required
+            error={error.status && error.errorMessage.wardName.length !== 0}
+            helperText={error.errorMessage.wardName}
             onChange={(e) => {
-              editWard === ""
-                ? setEditWard(e.target.value)
-                : setEditWard(e.target.value);
+              setWardRequest((prev) => {
+                return {
+                  ...prev,
+                  wardName: e.target.value,
+                }
+              })
             }}
           />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => setOpenPopup(false)}>
-            {editWard === "" ? "Tạo mới" : "Cập nhật"}
+          <Button autoFocus onClick={handleSendWardRequest}>
+            {addNew ? "Tạo mới" : "Cập nhật"}
           </Button>
         </DialogActions>
       </BootstrapDialog>
-    </Grid>
+    </Grid >
   );
 }
 

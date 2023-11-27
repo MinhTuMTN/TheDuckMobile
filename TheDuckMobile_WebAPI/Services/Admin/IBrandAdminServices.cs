@@ -6,9 +6,10 @@ namespace TheDuckMobile_WebAPI.Services.Admin
 {
     public interface IBrandAdminServices
     {
-        public Task<List<BrandListResponse>> GetAllBrands();
+        public Task<List<BrandListResponse>> GetAllBrands(bool isDeletedFilter);
         public Task<BrandResponse> AddBrand(BrandRequest request);
         public Task<BrandResponse> EditBrand(int brandId, BrandRequest request);
         public Task<bool> DeleteBrand(int brandId);
+        public Task<List<BrandListResponse>> GetActiveBrands();
     }
 }

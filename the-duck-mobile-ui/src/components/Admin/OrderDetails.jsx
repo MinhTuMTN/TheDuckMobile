@@ -164,8 +164,8 @@ function OrderDetails(props) {
             <TieuDeCot>Trạng thái</TieuDeCot>
           </Grid>
           <Grid item xs={9}>
-            <NoiDung>
-            <Chip color={chipColor} label={order.orderState} />
+            <NoiDung component={'span'}>
+              <Chip color={chipColor} label={order.orderState} />
             </NoiDung>
           </Grid>
         </Grid>

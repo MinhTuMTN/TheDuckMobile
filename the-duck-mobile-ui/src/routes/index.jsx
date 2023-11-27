@@ -16,9 +16,7 @@ import EditCatalogPage from "../pages/Admin/CatalogManagement/EditCatalogPage";
 import AddColorPage from "../pages/Admin/ColorManagement/AddColorPage";
 import ColorListPage from "../pages/Admin/ColorManagement/ColorListPage";
 import EditColorPage from "../pages/Admin/ColorManagement/EditColorPage";
-import AddCouponPage from "../pages/Admin/CouponManagement/AddCouponPage";
 import CouponListPage from "../pages/Admin/CouponManagement/CouponListPage";
-import EditCouponPage from "../pages/Admin/CouponManagement/EditCouponPage";
 import CustomerDetailPage from "../pages/Admin/CustomerManagement/CustomerDetailPage";
 import CustomerListPage from "../pages/Admin/CustomerManagement/CustomerListPage";
 import FeedbackListPage from "../pages/Admin/FeedbackManagement/FeedbackListPage";
@@ -44,6 +42,9 @@ import Product from "../pages/Seller/Product";
 import { StoreProtectedLayout } from "../layouts/StoreProtectedLayout";
 import Analytics from "../pages/Admin/Analytics";
 import AnalyticsStore from "../pages/Seller/AnalyticsStore";
+import CouponDetailPage from "../pages/Admin/CouponManagement/CouponDetailPage";
+
+import Points from "../pages/Points";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -136,6 +137,10 @@ function Router(props) {
               path: "order-details",
               element: <OrderHistoryDetails />,
             },
+            {
+              path: "points",
+              element: <Points />,
+            },
           ],
         },
       ],
@@ -195,9 +200,12 @@ function Router(props) {
           path: "product-management/add-product-version",
           element: <AddProductVersionPage />,
         },
-
         {
-          path: "product-management/detail",
+          path: "product-management/product-version/:productVersionId",
+          element: <AddProductVersionPage />,
+        },
+        {
+          path: "product-management/:productId",
           element: <ProductDetailPage />,
         },
 
@@ -232,7 +240,7 @@ function Router(props) {
           element: <EditStorePage />,
         },
         {
-          path: "store-management/detail",
+          path: "store-management/:storeId",
           element: <StoreDetailPage />,
         },
         {
@@ -260,12 +268,8 @@ function Router(props) {
           element: <CouponListPage />,
         },
         {
-          path: "coupon-management/add",
-          element: <AddCouponPage />,
-        },
-        {
-          path: "coupon-management/edit",
-          element: <EditCouponPage />,
+          path: "coupon-management/:couponId",
+          element: <CouponDetailPage />,
         },
         {
           path: "feedback-management",

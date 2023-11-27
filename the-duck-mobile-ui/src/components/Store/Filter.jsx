@@ -16,7 +16,7 @@ BasicPopover.propTypes = {
 
 BasicPopover.defaultProps = {
   value: [],
-  onChange: () => {},
+  onChange: () => { },
 };
 
 export default function BasicPopover(props) {

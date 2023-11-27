@@ -205,13 +205,13 @@ function StoreListPage() {
                                     </MuiButton>
                                     <DialogConfirm
                                         open={deleteDialog}
-                                        title={isDeleted ? "Khôi phục chi nhánh" : "Xóa chi nhánh"}
+                                        title={isDeleted ? "Khôi phục chi nhánh" : "Khóa chi nhánh"}
                                         content={
                                             isDeleted
                                                 ? "Bạn có chắc chắn muốn khôi phục chi nhánh này"
-                                                : "Bạn có chắc chắn muốn xóa chi nhánh này?"
+                                                : "Bạn có chắc chắn muốn khóa chi nhánh này?"
                                         }
-                                        okText={isDeleted ? "Khôi phục" : "Xóa"}
+                                        okText={isDeleted ? "Khôi phục" : "Khóa"}
                                         cancelText={"Hủy"}
                                         onOk={handleTrashButtonClick}
                                         onCancel={() => setDeleteDialog(false)}

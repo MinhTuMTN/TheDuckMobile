@@ -37,6 +37,8 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import MuiTextFeild from "../../../../components/MuiTextFeild";
 import { DataContext } from "../../../../layouts/AdminLayout";
+import { addProvince, updateProvince } from "../../../../services/Admin/AddressService";
+import { enqueueSnackbar } from "notistack";
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -76,7 +78,14 @@ function ProvinceListPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowsSearched, setRowsSearched] = useState([]);
   const [searchString, setSearchString] = useState("");
-  const [editProvice, setEditProvice] = useState("");
+  const [editProvince, setEditProvince] = useState({});
+  const [addNew, setAddNew] = useState(true);
+  const [error, setError] = useState({
+    status: false,
+    errorMessage: {
+      provinceName: "",
+    }
+  });
 
   const navigate = useNavigate();
 
@@ -111,14 +120,17 @@ function ProvinceListPage() {
     setPage(0);
   };
 
+  const [anchorId, setAnchorId] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openPopup, setOpenPopup] = React.useState(false);
 
-  const handleClick = (event) => {
+  const openPopover = id => (event) => {
+    setAnchorId(id);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
+    setAnchorId(null);
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
@@ -127,6 +139,69 @@ function ProvinceListPage() {
   const theme = useTheme();
   const isFullScreen = useMediaQuery(theme.breakpoints.up("lg"));
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Điều này sẽ kiểm tra nếu màn hình lớn hơn hoặc bằng lg breakpoint
+
+  const handleSendProvinceRequest = async () => {
+    let validData = true;
+    if (!editProvince.provinceName || editProvince.provinceName.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          ...prev,
+          status: true,
+          errorMessage: {
+            ...prev.errorMessage,
+            provinceName: "Tên tỉnh thành không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            ...prev.errorMessage,
+            provinceName: "",
+          }
+        };
+      });
+    }
+
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        provinceName: ""
+      }
+    });
+
+    let response
+    if (addNew) {
+      response = await addProvince({
+        provinceName: editProvince.provinceName,
+      });
+      if (response.success) {
+        enqueueSnackbar("Thêm tỉnh thành thành công", { variant: "success" });
+        setOpenPopup(false);
+        navigate(0);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+      }
+    } else {
+      response = await updateProvince(editProvince.provinceId, {
+        provinceName: editProvince.provinceName,
+      });
+      if (response.success) {
+        enqueueSnackbar("Thêm tỉnh thành thành công", { variant: "success" });
+        setOpenPopup(false);
+        navigate(0);
+      } else {
+        enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+      }
+    }
+  };
 
   return (
     <Grid
@@ -159,8 +234,17 @@ function ProvinceListPage() {
             size="medium"
             startIcon={<AddOutlinedIcon />}
             onClick={() => {
+              setAddNew(true);
               setOpenPopup(true);
-              setEditProvice("");
+              setEditProvince({
+                provinceName: "",
+              });
+              setError({
+                status: false,
+                errorMessage: {
+                  provinceName: "",
+                }
+              });
             }}
           >
             Thêm tỉnh
@@ -241,9 +325,9 @@ function ProvinceListPage() {
               <TableBody>
                 {(rowsPerPage > 0
                   ? rowsSearched.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
                   : rowsSearched
                 ).map((row, i) => (
                   <TableRow
@@ -272,13 +356,13 @@ function ProvinceListPage() {
                           <IconButton
                             color="black"
                             aria-describedby={id}
-                            onClick={handleClick}
+                            onClick={openPopover(row.provinceId)}
                           >
                             <MoreVertIcon color="black" />
                           </IconButton>
                           <Popover
                             id={id}
-                            open={open}
+                            open={anchorId === row.provinceId}
                             anchorEl={anchorEl}
                             onClose={handleClose}
                             anchorOrigin={{
@@ -295,8 +379,18 @@ function ProvinceListPage() {
                                 variant="text"
                                 size="medium"
                                 onClick={(e) => {
+                                  setAddNew(false);
                                   setOpenPopup(true);
-                                  setEditProvice(row.provineName);
+                                  setEditProvince({
+                                    provinceId: row.provinceId,
+                                    provinceName: row.provineName,
+                                  });
+                                  setError({
+                                    status: false,
+                                    errorMessage: {
+                                      provinceName: "",
+                                    }
+                                  });
                                 }}
                                 sx={{
                                   paddingX: 2,
@@ -315,9 +409,13 @@ function ProvinceListPage() {
                                   textAlign: "left",
                                 }}
                                 onClick={(e) => {
-                                  // Xử lý sự kiện cho nút "Chỉnh sửa"
                                   navigate(
-                                    `/admin/address-management/province/detail?id=${row.provinceId}`
+                                    `/admin/address-management/province/detail?provinceId=${row.provinceId}`,
+                                    {
+                                      state: {
+                                        province: row
+                                      }
+                                    }
                                   );
                                 }}
                               >
@@ -333,8 +431,18 @@ function ProvinceListPage() {
                             color="black"
                             onClick={(e) => {
                               // Xử lý sự kiện cho nút "Chỉnh sửa"
+                              setAddNew(false);
                               setOpenPopup(true);
-                              setEditProvice(row.provineName);
+                              setEditProvince({
+                                provinceId: row.provinceId,
+                                provinceName: row.provineName,
+                              });
+                              setError({
+                                status: false,
+                                errorMessage: {
+                                  provinceName: "",
+                                }
+                              });
                             }}
                           >
                             <ModeEditIcon color="black" />
@@ -344,7 +452,12 @@ function ProvinceListPage() {
                             onClick={(e) => {
                               // Xử lý sự kiện cho nút "Xem"
                               navigate(
-                                `/admin/address-management/province/detail?provinceId=${row.provinceId}`
+                                `/admin/address-management/province/detail?provinceId=${row.provinceId}`,
+                                {
+                                  state: {
+                                    province: row
+                                  }
+                                }
                               );
                             }}
                           >
@@ -383,12 +496,12 @@ function ProvinceListPage() {
 
       <BootstrapDialog
         open={openPopup}
-        onOk={() => {}}
+        onOk={() => { }}
         onClose={() => setOpenPopup(false)}
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          {editProvice === "" ? "Thêm tỉnh mới" : "Chỉnh sửa tỉnh"}
+          {addNew ? "Thêm tỉnh mới" : "Chỉnh sửa tỉnh"}
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -405,20 +518,25 @@ function ProvinceListPage() {
         <DialogContent dividers>
           <MuiTextFeild
             label="Tên tỉnh"
-            value={editProvice}
+            value={editProvince.provinceName}
             margin="normal"
             autoFocus
-            required
+            error={error.status && error.errorMessage.provinceName.length !== 0}
+            helperText={error.errorMessage.provinceName}
+            style={{ width: "350px" }}
             onChange={(e) => {
-              editProvice === ""
-                ? setEditProvice(e.target.value)
-                : setEditProvice(e.target.value);
+              setEditProvince((prev) => {
+                return {
+                  ...prev,
+                  provinceName: e.target.value,
+                }
+              })
             }}
           />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={() => setOpenPopup(false)}>
-            {editProvice === "" ? "Tạo mới" : "Cập nhật"}
+          <Button autoFocus onClick={handleSendProvinceRequest}>
+            {addNew ? "Tạo mới" : "Cập nhật"}
           </Button>
         </DialogActions>
       </BootstrapDialog>

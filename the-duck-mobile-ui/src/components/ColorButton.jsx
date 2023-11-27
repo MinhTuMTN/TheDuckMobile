@@ -7,8 +7,8 @@ function ColorButton(props) {
       component={"span"}
       sx={{
         display: "inline-block",
-        width: props.width && "1rem",
-        height: props.height && "1rem",
+        width: props.width || "1rem",
+        height: props.height || "1rem",
         backgroundColor: props.color || "black",
         borderRadius: "50%",
       }}

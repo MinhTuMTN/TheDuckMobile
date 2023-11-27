@@ -40,10 +40,26 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return new BrandResponse(brand);
         }
 
-        public async Task<List<BrandListResponse>> GetAllBrands()
+        public async Task<List<BrandListResponse>> GetAllBrands(bool isDeletedFilter)
+        {
+            var brands = _context
+                .Brands
+                .Include(b => b.Products)
+                .AsQueryable();
+
+            if (isDeletedFilter)
+                brands = brands.Where(b => b.IsDeleted == false);
+
+            var result = await brands.ToListAsync();
+
+            return result.Select(b => new BrandListResponse(b)).ToList();
+        }
+
+        public async Task<List<BrandListResponse>> GetActiveBrands()
         {
             var brands = await _context.Brands
                 .Include(b => b.Products)
+                .Where(b => b.IsDeleted == false)
                 .ToListAsync();
             return brands.Select(b => new BrandListResponse(b)).ToList();
         }
@@ -67,8 +83,29 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 brand.BrandName = request.BrandName;
 
             brand.IsDeleted = request.IsDeleted;
-
             brand.LastModifiedAt = DateTime.Now;
+
+            var products = brand.Products;
+
+            if (products != null && products.Count > 0)
+            {
+                if (brand.IsDeleted)
+                {
+                    foreach (var product in products)
+                    {
+                        product.IsDeleted = true;
+                        product.LastModifiedAt = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    foreach (var product in products)
+                    {
+                        product.IsDeleted = false;
+                        product.LastModifiedAt = DateTime.Now;
+                    }
+                }
+            }
 
             await _context.SaveChangesAsync();
 
@@ -85,6 +122,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 throw new CustomNotFoundException("Brand can't be found");
 
             brand.IsDeleted = true;
+            brand.LastModifiedAt = DateTime.Now;
 
             await _context.SaveChangesAsync();
             return true;

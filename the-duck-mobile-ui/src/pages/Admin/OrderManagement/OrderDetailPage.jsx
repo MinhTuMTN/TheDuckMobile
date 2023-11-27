@@ -16,7 +16,6 @@ function OrderDetailPage(props) {
 
   const handleGetOrder = useCallback(async () => {
     const response = await getOrderById(state.id);
-    console.log(response);
     if (response.success) {
       setOrder(response.data.data);
     }
@@ -52,10 +51,10 @@ function OrderDetailPage(props) {
               onClick={() => {
                 pathSegs[pathSegs.length - 1] !== "order-management"
                   ? navigate(state.prevURL, {
-                      state: {
-                        id: pathSegs[pathSegs.length - 1],
-                      },
-                    })
+                    state: {
+                      id: pathSegs[pathSegs.length - 1],
+                    },
+                  })
                   : navigate(state.prevURL);
               }}
             >
@@ -69,7 +68,8 @@ function OrderDetailPage(props) {
                 color: "#111927",
               }}
             >
-              Danh sách đơn hàng
+              {pathSegs[pathSegs.length - 1] !== "order-management" ?
+                "Thông tin khách hàng" : "Danh sách đơn hàng"}
             </Typography>
           </Stack>
           <Typography

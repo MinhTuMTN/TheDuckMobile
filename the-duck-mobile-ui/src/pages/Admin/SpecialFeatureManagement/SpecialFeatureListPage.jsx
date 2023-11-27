@@ -40,6 +40,7 @@ import { DataContext } from "../../../layouts/AdminLayout";
 import { enqueueSnackbar } from "notistack";
 import DialogConfirm from "../../../components/DialogConfirm";
 import { addSpecialFeature, deleteSpecialFeature, restoreSpecialFeature, updateSpecialFeature } from "../../../services/Admin/SpecialFeatureService";
+import { useNavigate } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -75,6 +76,7 @@ const SearchTextField = styled(MuiTextFeild)(({ theme }) => ({
 }));
 
 function SpecialFeatureListPage() {
+  const navigate = useNavigate();
   const { dataFetched } = useContext(DataContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -86,6 +88,12 @@ function SpecialFeatureListPage() {
   const [index, setIndex] = useState(0);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [name, setName] = useState("");
+  const [error, setError] = useState({
+    status: false,
+    errorMessage: {
+      specialFeatureName: "",
+    },
+  });
 
   useEffect(() => {
     setRowsSearched(dataFetched);
@@ -118,14 +126,17 @@ function SpecialFeatureListPage() {
     setPage(0);
   };
 
+  const [anchorId, setAnchorId] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openPopup, setOpenPopup] = React.useState(false);
 
-  const handleClick = (event) => {
+  const openPopover = id => (event) => {
+    setAnchorId(id);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
+    setAnchorId(null);
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
@@ -136,6 +147,39 @@ function SpecialFeatureListPage() {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Điều này sẽ kiểm tra nếu màn hình lớn hơn hoặc bằng lg breakpoint
 
   const handleSendRequest = async () => {
+    let validData = true;
+    if (!name || name.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            specialFeatureName: "Tên tính năng không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            specialFeatureName: "",
+          }
+        };
+      });
+    }
+
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        specialFeatureName: "",
+      }
+    });
+
     let response;
     if (addNew) {
       response = await addSpecialFeature({
@@ -145,7 +189,7 @@ function SpecialFeatureListPage() {
       if (response.success) {
         enqueueSnackbar("Thêm tính năng thành công", { variant: "success" });
         setOpenPopup(false);
-        window.location.reload();
+        navigate(0);
       } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     } else {
       response = await updateSpecialFeature(specialFeatureId, {
@@ -183,6 +227,17 @@ function SpecialFeatureListPage() {
       }
     }
   };
+
+  const handlePopupClose = () => {
+    setOpenPopup(false);
+    setError({
+      error: false,
+      errorMessage: {
+        specialFeatureName: "",
+      }
+    });
+  }
+
   return (
     <Grid
       container
@@ -214,8 +269,15 @@ function SpecialFeatureListPage() {
             size="medium"
             startIcon={<AddOutlinedIcon />}
             onClick={() => {
+              setAddNew(true);
               setOpenPopup(true);
               setName("");
+              setError({
+                error: false,
+                errorMessage: {
+                  specialFeatureName: "",
+                }
+              });
             }}
           >
             Thêm tính năng mới
@@ -331,13 +393,13 @@ function SpecialFeatureListPage() {
                           <IconButton
                             color="black"
                             aria-describedby={id}
-                            onClick={handleClick}
+                            onClick={openPopover(row.specialFeatureId)}
                           >
                             <MoreVertIcon color="black" />
                           </IconButton>
                           <Popover
                             id={id}
-                            open={open}
+                            open={anchorId === row.specialFeatureId}
                             anchorEl={anchorEl}
                             onClose={handleClose}
                             anchorOrigin={{
@@ -358,6 +420,12 @@ function SpecialFeatureListPage() {
                                   setSpecialFeatureId(row.specialFeatureId);
                                   setName(row.specialFeatureName);
                                   setAddNew(false);
+                                  setError({
+                                    error: false,
+                                    errorMessage: {
+                                      specialFeatureName: "",
+                                    }
+                                  });
                                 }}
                                 sx={{
                                   paddingX: 2,
@@ -398,6 +466,12 @@ function SpecialFeatureListPage() {
                               setSpecialFeatureId(row.specialFeatureId);
                               setName(row.specialFeatureName);
                               setAddNew(false);
+                              setError({
+                                error: false,
+                                errorMessage: {
+                                  specialFeatureName: "",
+                                }
+                              });
                             }}
                           >
                             <ModeEditIcon color="black" />
@@ -462,8 +536,7 @@ function SpecialFeatureListPage() {
 
       <BootstrapDialog
         open={openPopup}
-        onOk={() => { }}
-        onClose={() => setOpenPopup(false)}
+        onClose={handlePopupClose}
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
@@ -471,7 +544,7 @@ function SpecialFeatureListPage() {
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={() => setOpenPopup(false)}
+          onClick={handlePopupClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -487,7 +560,11 @@ function SpecialFeatureListPage() {
             value={name}
             margin="normal"
             autoFocus
-            required
+            style={{
+              minWidth: "300px",
+            }}
+            error={error.status && error.errorMessage.specialFeatureName?.length !== 0}
+            helperText={error.errorMessage.specialFeatureName}
             onChange={(e) => {
               setName(e.target.value);
             }}

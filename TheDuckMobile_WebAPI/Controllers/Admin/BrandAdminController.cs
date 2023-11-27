@@ -20,14 +20,28 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         [HttpGet]
         [AllowAnonymous]
         /*[Authorize(Roles = "admin")]*/
-        public async Task<IActionResult> GetAllBrands()
+        public async Task<IActionResult> GetAllBrands([FromQuery] bool isDeletedFilter = false)
         {
-            var brands = await _brandServices.GetAllBrands();
+            var brands = await _brandServices.GetAllBrands(isDeletedFilter);
             return Ok(new GenericResponse
             {
                 Success = true,
                 Data = brands,
                 Message = "Successfully retrieved all brands"
+            });
+        }
+
+        [HttpGet("active")]
+        [AllowAnonymous]
+        /*[Authorize(Roles = "admin")]*/
+        public async Task<IActionResult> GetActiveBrands()
+        {
+            var brands = await _brandServices.GetActiveBrands();
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = brands,
+                Message = "Successfully retrieved active brands"
             });
         }
 

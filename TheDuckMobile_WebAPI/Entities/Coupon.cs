@@ -21,5 +21,9 @@ namespace TheDuckMobile_WebAPI.Entities
 
         [JsonIgnore]
         public virtual ICollection<Order>? Orders { get; set; }
+
+        public Guid? CustomerId { get; set; }
+        [JsonIgnore]
+        public virtual Customer? Customer { get; set; }
     }
 }

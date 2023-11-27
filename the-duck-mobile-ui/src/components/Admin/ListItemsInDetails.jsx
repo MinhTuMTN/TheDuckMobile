@@ -38,10 +38,8 @@ const NameContainer = styled.div({
 
 function ListItemsInDetails(props) {
   const { items } = props;
-  console.log(items);
   return (
     <Stack
-      d
       sx={{
         borderRadius: "15px",
         paddingTop: 2,
@@ -84,7 +82,7 @@ function ListItemsInDetails(props) {
                     textAlign: "left",
                   }}
                 >
-                  {item.storeProduct?.productVersion?.product?.productName}{" "}
+                  {item.storeProduct?.productVersion?.product?.productName}{" - "}
                   {item.storeProduct?.productVersion?.versionName}
                 </TieuDeCot>
               </NameContainer>

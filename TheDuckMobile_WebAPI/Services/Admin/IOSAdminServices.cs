@@ -5,11 +5,12 @@ namespace TheDuckMobile_WebAPI.Services.Admin
 {
     public interface IOSAdminServices
     {
-        public Task<List<OS>> GetAllOSs();
+        public Task<List<OS>> GetAllOSs(bool isDeletedFilter);
         public Task<OS> GetOSById(int id);
         public Task<OS> AddOS(OSRequest request);
         public Task<OS> UpdateOS(int id, OSRequest request);
         public Task<OS?> RestoreOS(int osId);
         public Task<bool> DeleteOS(int id);
+        public Task<List<OS>> GetActiveOSs();
     }
 }

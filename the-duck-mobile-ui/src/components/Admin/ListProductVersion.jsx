@@ -1,6 +1,7 @@
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import RestoreFromTrashOutlinedIcon from "@mui/icons-material/RestoreFromTrashOutlined";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
@@ -13,28 +14,16 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
-import React from "react";
+import React, { useState } from "react";
 import FormatCurrency from "../FormatCurrency";
-const Items = [
-  {
-    id: 1,
-    name: "Điện thoại SamSung Galaxy M31",
-    creatAt: "20/10/2022",
-    price: 100000000,
-  },
-  {
-    id: 2,
-    name: "Điện thoại iPhone 14 Pro Max 128GB",
-    creatAt: "20/11/2023",
-    price: 27290000,
-  },
-  {
-    id: 3,
-    name: "Laptop Dell Inspiron 14 T7430 i5 1335U/8GB/512GB/Touch/Pen/OfficeHS/Win11 (N7430I58W1) ",
-    creatAt: "12/10/2021",
-    price: 23290000,
-  },
-];
+import FormatDate from "../FormatDate";
+import {
+  deleteProductVersion,
+  restoreProductVersion,
+} from "../../services/Admin/ProductVersionService";
+import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
+import DialogConfirm from "../DialogConfirm";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   borderBottom: "1px solid #E0E0E0",
@@ -68,7 +57,10 @@ const ButtonInPopover = styled(Button)(({ theme }) => ({
 }));
 
 function ListProductVersion(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+  const { productVersions } = props;
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -82,6 +74,42 @@ function ListProductVersion(props) {
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [openDialogConfirm, setOpenDialogConfirm] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const [selectedProductVersionId, setSelectedProductVersionId] =
+    useState(null);
+  const handleDeleteProductVersion = async (productVersionId) => {
+    const response = await deleteProductVersion(productVersionId);
+
+    if (response.success) {
+      enqueueSnackbar("Xóa phiên bản sản phẩm thành công", {
+        variant: "success",
+      });
+      // Refresh lại trang
+      navigate(0, { replace: true });
+    } else {
+      enqueueSnackbar("Xóa phiên bản sản phẩm thất bại", {
+        variant: "error",
+      });
+    }
+  };
+
+  const handleRestoreProductVersion = async (productVersionId) => {
+    const response = await restoreProductVersion(productVersionId);
+
+    if (response.success) {
+      enqueueSnackbar("Khôi phục phiên bản sản phẩm thành công", {
+        variant: "success",
+      });
+      // Refresh lại trang
+      navigate(0, { replace: true });
+    } else {
+      enqueueSnackbar("Khôi phục phiên bản sản phẩm thất bại", {
+        variant: "error",
+      });
+    }
+  };
 
   return (
     <Stack>
@@ -109,8 +137,8 @@ function ListProductVersion(props) {
           </Grid>
         </Grid>
       </BoxStyle>
-      {Items.map((item) => (
-        <BoxStyle key={item.id}>
+      {productVersions?.map((item, index) => (
+        <BoxStyle key={index}>
           <Grid container>
             <Grid item xs={6} sm={7}>
               <NameContainer>
@@ -122,7 +150,7 @@ function ListProductVersion(props) {
                     width: "95%",
                   }}
                 >
-                  {item.name}
+                  {item.versionName}
                 </TieuDeCot>
                 <NoiDung>
                   <FormatCurrency amount={item.price} />
@@ -131,7 +159,9 @@ function ListProductVersion(props) {
             </Grid>
 
             <Grid item xs={3} sm={3} textAlign={"center"}>
-              <NoiDung>{item.creatAt}</NoiDung>
+              <NoiDung>
+                <FormatDate dateTime={item.createdAt} />
+              </NoiDung>
             </Grid>
             <Grid item xs={3} sm={2} textAlign={"center"}>
               {isSmallScreen ? (
@@ -163,15 +193,34 @@ function ListProductVersion(props) {
                     }}
                   >
                     <Stack direction={"column"} justifyContent={"left"}>
-                      <ButtonInPopover variant="text" size="medium">
+                      <ButtonInPopover
+                        variant="text"
+                        size="medium"
+                        onClick={() => {
+                          navigate(
+                            `/admin/product-management/product-version/${item.productVersionId}`,
+                            {
+                              state: {
+                                productId: item.productId,
+                              },
+                            }
+                          );
+                        }}
+                      >
                         Chỉnh sửa
                       </ButtonInPopover>
                       <ButtonInPopover
                         variant="text"
                         size="medium"
-                        onClick={(e) => {}}
+                        onClick={(e) => {
+                          if (item.isDeleted) setIsDelete(false);
+                          else setIsDelete(true);
+
+                          setOpenDialogConfirm(true);
+                          setSelectedProductVersionId(item.productVersionId);
+                        }}
                       >
-                        Xoá
+                        {item.isDeleted ? "Khôi phục" : "Xóa"}
                       </ButtonInPopover>
                     </Stack>
                   </Popover>
@@ -179,11 +228,36 @@ function ListProductVersion(props) {
               ) : (
                 // Hiển thị cho màn hình vừa và lớn
                 <>
-                  <IconButton color="black" onClick={(e) => {}}>
+                  <IconButton
+                    color="black"
+                    onClick={(e) => {
+                      navigate(
+                        `/admin/product-management/product-version/${item.productVersionId}`,
+                        {
+                          state: {
+                            productId: item.productId,
+                          },
+                        }
+                      );
+                    }}
+                  >
                     <ModeEditIcon color="black" />
                   </IconButton>
-                  <IconButton color="black" onClick={(e) => {}}>
-                    <DeleteOutlinedIcon color="black" />
+                  <IconButton
+                    color="black"
+                    onClick={(e) => {
+                      if (item.isDeleted) setIsDelete(false);
+                      else setIsDelete(true);
+
+                      setOpenDialogConfirm(true);
+                      setSelectedProductVersionId(item.productVersionId);
+                    }}
+                  >
+                    {item.isDeleted ? (
+                      <RestoreFromTrashOutlinedIcon color="black" />
+                    ) : (
+                      <DeleteOutlinedIcon color="black" />
+                    )}
                   </IconButton>
                 </>
               )}
@@ -191,6 +265,27 @@ function ListProductVersion(props) {
           </Grid>
         </BoxStyle>
       ))}
+
+      <DialogConfirm
+        open={openDialogConfirm}
+        cancelText={"Hủy"}
+        content={
+          isDelete
+            ? "Bạn có chắc chắn muốn xóa phiên bản sản phẩm này?"
+            : "Bạn có chắc chắn muốn khôi phục phiên bản sản phẩm này?"
+        }
+        onOk={
+          isDelete
+            ? () => handleDeleteProductVersion(selectedProductVersionId)
+            : () => handleRestoreProductVersion(selectedProductVersionId)
+        }
+        onCancel={() => setOpenDialogConfirm(false)}
+        okText={isDelete ? "Xóa" : "Khôi phục"}
+        title={
+          isDelete ? "Xóa phiên bản sản phẩm" : "Khôi phục phiên bản sản phẩm"
+        }
+        onClose={() => setOpenDialogConfirm(false)}
+      />
     </Stack>
   );
 }

@@ -85,7 +85,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromForm] EditProductRequest request)
+        public async Task<IActionResult> AddProduct([FromForm] AddProductRequest request)
         {
             var product = await _productServices.AddProduct(request);
 
@@ -101,7 +101,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPut("{productId}")]
-        public async Task<IActionResult> EditProduct([FromRoute] Guid productId, [FromForm] EditProductRequest request)
+        public async Task<IActionResult> EditProduct([FromRoute] Guid productId, [FromBody] EditProductRequest request)
         {
             var product = await _productServices.EditProduct(productId, request);
 
@@ -113,6 +113,47 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Success = true,
                 Message = "Product edited successfully.",
                 Data = product
+            });
+        }
+
+        [HttpGet("filtered")]
+        /*[Authorize(Roles = "Admin")]*/
+        public async Task<IActionResult> GetFilteredProducts(
+            [FromQuery] string? search = "",
+            [FromQuery] int page = 0,
+            [FromQuery] int limit = 1,
+            [FromQuery] List<int>? catalogIds = null,
+            [FromQuery] List<bool>? productStatus = null,
+            [FromQuery] List<int>? productQuantity = null
+        )
+        {
+            var result = await _productServices
+                .GetFilteredProducts(
+                    search,
+                    page,
+                    limit,
+                    catalogIds,
+                    productStatus,
+                    productQuantity
+                );
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = result
+            });
+        }
+
+        [HttpPut("thumbnail/{productId}")]
+        public async Task<IActionResult> EditProductThumbnail([FromRoute] Guid productId, [FromForm] ProductThumbnailRequest request)
+        {
+            var result = await _productServices.EditProductThumbnail(productId, request);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = result,
+                Message = "Successfully edited product thumbnail"
             });
         }
     }

@@ -10,6 +10,7 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
         public double MinPrice { get; set; }
         public double MaxDiscount { get; set; }
         public int MaxUse { get; set; }
+        public int Remain { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int CurrentUse { get; set; }
@@ -25,6 +26,7 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
             MaxDiscount = coupon.MaxDiscount;
             StartDate = coupon.StartDate;
             EndDate = coupon.EndDate;
+            Remain = coupon.MaxUse - coupon.CurrentUse;
             CurrentUse = coupon.CurrentUse;
             IsDeleted = coupon.IsDeleted;
         }

@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import CircleIcon from "@mui/icons-material/Circle";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useTheme } from "@emotion/react";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import {
   Box,
   Button,
@@ -18,17 +20,12 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FormatDate from "../FormatDate";
 
 const CustomText = styled(Typography)(({ theme }) => ({
   fontSize: "14px !important",
-}));
-const ButtonInPopover = styled(Button)(({ theme }) => ({
-  color: "#101828",
-  paddingX: 3,
-  paddingY: 1,
-  justifyContent: "flex-start",
 }));
 
 function useCustomMediaQuery() {
@@ -48,10 +45,13 @@ function useCustomMediaQuery() {
 
 function Row(props) {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const { row } = props;
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -59,11 +59,6 @@ function Row(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
-  const formattedDate = new Intl.DateTimeFormat("vi-VN", options).format(
-    new Date(row.createDate)
-  );
 
   const maxWidth = useCustomMediaQuery();
 
@@ -74,9 +69,13 @@ function Row(props) {
           <Stack direction={"row"} spacing={2} alignItems={"center"}>
             <CardMedia
               component="img"
-              image={row.productImage}
+              image={row.thumbnail}
               alt="Hình ảnh sản phẩm"
-              style={{ maxHeight: "5rem", maxWidth: "5rem" }}
+              style={{
+                maxHeight: "5rem",
+                maxWidth: "5rem",
+                objectFit: "contain",
+              }}
             />
             <Stack direction={"column"} spacing={0.5}>
               <CustomText
@@ -102,71 +101,92 @@ function Row(props) {
                   maxWidth: maxWidth,
                 }}
               >
-                Category {row.category}
+                Category {row.catalogName}
               </CustomText>
             </Stack>
           </Stack>
         </TableCell>
         <TableCell align="left">
-          <CustomText>{formattedDate}</CustomText>
+          <CustomText>
+            <FormatDate dateTime={row.createdAt} />
+          </CustomText>
         </TableCell>
         <TableCell align="right">
           <Stack direction={"row"} spacing={1} alignItems={"center"}>
             <CircleIcon
               sx={{
                 fontSize: 10,
-                color: row.status === "Còn bán" ? "#00C58D" : "#c52700",
+                color: row.isDeleted ? "#c52700" : "#00C58D",
               }}
             />
-            <CustomText>{row.status}</CustomText>
+            <CustomText>{row.isDeleted ? "Ngưng bán" : "Còn bán"}</CustomText>
           </Stack>
         </TableCell>
         <TableCell align="right">
           <>
-            <IconButton
-              color="black"
-              aria-describedby={id}
-              onClick={handleClick}
-            >
-              <MoreVertIcon color="black" />
-            </IconButton>
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-            >
-              <Stack direction={"column"} paddingX={1}>
-                <ButtonInPopover
-                  variant="text"
-                  size="medium"
-                  onClick={(e) => {}}
+            {isSmallScreen ? (
+              // Hiển thị cho màn hình nhỏ
+              <>
+                <IconButton
+                  color="black"
+                  aria-describedby={id}
+                  onClick={handleClick}
                 >
-                  Chỉnh sửa
-                </ButtonInPopover>
-                <ButtonInPopover
-                  variant="text"
-                  size="medium"
+                  <MoreVertIcon color="black" />
+                </IconButton>
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                >
+                  <Stack direction={"column"}>
+                    <Button
+                      variant="text"
+                      size="medium"
+                      sx={{
+                        paddingX: 2,
+                        paddingY: 1,
+                        textAlign: "left",
+                      }}
+                      onClick={(e) => {
+                        navigate(`/admin/product-management/${row.productId}`, {
+                          state: {
+                            id: row.productId,
+                          },
+                        });
+                      }}
+                    >
+                      Xem
+                    </Button>
+                  </Stack>
+                </Popover>
+              </>
+            ) : (
+              // Hiển thị cho màn hình vừa và lớn
+              <>
+                <IconButton
+                  color="black"
                   onClick={(e) => {
-                    navigate("/admin/product-management/detail", {
+                    navigate(`/admin/product-management/${row.productId}`, {
                       state: {
                         id: row.productId,
                       },
                     });
                   }}
                 >
-                  Xem
-                </ButtonInPopover>
-              </Stack>
-            </Popover>
+                  <InfoOutlinedIcon color="black" />
+                </IconButton>
+              </>
+            )}
           </>
         </TableCell>
       </TableRow>
@@ -208,8 +228,8 @@ function ProductsTableBasic(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.slice(0, rowsPerPage).map((row) => (
-                <Row key={row.id} row={row} />
+              {items?.slice(0, rowsPerPage).map((row, index) => (
+                <Row key={index} row={row} />
               ))}
             </TableBody>
           </Table>
@@ -220,9 +240,9 @@ function ProductsTableBasic(props) {
         count={count}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
+        page={page - 1}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[1, 5, 10, 25]}
       />
     </>
   );

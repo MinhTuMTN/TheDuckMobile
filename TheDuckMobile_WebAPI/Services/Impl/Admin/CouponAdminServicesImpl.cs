@@ -34,27 +34,56 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return coupon;
         }
 
-        public async Task<Coupon> AddCoupon(CouponRequest request)
+        public async Task<Coupon?> GetCouponByCode(CouponRequest request)
         {
-            var coupon = new Coupon
-            {
-                CouponCode = request.CouponCode,
-                Discount = request.Discount,
-                MinPrice = request.MinPrice,
-                MaxDiscount = request.MaxDiscount,
-                MaxUse = request.MaxUse,
-                StartDate = request.StartDate,
-                EndDate = request.EndDate,
-                CurrentUse = 0,
-                CreatedAt = DateTime.Now,
-                LastModifiedAt = DateTime.Now,
-                IsDeleted = false
-            };
+            var coupon = await _context.Coupons
+                .FirstOrDefaultAsync(c => c.CouponCode == request.CouponCode);
 
-            await _context.Coupons.AddAsync(coupon);
-            await _context.SaveChangesAsync();
+            if (coupon == null)
+                return null;
 
             return coupon;
+        }
+
+        public async Task<Coupon> AddCoupon(CouponRequest request)
+        {
+            var couponExist = await GetCouponByCode(request);
+            if (couponExist != null)
+            {
+                couponExist.Discount = request.Discount;
+                couponExist.MinPrice = request.MinPrice;
+                couponExist.MaxDiscount = request.MaxDiscount;
+                couponExist.MaxUse = request.MaxUse;
+                couponExist.StartDate = request.StartDate;
+                couponExist.EndDate = request.EndDate;
+                couponExist.CurrentUse = request.CurrentUse;
+                couponExist.LastModifiedAt = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+                return couponExist;
+            }
+            else
+            {
+                var coupon = new Coupon
+                {
+                    CouponCode = request.CouponCode,
+                    Discount = request.Discount,
+                    MinPrice = request.MinPrice,
+                    MaxDiscount = request.MaxDiscount,
+                    MaxUse = request.MaxUse,
+                    StartDate = request.StartDate,
+                    EndDate = request.EndDate,
+                    CurrentUse = 0,
+                    CreatedAt = DateTime.Now,
+                    LastModifiedAt = DateTime.Now,
+                    IsDeleted = false
+                };
+                await _context.Coupons.AddAsync(coupon);
+                await _context.SaveChangesAsync();
+
+                return coupon;
+            }
+
         }
 
         public async Task<Coupon> UpdateCoupon(string couponId, CouponRequest request)

@@ -18,9 +18,10 @@ import BrandsTable from "../../../components/Admin/BrandsTables";
 import AddNewBrand from "../../../components/Admin/AddNewBrand";
 import CloseIcon from "@mui/icons-material/Close";
 import { DataContext } from "../../../layouts/AdminLayout";
-import SearchList from "../../../components/Admin/SearchList";
+import SearchBrandList from "../../../components/Admin/SearchBrandList";
 import { addBrand } from "../../../services/Admin/BrandService";
 import { enqueueSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -41,6 +42,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 }));
 
 function BrandListPage(props) {
+  const navigate = useNavigate();
   const { dataFetched } = useContext(DataContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -51,21 +53,61 @@ function BrandListPage(props) {
     brandName: "",
     image: null,
   });
+  const [error, setError] = useState({
+    status: false,
+    errorMessage: {
+      brandName: "",
+    },
+  });
 
   useEffect(() => {
     setRowsSearched(dataFetched);
   }, [dataFetched]);
 
-  
+
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
   const handleRowsPerPageChange = (event) => {
-    setRowsPerPage(event.target.value);
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const handleAddBrand = async () => {
+    let validData = true;
+    if (!brandAdd.brandName || brandAdd.brandName.trim().length === 0) {
+      validData = false;
+      setError((prev) => {
+        return {
+          status: true,
+          errorMessage: {
+            brandName: "Tên thương hiệu không được để trống",
+          }
+        };
+      });
+    } else {
+      setError((prev) => {
+        return {
+          ...prev,
+          errorMessage: {
+            brandName: "",
+          }
+        };
+      });
+    }
+
+    if (!validData) {
+      return;
+    }
+
+    setError({
+      status: false,
+      errorMessage: {
+        brandName: "",
+      }
+    });
+
     const formData = new FormData();
     formData.append('brandName', brandAdd.brandName);
     formData.append('image', brandAdd.image);
@@ -76,9 +118,20 @@ function BrandListPage(props) {
     if (response.success) {
       enqueueSnackbar("Thêm thương hiệu thành công", { variant: "success" });
       setOpen(false);
-      window.location.reload();
+      navigate(0);
     } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
   };
+
+  const handlePopupClose = () => {
+    setOpen(false);
+    setError({
+      error: false,
+      errorMessage: {
+        brandName: "",
+      }
+    });
+  }
+
   return (
     <Box component={"main"} sx={{ flexGrow: 1, py: 8 }}>
       <Container maxWidth={"lg"}>
@@ -86,7 +139,15 @@ function BrandListPage(props) {
           <Stack direction={"row"} justifyContent={"space-between"}>
             <Typography variant="h3">Danh sách thương hiệu</Typography>
             <CustomButton
-              onClick={() => setOpen(true)}
+              onClick={() => {
+                setError({
+                  status: false,
+                  errorMessage: {
+                    brandName: "",
+                  }
+                });
+                setOpen(true);
+              }}
               variant="contained"
               startIcon={<AddOutlinedIcon />}
             >
@@ -102,13 +163,13 @@ function BrandListPage(props) {
             }}
             spacing={"2px"}
           >
-            <SearchList
-            placeholder="Tìm kiếm thương hiệu"
-            searchString={searchString}
-            setRowsSearched={setRowsSearched}
-            dataFetched={dataFetched}
-            setSearchString={setSearchString}
-            setPage={setPage}
+            <SearchBrandList
+              placeholder="Tìm kiếm thương hiệu"
+              searchString={searchString}
+              setRowsSearched={setRowsSearched}
+              dataFetched={dataFetched}
+              setSearchString={setSearchString}
+              setPage={setPage}
             />
 
             <BrandsTable
@@ -118,6 +179,14 @@ function BrandListPage(props) {
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
               rowsPerPage={rowsPerPage}
+              rowsPerPageOptions={[
+                5,
+                10,
+                25,
+                { label: "All", value: -1 },
+              ]}
+              error={error}
+              setError={setError}
             />
           </Stack>
         </Stack>
@@ -125,8 +194,7 @@ function BrandListPage(props) {
 
       <BootstrapDialog
         open={open}
-        onOk={() => { }}
-        onClose={() => setOpen(false)}
+        onClose={handlePopupClose}
         aria-labelledby="customized-dialog-title"
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
@@ -134,7 +202,7 @@ function BrandListPage(props) {
         </DialogTitle>
         <IconButton
           aria-label="close"
-          onClick={() => setOpen(false)}
+          onClick={handlePopupClose}
           sx={{
             position: "absolute",
             right: 8,
@@ -145,7 +213,7 @@ function BrandListPage(props) {
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <AddNewBrand setBrandAdd={setBrandAdd} />
+          <AddNewBrand setBrandAdd={setBrandAdd} error={error} />
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleAddBrand}>

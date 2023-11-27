@@ -14,9 +14,16 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ListProductVersion from "./ListProductVersion";
 import BasicProductInDetailsPage from "./BasicProductInDetailsPage";
+import DialogConfirm from "../DialogConfirm";
+import {
+  deleteProduct,
+  restoreProduct,
+  updateProductThumbnail,
+} from "../../services/Admin/ProductService";
+import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
@@ -47,17 +54,88 @@ const paperStyle = {
 };
 
 function BasicProductDetails(props) {
-  const [statusProduct, setStatusProduct] = React.useState("");
-
-  const handleChangeStatusProduct = (event) => {
-    setStatusProduct(event.target.value);
-  };
-
+  const navigate = useNavigate();
   const theme = useTheme();
+  const { product } = props;
+  let status = product.isDeleted;
   const isFullWidth = useMediaQuery(theme.breakpoints.up("md"));
   const spacingValue = isFullWidth ? 2 : 0;
+  const [statusProduct, setStatusProduct] = useState(false);
+  const [editStatus, setEditStatus] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(true);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [imageSelected, setImageSelected] = useState(null);
+  const [image, setImage] = useState("");
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    setEditStatus(status);
+    setStatusProduct(status);
+    setImage(product.thumbnail);
+  }, [status, product.thumbnail]);
+
+  const handleStatusChange = (event) => {
+    setEditStatus(event.target.value);
+    if (statusProduct !== event.target.value) {
+      setDisabledButton(false);
+    } else {
+      setDisabledButton(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!imageSelected) return;
+    const url = URL.createObjectURL(imageSelected);
+    setImage(url);
+    return () => URL.revokeObjectURL(url);
+  }, [imageSelected]);
+
+  const handleImageChange = (event) => {
+    setImageSelected(event.target.files[0]);
+  };
+  const handleUpdateButtonClick = async () => {
+    let response;
+    if (statusProduct) {
+      response = await restoreProduct(product.productId);
+      if (response.success) {
+        enqueueSnackbar("Mở khóa sản phẩm thành công!", { variant: "success" });
+        setDisabledButton(true);
+        setStatusProduct(editStatus);
+      } else {
+        enqueueSnackbar("Mở khóa sản phẩm thất bại!", { variant: "error" });
+      }
+    } else {
+      response = await deleteProduct(product.productId);
+      if (response.success) {
+        enqueueSnackbar("Khóa sản phẩm thành công!", { variant: "success" });
+        setDisabledButton(true);
+        setStatusProduct(editStatus);
+      } else {
+        enqueueSnackbar("Khóa sản phẩm thất bại!", { variant: "error" });
+      }
+    }
+  };
+
+  const handleImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const fileInputRef = React.createRef();
+
+  const handleEditThumbnail = async () => {
+    const formData = new FormData();
+    formData.append("thumbnail", imageSelected);
+
+    enqueueSnackbar("Đang cập nhật thông tin...", { variant: "info" });
+    const response = await updateProductThumbnail(product.productId, formData);
+
+    if (response.success) {
+      enqueueSnackbar("Chỉnh sửa hình ảnh thành công", { variant: "success" });
+      navigate(0);
+    } else enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+  };
+
   return (
     <Grid container spacing={spacingValue}>
       <Grid item xs={12} md={3.5}>
@@ -82,6 +160,7 @@ function BasicProductDetails(props) {
                   fontWeight: "600 !important",
                   fontSize: "14px !important",
                 }}
+                onClick={handleEditThumbnail}
               >
                 Chỉnh sửa
               </Button>
@@ -90,10 +169,18 @@ function BasicProductDetails(props) {
           <BoxStyle2>
             <Stack direction={"row"} spacing={1} alignItems={"center"}>
               <CardMedia
-                component="img"
                 height="fit-content"
-                image="https://static.skyassets.com/contentstack/assets/blt143e20b03d72047e/blt1c33e1158f1c5ecf/6319d97c454b1c2ebb3f4037/Carousel_iPhone14Plus_Purple_Placement01-PreOrder.png"
-                alt="Paella dish"
+                component="img"
+                image={image}
+                alt="product-thumbnail"
+                style={{ cursor: "pointer" }}
+                onClick={handleImageClick}
+              />
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleImageChange}
               />
             </Stack>
           </BoxStyle2>
@@ -119,8 +206,8 @@ function BasicProductDetails(props) {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={statusProduct}
-                  onChange={handleChangeStatusProduct}
+                  value={typeof editStatus === "undefined" ? false : editStatus}
+                  onChange={handleStatusChange}
                   size="small"
                   sx={{
                     borderRadius: "10px !important",
@@ -130,7 +217,7 @@ function BasicProductDetails(props) {
                   }}
                 >
                   <MenuItem
-                    value={1}
+                    value={false}
                     sx={{
                       fontSize: "14px !important",
                     }}
@@ -146,7 +233,7 @@ function BasicProductDetails(props) {
                     Đang bán
                   </MenuItem>
                   <MenuItem
-                    value={2}
+                    value={true}
                     sx={{
                       fontSize: "14px !important",
                     }}
@@ -165,20 +252,38 @@ function BasicProductDetails(props) {
               </FormControl>
               <Button
                 variant="contained"
+                disabled={disabledButton}
                 sx={{
                   fontSize: "14px !important",
                   fontWeight: "500 !important",
                   whiteSpace: "nowrap", // Thêm vào đây
                 }}
+                onClick={(e) => {
+                  setDeleteDialog(true);
+                }}
               >
                 Cập nhật
               </Button>
+              <DialogConfirm
+                open={deleteDialog}
+                title={statusProduct ? "Mở khóa sản phẩm" : "Khóa sản phẩm"}
+                content={
+                  statusProduct
+                    ? "Bạn có chắc chắn muốn mở khóa sản phẩm này?"
+                    : "Bạn có chắc chắn muốn khóa sản phẩm này?"
+                }
+                okText={statusProduct ? "Khôi phục" : "Khóa"}
+                cancelText={"Hủy"}
+                onOk={handleUpdateButtonClick}
+                onCancel={() => setDeleteDialog(false)}
+                onClose={() => setDeleteDialog(false)}
+              />
             </Stack>
           </BoxStyle2>
         </Stack>
       </Grid>
       <Grid item xs={12} md={8.5}>
-        <BasicProductInDetailsPage />
+        <BasicProductInDetailsPage product={product} />
         <Stack component={Paper} elevation={3} sx={paperStyle}>
           <Stack
             sx={{
@@ -207,7 +312,12 @@ function BasicProductDetails(props) {
                     fontSize: "14px !important",
                   }}
                   onClick={() => {
-                    navigate("/admin/product-management/add-product-version");
+                    navigate("/admin/product-management/add-product-version", {
+                      state: {
+                        productId: product.productId,
+                        productName: product.productName,
+                      },
+                    });
                   }}
                 >
                   Thêm
@@ -215,7 +325,7 @@ function BasicProductDetails(props) {
               </Grid>
             </BoxStyle>
             <Box>
-              <ListProductVersion />
+              <ListProductVersion productVersions={product.productVersions} />
             </Box>
           </Stack>
         </Stack>
