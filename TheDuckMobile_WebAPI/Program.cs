@@ -79,6 +79,7 @@ builder.Services.AddScoped<IProvinceAdminServices, ProvinceAdminServicesImpl>();
 builder.Services.AddScoped<IDistrictAdminServices, DistrictAdminServicesImpl>();
 builder.Services.AddScoped<IWardAdminServices, WardAdminServicesImpl>();
 builder.Services.AddScoped<IStatisticAdminServices, StatisticAdminServicesImpl>();
+builder.Services.AddScoped<IMSGraphAPIServices, MSGraphAPIServicesImpl>();
 
 // Store
 builder.Services.AddScoped<IStaffServices, StaffServicesImpl>();

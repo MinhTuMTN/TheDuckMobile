@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TheDuckMobile_WebAPI.Models.Response;
 using TheDuckMobile_WebAPI.Services;
+using TheDuckMobile_WebAPI.Services.Admin;
 
 namespace TheDuckMobile_WebAPI.Controllers
 {
@@ -11,70 +13,24 @@ namespace TheDuckMobile_WebAPI.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
-        private readonly ITwilioServices _twilioServices;
-        private readonly IJsonServices _jsonServices;
+        private readonly IMSGraphAPIServices _mSGraphAPIServices;
 
-        public TestController(ITwilioServices twilioServices, IJsonServices jsonServices)
+        public TestController(IMSGraphAPIServices mSGraphAPIServices)
         {
-            _twilioServices = twilioServices;
-            _jsonServices = jsonServices;
+            _mSGraphAPIServices = mSGraphAPIServices;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Test()
         {
-            return Ok("Hello World");
-        }
+            var user = await _mSGraphAPIServices.ResetPassword("c1b25c70-ef7f-4247-938d-8f6631cee8cf");
 
-        [HttpPost]
-        public IActionResult Post([FromForm] string phone)
-        {
-            _twilioServices.SendSMSVerificationCode(phone);
-            return Ok(phone);
-        }
-
-        [HttpPost("verify")]
-        public IActionResult Verify([FromForm] string phone, [FromForm] string code)
-        {
-            return Ok(_twilioServices.VerifySMSVerificationCode(phone, code));
-        }
-
-        [HttpPost("json-test")]
-        public IActionResult JsonTest([FromForm] string json)
-        {
-            IDictionary<string, object>? expando = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-
-            if (expando is null)
-                return BadRequest("Invalid JSON");
-
-            string[] keys = { "age", "name", "salary" };
-
-            // Read the JSON object and print in console
-            foreach (string key in keys)
+            return Ok(new GenericResponse
             {
-                // Check if the key exists
-                if (!expando.ContainsKey(key))
-                    return BadRequest($"Invalid JSON. Missing key: {key}");
-                Console.WriteLine($"{key}: {expando[key]}");
-            }
-
-            return Ok(expando);
-        }
-
-        [HttpGet("json-test")]
-        public IActionResult JsonTest()
-        {
-            IDictionary<string, object> expando = new Dictionary<string, object>();
-
-            string keyAge = "age";
-            string keyName = "name";
-
-            expando.Add(keyName, "John Doe");
-            expando.Add(keyAge, 42);
-
-            string json = JsonConvert.SerializeObject(expando);
-
-            return Ok(json);
+                Success = true,
+                Message = "Test",
+                Data = user
+            });
         }
     }
 }
