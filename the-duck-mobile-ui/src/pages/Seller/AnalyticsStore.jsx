@@ -8,10 +8,12 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React from "react";
-import RevenueChart from "../../components/Admin/RevenueChart";
+import React, { useCallback, useEffect, useState } from "react";
+import RevenueChartStore from "../../components/Store/RevenueChartStore";
 import OptionsInAnalyticPageStore from "../../components/Store/OptionsInAnalyticPageStore";
 import OrdersPieChart from "../../components/Store/OrdersPieChart";
+import { getAllStatistic } from "../../services/Store/StatisticService";
+import { enqueueSnackbar } from "notistack";
 
 const paperStyle = {
   marginTop: 4,
@@ -22,6 +24,22 @@ function AnalyticsStore(props) {
   const theme = useTheme();
   const isFullWidth = useMediaQuery(theme.breakpoints.up("md"));
   const spacingValue = isFullWidth ? 4 : 0;
+  const [statisticData, setStatisticData] = useState({});
+
+  const handleGetAllStatistics = useCallback(async () => {
+    const response = await getAllStatistic();
+
+    if (response.success) {
+      setStatisticData(response.data.data);
+    }
+    else {
+      enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
+    }
+  }, []);
+
+  useEffect(() => {
+    handleGetAllStatistics();
+  }, [handleGetAllStatistics]);
 
   return (
     <Box component={"main"} sx={{ flexGrow: 1, pt: 0, pb: 4 }}>
@@ -41,7 +59,7 @@ function AnalyticsStore(props) {
 
             <Grid container spacing={spacingValue}>
               <Grid item xs={12} md={8}>
-                <OptionsInAnalyticPageStore />
+                <OptionsInAnalyticPageStore statisticData={statisticData} />
                 <Stack component={Paper} elevation={3} sx={paperStyle}>
                   <Stack
                     sx={{
@@ -49,12 +67,12 @@ function AnalyticsStore(props) {
                       paddingTop: 0,
                     }}
                   >
-                    <RevenueChart />
+                    <RevenueChartStore statisticData={statisticData} />
                   </Stack>
                 </Stack>
               </Grid>
               <Grid item xs={12} md={4}>
-                <OrdersPieChart />
+                <OrdersPieChart pieChartData={statisticData.pieChartStatistics} />
               </Grid>
             </Grid>
           </Stack>

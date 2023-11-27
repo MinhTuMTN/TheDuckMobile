@@ -34,7 +34,7 @@ const sidebarItems = [
   {
     display: "Thống kê",
     icon: <RedeemIcon />,
-    to: "/store/statistics",
+    to: "/store/analytics",
   },
 ];
 

@@ -11,50 +11,32 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
     public class StatisticServicesImpl : IStatisticServices
     {
         private readonly DataContext _context;
+        private readonly IStaffServices _staffServices;
 
-        public StatisticServicesImpl(DataContext context)
+        public StatisticServicesImpl(DataContext context, IStaffServices staffServices)
         {
             _context = context;
+            _staffServices = staffServices;
         }
 
         public async Task<StatisticResponse> Statistic(
             DateTime startDate,
             DateTime endDate,
-            Guid storeId)
+            Guid staffId)
         {
+            var store = await _staffServices.GetStoreByStaffId(staffId);
+
             var totalOrders = await _context
                 .Orders
-                .Where(o => o.StoreId == storeId)
-                .CountAsync();
-
-            var totalDeliveredOrders = await _context
-                .Orders
-                .Where(o =>
-                o.OrderState == OrderState.Delivered &&
-                o.StoreId == storeId)
-                .CountAsync();
-
-            var totalStaffs = await _context
-                .Staffs
-                .Where(s => s.StoreId == storeId &&
-                s.IsDeleted == false)
+                .Where(o => o.StoreId == store.StoreId)
                 .CountAsync();
 
             var totalStoreProducts = await _context
                 .StoreProducts
                 .Where(sp =>
                 sp.IsDelete == false &&
-                sp.StoreId == storeId)
+                sp.StoreId == store.StoreId)
                 .CountAsync();
-
-            /*var topSoldStoreProducts = await _context
-                .StoreProducts
-                .Where(sp =>
-                sp.IsDelete == false &&
-                sp.StoreId == storeId)
-                .OrderByDescending(sp => sp.Sold)
-                .Take(5)
-                .ToListAsync();*/
 
             if (startDate == DateTime.MinValue)
             {
@@ -72,7 +54,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 o.CreatedAt.Date >= startDate &&
                 o.CreatedAt.Date <= endDate &&
                 o.OrderState == OrderState.Delivered &&
-                o.StoreId == storeId)
+                o.StoreId == store.StoreId)
                 .GroupBy(o => o.CreatedAt.Date)
                 .Select(g => new Statistic
                 {
@@ -89,15 +71,49 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 dataStatistic.Add(statistic.OrderTotal);
             }
 
+            var pieChartStatistics = await _context
+                .Orders
+                .Where(o => o.StoreId == store.StoreId)
+                .GroupBy(o => o.OrderState)
+                .Select(g => new PieChartStatistic
+                {
+                    Id = (int)g.Key,
+                    Value = g.Count(),
+                    Label = g.Key.ToString()
+                })
+                .ToListAsync();
+
+            foreach (var pieChartStatistic in pieChartStatistics)
+            {
+                switch (pieChartStatistic.Id)
+                {
+                    case 0:
+                        pieChartStatistic.Label = "Chờ xác nhận";
+                        break;
+                    case 1:
+                        pieChartStatistic.Label = "Đang chuẩn bị";
+                        break;
+                    case 2:
+                        pieChartStatistic.Label = "Đang giao";
+                        break;
+                    case 3:
+                        pieChartStatistic.Label = "Đã hoàn thành";
+                        break;
+                    case 4:
+                        pieChartStatistic.Label = "Bị huỷ";
+                        break;
+                    default:
+                        break;
+                }
+            }
+
             return new StatisticResponse(
-                totalStaffs,
                 totalOrders,
-                totalDeliveredOrders,
                 totalStoreProducts,
-                /*topSoldStoreProducts,*/
                 labelStatistic,
                 dataStatistic,
-                statisticOrders);
+                statisticOrders,
+                pieChartStatistics);
         }
     }
 }

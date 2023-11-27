@@ -32,6 +32,8 @@ const TieuDe = styled(Typography)(({ theme }) => ({
 }));
 
 function OrdersPieChart(props) {
+  const { pieChartData } = props;
+
   return (
     <Stack component={Paper} elevation={3} sx={paperStyle}>
       <BoxStyle
@@ -58,22 +60,17 @@ function OrdersPieChart(props) {
       </BoxStyle>
       <BoxStyle2 className="Hello">
         <Stack direction={"row"} spacing={1} alignItems={"center"}>
-          <PieChart
-            series={[
-              {
-                data: [
-                  { id: 0, value: 10, label: "Chờ xác nhận" },
-                  { id: 1, value: 15, label: "Đang chuẩn bị" },
-                  { id: 2, value: 20, label: "Đang giao" },
-                  { id: 3, value: 50, label: "Đã hoàn thành" },
-                  { id: 4, value: 5, label: "Bị huỷ" },
-                ],
-                innerRadius: 50,
-              },
-            ]}
-            width={500}
-            height={200}
-          />
+          {pieChartData &&
+            <PieChart
+              series={[
+                {
+                  data: pieChartData,
+                  innerRadius: 50,
+                },
+              ]}
+              width={500}
+              height={200}
+            />}
         </Stack>
       </BoxStyle2>
     </Stack>
