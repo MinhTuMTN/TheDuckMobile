@@ -13,24 +13,29 @@ namespace TheDuckMobile_WebAPI.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
-        private readonly IMSGraphAPIServices _mSGraphAPIServices;
+        private readonly IFirebaseServices _firebaseServices;
 
-        public TestController(IMSGraphAPIServices mSGraphAPIServices)
+        public TestController(IFirebaseServices firebaseServices)
         {
-            _mSGraphAPIServices = mSGraphAPIServices;
+            _firebaseServices = firebaseServices;
         }
 
         [HttpGet]
         public async Task<IActionResult> Test()
         {
-            var user = await _mSGraphAPIServices.Test();
+            var result = await _firebaseServices
+                .SendNotification(
+                    "Hello",
+                    "Xin chào bạn",
+                    "token test",
+                    new Dictionary<string, string>
+                    {
+                        { "message", "Your OTP is 12389a0" },
+                        { "phoneNumber", "+84372913432" },
+                    }
+                );
 
-            return Ok(new GenericResponse
-            {
-                Success = true,
-                Message = "Test",
-                Data = user
-            });
+            return Ok(result);
         }
     }
 }
