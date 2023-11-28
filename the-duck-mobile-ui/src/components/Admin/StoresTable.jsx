@@ -192,7 +192,7 @@ function Row(props) {
             textAlign={"center"}
             justifyContent={"center"}
           >
-            <IconButton>
+            <IconButton onClick={() => navigate(row.storeId)}>
               <InfoOutlined />
             </IconButton>
             <IconButton onClick={() => setOpenConfirm(true)}>

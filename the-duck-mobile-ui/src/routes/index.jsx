@@ -211,7 +211,6 @@ function Router(props) {
               path: "product-management/:productId",
               element: <ProductDetailPage />,
             },
-
             {
               path: "customer-management",
               element: <CustomerListPage />,
@@ -229,66 +228,59 @@ function Router(props) {
               path: "brand-management",
               element: <BrandListPage />,
             },
+            {
+              path: "store-management",
+              element: <StoresPage />,
+            },
+            {
+              path: "store-management/:storeId",
+              element: <StoreDetailPage />,
+            },
+            {
+              path: "os-management",
+              element: <OSListPage />,
+            },
+            {
+              path: "os-management/add",
+              element: <AddOSPage />,
+            },
+            {
+              path: "os-management/:osId",
+              element: <EditOSPage />,
+            },
+            {
+              path: "order-management",
+              element: <OrderListPage />,
+            },
+            {
+              path: "order-management/:orderId",
+              element: <OrderDetailPage />,
+            },
+            {
+              path: "coupon-management",
+              element: <CouponListPage />,
+            },
+            {
+              path: "coupon-management/:couponId",
+              element: <CouponDetailPage />,
+            },
+            {
+              path: "feedback-management",
+              element: <FeedbackListPage />,
+            },
+            {
+              path: "special-feature-management",
+              element: <SpecialFeatureListPage />,
+            },
+            {
+              path: "special-feature-management/add",
+              element: <AddSpecialFeaturePage />,
+            },
+            {
+              path: "special-feature-management/:specialFeature",
+              element: <EditSpecialFeaturePage />,
+            },
           ],
-        },
-
-        {
-          path: "stores-management",
-          element: <StoresPage />,
-        },
-
-        {
-          path: "store-management",
-          element: <StoresPage />,
-        },
-
-        {
-          path: "store-management/:storeId",
-          element: <StoreDetailPage />,
-        },
-        {
-          path: "os-management",
-          element: <OSListPage />,
-        },
-        {
-          path: "os-management/add",
-          element: <AddOSPage />,
-        },
-        {
-          path: "os-management/:osId",
-          element: <EditOSPage />,
-        },
-        {
-          path: "order-management",
-          element: <OrderListPage />,
-        },
-        {
-          path: "order-management/:orderId",
-          element: <OrderDetailPage />,
-        },
-        {
-          path: "coupon-management",
-          element: <CouponListPage />,
-        },
-        {
-          path: "coupon-management/:couponId",
-          element: <CouponDetailPage />,
-        },
-        {
-          path: "feedback-management",
-          element: <FeedbackListPage />,
-        },
-        {
-          path: "special-feature-management",
-          element: <SpecialFeatureListPage />,
-        },
-        {
-          path: "special-feature-management/add",
-          element: <AddSpecialFeaturePage />,
-        },
-        {
-          path: "special-feature-management/:specialFeature",
-          element: <EditSpecialFeaturePage />,
         },
       ],
     },
