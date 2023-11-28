@@ -741,7 +741,7 @@ function CouponListPage() {
               <MuiTextFeild
                 type="number"
                 label="Giảm giá"
-                value={addNew ? couponRequest.discount.toString() : "1"}
+                value={addNew ? "1" : couponRequest.discount.toString()}
                 margin="normal"
                 InputProps={{ inputProps: { min: 1, max: 99 } }}
                 error={error.status && error.errorMessage.discount.length !== 0}
@@ -759,7 +759,7 @@ function CouponListPage() {
               <MuiTextFeild
                 type="number"
                 label="Số lượng"
-                value={addNew ? couponRequest.maxUse.toString() : "1"}
+                value={addNew ? "1" : couponRequest.maxUse.toString()}
                 margin="normal"
                 InputProps={{ inputProps: { min: 1 } }}
                 error={error.status && error.errorMessage.maxUse.length !== 0}
@@ -779,7 +779,7 @@ function CouponListPage() {
               <MuiTextFeild
                 type="number"
                 label="Đơn tối thiểu"
-                value={addNew ? couponRequest.minPrice.toString() : "1000"}
+                value={addNew ? "1000" : couponRequest.minPrice.toString()}
                 margin="normal"
                 InputProps={{ inputProps: { min: 1000 } }}
                 error={error.status && error.errorMessage.minPrice.length !== 0}
@@ -797,7 +797,7 @@ function CouponListPage() {
               <MuiTextFeild
                 type="number"
                 label="Giảm tối đa"
-                value={addNew ? couponRequest.maxDiscount.toString() : "1000"}
+                value={addNew ? "1000" : couponRequest.maxDiscount.toString()}
                 margin="normal"
                 InputProps={{ inputProps: { min: 1000 } }}
                 error={error.status && error.errorMessage.maxDiscount.length !== 0}
