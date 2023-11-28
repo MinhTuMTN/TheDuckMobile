@@ -1,4 +1,5 @@
-﻿using TheDuckMobile_WebAPI.Entities;
+﻿using System.Text.Json.Serialization;
+using TheDuckMobile_WebAPI.Entities;
 
 namespace TheDuckMobile_WebAPI.Entities
 {
@@ -10,6 +11,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         //Quan hệ 1 - n với bảng store
         public Guid StoreId { get; set; }
+        [JsonIgnore]
         public virtual Store? Store { get; set; }
 
     }

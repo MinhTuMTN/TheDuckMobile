@@ -2,18 +2,17 @@ import {
   Button,
   Card,
   CardMedia,
-  Divider,
   Grid,
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useCallback, useEffect } from "react";
-import MuiTextFeild from "../components/MuiTextFeild";
-import DialogConfirm from "../components/DialogConfirm";
 import { useSnackbar } from "notistack";
-import { exchangeCoupon, getCustomerCoupons } from "../services/CouponService";
+import React, { useCallback, useEffect } from "react";
 import logo from "../assets/logo.jpg";
+import DialogConfirm from "../components/DialogConfirm";
 import FormatCurrency from "../components/FormatCurrency";
+import MuiTextFeild from "../components/MuiTextFeild";
+import { exchangeCoupon, getCustomerCoupons } from "../services/CouponService";
 
 function CouponItem(props) {
   const { enqueueSnackbar } = useSnackbar();
@@ -52,7 +51,10 @@ function CouponItem(props) {
               Mã giảm giá: <FormatCurrency amount={coupon.maxDiscount} />
             </Typography>
             <Typography variant="body1">
-              Ngày hết hạn: {formatedDate}
+              Ngày hết hạn:{" "}
+              {new Date(formatedDate).toLocaleString("vi", {
+                dateStyle: "short",
+              })}
             </Typography>
           </Stack>
         </Grid>
