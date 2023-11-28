@@ -1,21 +1,23 @@
 import React from "react";
 import { useRoutes } from "react-router-dom";
+import Loading from "../components/Loading";
+import AdminLayout from "../layouts/AdminLayout";
 import MainLayout from "../layouts/MainLayout";
 import ProfileLayout from "../layouts/ProfileLayout";
 import { ProtectedLayout } from "../layouts/ProtectedLayout";
-import NotFound from "../pages/NotFound";
-import Loading from "../components/Loading";
-import AdminLayout from "../layouts/AdminLayout";
 import StoreLayout from "../layouts/StoreLayout";
+import { StoreProtectedLayout } from "../layouts/StoreProtectedLayout";
 import DistrictListPage from "../pages/Admin/AddressManagement/DistrictManagement/DistrictListPage";
 import ProvinceListPage from "../pages/Admin/AddressManagement/ProvinceManagement/ProvinceListPage";
 import WardListPage from "../pages/Admin/AddressManagement/WardManagement/WardListPage";
+import Analytics from "../pages/Admin/Analytics";
 import BrandListPage from "../pages/Admin/BrandManagement/BrandListPage";
 import CatalogListPage from "../pages/Admin/CatalogManagement/CatalogListPage";
 import EditCatalogPage from "../pages/Admin/CatalogManagement/EditCatalogPage";
 import AddColorPage from "../pages/Admin/ColorManagement/AddColorPage";
 import ColorListPage from "../pages/Admin/ColorManagement/ColorListPage";
 import EditColorPage from "../pages/Admin/ColorManagement/EditColorPage";
+import CouponDetailPage from "../pages/Admin/CouponManagement/CouponDetailPage";
 import CouponListPage from "../pages/Admin/CouponManagement/CouponListPage";
 import CustomerDetailPage from "../pages/Admin/CustomerManagement/CustomerDetailPage";
 import CustomerListPage from "../pages/Admin/CustomerManagement/CustomerListPage";
@@ -32,18 +34,14 @@ import ProductListPage from "../pages/Admin/ProductManagement/ProductListPage";
 import AddSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/AddSpecialFeaturePage";
 import EditSpecialFeaturePage from "../pages/Admin/SpecialFeatureManagement/EditSpecialFeaturePage";
 import SpecialFeatureListPage from "../pages/Admin/SpecialFeatureManagement/SpecialFeatureListPage";
-import AddStorePage from "../pages/Admin/StoreManagement/AddStorePage";
-import EditStorePage from "../pages/Admin/StoreManagement/EditStorePage";
 import StoreDetailPage from "../pages/Admin/StoreManagement/StoreDetailPage";
-import StoreListPage from "../pages/Admin/StoreManagement/StoreListPage";
+import NotFound from "../pages/NotFound";
+import AnalyticsStore from "../pages/Seller/AnalyticsStore";
 import OrderDetails from "../pages/Seller/OrderDetails";
 import Orders from "../pages/Seller/Orders";
 import Product from "../pages/Seller/Product";
-import { StoreProtectedLayout } from "../layouts/StoreProtectedLayout";
-import Analytics from "../pages/Admin/Analytics";
-import AnalyticsStore from "../pages/Seller/AnalyticsStore";
-import CouponDetailPage from "../pages/Admin/CouponManagement/CouponDetailPage";
 
+import StoresPage from "../pages/Admin/StoreManagement/StoresPage";
 import Points from "../pages/Points";
 import { AdminProtectedLayout } from "../layouts/AdminProtectedLayout";
 
@@ -213,7 +211,6 @@ function Router(props) {
               path: "product-management/:productId",
               element: <ProductDetailPage />,
             },
-
             {
               path: "customer-management",
               element: <CustomerListPage />,
@@ -231,18 +228,9 @@ function Router(props) {
               path: "brand-management",
               element: <BrandListPage />,
             },
-
             {
               path: "store-management",
-              element: <StoreListPage />,
-            },
-            {
-              path: "store-management/add",
-              element: <AddStorePage />,
-            },
-            {
-              path: "store-management/edit",
-              element: <EditStorePage />,
+              element: <StoresPage />,
             },
             {
               path: "store-management/:storeId",

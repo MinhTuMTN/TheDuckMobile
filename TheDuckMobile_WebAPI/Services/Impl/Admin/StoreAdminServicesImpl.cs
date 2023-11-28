@@ -43,8 +43,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             if (store == null)
                 throw new CustomNotFoundException("Can't found store");
 
-            return new StoreDetailsResponse(store, store.Address!, 
-                store.Staffs is null ? null : store.Staffs, 
+            return new StoreDetailsResponse(store, store.Address!,
+                store.Staffs is null ? null : store.Staffs,
                 store.Provines == null ? null : store.Provines);
         }
 
@@ -71,7 +71,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             Guid guid = Guid.Parse(storeId);
             var store = await _context
                 .Stores
-                .Where(s => s.StoreId == guid && !s.IsDeleted)
+                .Where(s => s.StoreId == guid && s.IsDeleted)
                 .FirstOrDefaultAsync();
 
             if (store == null)
@@ -139,7 +139,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                 .Stores
                 .Where(s => s.StoreId == storeId && !s.IsDeleted)
                 .FirstOrDefaultAsync();
-            if (store == null) { 
+            if (store == null)
+            {
                 throw new CustomNotFoundException("Can't found store");
             }
 
