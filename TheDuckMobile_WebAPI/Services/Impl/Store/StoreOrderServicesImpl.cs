@@ -47,6 +47,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
 
             // Change Order State to Canceled
             order.OrderState = OrderState.Canceled;
+            order.StaffId = staff.UserId;
 
             // Update Product Quantity, ProductVersion Quantity, StoreProduct Quantity, StoreProduct Sold Quantity
             foreach (var orderItem in order.OrderItems!)
@@ -71,8 +72,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
             var staff = await _dataContext.Staffs
                 .Include(s => s.Store)
                 .FirstOrDefaultAsync(s => s.UserId == staffId
-                                   && s.IsDeleted == false
-                                                  );
+                                   && s.IsDeleted == false);
             if (staff == null)
                 throw new UnauthorizedException("Can't access to this resources");
 
@@ -86,6 +86,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
 
             // Change Order State to Delivered
             order.OrderState = OrderState.Delivered;
+            order.StaffId = staff.UserId;
 
             await _dataContext.SaveChangesAsync();
             return true;
@@ -112,6 +113,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
 
             // Change Order State to Delivering
             order.OrderState = OrderState.Delivering;
+            order.StaffId = staff.UserId;
 
             await _dataContext.SaveChangesAsync();
             return true;
@@ -161,6 +163,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 };
                 customer.Addresses.Add(order.Address!);
                 order.Customer = customer;
+                order.StaffId = staff.UserId;
 
                 // Remove TemporaryCustomer
                 order.TemporaryCustomer = null;
