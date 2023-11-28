@@ -362,7 +362,7 @@ function ProductDetails(props) {
                         <QuantityCounter
                           quantity={quantity}
                           onChange={setQuantity}
-                          remain={selectedVersion?.quantity - selectedVersion?.sold}
+                          remain={selectedVersion?.quantity}
                         />
                         <Typography
                           variant={"body"}
@@ -370,7 +370,7 @@ function ProductDetails(props) {
                             fontSize: "16px"
                           }}
                         >
-                          {selectedVersion?.quantity - selectedVersion?.sold} sản phẩm có sẵn
+                          {selectedVersion?.quantity} sản phẩm có sẵn
                         </Typography>
                       </Stack>
                       <Stack
