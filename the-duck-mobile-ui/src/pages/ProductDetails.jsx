@@ -362,6 +362,7 @@ function ProductDetails(props) {
                         <QuantityCounter
                           quantity={quantity}
                           onChange={setQuantity}
+                          remain={selectedVersion?.quantity - selectedVersion?.sold}
                         />
                         <Typography
                           variant={"body"}

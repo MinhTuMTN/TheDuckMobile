@@ -3,14 +3,19 @@ import { Button, Card, Stack } from "@mui/material";
 import React from "react";
 
 function QuantityCounter(props) {
-  const { quantity, onChange } = props;
+  const { quantity, onChange, remain } = props;
   const InputCustom = styled.input`
     border: none;
-    width: 1rem;
+    width: 1.4rem;
   `;
 
   const incrementQuantity = () => {
-    onChange(quantity + 1);
+    if (quantity + 1 <= remain) {
+      onChange(quantity + 1);
+    }
+    else {
+      onChange(quantity);
+    }
   };
 
   const decrementQuantity = () => {
