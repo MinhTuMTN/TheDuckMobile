@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TheDuckMobile_WebAPI.Models.Request.Admin;
 using TheDuckMobile_WebAPI.Models.Response;
@@ -9,6 +10,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class CatalogAttributeAdminController : ControllerBase
     {
         private readonly ICatalogAttributeServices _catalogAttributeServices;

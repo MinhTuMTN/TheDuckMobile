@@ -26,6 +26,7 @@ import { getAllOSs } from "../services/Admin/OSService";
 import { getAllOrders } from "../services/Admin/OrderService";
 import { getAllSpecialFeatures } from "../services/Admin/SpecialFeatureService";
 import { getAllStores } from "../services/Admin/StoreService";
+import { getAllStatistic } from "../services/Admin/StatisticService";
 
 const SIDE_NAV_WIDTH = 280;
 
@@ -52,15 +53,16 @@ function AdminLayout(props) {
   const pathname = useLocation().pathname;
   const editedPath = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
   const [dataFetched, setDataFetched] = useState([]);
+  const [statistic, setStatistic] = useState({});
 
   const [searchParams] = useSearchParams();
 
   const fetchData = useCallback(async () => {
     let response;
+    let isStatistic = false;
 
     switch (editedPath) {
       case "/admin/customer-management":
-      case "/admin":
         response = await getAllCustomers();
         break;
       case "/admin/address-management/province":
@@ -99,12 +101,21 @@ function AdminLayout(props) {
       case "/admin/order-management":
         response = await getAllOrders();
         break;
+      case "/admin":
+      case "/admin/analytics":
+        isStatistic = true;
+        response = await getAllStatistic();
+        break;
       default:
         break;
     }
 
     if (response?.success) {
-      setDataFetched(response.data.data);
+      if (isStatistic) {
+        setStatistic(response.data.data);
+      } else {
+        setDataFetched(response.data.data);
+      }
     } else {
       if (typeof response !== "undefined") {
         enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
@@ -117,7 +128,7 @@ function AdminLayout(props) {
   }, [fetchData]);
 
   return (
-    <DataContext.Provider value={{ dataFetched }}>
+    <DataContext.Provider value={{ dataFetched, statistic }}>
       <Fragment>
         <TopNavbar onDrawerClick={setOpen} isAdmin />
         <AdminSidebar open={open} onOpenClose={setOpen} />

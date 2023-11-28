@@ -93,7 +93,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             return new UserCouponResponse
             {
                 Point = user.Point,
-                Coupons = user.Coupons
+                Coupons = user.Coupons?.OrderByDescending(c => c.CreatedAt).ToList()
             };
         }
     }

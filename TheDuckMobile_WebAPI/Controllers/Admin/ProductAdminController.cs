@@ -9,6 +9,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class ProductAdminController : ControllerBase
     {
         private readonly IProductAdminServices _productServices;
@@ -18,8 +19,6 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllProducts()
         {
             var products = await _productServices.GetAllProducts();
@@ -32,8 +31,6 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet("{productId}")]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetProductById([FromRoute] Guid productId)
         {
             var product = await _productServices.GetProductById(productId);
@@ -48,8 +45,6 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpDelete("{productId}")]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> DeleteProduct([FromRoute] Guid productId)
         {
             var product = await _productServices.DeleteProduct(productId);

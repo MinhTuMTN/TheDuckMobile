@@ -17,7 +17,7 @@ import React, {
   useLayoutEffect,
   useState,
 } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import CustomBreadcrumb from "../components/CustomBreadcrumb";
 import FormatCurrency from "../components/FormatCurrency";
 import ProductDetailsRating from "../components/ProductDetailsRating";
@@ -89,6 +89,7 @@ const StyledButtonColorOuter = styled(Box)(({ theme }) => ({
   },
 }));
 function ProductDetails(props) {
+  const { state } = useLocation();
   const [searchParams] = useSearchParams();
   const { enqueueSnackbar } = useSnackbar();
   const [selectedImage, setSelectedImage] = React.useState("");
@@ -300,7 +301,7 @@ function ProductDetails(props) {
                     numReviews={info?.votes?.length}
                   />
 
-                  <ProductDetailsShortDesc />
+                  <ProductDetailsShortDesc desc={info?.productDescription} />
 
                   <Stack
                     direction={"column"}
@@ -361,6 +362,7 @@ function ProductDetails(props) {
                         <QuantityCounter
                           quantity={quantity}
                           onChange={setQuantity}
+                          remain={selectedVersion?.quantity}
                         />
                         <Typography
                           variant={"body"}
@@ -368,7 +370,7 @@ function ProductDetails(props) {
                             fontSize: "16px"
                           }}
                         >
-                          {selectedVersion?.quantity - selectedVersion?.sold} sản phẩm có sẵn
+                          {selectedVersion?.quantity} sản phẩm có sẵn
                         </Typography>
                       </Stack>
                       <Stack
@@ -414,6 +416,7 @@ function ProductDetails(props) {
                   attributes={info?.catalogAttributes}
                   reviews={votes}
                   setReviews={setVotes}
+                  activeTab={state?.activeTab}
                 />
               </Grid>
               <Grid

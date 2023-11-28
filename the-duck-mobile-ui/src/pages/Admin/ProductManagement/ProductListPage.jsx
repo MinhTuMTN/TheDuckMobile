@@ -90,8 +90,6 @@ function ProductListPage(props) {
 
   const [selectedStatus, setSelectedStatus] = useState([]);
   const handleChangeStatusFilter = (event) => {
-    console.log(selectedStatus);
-    console.log(typeof event.target.value);
     if (event.target.checked) {
       setSelectedStatus((prev) => [...prev, event.target.value === "true"]);
     } else {

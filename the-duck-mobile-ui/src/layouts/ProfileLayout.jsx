@@ -123,7 +123,7 @@ function ProfileLayout(props) {
               <>
                 <Stack direction={"row"} spacing={2} mt={1}>
                   <StoreMallDirectoryOutlined />
-                  <CustomLink to={role === "admin" ? "/admin" : "/store"}>
+                  <CustomLink to={role === "Admin" ? "/admin" : "/store"}>
                     <Typography variant="body1" component="h1">
                       {role === "Admin"
                         ? "Admin Dashboard"

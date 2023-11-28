@@ -18,7 +18,13 @@ import { useSnackbar } from "notistack";
 import React from "react";
 import { useAuth } from "../auth/AuthProvider";
 import MuiTextFeild from "../components/MuiTextFeild";
-import { checkPhoneExists, login, register } from "../services/AuthService";
+import {
+  checkPhoneExists,
+  checkStaffEmail,
+  login,
+  register,
+  staffLogin,
+} from "../services/AuthService";
 import { useLocation } from "react-router-dom";
 
 const Wrapper = styled(Container)`
@@ -54,21 +60,29 @@ function Login(props) {
 
   const handleEnterPhoneNumber = async () => {
     const phoneRegex = /^\d+$/;
+    const isStaffEmail = phone
+      .trim()
+      .toLowerCase()
+      .endsWith("@minhtunguyen.onmicrosoft.com");
 
-    if (!phoneRegex.test(phone)) {
+    if (!phoneRegex.test(phone) && !isStaffEmail) {
       enqueueSnackbar("Vui lòng chỉ nhập số", { variant: "error" });
       return;
     }
 
-    if (phone.trim().length !== 10 || phone[0] !== "0") {
+    if ((phone.trim().length !== 10 || phone[0] !== "0") && !isStaffEmail) {
       enqueueSnackbar("Số điện thoại không hợp lệ", { variant: "error" });
       return;
     }
 
-    const phoneNumber = "+84" + phone.slice(1);
+    const phoneNumber = isStaffEmail
+      ? phone.trim().toLowerCase()
+      : "+84" + phone.slice(1);
 
-    enqueueSnackbar("Đang kiểm tra số điện thoại", { variant: "info" });
-    const response = await checkPhoneExists(phoneNumber);
+    enqueueSnackbar(`Đang gửi mã OTP đến ${phone}`, { variant: "info" });
+    const response = isStaffEmail
+      ? await checkStaffEmail(phoneNumber)
+      : await checkPhoneExists(phoneNumber);
 
     if (response.success) {
       setPhoneExist(response.data.data);
@@ -80,12 +94,24 @@ function Login(props) {
 
   const handleLogin = async () => {
     const phoneNumber = "+84" + phone.slice(1);
+    const isStaffEmail = phone
+      .trim()
+      .toLowerCase()
+      .endsWith("@minhtunguyen.onmicrosoft.com");
 
     var response;
     if (phoneExist) {
-      response = await login(phoneNumber, otp);
+      response = isStaffEmail
+        ? await staffLogin(phone.trim().toLowerCase(), otp)
+        : await login(phoneNumber, otp);
     } else {
-      response = await register(phoneNumber, name, dateOfBirth, gender, otp);
+      response = await register(
+        phoneNumber,
+        name,
+        dateOfBirth,
+        parseInt(gender),
+        otp
+      );
     }
     if (!response.success) {
       enqueueSnackbar("OTP không hợp lệ", { variant: "error" });
@@ -107,6 +133,7 @@ function Login(props) {
             }
             alt="Login"
             width={"60%"}
+            style={{ maxHeight: "15rem" }}
           />
         </Grid>
         <Grid item xs={12} md={6} alignItems={"center"} display={"flex"}>

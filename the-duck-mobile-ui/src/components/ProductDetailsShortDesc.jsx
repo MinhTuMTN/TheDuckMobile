@@ -1,7 +1,23 @@
 import { Typography } from "@mui/material";
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
+import PropTypes from "prop-types";
+
+ProductDetailsShortDesc.propTypes = {
+  desc: PropTypes.string,
+};
+
+ProductDetailsShortDesc.defaultProps = {
+  desc: "Không có mô tả",
+};
 
 function ProductDetailsShortDesc(props) {
+  const { desc } = props;
+  const [shortDesc, setShortDesc] = useState("");
+
+  useEffect(() => {
+    setShortDesc(desc.split(' ').slice(0, 150).join(' '));
+  }, [desc]);
+
   return (
     <div
       style={{
@@ -21,16 +37,9 @@ function ProductDetailsShortDesc(props) {
         }}
         component={"p"}
       >
-        Học ngay 40 đoạn hội thoại tiếng Anh giao tiếp thông dụng trong đời sống
-        sau đây để cải thiện trình độ tiếng Anh nhé. Chắc chắn rằng sau khi học
-        xong bài viết này, bạn sẽ up level ngay lập tức mà bạn không kịp nhận
-        ra, đừng quên bookmark để lưu học dần mỗi ngày nha! Nếu bạn đang muốn
-        tăng khả năng phản xạ khi giao tiếp bằng Tiếng Anh thì việc học các đoạn
-        hội thoại thông dụng là rất cần thiết. Dưới đây là 70 đoạn hội thoại
-        Tiếng Anh cơ bản thông dụng sử dụng hàng ngày, công sở, du lịch. Những
-        đoạn hội thoại này sẽ giúp bạn up level ngay trong 1 tuần.
+        {shortDesc + "... "}
       </Typography>
-    </div>
+    </div >
   );
 }
 

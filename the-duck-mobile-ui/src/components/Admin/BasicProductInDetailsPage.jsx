@@ -196,7 +196,6 @@ function BasicProductInDetailsPage(props) {
       return;
     }
 
-    console.log(editProduct);
     let response = await updateProduct(product.productId, {
       productName: editProduct.productName,
       productDescription: editProduct.productDescription,

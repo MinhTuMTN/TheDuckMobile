@@ -4,6 +4,7 @@ import { Box, Grid, IconButton, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
 import orderpic from "../../assets/ordering.png";
 import productpic from "../../assets/product.png";
+import { useNavigate } from "react-router-dom";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   paddingTop: "12px !important",
@@ -27,6 +28,8 @@ const TieuDeCot = styled(Typography)(({ theme }) => ({
 }));
 
 function OptionsInAnalyticPageStore(props) {
+  const navigate = useNavigate();
+  const { statisticData } = props;
   return (
     <Stack
       spacing={2}
@@ -67,7 +70,7 @@ function OptionsInAnalyticPageStore(props) {
               />
               <Stack direction={"column"}>
                 <TieuDe>Số Đơn Hàng</TieuDe>
-                <TieuDeCot>500</TieuDeCot>
+                <TieuDeCot>{statisticData.totalOrders}</TieuDeCot>
               </Stack>
             </Stack>
 
@@ -96,6 +99,7 @@ function OptionsInAnalyticPageStore(props) {
                 style={{
                   fontSize: "14px",
                 }}
+                onClick={() => navigate("/store/orders")}
               >
                 <EastIcon
                   sx={{
@@ -135,7 +139,7 @@ function OptionsInAnalyticPageStore(props) {
               />
               <Stack direction={"column"}>
                 <TieuDe>Số Sản Phẩm</TieuDe>
-                <TieuDeCot>500</TieuDeCot>
+                <TieuDeCot>{statisticData.totalStoreProducts}</TieuDeCot>
               </Stack>
             </Stack>
 
@@ -164,6 +168,7 @@ function OptionsInAnalyticPageStore(props) {
                 style={{
                   fontSize: "14px",
                 }}
+                onClick={() => navigate("/store/products")}
               >
                 <EastIcon
                   sx={{

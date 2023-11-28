@@ -711,6 +711,15 @@ namespace TheDuckMobile_WebAPI.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
+                    b.Property<string>("OTP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("OTPExpiredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OTPRetry")
+                        .HasColumnType("int");
+
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 

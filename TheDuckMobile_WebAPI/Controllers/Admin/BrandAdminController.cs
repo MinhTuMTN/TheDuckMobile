@@ -18,8 +18,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllBrands([FromQuery] bool isDeletedFilter = false)
         {
             var brands = await _brandServices.GetAllBrands(isDeletedFilter);
@@ -32,8 +31,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet("active")]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetActiveBrands()
         {
             var brands = await _brandServices.GetActiveBrands();
@@ -46,6 +44,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddBrand([FromForm] BrandRequest request)
         {
             var result = await _brandServices.AddBrand(request);
@@ -58,6 +57,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPut("{brandId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditBrand([FromRoute] int brandId, [FromForm] BrandRequest request)
         {
             var result = await _brandServices.EditBrand(brandId, request);
@@ -70,6 +70,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpDelete("{brandId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBrand([FromRoute] int brandId)
         {
             var result = await _brandServices.DeleteBrand(brandId);

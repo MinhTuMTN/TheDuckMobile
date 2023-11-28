@@ -15,3 +15,11 @@ export const checkPhoneExists = (phone) => {
 export const checkToken = () => {
   return get("/auth/check-token");
 };
+
+export const checkStaffEmail = (email) => {
+  return post("/auth/check-staff-email", { email });
+};
+
+export const staffLogin = (email, otp) => {
+  return post("/auth/staff-login", { email, otp });
+};

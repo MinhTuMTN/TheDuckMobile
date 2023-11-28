@@ -8,6 +8,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class StaffAdminController : ControllerBase
     {
         private readonly IStaffAdminServices _staffServices;
@@ -17,8 +18,6 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllStaffs()
         {
             var staffs = await _staffServices.GetAllStaffs();

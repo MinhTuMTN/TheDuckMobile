@@ -1,28 +1,33 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TheDuckMobile_WebAPI.Models.Request.Admin;
+using System.Security.Claims;
 using TheDuckMobile_WebAPI.Models.Response;
-using TheDuckMobile_WebAPI.Services.Admin;
+using TheDuckMobile_WebAPI.Services.Store;
 
-namespace TheDuckMobile_WebAPI.Controllers.Admin
+namespace TheDuckMobile_WebAPI.Controllers.Store
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StatisticAdminController : ControllerBase
+    [Authorize(Roles = "Staff")]
+    public class StoreStatisticController : ControllerBase
     {
-        private readonly IStatisticAdminServices _statisticServices;
-        public StatisticAdminController(IStatisticAdminServices statisticServices)
+        private readonly IStatisticServices _statisticServices;
+        public StoreStatisticController(IStatisticServices statisticServices)
         {
             _statisticServices = statisticServices;
         }
 
-        [HttpGet()]
+        [HttpGet]
         [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
-        public async Task<IActionResult> Statistic([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        public async Task<IActionResult> Statistic(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate)
         {
-            var statistic = await _statisticServices.Statistic(startDate, endDate);
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var statistic = await _statisticServices.Statistic(startDate, endDate, Guid.Parse(id!));
             return Ok(new GenericResponse
             {
                 Success = true,
@@ -32,3 +37,4 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
     }
 }
+

@@ -42,6 +42,12 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             };
 
             await _context.Customers.AddAsync(customer);
+
+            var tempCustomer = await _context.TemporaryCustomers.FirstOrDefaultAsync(tempCustomer => tempCustomer.Phone == request.Phone);
+            if (tempCustomer != null)
+            {
+                _context.TemporaryCustomers.Remove(tempCustomer);
+            }
             await _context.SaveChangesAsync();
             return customer;
         }
@@ -92,8 +98,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 return false;
 
             // Check 3 minutes before aldready sent OTP
-            if ((staff.OTP != null && staff.OTPExpiredAt <= DateTime.Now)
-                || (staff.OTP != null && staff.OTPRetry == 5 && staff.OTPExpiredAt <= DateTime.Now))
+            if (staff.OTPExpiredAt != null && staff.OTPExpiredAt > DateTime.Now)
                 return null;
 
             // Create OTP with 6 digits
@@ -126,30 +131,23 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             if (staff is null)
                 return false;
 
-            // Check if OTP is expired
-            if (staff.OTPExpiredAt <= DateTime.Now)
+            if (staff.OTPExpiredAt < DateTime.Now)
                 return false;
 
-            // Check if OTP is invalid and after 5 times, OTP will be expired
+            if (staff.OTPRetry == 5)
+                return false;
+
             if (staff.OTP != otp)
             {
                 staff.OTPRetry++;
-                if (staff.OTPRetry > 5)
-                {
-                    staff.OTPRetry = 0;
-                    staff.OTP = null;
-                    staff.OTPExpiredAt = DateTime.Now;
-                    await _context.SaveChangesAsync();
-                    return false;
-                }
                 await _context.SaveChangesAsync();
                 return false;
             }
 
-            // If correct OTP, reset OTP and OTPExpiredAt
-            staff.OTPRetry = 0;
             staff.OTP = null;
-            staff.OTPExpiredAt = DateTime.Now;
+            staff.OTPRetry = 0;
+            staff.OTPExpiredAt = null;
+
             await _context.SaveChangesAsync();
 
             return true;

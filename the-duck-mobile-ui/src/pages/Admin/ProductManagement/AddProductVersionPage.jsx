@@ -63,6 +63,7 @@ function AddProductVersionPage() {
   const { productVersionId } = useParams();
   const [oldImages, setOldImages] = React.useState([]);
   const [promotionPrice, setPromotionPrice] = React.useState("");
+  const [versionName, setVersionName] = React.useState("");
 
   const [info, setInfo] = React.useState({
     productId: state?.productId,
@@ -145,6 +146,7 @@ function AddProductVersionPage() {
         price: productVersion.price.toLocaleString("vn"),
         versisonName: productVersion.versionName,
       });
+      setVersionName(productVersion.versionName);
       setOldImages(productVersion.images);
       setPromotionPrice(productVersion.promotionPrice.toLocaleString("vn"));
       setSpecifications(JSON.parse(productVersion.specification));
@@ -360,7 +362,9 @@ function AddProductVersionPage() {
           paddingTop={4}
           paddingBottom={3}
         >
-          Tạo phiên bản mới cho {state?.productName}
+          {!productVersionId ?
+            `Tạo phiên bản mới cho ${state?.productName}` :
+            `Cập nhật phiên bản cho ${state?.productName} - ${versionName}`}
         </Typography>
       </Grid>
 

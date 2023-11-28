@@ -11,6 +11,8 @@ using TheDuckMobile_WebAPI.Services.Admin;
 using TheDuckMobile_WebAPI.Services.Impl.Admin;
 using TheDuckMobile_WebAPI.Services.Store;
 using TheDuckMobile_WebAPI.Services.Impl.Store;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +59,8 @@ builder.Services.AddScoped<IVoteServices, VoteServicesImpl>();
 builder.Services.AddScoped<ICouponServices, CouponServicesImpl>();
 builder.Services.AddScoped<IStoreServices, StoreServicesImpl>();
 builder.Services.AddScoped<IOrderServices, OrderServicesImpl>();
+builder.Services.AddScoped<IFirebaseServices, FirebaseServicesImpl>();
+builder.Services.AddScoped<ISMSServices, SMSServicesImpl>();
 
 // Admin
 builder.Services.AddScoped<IProductAdminServices, ProductAdminServicesImpl>();
@@ -90,6 +94,11 @@ builder.Services.AddScoped<IStoreOrderServices, StoreOrderServicesImpl>();
 builder.Services.AddScoped<IStatisticServices, StatisticServicesImpl>();
 
 #endregion
+
+FirebaseApp.Create(new AppOptions()
+{
+    Credential = GoogleCredential.FromFile("key.json"),
+});
 
 var app = builder.Build();
 

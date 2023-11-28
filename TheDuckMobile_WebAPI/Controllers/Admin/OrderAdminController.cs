@@ -8,6 +8,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class OrderAdminController : ControllerBase
     {
         private readonly IOrderAdminServices _orderAdminServices;

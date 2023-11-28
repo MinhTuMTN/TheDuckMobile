@@ -78,6 +78,17 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return staffs.Select(s => new StaffListResponse(s)).ToList();
         }
 
+        public async Task<List<StaffListResponse>> GetAllStaffs(Guid storeId)
+        {
+            var staffs = await _context.Staffs
+                .Include(s => s.Orders)
+                .Include(s => s.Store)
+                .Where(s => s.StoreId == storeId && s.IsDeleted == false)
+                .ToListAsync();
+
+            return staffs.Select(s => new StaffListResponse(s)).ToList();
+        }
+
         public async Task<string> ResetPassword(Guid storeId, Guid staffId)
         {
             var staff = await _context

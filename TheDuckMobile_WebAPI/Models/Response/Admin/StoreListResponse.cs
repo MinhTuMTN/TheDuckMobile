@@ -10,7 +10,7 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
         public int OpenMinutes { get; set; }
         public int CloseHours { get; set; }
         public int CloseMinutes { get; set; }
-        public Address? Address { get; set; }
+        public UserAddressResponse? Address { get; set; }
         public int NumberOfStaffs { get; set; }
         public int NumberOfOrders { get; set; }
         public bool IsDeleted { get; set; }
@@ -23,7 +23,7 @@ namespace TheDuckMobile_WebAPI.Models.Response.Admin
             OpenMinutes = store.OpenMinutes;
             CloseHours = store.CloseHours;
             CloseMinutes = store.CloseMinutes;
-            Address = store.Address;
+            Address = store.Address == null ? null : new UserAddressResponse(store.Address);
             NumberOfStaffs = store.Staffs == null ? 0 : store.Staffs.Count;
             NumberOfOrders = store.Orders == null ? 0 : store.Orders.Count;
             IsDeleted = store.IsDeleted;

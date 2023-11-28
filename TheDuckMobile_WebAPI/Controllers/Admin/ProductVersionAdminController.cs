@@ -8,6 +8,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class ProductVersionAdminController : ControllerBase
     {
         private readonly IProductVersionAdminServices _productVersionAdminServices;

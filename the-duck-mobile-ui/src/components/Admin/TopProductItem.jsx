@@ -28,6 +28,7 @@ function useCustomMediaQuery() {
   }, [isLargeScreen, isMediumScreen]);
 }
 function TopProductItem(props) {
+  const { product, index } = props;
   const maxWidth = useCustomMediaQuery();
 
   return (
@@ -36,7 +37,7 @@ function TopProductItem(props) {
         <Grid item lg={4} sm={3} xs={4} md={2}>
           <CardMedia
             component="img"
-            src="https://cdn-v2.didongviet.vn/files/media/catalog/product/s/a/samsung-galaxy-s23-ultra-5g-mau-xanh.png"
+            src={product.thumbnail}
             alt="Hình ảnh sản phẩm"
             style={{ maxHeight: "5rem", maxWidth: "5rem" }}
           />
@@ -49,7 +50,7 @@ function TopProductItem(props) {
                 fontWeight: "500",
               }}
             >
-              SamSung Galaxy S21 Ultra 5G
+              {product.productName}
             </CustomText>
             <CustomText
               variant="body1"
@@ -62,7 +63,7 @@ function TopProductItem(props) {
                 maxWidth: maxWidth,
               }}
             >
-              Điện thoại
+              {product.catalog?.catalogName}
             </CustomText>
           </Stack>
         </Grid>
@@ -75,7 +76,7 @@ function TopProductItem(props) {
             color: "#10b981",
           }}
         >
-          1.000.000
+          {product.sold}
         </CustomText>
         <CustomText
           style={{
@@ -113,7 +114,7 @@ function TopProductItem(props) {
               width: "fit-content",
             }}
           >
-            #1
+            #{index + 1}
           </Typography>
         </Box>
       </Grid>

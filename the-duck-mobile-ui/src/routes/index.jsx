@@ -43,6 +43,7 @@ import Product from "../pages/Seller/Product";
 
 import StoresPage from "../pages/Admin/StoreManagement/StoresPage";
 import Points from "../pages/Points";
+import { AdminProtectedLayout } from "../layouts/AdminProtectedLayout";
 
 const LazyLoad = (Component) => (props) =>
   (
@@ -144,85 +145,91 @@ function Router(props) {
       ],
     },
     {
-      path: "/admin",
-      element: <AdminLayout />,
+      path: "/",
+      element: <AdminProtectedLayout />,
       children: [
         {
-          path: "analytics",
-          element: <Analytics />,
-        },
-        {
-          path: "address-management/province",
-          element: <ProvinceListPage />,
-        },
+          path: "/admin",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "analytics",
+              element: <Analytics />,
+            },
+            {
+              path: "address-management/province",
+              element: <ProvinceListPage />,
+            },
 
-        {
-          path: "address-management/province/detail",
-          element: <DistrictListPage />,
-        },
+            {
+              path: "address-management/province/detail",
+              element: <DistrictListPage />,
+            },
 
-        {
-          path: "address-management/province/district/detail",
-          element: <WardListPage />,
-        },
+            {
+              path: "address-management/province/district/detail",
+              element: <WardListPage />,
+            },
 
-        {
-          path: "color-management",
-          element: <ColorListPage />,
-        },
-        {
-          path: "color-management",
-          element: <AddColorPage />,
-        },
-        {
-          path: "color-management/:colorId",
-          element: <EditColorPage />,
-        },
-        {
-          path: "catalog-management",
-          element: <CatalogListPage />,
-        },
-        {
-          path: "catalog-management/:catalogId",
-          element: <EditCatalogPage />,
-        },
-        {
-          path: "product-management",
-          element: <ProductListPage />,
-        },
-        {
-          path: "product-management/add",
-          element: <AddProductPage />,
-        },
-        {
-          path: "product-management/add-product-version",
-          element: <AddProductVersionPage />,
-        },
-        {
-          path: "product-management/product-version/:productVersionId",
-          element: <AddProductVersionPage />,
-        },
-        {
-          path: "product-management/:productId",
-          element: <ProductDetailPage />,
-        },
+            {
+              path: "color-management",
+              element: <ColorListPage />,
+            },
+            {
+              path: "color-management",
+              element: <AddColorPage />,
+            },
+            {
+              path: "color-management/:colorId",
+              element: <EditColorPage />,
+            },
+            {
+              path: "catalog-management",
+              element: <CatalogListPage />,
+            },
+            {
+              path: "catalog-management/:catalogId",
+              element: <EditCatalogPage />,
+            },
+            {
+              path: "product-management",
+              element: <ProductListPage />,
+            },
+            {
+              path: "product-management/add",
+              element: <AddProductPage />,
+            },
+            {
+              path: "product-management/add-product-version",
+              element: <AddProductVersionPage />,
+            },
+            {
+              path: "product-management/product-version/:productVersionId",
+              element: <AddProductVersionPage />,
+            },
+            {
+              path: "product-management/:productId",
+              element: <ProductDetailPage />,
+            },
 
-        {
-          path: "customer-management",
-          element: <CustomerListPage />,
-        },
-        {
-          element: <CustomerListPage />,
-          index: true,
-        },
-        {
-          path: "customer-management/:customerId",
-          element: <CustomerDetailPage />,
-        },
+            {
+              path: "customer-management",
+              element: <CustomerListPage />,
+            },
+            {
+              element: <Analytics />,
+              index: true,
+            },
+            {
+              path: "customer-management/:customerId",
+              element: <CustomerDetailPage />,
+            },
 
-        {
-          path: "brand-management",
-          element: <BrandListPage />,
+            {
+              path: "brand-management",
+              element: <BrandListPage />,
+            },
+          ],
         },
 
         {
