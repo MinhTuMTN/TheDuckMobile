@@ -26,6 +26,7 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import "dayjs/locale/en-gb";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import TablePaginationActions from "../../../components/TablePaginationActions";
 import { useCallback, useContext, useEffect, useState } from "react";
