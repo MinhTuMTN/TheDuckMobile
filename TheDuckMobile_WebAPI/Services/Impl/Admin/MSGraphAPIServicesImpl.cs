@@ -38,7 +38,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             };
             var result = await graphClient.Users.PostAsync(user);
 
-            if (result is null)
+            if (result is null || result.Id is null)
                 throw new ExceptionWithStatusCode(500, "Cannot create new user");
 
             var userId = result.Id;
@@ -57,7 +57,10 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             };
 
             // To initialize your graphClient, see https://learn.microsoft.com/en-us/graph/sdks/create-client?from=snippets&tabs=csharp
-            await graphClient.Users[userId].AssignLicense.PostAsync(requestBody);
+            var assignLicenseResult = await graphClient.Users[userId].AssignLicense.PostAsync(requestBody);
+
+            if (assignLicenseResult is null)
+                throw new ExceptionWithStatusCode(500, "Cannot assign license to user");
 
             return userId;
         }
@@ -182,8 +185,9 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return true;
         }
 
-        public async Task<bool> Test()
+        public Task<bool> Test()
         {
+
             throw new NotImplementedException();
         }
     }

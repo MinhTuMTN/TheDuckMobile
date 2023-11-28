@@ -18,20 +18,20 @@ namespace TheDuckMobile_WebAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly JwtProvider _jwtProvider;
-        private readonly ITwilioServices _twilioServices;
         private readonly IUserServices _userServices;
         private readonly IMSGraphAPIServices _mSGraphAPIServices;
         private readonly IConfiguration _configuration;
+        private readonly ISMSServices _smsServices;
 
         public AuthController(
             JwtProvider jwtProvider,
-            ITwilioServices twilioServices,
+            ISMSServices smsServices,
             IUserServices userServices,
             IConfiguration configuration,
             IMSGraphAPIServices mSGraphAPIServices)
         {
             _jwtProvider = jwtProvider;
-            _twilioServices = twilioServices;
+            _smsServices = smsServices;
             _userServices = userServices;
             _configuration = configuration;
             _mSGraphAPIServices = mSGraphAPIServices;
@@ -67,7 +67,8 @@ namespace TheDuckMobile_WebAPI.Controllers
                 });
             }
 
-            if (!_twilioServices.SendSMSVerificationCode(request.Phone!))
+            var sentSMS = await _smsServices.SendSMSVerificationCode(request.Phone!);
+            if (sentSMS is null || (bool)sentSMS == false)
             {
                 return BadRequest(new GenericResponse
                 {
@@ -136,7 +137,8 @@ namespace TheDuckMobile_WebAPI.Controllers
 
             }
 
-            if (!_twilioServices.VerifySMSVerificationCode(request.Phone!, request.OTP!))
+            var isVerified = await _smsServices.VerifySMSVerificationCode(request.Phone!, request.OTP!);
+            if (!isVerified)
             {
                 return Unauthorized(new GenericResponse
                 {
@@ -193,7 +195,8 @@ namespace TheDuckMobile_WebAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            if (!_twilioServices.VerifySMSVerificationCode(request.Phone!, request.OTP!))
+            bool valid = await _smsServices.VerifySMSVerificationCode(request.Phone!, request.OTP!);
+            if (!valid)
             {
                 return Unauthorized(new GenericResponse
                 {
