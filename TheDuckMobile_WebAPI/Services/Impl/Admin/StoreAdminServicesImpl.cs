@@ -166,8 +166,29 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                     AddressId = Guid.NewGuid(),
                     StreetName = request.StreetName,
                     WardId = request.WardId
-                }
+                },
+                StoreProducts = new List<StoreProduct>()
             };
+
+
+            var productVersions = await _context.ProductVersions.ToListAsync();
+
+            foreach (var productVersion in productVersions)
+            {
+                store.StoreProducts.Add(new StoreProduct
+                {
+                    CreatedAt = DateTime.Now,
+                    IsDelete = productVersion.IsDeleted,
+                    LastModifiedAt = DateTime.Now,
+                    ProductVersionId = productVersion.ProductVersionId,
+                    StoreId = store.StoreId,
+                    IsSelling = !productVersion.IsDeleted,
+                    ProductVersion = productVersion,
+                    Quantity = 0,
+                    Store = store,
+                    StoreProductId = Guid.NewGuid()
+                });
+            }
 
             await _context.Stores.AddAsync(store);
             await _context.SaveChangesAsync();
