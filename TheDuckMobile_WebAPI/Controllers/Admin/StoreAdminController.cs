@@ -33,6 +33,22 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateStore([FromBody] UpdateStoreRequest request)
+        {
+            var store = await _storeAdminServices.CreateStore(request);
+
+            if (store == null)
+                throw new BadHttpRequestException("Store could not be created.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Store created successfully.",
+                Data = store
+            });
+        }
+
         [HttpGet("{storeId}")]
         public async Task<IActionResult> GetStoreById([FromRoute] string storeId)
         {
@@ -81,6 +97,38 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             });
         }
 
+        [HttpPut("{storeId}")]
+        public async Task<IActionResult> UpdateStore([FromRoute] Guid storeId, [FromBody] UpdateStoreRequest request)
+        {
+            var store = await _storeAdminServices.UpdateStore(storeId, request);
+
+            if (store == null)
+                throw new BadHttpRequestException("Store could not be updated.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Store updated successfully.",
+                Data = store
+            });
+        }
+
+        [HttpGet("{storeId}/staff")]
+        public async Task<IActionResult> GetAllStaffs([FromRoute] Guid storeId)
+        {
+            var staffs = await _staffAdminServices.GetAllStaffs(storeId);
+
+            if (staffs == null)
+                throw new BadHttpRequestException("Staffs could not be retrieved.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Staffs retrieved successfully.",
+                Data = staffs
+            });
+        }
+
         [HttpPost("{storeId}/staff")]
         public async Task<IActionResult> AddStaff([FromRoute] Guid storeId, [FromBody] CreateStaffRequest request)
         {
@@ -110,6 +158,39 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Success = true,
                 Message = "Staff reset password successfully.",
                 Data = staff
+            });
+        }
+
+        [HttpGet("{storeId}/province")]
+        public async Task<IActionResult> GetAllProvinces([FromRoute] Guid storeId)
+        {
+            var provinces = await _storeAdminServices.GetAllProvinces(storeId);
+
+            if (provinces == null)
+                throw new BadHttpRequestException("Provinces could not be retrieved.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Provinces retrieved successfully.",
+                Data = provinces
+            });
+        }
+
+        [HttpPost("{storeId}/province")]
+        public async Task<IActionResult> AddProvince([FromRoute] Guid storeId,
+            [FromBody] StoreProvinceRequest request)
+        {
+            var province = await _storeAdminServices.AddProvince(storeId, request);
+
+            if (province == null)
+                throw new BadHttpRequestException("Province could not be added.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Province added successfully.",
+                Data = province
             });
         }
     }
