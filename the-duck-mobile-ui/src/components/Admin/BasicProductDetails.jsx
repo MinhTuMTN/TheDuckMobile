@@ -316,6 +316,7 @@ function BasicProductDetails(props) {
                       state: {
                         productId: product.productId,
                         productName: product.productName,
+                        edit: false,
                       },
                     });
                   }}
@@ -325,7 +326,7 @@ function BasicProductDetails(props) {
               </Grid>
             </BoxStyle>
             <Box>
-              <ListProductVersion productVersions={product.productVersions} />
+              <ListProductVersion productName={product.productName} productVersions={product.productVersions} />
             </Box>
           </Stack>
         </Stack>

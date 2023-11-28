@@ -59,7 +59,7 @@ const ButtonInPopover = styled(Button)(({ theme }) => ({
 function ListProductVersion(props) {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { productVersions } = props;
+  const { productName, productVersions } = props;
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -202,6 +202,7 @@ function ListProductVersion(props) {
                             {
                               state: {
                                 productId: item.productId,
+                                productName: productName,
                               },
                             }
                           );
@@ -236,6 +237,7 @@ function ListProductVersion(props) {
                         {
                           state: {
                             productId: item.productId,
+                            productName: productName,
                           },
                         }
                       );

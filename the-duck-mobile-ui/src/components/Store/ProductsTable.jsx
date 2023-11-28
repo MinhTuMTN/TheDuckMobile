@@ -41,7 +41,7 @@ function Row(props) {
     });
     if (response.success) {
       enqueueSnackbar("Cập nhật số lượng thành công", { variant: "success" });
-      setQuantity((prev) => prev + updateQuantity);
+      setQuantity((prev) => parseInt(prev) + parseInt(updateQuantity));
     } else {
       enqueueSnackbar("Cập nhật số lượng thất bại", { variant: "error" });
     }
