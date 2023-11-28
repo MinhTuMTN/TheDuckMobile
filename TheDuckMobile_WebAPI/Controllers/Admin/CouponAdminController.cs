@@ -9,6 +9,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class CouponAdminController : ControllerBase
     {
         private readonly ICouponAdminServices _couponAdminServices;
@@ -18,8 +19,6 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllCoupons()
         {
             var coupons = await _couponAdminServices.GetAllCoupons();

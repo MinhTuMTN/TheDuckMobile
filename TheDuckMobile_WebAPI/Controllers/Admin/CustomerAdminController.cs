@@ -8,6 +8,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class CustomerAdminController : ControllerBase
     {
         private readonly ICustomerAdminServices _customerServices;
@@ -17,8 +18,6 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllCustomers()
         {
             var customers = await _customerServices.GetAllCustomers();
@@ -31,8 +30,6 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet("{customerId}")]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetCustomerById([FromRoute] Guid customerId)
         {
             var customer = await _customerServices.GetCustomerById(customerId);

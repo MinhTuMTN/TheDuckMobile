@@ -9,6 +9,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class StoreAdminController : ControllerBase
     {
         private readonly IStoreAdminServices _storeAdminServices;
@@ -20,8 +21,6 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllStores()
         {
             var stores = await _storeAdminServices.GetAllStores();

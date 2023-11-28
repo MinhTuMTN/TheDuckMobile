@@ -18,8 +18,6 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet("province")]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllProvinces()
         {
             var provinces = await _addressServices.GetAllProvinces();
@@ -58,6 +56,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPost("province")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddProvince([FromBody] AddProvinceRequest request)
         {
             var province = await _addressServices.AddProvince(request);
@@ -70,6 +69,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPut("province/{provinceId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProvince([FromRoute] int provinceId, [FromBody] AddProvinceRequest request)
         {
             var province = await _addressServices.UpdateProvince(provinceId, request);
@@ -82,6 +82,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPost("district")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddDistrict([FromBody] AddDistrictRequest request)
         {
             var district = await _addressServices.AddDistrict(request);
@@ -94,6 +95,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPut("district/{districtId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProvince([FromRoute] int districtId, [FromBody] AddDistrictRequest request)
         {
             var district = await _addressServices.UpdateDistrict(districtId, request);
@@ -106,6 +108,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPost("ward")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddWard([FromBody] AddWardRequest request)
         {
             var ward = await _addressServices.AddWard(request);
@@ -118,6 +121,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPut("ward/{wardId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateWard([FromRoute] int wardId, [FromBody] AddWardRequest request)
         {
             var ward = await _addressServices.UpdateWard(wardId, request);

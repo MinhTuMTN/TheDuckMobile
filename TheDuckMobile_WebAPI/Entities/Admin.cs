@@ -2,7 +2,7 @@
 
 namespace TheDuckMobile_WebAPI.Entities
 {
-    public class Admin : User
+    public class Admin : Staff
     {
     }
 }

@@ -14,9 +14,8 @@ import { useSnackbar } from "notistack";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { getAllProvinces } from "../../services/Admin/AddressService";
-import DialogForm from "../DialogForm";
-import { async } from "q";
 import { addStoreProvince } from "../../services/Admin/StoreService";
+import DialogForm from "../DialogForm";
 
 function StoreProvinceTable(props) {
   const { provinces = [], storeId } = props;

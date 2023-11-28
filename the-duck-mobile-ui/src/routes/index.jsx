@@ -45,13 +45,14 @@ import AnalyticsStore from "../pages/Seller/AnalyticsStore";
 import CouponDetailPage from "../pages/Admin/CouponManagement/CouponDetailPage";
 
 import Points from "../pages/Points";
+import { AdminProtectedLayout } from "../layouts/AdminProtectedLayout";
 
 const LazyLoad = (Component) => (props) =>
-(
-  <React.Suspense fallback={<Loading />}>
-    <Component {...props} />
-  </React.Suspense>
-);
+  (
+    <React.Suspense fallback={<Loading />}>
+      <Component {...props} />
+    </React.Suspense>
+  );
 
 const HomeLazy = LazyLoad(React.lazy(() => import("../pages/Home")));
 const SearchProductLazy = LazyLoad(
@@ -146,146 +147,152 @@ function Router(props) {
       ],
     },
     {
-      path: "/admin",
-      element: <AdminLayout />,
+      path: "/",
+      element: <AdminProtectedLayout />,
       children: [
         {
-          path: "analytics",
-          element: <Analytics />,
-        },
-        {
-          path: "address-management/province",
-          element: <ProvinceListPage />,
-        },
+          path: "/admin",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "analytics",
+              element: <Analytics />,
+            },
+            {
+              path: "address-management/province",
+              element: <ProvinceListPage />,
+            },
 
-        {
-          path: "address-management/province/detail",
-          element: <DistrictListPage />,
-        },
+            {
+              path: "address-management/province/detail",
+              element: <DistrictListPage />,
+            },
 
-        {
-          path: "address-management/province/district/detail",
-          element: <WardListPage />,
-        },
+            {
+              path: "address-management/province/district/detail",
+              element: <WardListPage />,
+            },
 
-        {
-          path: "color-management",
-          element: <ColorListPage />,
-        },
-        {
-          path: "color-management",
-          element: <AddColorPage />,
-        },
-        {
-          path: "color-management/:colorId",
-          element: <EditColorPage />,
-        },
-        {
-          path: "catalog-management",
-          element: <CatalogListPage />,
-        },
-        {
-          path: "catalog-management/:catalogId",
-          element: <EditCatalogPage />,
-        },
-        {
-          path: "product-management",
-          element: <ProductListPage />,
-        },
-        {
-          path: "product-management/add",
-          element: <AddProductPage />,
-        },
-        {
-          path: "product-management/add-product-version",
-          element: <AddProductVersionPage />,
-        },
-        {
-          path: "product-management/product-version/:productVersionId",
-          element: <AddProductVersionPage />,
-        },
-        {
-          path: "product-management/:productId",
-          element: <ProductDetailPage />,
-        },
+            {
+              path: "color-management",
+              element: <ColorListPage />,
+            },
+            {
+              path: "color-management",
+              element: <AddColorPage />,
+            },
+            {
+              path: "color-management/:colorId",
+              element: <EditColorPage />,
+            },
+            {
+              path: "catalog-management",
+              element: <CatalogListPage />,
+            },
+            {
+              path: "catalog-management/:catalogId",
+              element: <EditCatalogPage />,
+            },
+            {
+              path: "product-management",
+              element: <ProductListPage />,
+            },
+            {
+              path: "product-management/add",
+              element: <AddProductPage />,
+            },
+            {
+              path: "product-management/add-product-version",
+              element: <AddProductVersionPage />,
+            },
+            {
+              path: "product-management/product-version/:productVersionId",
+              element: <AddProductVersionPage />,
+            },
+            {
+              path: "product-management/:productId",
+              element: <ProductDetailPage />,
+            },
 
-        {
-          path: "customer-management",
-          element: <CustomerListPage />,
-        },
-        {
-          element: <Analytics />,
-          index: true,
-        },
-        {
-          path: "customer-management/:customerId",
-          element: <CustomerDetailPage />,
-        },
+            {
+              path: "customer-management",
+              element: <CustomerListPage />,
+            },
+            {
+              element: <Analytics />,
+              index: true,
+            },
+            {
+              path: "customer-management/:customerId",
+              element: <CustomerDetailPage />,
+            },
 
-        {
-          path: "brand-management",
-          element: <BrandListPage />,
-        },
+            {
+              path: "brand-management",
+              element: <BrandListPage />,
+            },
 
-        {
-          path: "store-management",
-          element: <StoreListPage />,
-        },
-        {
-          path: "store-management/add",
-          element: <AddStorePage />,
-        },
-        {
-          path: "store-management/edit",
-          element: <EditStorePage />,
-        },
-        {
-          path: "store-management/:storeId",
-          element: <StoreDetailPage />,
-        },
-        {
-          path: "os-management",
-          element: <OSListPage />,
-        },
-        {
-          path: "os-management/add",
-          element: <AddOSPage />,
-        },
-        {
-          path: "os-management/:osId",
-          element: <EditOSPage />,
-        },
-        {
-          path: "order-management",
-          element: <OrderListPage />,
-        },
-        {
-          path: "order-management/:orderId",
-          element: <OrderDetailPage />,
-        },
-        {
-          path: "coupon-management",
-          element: <CouponListPage />,
-        },
-        {
-          path: "coupon-management/:couponId",
-          element: <CouponDetailPage />,
-        },
-        {
-          path: "feedback-management",
-          element: <FeedbackListPage />,
-        },
-        {
-          path: "special-feature-management",
-          element: <SpecialFeatureListPage />,
-        },
-        {
-          path: "special-feature-management/add",
-          element: <AddSpecialFeaturePage />,
-        },
-        {
-          path: "special-feature-management/:specialFeature",
-          element: <EditSpecialFeaturePage />,
+            {
+              path: "store-management",
+              element: <StoreListPage />,
+            },
+            {
+              path: "store-management/add",
+              element: <AddStorePage />,
+            },
+            {
+              path: "store-management/edit",
+              element: <EditStorePage />,
+            },
+            {
+              path: "store-management/:storeId",
+              element: <StoreDetailPage />,
+            },
+            {
+              path: "os-management",
+              element: <OSListPage />,
+            },
+            {
+              path: "os-management/add",
+              element: <AddOSPage />,
+            },
+            {
+              path: "os-management/:osId",
+              element: <EditOSPage />,
+            },
+            {
+              path: "order-management",
+              element: <OrderListPage />,
+            },
+            {
+              path: "order-management/:orderId",
+              element: <OrderDetailPage />,
+            },
+            {
+              path: "coupon-management",
+              element: <CouponListPage />,
+            },
+            {
+              path: "coupon-management/:couponId",
+              element: <CouponDetailPage />,
+            },
+            {
+              path: "feedback-management",
+              element: <FeedbackListPage />,
+            },
+            {
+              path: "special-feature-management",
+              element: <SpecialFeatureListPage />,
+            },
+            {
+              path: "special-feature-management/add",
+              element: <AddSpecialFeaturePage />,
+            },
+            {
+              path: "special-feature-management/:specialFeature",
+              element: <EditSpecialFeaturePage />,
+            },
+          ],
         },
       ],
     },

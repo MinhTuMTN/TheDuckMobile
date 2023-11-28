@@ -9,6 +9,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class StatisticAdminController : ControllerBase
     {
         private readonly IStatisticAdminServices _statisticServices;

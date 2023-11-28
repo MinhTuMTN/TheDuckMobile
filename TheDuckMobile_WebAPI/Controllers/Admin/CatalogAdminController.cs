@@ -18,8 +18,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllCatalogs([FromQuery] bool isDeletedFilter)
         {
             var catalogs = await _catalogServices.GetAllCatalogs(isDeletedFilter);
@@ -32,8 +31,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet("active")]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetActiveCatalogs()
         {
             var catalogs = await _catalogServices.GetActiveCatalogs();
@@ -46,6 +44,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddCatalog([FromBody] AddCatalogRequest request)
         {
             var catalog = await _catalogServices.AddCatalog(request);
@@ -58,6 +57,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPost("{catalogId}/brands")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddBrandToCatalog([FromRoute] int catalogId, [FromBody] AddBrandToCatalogRequest request)
         {
             var catalog = await _catalogServices.AddBrandToCatalog(catalogId, request);
@@ -70,6 +70,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPost("{catalogId}/special-features")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddSpecialFeatureToCatalog([FromRoute] int catalogId, [FromBody] AddSpecialFeatureToCatalogRequest request)
         {
             var catalog = await _catalogServices.AddSpecialFeatureToCatalog(catalogId, request);
@@ -82,6 +83,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet("{catalogId}/attributes")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCatalogAttributes([FromRoute] int catalogId)
         {
             var catalogAttributes = await _catalogServices.GetCatalogAttributes(catalogId);
@@ -94,6 +96,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpPut("{catalogId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditCatalog([FromRoute] int catalogId, [FromBody] AddCatalogRequest request)
         {
             var catalog = await _catalogServices.EditCatalog(catalogId, request);
@@ -110,6 +113,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpDelete("{catalogId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCatalog([FromRoute] int catalogId)
         {
             var success = await _catalogServices.DeleteCatalog(catalogId);
@@ -126,6 +130,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet("restore/{catalogId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RestoreColor([FromRoute] int catalogId)
         {
             var catalog = await _catalogServices.RestoreCatalog(catalogId);
@@ -142,6 +147,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet("{catalogId}/special-features")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCatalogSpecialFeatures([FromRoute] int catalogId)
         {
             var catalogSpecialFeatures = await _catalogServices.GetCatalogSpecialFeatures(catalogId);
@@ -154,6 +160,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpDelete("{catalogId}/special-features/{specialFeatureId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCatalogSpecialFeature([FromRoute] int catalogId, [FromRoute] int specialFeatureId)
         {
             var success = await _catalogServices.DeleteCatalogSpecialFeature(catalogId, specialFeatureId);

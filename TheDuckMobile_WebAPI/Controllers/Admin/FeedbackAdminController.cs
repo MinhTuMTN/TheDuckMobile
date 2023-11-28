@@ -8,6 +8,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class FeedbackAdminController : ControllerBase
     {
         private readonly IFeedbackAdminServices _feedbackAdminServices;
@@ -17,8 +18,6 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        /*[Authorize(Roles = "admin")]*/
         public async Task<IActionResult> GetAllOSs()
         {
             var feedbacks = await _feedbackAdminServices.GetAllFeedbacks();

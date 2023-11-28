@@ -37,7 +37,7 @@ namespace TheDuckMobile_WebAPI.Config
                     new Claim(ClaimTypes.Name, user.FullName),
                     new Claim("Phone", user.Phone == null ? ((Staff)user).Email! : user.Phone),
                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                    new Claim(ClaimTypes.Role, user is Customer ? "Customer" : (user is Staff ? "Staff" : "Admin")),
+                    new Claim(ClaimTypes.Role, user is Customer ? "Customer" : (user is Admin ? "Admin" : "Staff")),
 
                     //roles
 
