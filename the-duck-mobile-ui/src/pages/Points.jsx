@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardMedia,
-  Divider,
   Grid,
   Stack,
   Typography,

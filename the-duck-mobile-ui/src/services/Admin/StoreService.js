@@ -12,7 +12,6 @@ export const updateStore = (storeId, data) => {
   return put(`storeadmin/${storeId}`, data);
 };
 
-
 export const deleteStore = (storeId) => {
   return del(`storeadmin/${storeId}`);
 };
