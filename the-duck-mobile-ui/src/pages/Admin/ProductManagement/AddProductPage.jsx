@@ -26,6 +26,7 @@ import { getAllBrands } from "../../../services/Admin/BrandService";
 import { getAllCatalogs } from "../../../services/Admin/CatalogService";
 import { useSnackbar } from "notistack";
 import { createProduct } from "../../../services/Admin/ProductService";
+import Loading from "../../../components/Loading";
 
 const CustomTypography = styled(Typography)(({ theme }) => ({
   fontSize: "14px !important",
@@ -49,6 +50,7 @@ function AddProductPage() {
   const [brand, setBrand] = React.useState([]);
   const [catalog, setCatalog] = React.useState([]);
   const [OS, setOS] = React.useState([]);
+  const [isLoading, setIsLoading] = useState(false); // for loading button
 
   const [info, setInfo] = useState({
     productName: "",
@@ -129,6 +131,7 @@ function AddProductPage() {
     formData.append("osId", info.osId);
     formData.append("thumbnail", file);
 
+    setIsLoading(true);
     const response = await createProduct(formData);
     if (response.success) {
       enqueueSnackbar("Tạo sản phẩm thành công", { variant: "success" });
@@ -136,7 +139,10 @@ function AddProductPage() {
     } else {
       enqueueSnackbar("Tạo sản phẩm thất bại", { variant: "error" });
     }
+    setIsLoading(false);
   };
+
+  if (isLoading) return <Loading />;
 
   return (
     <Grid

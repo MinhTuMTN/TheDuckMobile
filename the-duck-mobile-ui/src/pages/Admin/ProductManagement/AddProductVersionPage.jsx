@@ -362,9 +362,9 @@ function AddProductVersionPage() {
           paddingTop={4}
           paddingBottom={3}
         >
-          {!productVersionId ?
-            `Tạo phiên bản mới cho ${state?.productName}` :
-            `Cập nhật phiên bản cho ${state?.productName} - ${versionName}`}
+          {!productVersionId
+            ? `Tạo phiên bản mới cho ${state?.productName}`
+            : `Cập nhật phiên bản cho ${state?.productName} - ${versionName}`}
         </Typography>
       </Grid>
 
