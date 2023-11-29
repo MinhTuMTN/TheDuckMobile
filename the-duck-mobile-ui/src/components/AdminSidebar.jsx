@@ -116,12 +116,12 @@ const sidebarItems = [
     to: "/admin/coupon-management",
     section: "coupon-management",
   },
-  {
-    display: "Phản Hồi",
-    icon: <FeedbackIcon />,
-    to: "/admin/feedback-management",
-    section: "feedback-management",
-  },
+  // {
+  //   display: "Phản Hồi",
+  //   icon: <FeedbackIcon />,
+  //   to: "/admin/feedback-management",
+  //   section: "feedback-management",
+  // },
   {
     display: "Thống Kê",
     icon: <AnalyticsIcon />,
