@@ -90,6 +90,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
             var store = await _staffServices.GetStoreByStaffId(staffId);
             var storeProduct = await _context
                 .StoreProducts
+                .Include(sp => sp.ProductVersion!)
+                .ThenInclude(pv => pv.Product!)
                 .Where(s => s.StoreProductId == storeProductId && s.StoreId == store.StoreId && s.IsDelete == false)
                 .FirstOrDefaultAsync();
 
@@ -97,6 +99,12 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 throw new CustomNotFoundException("Can't found store product");
 
             storeProduct.Quantity += quantity;
+            storeProduct.ProductVersion!.Quantity += quantity;
+            storeProduct.ProductVersion!.Product!.Quantity += quantity;
+
+            storeProduct.LastModifiedAt = DateTime.Now;
+            storeProduct.ProductVersion!.Product!.LastModifiedAt = DateTime.Now;
+
 
             await _context.SaveChangesAsync();
             return true;

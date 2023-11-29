@@ -70,6 +70,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                     Price = productVersion.Price,
                     PromotionPrice = productVersion.PromotionPrice,
                     Quantity = userCartItem.Quantity,
+                    MaxQuantity = productVersion.Quantity,
                     ColorName = productVersion.Color!.ColorName,
                     ColorCode = productVersion.Color.ColorCode
                 });

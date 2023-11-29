@@ -88,6 +88,10 @@ function CartTable(props) {
               <TableCell>
                 <Checkbox
                   color="color1"
+                  disabled={
+                    product?.quantity === 0 ||
+                    product.quantity > product.maxQuantity
+                  }
                   checked={selectedProducts.includes(product)}
                   onChange={() => onSelectProduct(product)}
                 />
@@ -142,53 +146,72 @@ function CartTable(props) {
                 </Typography>
               </TableCell>
               <TableCell align="center">
-                <Stack
-                  direction={"row"}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  spacing={1}
-                  width={"100%"}
-                >
-                  <IconButton
-                    size="large"
-                    aria-label="minus"
-                    sx={{
-                      cursor: `${
-                        product?.quantity === 1 ? "not-allowed" : "pointer"
-                      }`,
-                    }}
-                    onClick={() => {
-                      onProductCartChange(
-                        products.map((p) => {
-                          if (p.productVersionId === product.productVersionId) {
-                            p.quantity = Math.max(1, p.quantity - 1);
-                          }
-                          return p;
-                        })
-                      );
-                    }}
+                <Stack direction={"column"}>
+                  <Stack
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    spacing={1}
+                    width={"100%"}
                   >
-                    -
-                  </IconButton>
-                  <Typography variant="body1" component="p">
-                    {product?.quantity}
-                  </Typography>
-                  <IconButton
-                    size="large"
-                    aria-label="plus"
-                    onClick={() => {
-                      onProductCartChange(
-                        products.map((p) => {
-                          if (p.productVersionId === product.productVersionId) {
-                            p.quantity = Math.max(1, p.quantity + 1);
-                          }
-                          return p;
-                        })
-                      );
-                    }}
-                  >
-                    +
-                  </IconButton>
+                    <IconButton
+                      size="large"
+                      aria-label="minus"
+                      sx={{
+                        cursor: `${
+                          product?.quantity === 1 ? "not-allowed" : "pointer"
+                        }`,
+                      }}
+                      onClick={() => {
+                        onProductCartChange(
+                          products.map((p) => {
+                            if (
+                              p.productVersionId === product.productVersionId
+                            ) {
+                              p.quantity = Math.max(1, p.quantity - 1);
+                            }
+                            return p;
+                          })
+                        );
+                      }}
+                    >
+                      -
+                    </IconButton>
+                    <Typography variant="body1" component="p">
+                      {product?.quantity}
+                    </Typography>
+                    <IconButton
+                      size="large"
+                      aria-label="plus"
+                      onClick={() => {
+                        onProductCartChange(
+                          products.map((p) => {
+                            if (
+                              p.productVersionId === product.productVersionId &&
+                              p.quantity < p.maxQuantity
+                            ) {
+                              p.quantity = Math.max(1, p.quantity + 1);
+                            }
+                            return p;
+                          })
+                        );
+                      }}
+                    >
+                      +
+                    </IconButton>
+                  </Stack>
+                  {product?.quantity >= product?.maxQuantity && (
+                    <Typography
+                      variant="body2"
+                      component="p"
+                      color={"color1.main"}
+                      style={{
+                        fontSize: ".9rem",
+                      }}
+                    >
+                      Tối đa: {product?.maxQuantity} sản phẩm
+                    </Typography>
+                  )}
                 </Stack>
               </TableCell>
               <TableCell align="right">

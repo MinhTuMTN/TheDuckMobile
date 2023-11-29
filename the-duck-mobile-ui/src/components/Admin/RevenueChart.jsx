@@ -63,7 +63,7 @@ function RevenueChart(props) {
   const handleStatistic = async () => {
     const response = await getAllStatistic({
       startDate: new Date(statisticRequest.startDate.format("YYYY-MM-DD")),
-      endDate: new Date(statisticRequest.endDate.format("YYYY-MM-DD"))
+      endDate: new Date(statisticRequest.endDate.format("YYYY-MM-DD")),
     });
 
     if (response.success) {
@@ -72,7 +72,7 @@ function RevenueChart(props) {
     } else {
       enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     }
-  }
+  };
 
   return (
     <>
@@ -82,13 +82,10 @@ function RevenueChart(props) {
         width={"100%"}
         sx={{
           paddingY: 1,
-          paddingX: 2
+          paddingX: 2,
         }}
       >
-        <LocalizationProvider
-          dateAdapter={AdapterDayjs}
-          adapterLocale="en-gb"
-        >
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
           <CustomDatePicker
             label="Ngày bắt đầu"
             value={dayjs(statisticRequest.startDate)}
@@ -104,10 +101,7 @@ function RevenueChart(props) {
             sx={{ mt: 2 }}
           />
         </LocalizationProvider>
-        <LocalizationProvider
-          dateAdapter={AdapterDayjs}
-          adapterLocale="en-gb"
-        >
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
           <CustomDatePicker
             label="Ngày kết thúc"
             value={dayjs(statisticRequest.endDate)}
@@ -129,7 +123,7 @@ function RevenueChart(props) {
         display="flex"
         justifyContent="flex-end"
         sx={{
-          paddingX: 2
+          paddingX: 2,
         }}
       >
         <CustomButton
@@ -140,7 +134,7 @@ function RevenueChart(props) {
         >
           Thống Kê
         </CustomButton>
-      </Box >
+      </Box>
       <BoxStyle
         component={Stack}
         direction={"row"}
@@ -164,14 +158,16 @@ function RevenueChart(props) {
         <TieuDe>Biểu đồ doanh thu</TieuDe>
       </BoxStyle>
       <BoxStyle>
-        {labels && <LineChart
-          xAxis={[{ scaleType: "point", data: labels }]}
-          series={[{ data: data, label: "Doanh thu" }]}
-          height={350}
-          sx={{
-            padding: "1.6rem",
-          }}
-        />}
+        {labels && data && (
+          <LineChart
+            xAxis={[{ scaleType: "point", data: labels }]}
+            series={[{ data: data, label: "Doanh thu" }]}
+            height={350}
+            sx={{
+              padding: "1.6rem",
+            }}
+          />
+        )}
       </BoxStyle>
     </>
   );

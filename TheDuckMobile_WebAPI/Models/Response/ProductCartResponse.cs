@@ -12,6 +12,7 @@ namespace TheDuckMobile_WebAPI.Models.Response
         public double Price { get; set; }
         public double PromotionPrice { get; set; }
         public int Quantity { get; set; }
+        public int MaxQuantity { get; set; }
         public string? ColorName { get; set; }
         public string? ColorCode { get; set; }
 

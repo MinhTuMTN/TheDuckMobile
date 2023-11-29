@@ -18,7 +18,7 @@ function Cart(props) {
     const cart = JSON.parse(localStorage.getItem("cart"));
     const res = await getProductCartDetails(cart);
     if (res.error) {
-      enqueueSnackbar(res.message, { variant: "error" });
+      enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     } else {
       setProducts(res.data.data);
     }
