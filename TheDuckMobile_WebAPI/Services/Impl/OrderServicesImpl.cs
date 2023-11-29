@@ -64,6 +64,10 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                     if (productVersion == null)
                         throw new BadHttpRequestException("Some product version does not exist");
 
+                    // Check if quantity of product version is enough
+                    if (productVersion.Quantity < productVersionQuantity.Quantity)
+                        throw new BadHttpRequestException("Some product version quantity is not enough");
+
                     // Update quantity of product version and product
                     productVersion.Quantity -= productVersionQuantity.Quantity;
                     productVersion.Product!.Quantity -= productVersionQuantity.Quantity;
