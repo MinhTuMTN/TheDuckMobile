@@ -2,7 +2,8 @@ import axios from "axios";
 
 var qs = require("qs");
 const axiosInstance = axios.create({
-  baseURL: "https://the-duck-mobile.azurewebsites.net/api",
+  // baseURL: "https://the-duck-mobile.azurewebsites.net/api",
+  baseURL: "https://tb7drp6q-5129.asse.devtunnels.ms/api",
   // baseURL: "https://localhost:7008/api",
   timeout: 5000,
   headers: {

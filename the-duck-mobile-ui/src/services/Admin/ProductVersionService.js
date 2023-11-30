@@ -5,9 +5,14 @@ export const getProductVersionAttributes = (productId) => {
 };
 
 export const addProductVersion = (data) => {
-  return post("ProductVersionAdmin", data, {
-    "Content-Type": "multipart/form-data",
-  });
+  return post(
+    "ProductVersionAdmin",
+    data,
+    {
+      "Content-Type": "multipart/form-data",
+    },
+    10000
+  );
 };
 
 export const deleteProductVersion = (productVersionId) => {
@@ -23,7 +28,12 @@ export const getProductVersion = (productVersionId) => {
 };
 
 export const updateProductVersion = (productVersionId, data) => {
-  return put(`ProductVersionAdmin/${productVersionId}`, data, {
-    "Content-Type": "multipart/form-data",
-  });
+  return put(
+    `ProductVersionAdmin/${productVersionId}`,
+    data,
+    {
+      "Content-Type": "multipart/form-data",
+    },
+    10000
+  );
 };
