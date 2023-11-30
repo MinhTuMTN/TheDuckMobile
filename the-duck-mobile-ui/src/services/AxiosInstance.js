@@ -2,7 +2,7 @@ import axios from "axios";
 
 var qs = require("qs");
 const axiosInstance = axios.create({
-  baseURL: "https://tb7drp6q-5129.asse.devtunnels.ms/api",
+  baseURL: "https://the-duck-mobile.azurewebsites.net/api",
   // baseURL: "https://localhost:7008/api",
   timeout: 5000,
   headers: {
@@ -16,13 +16,26 @@ export const updateToken = (token) => {
   axiosInstance.defaults.headers["Authorization"] = "Bearer " + token;
 };
 
-const handleRequest = async (requestMethod, url, data, headers, params) => {
+const handleRequest = async (
+  requestMethod,
+  url,
+  data,
+  headers,
+  params,
+  timeout
+) => {
   const result = {
     success: false,
     data: null,
     error: null,
     statusCode: 200,
   };
+
+  if (timeout) {
+    axiosInstance.defaults.timeout = timeout;
+  } else {
+    axiosInstance.defaults.timeout = 5000;
+  }
 
   try {
     let response = null;
@@ -58,12 +71,12 @@ export const get = async (url, params, headers) => {
   return handleRequest(axiosInstance.get, url, null, headers, params);
 };
 
-export const post = async (url, data, headers) => {
-  return handleRequest(axiosInstance.post, url, data, headers, null);
+export const post = async (url, data, headers, timeout) => {
+  return handleRequest(axiosInstance.post, url, data, headers, null, timeout);
 };
 
-export const put = async (url, data, headers) => {
-  return handleRequest(axiosInstance.put, url, data, headers, null);
+export const put = async (url, data, headers, timeout) => {
+  return handleRequest(axiosInstance.put, url, data, headers, null, timeout);
 };
 
 export const del = async (url, params, headers) => {
