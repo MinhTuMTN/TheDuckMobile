@@ -25,7 +25,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             var catalog = await _context.Catalogs
                 .Include(c => c.Brands)
                 .Include(c => c.SpecialFeatures)
-                .Include(c => c.Products)
+                .Include(c => c.Products!)
+                .ThenInclude(p => p.Votes)
                 .FirstOrDefaultAsync(c => c.CatalogURL == url);
             if (catalog == null)
                 return null;

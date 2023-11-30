@@ -21,8 +21,22 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         {
             var catalog = await _context
                 .Catalogs
+                .Include(c => c.CatalogAttributes)
                 .FirstOrDefaultAsync(c => c.CatalogId == request.CatalogId
                 && c.IsDeleted == false);
+
+            if (catalog == null)
+                throw new CustomNotFoundException("Can't found catalog");
+
+            // Check if CatalogAttribute already exists with the same key
+            if (catalog.CatalogAttributes != null)
+            {
+                foreach (var catalogAttributeCheck in catalog.CatalogAttributes)
+                {
+                    if (catalogAttributeCheck.Key == request.Key)
+                        throw new BadHttpRequestException("Catalog attribute already exists with the same key");
+                }
+            }
 
             CatalogAttributeType type;
             Enum.TryParse(request.Type, out type);
