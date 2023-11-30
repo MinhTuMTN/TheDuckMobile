@@ -35,7 +35,7 @@ const handleRequest = async (
   if (timeout) {
     axiosInstance.defaults.timeout = timeout;
   } else {
-    axiosInstance.defaults.timeout = 10000;
+    axiosInstance.defaults.timeout = 30000;
   }
 
   try {
