@@ -163,6 +163,11 @@ function Login(props) {
                     phone.length >= 11
                   }
                   style={{ with: "100%" }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleEnterPhoneNumber();
+                    }
+                  }}
                 />
                 <Button
                   variant="contained"
@@ -241,6 +246,11 @@ function Login(props) {
                   onChange={(e) => setOtp(e.target.value)}
                   required
                   fullWidth
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleLogin();
+                    }
+                  }}
                 />
                 <Button
                   variant="contained"
