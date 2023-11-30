@@ -16,6 +16,8 @@ function Cart(props) {
 
   const handleGetProductCartDetails = useCallback(async () => {
     const cart = JSON.parse(localStorage.getItem("cart"));
+    if (!cart) return;
+
     const res = await getProductCartDetails(cart);
     if (res.error) {
       enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
