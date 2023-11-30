@@ -62,7 +62,7 @@ function AddProductVersionPage() {
   const [isLoading, setIsLoading] = React.useState(false);
   const { productVersionId } = useParams();
   const [oldImages, setOldImages] = React.useState([]);
-  const [promotionPrice, setPromotionPrice] = React.useState("");
+  const [promotionPrice, setPromotionPrice] = React.useState("0");
   const [versionName, setVersionName] = React.useState("");
 
   const [info, setInfo] = React.useState({
@@ -461,11 +461,14 @@ function AddProductVersionPage() {
                       value={info?.price}
                       fullWidth
                       onChange={(e) => {
-                        let nums = e.target.value.replace(/,/g, "");
-                        if (nums === "") nums = "0";
-                        if (!nums || nums.endsWith(".")) return;
-                        const value = parseFloat(nums).toLocaleString("vn");
-                        setInfo({ ...info, price: value });
+                        const value = (e.target.value || "").replace(/,/g, "");
+                        const formated = parseFloat(
+                          value ? value : 0
+                        ).toLocaleString("en");
+                        console.log(formated);
+
+                        console.log(parseFloat(formated.replace(",", "")));
+                        setInfo((prev) => ({ ...prev, price: formated }));
                       }}
                       sx={{
                         "& .MuiInputBase-input": {
@@ -496,18 +499,24 @@ function AddProductVersionPage() {
                         type="text"
                         error={promotionPrice?.trim() === ""}
                         helperText={
-                          info?.price?.trim() === ""
+                          promotionPrice?.trim() === ""
                             ? "Giá tiền không được để trống"
                             : ""
                         }
                         value={promotionPrice}
                         fullWidth
                         onChange={(e) => {
-                          let nums = e.target.value.replace(/,/g, "");
-                          if (nums === "") nums = "0";
-                          if (!nums || nums.endsWith(".")) return;
-                          const value = parseFloat(nums).toLocaleString("vn");
-                          setPromotionPrice(value);
+                          const value = (e.target.value || "").replace(
+                            /,/g,
+                            ""
+                          );
+                          const formated = parseFloat(
+                            value ? value : 0
+                          ).toLocaleString("en");
+                          console.log(formated);
+
+                          console.log(parseFloat(formated.replace(",", "")));
+                          setPromotionPrice(formated);
                         }}
                         sx={{
                           "& .MuiInputBase-input": {
