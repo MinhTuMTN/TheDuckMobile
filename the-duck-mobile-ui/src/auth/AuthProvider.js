@@ -31,7 +31,6 @@ const AuthProvider = ({ children }) => {
       setRole_(response.data.data);
     } else {
       setRole_(null);
-      setToken(null);
     }
   }, []);
 
