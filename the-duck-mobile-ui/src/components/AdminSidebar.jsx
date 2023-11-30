@@ -1,17 +1,16 @@
 import styled from "@emotion/styled";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
 import BrandingWatermarkIcon from "@mui/icons-material/BrandingWatermark";
 import CategoryIcon from "@mui/icons-material/Category";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 import DevicesIcon from "@mui/icons-material/Devices";
 import DiscountIcon from "@mui/icons-material/Discount";
-import FeedbackIcon from "@mui/icons-material/Feedback";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import StoreIcon from "@mui/icons-material/Store";
-import AnalyticsIcon from '@mui/icons-material/Analytics';
 import pic from "../assets/logo-removebg-preview.jpg";
 
 import {
@@ -127,7 +126,7 @@ const sidebarItems = [
     icon: <AnalyticsIcon />,
     to: "/admin/analytics",
     section: "analytics",
-    analytics: true
+    analytics: true,
   },
 ];
 
@@ -201,12 +200,25 @@ function AdminSidebar(props) {
             {" "}
             THỐNG KÊ{" "}
           </Typography>
-          <ListItem disablePadding key={sidebarItems[sidebarItems.length - 1].section}>
-            <CustomLink to={sidebarItems[sidebarItems.length - 1].to} width={"100%"}>
+          <ListItem
+            disablePadding
+            key={sidebarItems[sidebarItems.length - 1].section}
+          >
+            <CustomLink
+              to={sidebarItems[sidebarItems.length - 1].to}
+              width={"100%"}
+            >
               <CustomListItemButton
-                active={activeSection === sidebarItems[sidebarItems.length - 1].section ? "true" : "false"}
+                active={
+                  activeSection ===
+                  sidebarItems[sidebarItems.length - 1].section
+                    ? "true"
+                    : "false"
+                }
               >
-                <CustomListItemIcon>{sidebarItems[sidebarItems.length - 1].icon}</CustomListItemIcon>
+                <CustomListItemIcon>
+                  {sidebarItems[sidebarItems.length - 1].icon}
+                </CustomListItemIcon>
                 <ListItemText
                   disableTypography
                   style={{ color: "#b5bac0 !important", fontSize: "14px" }}
@@ -229,23 +241,30 @@ function AdminSidebar(props) {
             QUẢN LÝ{" "}
           </Typography>
           <List>
-            {sidebarItems.map((item, index) => (
-              !item.analytics &&
-              <ListItem disablePadding key={item.section}>
-                <CustomLink to={item.to} width={"100%"}>
-                  <CustomListItemButton
-                    active={activeSection === item.section ? "true" : "false"}
-                  >
-                    <CustomListItemIcon>{item.icon}</CustomListItemIcon>
-                    <ListItemText
-                      disableTypography
-                      style={{ color: "#b5bac0 !important", fontSize: "14px" }}
-                      primary={item.display}
-                    />
-                  </CustomListItemButton>
-                </CustomLink>
-              </ListItem>
-            ))}
+            {sidebarItems.map(
+              (item, index) =>
+                !item.analytics && (
+                  <ListItem disablePadding key={item.section}>
+                    <CustomLink to={item.to} width={"100%"}>
+                      <CustomListItemButton
+                        active={
+                          activeSection === item.section ? "true" : "false"
+                        }
+                      >
+                        <CustomListItemIcon>{item.icon}</CustomListItemIcon>
+                        <ListItemText
+                          disableTypography
+                          style={{
+                            color: "#b5bac0 !important",
+                            fontSize: "14px",
+                          }}
+                          primary={item.display}
+                        />
+                      </CustomListItemButton>
+                    </CustomLink>
+                  </ListItem>
+                )
+            )}
           </List>
         </Box>
       </Drawer>
