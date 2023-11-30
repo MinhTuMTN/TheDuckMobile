@@ -158,7 +158,7 @@ function RevenueChart(props) {
         <TieuDe>Biểu đồ doanh thu</TieuDe>
       </BoxStyle>
       <BoxStyle>
-        {labels && data && (
+        {labels && labels.length > 0 && (
           <LineChart
             xAxis={[{ scaleType: "point", data: labels }]}
             series={[{ data: data, label: "Doanh thu" }]}
