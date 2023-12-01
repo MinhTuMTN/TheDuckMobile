@@ -107,7 +107,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             // Save to database
             staff.OTP = otp.ToString();
             staff.OTPRetry = 0;
-            staff.OTPExpiredAt = DateTime.Now.AddMinutes(3);
+            staff.OTPExpiredAt = DateTime.Now.AddMinutes(10);
 
             await _context.SaveChangesAsync();
 

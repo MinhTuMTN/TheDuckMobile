@@ -160,7 +160,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             var products = _context.Products
                 .Include(p => p.Votes)
                 .Include(p => p.Brand)
-                .Where(p => EF.Functions.FreeText(p.ProductName!, query)
+                .Where(p => p.ProductName!.Contains(query)
                     || p.Brand!.BrandName!.Contains(query)
                 );
 

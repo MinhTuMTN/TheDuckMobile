@@ -11,7 +11,7 @@ export const addProductVersion = (data) => {
     {
       "Content-Type": "multipart/form-data",
     },
-    10000
+    120000
   );
 };
 
@@ -34,6 +34,6 @@ export const updateProductVersion = (productVersionId, data) => {
     {
       "Content-Type": "multipart/form-data",
     },
-    10000
+    120000
   );
 };
