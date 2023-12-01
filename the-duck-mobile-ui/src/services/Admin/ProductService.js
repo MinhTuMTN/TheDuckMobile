@@ -34,3 +34,17 @@ export const createProduct = (data) => {
     "Content-Type": "multipart/form-data",
   });
 };
+
+export const getProductSpecialFeatures = (productId) => {
+  return get(`productadmin/${productId}/special-features`);
+};
+
+export const addProductSpecialFeatures = (productId, specialFeatureId) => {
+  return post(`productadmin/${productId}/special-features`, {
+    specialFeatureId,
+  });
+};
+
+export const deleteProductSpecialFeatures = (productId, specialFeatureId) => {
+  return del(`productadmin/${productId}/special-features/${specialFeatureId}`);
+};

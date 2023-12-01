@@ -151,5 +151,51 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
                 Message = "Successfully edited product thumbnail"
             });
         }
+
+        [HttpPost("{productId}/special-features")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddSpecialFeatureToProduct(
+            [FromRoute] Guid productId,
+            [FromBody] AddSpecialFeatureToProductRequest request
+            )
+        {
+            var product = await _productServices.AddSpecialFeatureToProduct(productId, request);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = product,
+                Message = "Successfully added special feature to product"
+            });
+        }
+
+        [HttpGet("{productId}/special-features")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetCatalogSpecialFeatures([FromRoute] Guid productId)
+        {
+            var productSpecialFeatures = await _productServices.GetProductSpecialFeatures(productId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = productSpecialFeatures,
+                Message = "Successfully retrieved product special features"
+            });
+        }
+
+        [HttpDelete("{productId}/special-features/{specialFeatureId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteProductSpecialFeature([FromRoute] Guid productId, [FromRoute] int specialFeatureId)
+        {
+            var success = await _productServices.DeleteProductSpecialFeature(productId, specialFeatureId);
+
+            if (!success)
+                throw new BadHttpRequestException("Product special feature could not be deleted.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Product special feature deleted successfully.",
+                Data = null
+            });
+        }
     }
 }
