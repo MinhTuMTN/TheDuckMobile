@@ -67,7 +67,7 @@ function SpecialFeatures(props) {
       specialFeatureId
     );
     if (response.success) {
-      enqueueSnackbar("Thêm tính năng đặc biệt thành công", {
+      enqueueSnackbar("Xóa tính năng đặc biệt thành công", {
         variant: "success",
       });
       handleGetSpecialFeatures();

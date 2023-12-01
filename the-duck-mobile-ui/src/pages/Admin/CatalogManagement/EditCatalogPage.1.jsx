@@ -13,6 +13,7 @@ import {
   FormEditCatalog,
   RootPageEditCatalog,
 } from "./EditCatalogPage";
+import Brands from "../../../components/Admin/Brands";
 
 export function EditCatalogPage(props) {
   const navigate = useNavigate();
@@ -102,6 +103,7 @@ export function EditCatalogPage(props) {
       </FormEditCatalog>
 
       <SpecialFeatures catalogId={editCatalog?.catalogId} />
+      <Brands catalogId={editCatalog?.catalogId} />
       <CatalogAttributes catalogId={editCatalog?.catalogId} />
     </RootPageEditCatalog>
   );

@@ -39,6 +39,58 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             return new CatalogDetailUserResponse(catalog);
         }
 
+        public async Task<CatalogBrandsResponse> GetCatalogBrands(int catalogId)
+        {
+            // 1: Find Special Feature in Catalog and 2: Find Special Feature not in Catalog
+            var catalog = await _context.Catalogs
+                .Include(c => c.Brands)
+                .FirstOrDefaultAsync(c => c.CatalogId == catalogId);
+
+            if (catalog == null)
+                throw new CustomNotFoundException("Can't found catalog");
+
+            var brands = await _context.Brands
+                .ToListAsync();
+
+            var availableBrands= catalog.Brands!.ToList();
+            var notAvailableBrands = brands.Except(availableBrands).ToList();
+
+            return new CatalogBrandsResponse
+            {
+                AvailableBrands = availableBrands.Select(a => new BrandItem
+                {
+                    BrandId = a.BrandId,
+                    BrandName = a.BrandName
+                }).ToList(),
+                NotAvailableBrands = notAvailableBrands.Select(n => new BrandItem
+                {
+                    BrandId = n.BrandId,
+                    BrandName = n.BrandName
+                }).ToList()
+            };
+        }
+
+        public async Task<bool> DeleteCatalogBrand(int catalogId, int brandId)
+        {
+            var catalog = await _context.Catalogs
+                .Include(c => c.Brands)
+                .FirstOrDefaultAsync(c => c.CatalogId == catalogId);
+
+            if (catalog == null)
+                throw new CustomNotFoundException("Can't found catalog");
+
+            var brand = await _context.Brands
+                .FirstOrDefaultAsync(b => b.BrandId == brandId);
+
+            if (brand == null || !catalog.Brands!.Contains(brand))
+                throw new CustomNotFoundException("Can't found brand");
+
+            catalog.Brands?.Remove(brand);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<CatalogDetailUserResponse> AddCatalog(AddCatalogRequest request)
         {
             var catalog = new Catalog

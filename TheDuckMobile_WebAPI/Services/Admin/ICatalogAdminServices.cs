@@ -19,5 +19,7 @@ namespace TheDuckMobile_WebAPI.Services.Admin
         public Task<List<CatalogListResponse>> GetActiveCatalogs();
         public Task<CatalogSpecialFeaturesResponse> GetCatalogSpecialFeatures(int catalogId);
         public Task<bool> DeleteCatalogSpecialFeature(int catalogId, int specialFeatureId);
+        public Task<CatalogBrandsResponse> GetCatalogBrands(int catalogId);
+        public Task<bool> DeleteCatalogBrand(int catalogId, int brandId);
     }
 }

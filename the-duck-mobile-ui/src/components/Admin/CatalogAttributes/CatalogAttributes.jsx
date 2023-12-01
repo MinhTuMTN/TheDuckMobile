@@ -159,8 +159,8 @@ function CatalogAttributesItems(props) {
             {attribute?.catalogAttributeType === 0
               ? "Kiểu chữ"
               : attribute?.catalogAttributeType === 1
-              ? "Kiểu danh sách"
-              : "Kiểu boolean"}
+                ? "Kiểu danh sách"
+                : "Kiểu boolean"}
           </Typography>
         </TableCell>
         <TableCell sx={{ textAlign: "center" }}>
@@ -434,7 +434,16 @@ function CatalogAttributes(props) {
         <Typography variant="h5" mt={2} mb={1}>
           Thuộc tính thông số kỹ thuật
         </Typography>
-        <CustomButton onClick={() => setOpenDialog(true)}>Thêm</CustomButton>
+        <CustomButton onClick={() => {
+          setAddCatalogAttributes({
+            displayName: "",
+            key: "",
+            catalogId: catalogId,
+            type: 0,
+            isRequired: false,
+          });
+          setOpenDialog(true);
+        }}>Thêm</CustomButton>
       </Stack>
       <Table>
         <TableHead>

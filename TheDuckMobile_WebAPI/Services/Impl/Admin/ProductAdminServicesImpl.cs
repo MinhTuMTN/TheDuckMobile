@@ -109,6 +109,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                     productVersion.LastModifiredAt = DateTime.Now;
                 }
             }
+
             await _context.SaveChangesAsync();
 
             return product;

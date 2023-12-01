@@ -100,7 +100,6 @@ function BasicProductInDetailsPage(props) {
     catalogId: 1,
     productName: "",
     productDescription: "",
-    quantity: 1,
   })
   const handleChangeBrand = (event) => {
     setEditProduct((prev) => {
@@ -171,7 +170,6 @@ function BasicProductInDetailsPage(props) {
       catalogId: product.catalog?.catalogId,
       productName: product.productName,
       productDescription: product.productDescription,
-      quantity: product.quantity,
     })
   };
 
@@ -180,9 +178,6 @@ function BasicProductInDetailsPage(props) {
       return;
     }
 
-    if (!editProduct.quantity) {
-      return;
-    }
 
     if (!editProduct.brandId) {
       return;
@@ -202,7 +197,6 @@ function BasicProductInDetailsPage(props) {
       brandId: editProduct.brandId,
       osId: editProduct.osId,
       catalogId: editProduct.catalogId,
-      quantity: editProduct.quantity,
     });
 
     if (response.success) {
@@ -380,7 +374,7 @@ function BasicProductInDetailsPage(props) {
         >
           <Stack direction={"column"} spacing={2}>
             <Grid container spacing={1}>
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={12}>
                 <Box>
                   <Typography
                     variant="body1"
@@ -413,45 +407,6 @@ function BasicProductInDetailsPage(props) {
                   {!editProduct.productName.trim() && (
                     <FormHelperText style={{ color: "red" }}>
                       Tên sản phẩm không được bỏ trống
-                    </FormHelperText>
-                  )}
-                </Box>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Box>
-                  <Typography
-                    variant="body1"
-                    style={{
-                      fontSize: "14px",
-                      marginBottom: "4px",
-                      color: !editProduct.quantity ? "#f44336" : "#111927",
-                    }}
-                  >
-                    Số lượng
-                  </Typography>
-                  <InputText
-                    type="number"
-                    InputProps={{ inputProps: { min: 1 } }}
-                    sx={{
-                      size: "small",
-                      padding: "0 !important",
-                      fontSize: "14px !important",
-                      fieldset: { borderColor: !editProduct.quantity ? "red !important" : "inherit" }
-                    }}
-                    autoFocus
-                    required
-                    fullWidth
-                    value={editProduct.quantity}
-                    onChange={(e) => setEditProduct((prev) => {
-                      return {
-                        ...prev,
-                        quantity: e.target.value,
-                      };
-                    })}
-                  />
-                  {!editProduct.quantity && (
-                    <FormHelperText style={{ color: "red" }}>
-                      Số lượng không được bỏ trống
                     </FormHelperText>
                   )}
                 </Box>
