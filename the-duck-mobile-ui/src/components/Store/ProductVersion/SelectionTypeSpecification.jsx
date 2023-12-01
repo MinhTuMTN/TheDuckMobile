@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
-import { Grid, MenuItem, Select, Stack, Typography } from "@mui/material";
-import React from "react";
+import { Grid, MenuItem, Select, Typography } from "@mui/material";
 import PropTypes from "prop-types";
+import React from "react";
 
 const StyledMenuItemContent = styled(Typography)(({ theme }) => ({
   fontSize: "14px",
