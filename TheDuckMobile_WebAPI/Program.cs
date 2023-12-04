@@ -26,7 +26,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 builder.Services.AddDbContext<DataContext>(
     options => options.UseSqlServer(
-        builder.Configuration.GetConnectionString("TheDuckMobile"))
+        builder.Configuration.GetConnectionString("TheDuckMobileLocal"))
     );
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(option =>

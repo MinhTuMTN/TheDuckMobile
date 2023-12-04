@@ -14,7 +14,7 @@ namespace TheDuckMobile_WebAPI.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlServer(Configuration.GetConnectionString("TheDuckMobile"));
+            options.UseSqlServer(Configuration.GetConnectionString("TheDuckMobileLocal"));
         }
 
 
