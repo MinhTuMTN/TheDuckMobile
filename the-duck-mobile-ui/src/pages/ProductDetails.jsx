@@ -191,7 +191,7 @@ function ProductDetails(props) {
           },
           {
             url: "/category",
-            text: "Điện thoại",
+            text: `${info?.catalog?.catalogName}`,
           },
           {
             url: null,
@@ -219,11 +219,10 @@ function ProductDetails(props) {
                       sx={{
                         height: "100%",
                         width: "100%",
-                        backgroundImage: `url(${
-                          typeof selectedImage === "string"
+                        backgroundImage: `url(${typeof selectedImage === "string"
                             ? selectedImage
                             : selectedImage?.images[selectedImage]
-                        })`,
+                          })`,
                         backgroundSize: "contain",
                         backgroundPosition: "center",
                         backgroundRepeat: "no-repeat",
@@ -284,7 +283,7 @@ function ProductDetails(props) {
                     </span>
                     {selectedVersion?.promotionPrice &&
                       selectedVersion?.promotionPrice <
-                        selectedVersion?.price && (
+                      selectedVersion?.price && (
                         <span
                           style={{
                             fontSize: "18px",
@@ -345,7 +344,7 @@ function ProductDetails(props) {
                               style={{
                                 border:
                                   selectedVersion.productVersionId ===
-                                  version.productVersionId
+                                    version.productVersionId
                                     ? "2px solid #064374"
                                     : "none",
                               }}

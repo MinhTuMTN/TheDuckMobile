@@ -79,21 +79,13 @@ namespace TheDuckMobile_WebAPI.Controllers
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var result = await _orderServices.CancelOrder(Guid.Parse(id!), orderId);
-
-            if (!result)
-                return BadRequest(new GenericResponse
-                {
-                    Success = false,
-                    Message = "Failed to cancel order",
-                    Data = null
-                });
+            var orderDetails = await _orderServices.GetOrderDetails(Guid.Parse(id!), orderId);
 
             return Ok(new GenericResponse
             {
                 Success = true,
                 Message = "Success",
-                Data = null
+                Data = orderDetails
             });
         }
 
