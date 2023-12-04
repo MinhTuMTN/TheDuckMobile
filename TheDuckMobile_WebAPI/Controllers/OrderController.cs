@@ -79,15 +79,47 @@ namespace TheDuckMobile_WebAPI.Controllers
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
             var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var orderDetails = await _orderServices.GetOrderDetails(Guid.Parse(id!), orderId);
+            var result = await _orderServices.CancelOrder(Guid.Parse(id!), orderId);
+
+            if (!result)
+                return BadRequest(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Failed to cancel order",
+                    Data = null
+                });
 
             return Ok(new GenericResponse
             {
                 Success = true,
                 Message = "Success",
-                Data = orderDetails
+                Data = null
             });
         }
 
+        [HttpGet("{orderId}/cancel")]
+        [Authorize]
+        public async Task<IActionResult> CancelOrder(Guid orderId)
+        {
+            // Get Staff Id
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            var id = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _orderServices.CancelOrder(Guid.Parse(id!), orderId);
+            if (!result)
+                return BadRequest(new GenericResponse
+                {
+                    Success = false,
+                    Message = "Failed to cancel order",
+                    Data = null
+                });
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Success",
+                Data = null
+            });
+        }
     }
 }

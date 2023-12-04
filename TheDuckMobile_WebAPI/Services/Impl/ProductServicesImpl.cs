@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TheDuckMobile_WebAPI.Common;
 using TheDuckMobile_WebAPI.Entities;
 using TheDuckMobile_WebAPI.ErrorHandler;
 using TheDuckMobile_WebAPI.Models.Request;

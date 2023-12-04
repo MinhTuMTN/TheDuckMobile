@@ -15,3 +15,7 @@ export const getUserOrders = (page, limit) => {
 export const getOrderById = (id) => {
   return get(`/order/${id}`);
 };
+
+export const cancelOrder = (id) => {
+  return get(`/order/${id}/cancel`);
+};

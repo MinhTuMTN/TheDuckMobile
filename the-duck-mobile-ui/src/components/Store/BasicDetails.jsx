@@ -125,12 +125,12 @@ function BasicDetails(props) {
     3: {
       label: "Đã hoàn thành",
       action: "",
-      handle: () => {},
+      handle: () => { },
     },
     4: {
       label: "Đã hủy",
       action: "",
-      handle: () => {},
+      handle: () => { },
     },
   };
   return (
