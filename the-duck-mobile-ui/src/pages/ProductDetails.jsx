@@ -190,7 +190,7 @@ function ProductDetails(props) {
             text: "Trang chủ",
           },
           {
-            url: "/category",
+            url: "/category" + info?.catalog?.catalogURL,
             text: `${info?.catalog?.catalogName}`,
           },
           {
@@ -220,8 +220,8 @@ function ProductDetails(props) {
                         height: "100%",
                         width: "100%",
                         backgroundImage: `url(${typeof selectedImage === "string"
-                            ? selectedImage
-                            : selectedImage?.images[selectedImage]
+                          ? selectedImage
+                          : selectedImage?.images[selectedImage]
                           })`,
                         backgroundSize: "contain",
                         backgroundPosition: "center",
