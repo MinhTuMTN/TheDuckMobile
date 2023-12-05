@@ -151,7 +151,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 Rate = product.Rate,
                 CatalogAttributes = catalogAttributesResult,
                 ProductColorVersions = colorVersions,
-                Votes = product.Votes
+                Votes = product.Votes,
+                Catalog = product.Catalog,
             };
         }
 
