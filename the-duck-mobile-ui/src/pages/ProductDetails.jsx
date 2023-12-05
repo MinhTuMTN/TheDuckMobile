@@ -190,7 +190,7 @@ function ProductDetails(props) {
             text: "Trang chủ",
           },
           {
-            url: "/category" + info?.catalog?.catalogURL,
+            url: "/catalog" + info?.catalog?.catalogURL,
             text: `${info?.catalog?.catalogName}`,
           },
           {
