@@ -169,11 +169,13 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 {
                     UserId = Guid.NewGuid(),
                     FullName = tempCustomer.FullName,
-                    Phone = tempCustomer.Phone,
+                    Phone = tempCustomer.Phone!.StartsWith('0') ? "+84" + tempCustomer.Phone.Substring(1) : tempCustomer.Phone,
                     Addresses = new List<Address>(),
                     Gender = tempCustomer.Gender
                 };
-                customer.Addresses.Add(order.Address!);
+                if (order.Address != null && order.Address.Store == null)
+                    customer.Addresses.Add(order.Address);
+
                 order.Customer = customer;
                 order.StaffId = staff.UserId;
 
