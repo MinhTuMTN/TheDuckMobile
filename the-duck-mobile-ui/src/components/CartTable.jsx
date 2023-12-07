@@ -41,8 +41,14 @@ CartTable.defaultProps = {
 };
 
 function CartTable(props) {
-  const { products, onProductCartChange, selectedProducts, onSelectProduct } =
-    props;
+  const {
+    products,
+    onProductCartChange,
+    selectedProducts,
+    onSelectProduct,
+    setCoupon,
+    setDeleteDiscount,
+  } = props;
   const navigate = useNavigate();
 
   return (
