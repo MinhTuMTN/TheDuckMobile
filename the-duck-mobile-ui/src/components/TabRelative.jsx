@@ -30,7 +30,7 @@ const CustomTab = styled(Tab)(({ theme }) => ({
   fontSize: "22px",
 }));
 function TabRelative(props) {
-  const { specification, attributes, description, reviews, setReviews, setRate, rate } = props;
+  const { specification, attributes, description, reviews, setReviews, setRate } = props;
   const [tab, setTab] = useState("1");
 
   const handleChangeTab = (event, newTab) => {
@@ -58,7 +58,7 @@ function TabRelative(props) {
           <ProductDescription desc={description} />
         </TabPanel>
         <TabPanel value="3" style={{ padding: "2rem 0px" }}>
-          <ReviewProduct reviews={reviews} setReviews={setReviews} setRate={setRate} rate={rate} />
+          <ReviewProduct reviews={reviews} setReviews={setReviews} setRate={setRate} />
         </TabPanel>
       </TabContext>
     </>

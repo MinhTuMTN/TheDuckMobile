@@ -421,7 +421,6 @@ function ProductDetails(props) {
                   reviews={votes}
                   setReviews={setVotes}
                   setRate={setRate}
-                  rate={rate}
                   activeTab={state?.activeTab}
                 />
               </Grid>

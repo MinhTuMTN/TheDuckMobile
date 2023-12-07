@@ -14,7 +14,7 @@ ReviewProduct.propTypes = {
 };
 
 function ReviewProduct(props) {
-  const { reviews, setReviews, setRate, rate } = props;
+  const { reviews, setReviews, setRate } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { token } = useAuth();
   const { search } = useLocation();
