@@ -14,6 +14,8 @@ namespace TheDuckMobile_WebAPI.Models.Response.Store
         public double PromotionPrice { get; set; }
         public int Quantity { get; set; }
         public bool IsDeleted { get; set; }
+        public string? ColorCode { get; set; }
+        public string? ColorName { get; set; }
 
         public StoreProductListResponse(StoreProduct storeProduct)
         {
@@ -27,6 +29,8 @@ namespace TheDuckMobile_WebAPI.Models.Response.Store
             PromotionPrice = storeProduct.ProductVersion.PromotionPrice;
             Quantity = storeProduct.Quantity;
             IsDeleted = storeProduct.ProductVersion.IsDeleted;
+            ColorCode = storeProduct.ProductVersion.Color!.ColorCode;
+            ColorName = storeProduct.ProductVersion.Color.ColorName;
         }
     }
 }

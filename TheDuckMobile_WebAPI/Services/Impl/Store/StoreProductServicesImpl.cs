@@ -33,6 +33,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
             var storeProducts = _context
                 .StoreProducts
                 .Include(sp => sp.ProductVersion!)
+                .ThenInclude(pv => pv.Color!)
+                .Include(sp => sp.ProductVersion!)
                 .ThenInclude(pv => pv.Product!)
                 .ThenInclude(p => p.Catalog!)
                 .Where(sp => sp.StoreId == store.StoreId);
