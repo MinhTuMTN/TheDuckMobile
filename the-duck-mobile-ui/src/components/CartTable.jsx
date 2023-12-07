@@ -35,9 +35,9 @@ CartTable.propTypes = {
 
 CartTable.defaultProps = {
   products: [],
-  onProductCartChange: () => {},
+  onProductCartChange: () => { },
   selectedProducts: [],
-  onSelectProduct: () => {},
+  onSelectProduct: () => { },
 };
 
 function CartTable(props) {
@@ -185,11 +185,10 @@ function CartTable(props) {
                           size="large"
                           aria-label="minus"
                           sx={{
-                            cursor: `${
-                              product?.quantity === 1
-                                ? "not-allowed"
-                                : "pointer"
-                            }`,
+                            cursor: `${product?.quantity === 1
+                              ? "not-allowed"
+                              : "pointer"
+                              }`,
                           }}
                           onClick={() => {
                             onProductCartChange(
@@ -199,6 +198,8 @@ function CartTable(props) {
                                   product.productVersionId
                                 ) {
                                   p.quantity = Math.max(1, p.quantity - 1);
+                                  setCoupon({});
+                                  setDeleteDiscount(true);
                                 }
                                 return p;
                               })
@@ -218,10 +219,12 @@ function CartTable(props) {
                               products.map((p) => {
                                 if (
                                   p.productVersionId ===
-                                    product.productVersionId &&
+                                  product.productVersionId &&
                                   p.quantity < p.maxQuantity
                                 ) {
                                   p.quantity = Math.max(1, p.quantity + 1);
+                                  setCoupon({});
+                                  setDeleteDiscount(true);
                                 }
                                 return p;
                               })
