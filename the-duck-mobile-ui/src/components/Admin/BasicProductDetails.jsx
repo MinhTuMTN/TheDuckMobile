@@ -25,6 +25,7 @@ import {
 } from "../../services/Admin/ProductService";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
+import ProductSpecialFeatures from "./ProductSpecialFeatures";
 
 const BoxStyle = styled(Box)(({ theme }) => ({
   paddingLeft: "24px !important",
@@ -284,6 +285,7 @@ function BasicProductDetails(props) {
       </Grid>
       <Grid item xs={12} md={8.5}>
         <BasicProductInDetailsPage product={product} />
+        <ProductSpecialFeatures productId={product.productId} />
         <Stack component={Paper} elevation={3} sx={paperStyle}>
           <Stack
             sx={{

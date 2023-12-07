@@ -109,6 +109,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
                     productVersion.LastModifiredAt = DateTime.Now;
                 }
             }
+
             await _context.SaveChangesAsync();
 
             return product;
@@ -283,6 +284,94 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             await _context.SaveChangesAsync();
 
             return new ProductThumbnailResponse(product);
+        }
+
+        public async Task<AddProductSpecialFeatureResponse> AddSpecialFeatureToProduct(
+            Guid productId,
+            AddSpecialFeatureToProductRequest request
+            )
+        {
+            var product = await _context.Products
+                .Include(p => p.Catalog)
+                .FirstOrDefaultAsync(p => p.ProductId == productId && p.IsDeleted == false);
+
+            if (product == null)
+                throw new CustomNotFoundException("Can't found product");
+
+            var specialFeature = await _context.SpecialFeatures
+                .FirstOrDefaultAsync(sf => sf.SpecialFeatureId == request.SpecialFeatureId
+                && sf.IsDeleted == false);
+
+            if (specialFeature == null)
+                throw new CustomNotFoundException("Can't found special feature");
+
+            product.SpecialFeatures?.Add(specialFeature);
+            await _context.SaveChangesAsync();
+
+            return new AddProductSpecialFeatureResponse(product);
+        }
+
+        public async Task<ProductSpecialFeaturesResponse> GetProductSpecialFeatures(Guid productId)
+        {
+            // 1: Find Special Feature in Catalog and 2: Find Special Feature not in Catalog
+            var product = await _context.Products
+                .Include(p => p.SpecialFeatures)
+                .Include(p => p.Catalog)
+                .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+            if (product == null)
+                throw new CustomNotFoundException("Can't found product");
+
+            /*var catalog = await _context.Catalogs
+                .Include(c => c.SpecialFeatures)
+                .FirstOrDefaultAsync(c => c.Cata == productId);*/
+
+            var specialFeatures = await _context
+                .SpecialFeatures
+                .Include(sf => sf.Catalogs)
+                .Where(sf => sf.IsDeleted == false &&
+                sf.Catalogs!.Any(c => c.CatalogId == product.Catalog!.CatalogId))
+                .ToListAsync();
+
+            var availableSpecialFeatures = product.SpecialFeatures!.ToList();
+            var notAvailableSpecialFeatures = specialFeatures
+                .Except(availableSpecialFeatures)
+                .ToList();
+
+            return new ProductSpecialFeaturesResponse
+            {
+                AvailableSpecialFeatures = availableSpecialFeatures.Select(a => new SpecialFeatureItem
+                {
+                    SpecialFeatureId = a.SpecialFeatureId,
+                    SpecialFeatureName = a.SpecialFeatureName
+                }).ToList(),
+                NotAvailableSpecialFeatures = notAvailableSpecialFeatures.Select(n => new SpecialFeatureItem
+                {
+                    SpecialFeatureId = n.SpecialFeatureId,
+                    SpecialFeatureName = n.SpecialFeatureName
+                }).ToList()
+            };
+        }
+
+        public async Task<bool> DeleteProductSpecialFeature(Guid productId, int specialFeatureId)
+        {
+            var product = await _context.Products
+                .Include(p => p.SpecialFeatures)
+                .FirstOrDefaultAsync(c => c.ProductId == productId);
+
+            if (product == null)
+                throw new CustomNotFoundException("Can't found product");
+
+            var specialFeature = await _context.SpecialFeatures
+                .FirstOrDefaultAsync(sf => sf.SpecialFeatureId == specialFeatureId);
+
+            if (specialFeature == null || !product.SpecialFeatures!.Contains(specialFeature))
+                throw new CustomNotFoundException("Can't found special feature");
+
+            product.SpecialFeatures?.Remove(specialFeature);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

@@ -67,6 +67,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
         public async Task<BrandResponse> EditBrand(int brandId, BrandRequest request)
         {
             var brand = await _context.Brands
+                .Include(b => b.Products!)
+                .ThenInclude(p => p.ProductVersions)
                 .Where(b => b.BrandId == brandId)
                 .FirstOrDefaultAsync();
 
@@ -88,24 +90,16 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Admin
             var products = brand.Products;
 
             if (products != null && products.Count > 0)
-            {
-                if (brand.IsDeleted)
+                foreach (var product in products)
                 {
-                    foreach (var product in products)
-                    {
-                        product.IsDeleted = true;
-                        product.LastModifiedAt = DateTime.Now;
-                    }
+                    product.IsDeleted = brand.IsDeleted;
+                    product.LastModifiedAt = DateTime.Now;
+
+                    var productVersions = product.ProductVersions;
+                    if (productVersions != null && productVersions.Count > 0)
+                        foreach (var productVersion in productVersions)
+                            productVersion.IsDeleted = brand.IsDeleted;
                 }
-                else
-                {
-                    foreach (var product in products)
-                    {
-                        product.IsDeleted = false;
-                        product.LastModifiedAt = DateTime.Now;
-                    }
-                }
-            }
 
             await _context.SaveChangesAsync();
 

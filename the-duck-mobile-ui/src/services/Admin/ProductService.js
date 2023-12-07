@@ -30,7 +30,26 @@ export const updateProductThumbnail = (productId, data) => {
   });
 };
 export const createProduct = (data) => {
-  return post("productadmin", data, {
-    "Content-Type": "multipart/form-data",
+  return post(
+    "productadmin",
+    data,
+    {
+      "Content-Type": "multipart/form-data",
+    },
+    120000
+  );
+};
+
+export const getProductSpecialFeatures = (productId) => {
+  return get(`productadmin/${productId}/special-features`);
+};
+
+export const addProductSpecialFeatures = (productId, specialFeatureId) => {
+  return post(`productadmin/${productId}/special-features`, {
+    specialFeatureId,
   });
+};
+
+export const deleteProductSpecialFeatures = (productId, specialFeatureId) => {
+  return del(`productadmin/${productId}/special-features/${specialFeatureId}`);
 };

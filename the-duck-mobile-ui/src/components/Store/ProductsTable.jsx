@@ -21,6 +21,7 @@ import React, { useState } from "react";
 import { UpdateStoreProductQuantity } from "../../services/Store/StoreProductService";
 import FormatCurrency from "../FormatCurrency";
 import MuiTextField from "../MuiTextFeild";
+import ColorButton from "../ColorButton";
 
 const ButtonCustom = styled(Button)`
   border-radius: 0.7rem;
@@ -77,7 +78,20 @@ function Row(props) {
                   maxWidth: "300px", // Điều chỉnh chiều rộng tối đa
                 }}
               >
-                {row.productName} - {row.productVersionName}
+                {row.productVersionName} - {row.productName}
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                style={{
+                  color: "#6c737f",
+                  fontSize: "0.875rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.3rem",
+                }}
+              >
+                {" "}
+                Màu: {row.colorName} <ColorButton color={row.colorCode} />
               </Typography>
               <Typography
                 variant="subtitle1"
@@ -87,18 +101,12 @@ function Row(props) {
                 }}
               >
                 {" "}
-                Category {row.catalogName}
+                Category: {row.catalogName}
               </Typography>
             </Stack>
           </Stack>
         </TableCell>
-        <TableCell
-          align="right"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        <TableCell align="right">
           <Typography>
             <FormatCurrency amount={row.price} />
           </Typography>

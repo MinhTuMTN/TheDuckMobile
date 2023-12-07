@@ -4,8 +4,13 @@ import React from "react";
 import ColorButton from "./ColorButton";
 import FormatCurrency from "./FormatCurrency";
 import { useNavigate } from "react-router";
+import { cancelOrder } from "../services/OrderService";
+import { enqueueSnackbar } from "notistack";
+import DialogForm from "./DialogForm";
 
 function OrderHistoryItem(props) {
+  const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
   const { order } = props;
   const orderState = [
     "Chờ xác nhận",
@@ -14,7 +19,19 @@ function OrderHistoryItem(props) {
     "Đã giao hàng",
     "Đã hủy",
   ];
-  const navigate = useNavigate();
+
+  const handleCancel = async () => {
+    const response = await cancelOrder(order.orderId);
+    if (response.success) {
+      enqueueSnackbar("Hủy đơn hàng thành công", { variant: "success" });
+      navigate(0);
+    } else {
+      enqueueSnackbar("Hủy đơn hàng thất bại", { variant: "error" });
+    }
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <Paper
       elevation={3}
@@ -220,6 +237,9 @@ function OrderHistoryItem(props) {
                 color: "#fff",
               },
             }}
+            onClick={() => {
+              setOpen(true);
+            }}
           >
             Hủy
           </Button>
@@ -240,6 +260,16 @@ function OrderHistoryItem(props) {
           </Button>
         </Box>
       </Stack>
+      <DialogForm
+        open={open}
+        onClose={handleClose}
+        title={"Hủy đơn hàng"}
+        cancelText={"Hủy"}
+        onCancel={handleClose}
+        okText={"Xác nhận hủy đơn hàng"}
+        content={"Bạn có chắc chắn muốn hủy đơn hàng này?"}
+        onOk={handleCancel}
+      />
     </Paper>
   );
 }

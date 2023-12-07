@@ -100,6 +100,7 @@ function ProductDetails(props) {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedVersion, setSelectedVersion] = useState({});
   const [quantity, setQuantity] = useState(1);
+  const [rate, setRate] = useState(0);
   const navigate = useNavigate();
 
   const handleGetProductDetails = useCallback(async () => {
@@ -107,6 +108,8 @@ function ProductDetails(props) {
 
     if (response.success) {
       setInfo(response.data.data);
+
+      setRate(response.data.data.rate);
 
       const colors = response.data.data.productColorVersions;
       setColors(colors);
@@ -190,8 +193,8 @@ function ProductDetails(props) {
             text: "Trang chủ",
           },
           {
-            url: "/category",
-            text: "Điện thoại",
+            url: "/catalog/" + info?.catalog?.catalogURL,
+            text: `${info?.catalog?.catalogName}`,
           },
           {
             url: null,
@@ -219,11 +222,10 @@ function ProductDetails(props) {
                       sx={{
                         height: "100%",
                         width: "100%",
-                        backgroundImage: `url(${
-                          typeof selectedImage === "string"
-                            ? selectedImage
-                            : selectedImage?.images[selectedImage]
-                        })`,
+                        backgroundImage: `url(${typeof selectedImage === "string"
+                          ? selectedImage
+                          : selectedImage?.images[selectedImage]
+                          })`,
                         backgroundSize: "contain",
                         backgroundPosition: "center",
                         backgroundRepeat: "no-repeat",
@@ -284,7 +286,7 @@ function ProductDetails(props) {
                     </span>
                     {selectedVersion?.promotionPrice &&
                       selectedVersion?.promotionPrice <
-                        selectedVersion?.price && (
+                      selectedVersion?.price && (
                         <span
                           style={{
                             fontSize: "18px",
@@ -298,8 +300,8 @@ function ProductDetails(props) {
                   </Box>
 
                   <ProductDetailsRating
-                    rating={info?.rate}
-                    numReviews={info?.votes?.length}
+                    rating={rate}
+                    numReviews={votes?.length}
                   />
 
                   <ProductDetailsShortDesc desc={info?.productDescription} />
@@ -345,7 +347,7 @@ function ProductDetails(props) {
                               style={{
                                 border:
                                   selectedVersion.productVersionId ===
-                                  version.productVersionId
+                                    version.productVersionId
                                     ? "2px solid #064374"
                                     : "none",
                               }}
@@ -418,6 +420,7 @@ function ProductDetails(props) {
                   attributes={info?.catalogAttributes}
                   reviews={votes}
                   setReviews={setVotes}
+                  setRate={setRate}
                   activeTab={state?.activeTab}
                 />
               </Grid>

@@ -32,11 +32,11 @@ CartTotal.propTypes = {
 CartTotal.defaultProps = {
   selectedProducts: [],
   coupon: null,
-  onCouponChange: () => {},
+  onCouponChange: () => { },
 };
 
 function CartTotal(props) {
-  const { selectedProducts, coupon, onCouponChange } = props;
+  const { selectedProducts, coupon, onCouponChange, deleteDiscount, setDeleteDiscount } = props;
   const { enqueueSnackbar } = useSnackbar();
   const [total, setTotal] = React.useState(0);
   const [couponCode, setCouponCode] = React.useState("");
@@ -45,13 +45,16 @@ function CartTotal(props) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (deleteDiscount) {
+      setDiscount(0);
+    }
     let total = 0;
     selectedProducts.forEach((product) => {
       total +=
         Math.min(product.price, product.promotionPrice) * product.quantity;
     });
     setTotal(total);
-  }, [selectedProducts]);
+  }, [selectedProducts, deleteDiscount]);
 
   const handleCheckCoupon = async () => {
     if (couponCode.trim() === "") {
@@ -95,6 +98,7 @@ function CartTotal(props) {
       onCouponChange(couponData);
       enqueueSnackbar("Áp dụng mã giảm giá thành công", { variant: "success" });
 
+      setDeleteDiscount(false);
       let discountPrice = Math.min(
         (total * couponData.discount) / 100,
         couponData.maxDiscount

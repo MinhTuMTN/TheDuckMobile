@@ -123,8 +123,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 if (user != null)
                 {
                     customer = (Customer)user;
-                    customer.Point += (int)totalPrice / 100;
-                    await _dataContext.SaveChangesAsync();
+                    //customer.Point += (int)totalPrice / 100;
+                    //await _dataContext.SaveChangesAsync();
                 }
 
                 Coupon? coupon = null;
@@ -269,6 +269,42 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 throw new CustomNotFoundException("Order does not exist");
 
             return new OrderDetailsUserResponse(order);
+        }
+
+        public async Task<bool> CancelOrder(Guid customerId, Guid orderId)
+        {
+            // Find Order with state != Completed and state!=canceled and StoreId = Staff's StoreId
+            var order = _dataContext.Orders
+                .Include(o => o.OrderItems!)
+                    .ThenInclude(oi => oi.StoreProduct!)
+                    .ThenInclude(sp => sp.ProductVersion!)
+                    .ThenInclude(pv => pv.Product)
+                .FirstOrDefault(o => o.OrderId == orderId
+                    && o.OrderState == OrderState.Pending
+                    && o.CustomerId == customerId
+                );
+
+            if (order == null)
+                throw new CustomNotFoundException("Order not found");
+
+            // Change Order State to Canceled
+            order.OrderState = OrderState.Canceled;
+
+            // Update Product Quantity, ProductVersion Quantity, StoreProduct Quantity, StoreProduct Sold Quantity
+            foreach (var orderItem in order.OrderItems!)
+            {
+                var productVersion = orderItem.StoreProduct!.ProductVersion!;
+                var product = productVersion.Product!;
+                var storeProduct = orderItem.StoreProduct!;
+
+                product.Quantity += orderItem.Quantity;
+                product.Sold -= orderItem.Quantity;
+                productVersion.Quantity += orderItem.Quantity;
+                storeProduct.Quantity += orderItem.Quantity;
+            }
+
+            await _dataContext.SaveChangesAsync();
+            return true;
         }
     }
 }

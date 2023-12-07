@@ -131,7 +131,7 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
 
         [HttpGet("restore/{catalogId}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RestoreColor([FromRoute] int catalogId)
+        public async Task<IActionResult> RestoreCatalog([FromRoute] int catalogId)
         {
             var catalog = await _catalogServices.RestoreCatalog(catalogId);
 
@@ -172,6 +172,36 @@ namespace TheDuckMobile_WebAPI.Controllers.Admin
             {
                 Success = true,
                 Message = "Catalog special feature deleted successfully.",
+                Data = null
+            });
+        }
+
+        [HttpGet("{catalogId}/brands")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetCatalogBrands([FromRoute] int catalogId)
+        {
+            var catalogBrands = await _catalogServices.GetCatalogBrands(catalogId);
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Data = catalogBrands,
+                Message = "Successfully retrieved catalog brands"
+            });
+        }
+
+        [HttpDelete("{catalogId}/brands/{brandId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteCatalogBrand([FromRoute] int catalogId, [FromRoute] int brandId)
+        {
+            var success = await _catalogServices.DeleteCatalogBrand(catalogId, brandId);
+
+            if (!success)
+                throw new BadHttpRequestException("Catalog brand could not be deleted.");
+
+            return Ok(new GenericResponse
+            {
+                Success = true,
+                Message = "Catalog brand deleted successfully.",
                 Data = null
             });
         }

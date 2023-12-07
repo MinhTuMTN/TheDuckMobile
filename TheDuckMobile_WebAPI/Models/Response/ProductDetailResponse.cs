@@ -11,5 +11,6 @@ namespace TheDuckMobile_WebAPI.Models.Response
         public ICollection<Vote>? Votes { get; set; }
         public Dictionary<string, string>? CatalogAttributes { get; set; }
         public ICollection<ProductColorVersions>? ProductColorVersions { get; set; }
+        public Catalog? Catalog { get; set; }
     }
 }

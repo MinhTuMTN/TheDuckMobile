@@ -9,5 +9,6 @@ namespace TheDuckMobile_WebAPI.Services
         public Task<bool> CreateOrderNonLoggedIn(CreateOrderNonLoggedInRequest request);
         public Task<PaginationResponse> GetUserOrders(Guid userId, int page, int limit);
         public Task<OrderDetailsUserResponse> GetOrderDetails(Guid userId, Guid orderId);
+        public Task<bool> CancelOrder(Guid customerId, Guid orderId);
     }
 }

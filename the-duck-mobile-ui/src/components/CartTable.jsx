@@ -35,14 +35,20 @@ CartTable.propTypes = {
 
 CartTable.defaultProps = {
   products: [],
-  onProductCartChange: () => {},
+  onProductCartChange: () => { },
   selectedProducts: [],
-  onSelectProduct: () => {},
+  onSelectProduct: () => { },
 };
 
 function CartTable(props) {
-  const { products, onProductCartChange, selectedProducts, onSelectProduct } =
-    props;
+  const {
+    products,
+    onProductCartChange,
+    selectedProducts,
+    onSelectProduct,
+    setCoupon,
+    setDeleteDiscount,
+  } = props;
   const navigate = useNavigate();
 
   return (
@@ -90,7 +96,8 @@ function CartTable(props) {
                   color="color1"
                   disabled={
                     product?.quantity === 0 ||
-                    product.quantity > product.maxQuantity
+                    product.quantity > product.maxQuantity ||
+                    product?.isDeleted
                   }
                   checked={selectedProducts.includes(product)}
                   onChange={() => onSelectProduct(product)}
@@ -127,103 +134,136 @@ function CartTable(props) {
               <TableCell align="center">
                 <img src={product?.thumbnail} alt="product" width="100" />
               </TableCell>
-              <TableCell align="right">
-                {product?.promotionPrice > 0 &&
-                  product?.promotionPrice < product?.price && (
-                    <Typography
-                      variant="subtitle1"
-                      component="p"
-                      sx={{ textDecoration: "line-through" }}
-                      color={"color4.main"}
-                    >
-                      <FormatCurrency amount={product?.price} />
-                    </Typography>
-                  )}
-                <Typography variant="body1" component="p" color={"color1.main"}>
-                  <FormatCurrency
-                    amount={Math.min(product?.price, product?.promotionPrice)}
-                  />
-                </Typography>
-              </TableCell>
-              <TableCell align="center">
-                <Stack direction={"column"}>
-                  <Stack
-                    direction={"row"}
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    spacing={1}
-                    width={"100%"}
+              {product?.isDeleted ? (
+                <TableCell colSpan={3} align="center">
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    color={"color1.main"}
+                    fontWeight={"bold"}
                   >
-                    <IconButton
-                      size="large"
-                      aria-label="minus"
-                      sx={{
-                        cursor: `${
-                          product?.quantity === 1 ? "not-allowed" : "pointer"
-                        }`,
-                      }}
-                      onClick={() => {
-                        onProductCartChange(
-                          products.map((p) => {
-                            if (
-                              p.productVersionId === product.productVersionId
-                            ) {
-                              p.quantity = Math.max(1, p.quantity - 1);
-                            }
-                            return p;
-                          })
-                        );
-                      }}
-                    >
-                      -
-                    </IconButton>
-                    <Typography variant="body1" component="p">
-                      {product?.quantity}
-                    </Typography>
-                    <IconButton
-                      size="large"
-                      aria-label="plus"
-                      onClick={() => {
-                        onProductCartChange(
-                          products.map((p) => {
-                            if (
-                              p.productVersionId === product.productVersionId &&
-                              p.quantity < p.maxQuantity
-                            ) {
-                              p.quantity = Math.max(1, p.quantity + 1);
-                            }
-                            return p;
-                          })
-                        );
-                      }}
-                    >
-                      +
-                    </IconButton>
-                  </Stack>
-                  {product?.quantity >= product?.maxQuantity && (
+                    Sản phẩm không còn tồn tại
+                  </Typography>
+                </TableCell>
+              ) : (
+                <>
+                  <TableCell align="right">
+                    {product?.promotionPrice > 0 &&
+                      product?.promotionPrice < product?.price && (
+                        <Typography
+                          variant="subtitle1"
+                          component="p"
+                          sx={{ textDecoration: "line-through" }}
+                          color={"color4.main"}
+                        >
+                          <FormatCurrency amount={product?.price} />
+                        </Typography>
+                      )}
                     <Typography
-                      variant="body2"
+                      variant="body1"
                       component="p"
                       color={"color1.main"}
-                      style={{
-                        fontSize: ".9rem",
-                      }}
                     >
-                      Tối đa: {product?.maxQuantity} sản phẩm
+                      <FormatCurrency
+                        amount={Math.min(
+                          product?.price,
+                          product?.promotionPrice
+                        )}
+                      />
                     </Typography>
-                  )}
-                </Stack>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1" component="p" color={"color1.main"}>
-                  <FormatCurrency
-                    amount={
-                      Math.min(product?.price, product?.promotionPrice) *
-                      product?.quantity
-                    }
-                  />
-                </Typography>
-              </TableCell>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Stack direction={"column"}>
+                      <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        spacing={1}
+                        width={"100%"}
+                      >
+                        <IconButton
+                          size="large"
+                          aria-label="minus"
+                          sx={{
+                            cursor: `${product?.quantity === 1
+                              ? "not-allowed"
+                              : "pointer"
+                              }`,
+                          }}
+                          onClick={() => {
+                            onProductCartChange(
+                              products.map((p) => {
+                                if (
+                                  p.productVersionId ===
+                                  product.productVersionId
+                                ) {
+                                  p.quantity = Math.max(1, p.quantity - 1);
+                                  setCoupon({});
+                                  setDeleteDiscount(true);
+                                }
+                                return p;
+                              })
+                            );
+                          }}
+                        >
+                          -
+                        </IconButton>
+                        <Typography variant="body1" component="p">
+                          {product?.quantity}
+                        </Typography>
+                        <IconButton
+                          size="large"
+                          aria-label="plus"
+                          onClick={() => {
+                            onProductCartChange(
+                              products.map((p) => {
+                                if (
+                                  p.productVersionId ===
+                                  product.productVersionId &&
+                                  p.quantity < p.maxQuantity
+                                ) {
+                                  p.quantity = Math.max(1, p.quantity + 1);
+                                  setCoupon({});
+                                  setDeleteDiscount(true);
+                                }
+                                return p;
+                              })
+                            );
+                          }}
+                        >
+                          +
+                        </IconButton>
+                      </Stack>
+                      {product?.quantity >= product?.maxQuantity && (
+                        <Typography
+                          variant="body2"
+                          component="p"
+                          color={"color1.main"}
+                          style={{
+                            fontSize: ".9rem",
+                          }}
+                        >
+                          Tối đa: {product?.maxQuantity} sản phẩm
+                        </Typography>
+                      )}
+                    </Stack>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Typography
+                      variant="body1"
+                      component="p"
+                      color={"color1.main"}
+                    >
+                      <FormatCurrency
+                        amount={
+                          Math.min(product?.price, product?.promotionPrice) *
+                          product?.quantity
+                        }
+                      />
+                    </Typography>
+                  </TableCell>
+                </>
+              )}
               <TableCell align="center">
                 <DeleteButton
                   aria-label="delete"
@@ -232,6 +272,18 @@ function CartTable(props) {
                     onProductCartChange(
                       products.filter(
                         (p) => p.productVersionId !== product.productVersionId
+                      )
+                    );
+
+                    // Remove from local storage
+                    const cart = JSON.parse(localStorage.getItem("cart"));
+                    if (!cart) return;
+                    localStorage.setItem(
+                      "cart",
+                      JSON.stringify(
+                        cart.filter(
+                          (p) => p.productVersionId !== product.productVersionId
+                        )
                       )
                     );
                   }}

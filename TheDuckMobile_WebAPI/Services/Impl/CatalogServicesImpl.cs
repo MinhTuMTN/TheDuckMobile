@@ -54,7 +54,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
 
             var products = catalog.Products!
-                .Where(p => p.ProductPrice >= minPrice && p.ProductPrice <= maxPrice);
+                .Where(p => p.ProductPrice >= minPrice && p.ProductPrice <= maxPrice && p.IsDeleted == false);
 
             if (brands != null && brands.Count > 0)
                 products = products.Where(p => brands.Contains(p.BrandId));

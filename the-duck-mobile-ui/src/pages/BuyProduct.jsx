@@ -282,7 +282,7 @@ function BuyProduct(props) {
             marginBottom={"2.5rem"}
             alignItems={"center"}
           >
-            <IconButton aria-label="back">
+            <IconButton aria-label="back" onClick={() => navigate("/cart")}>
               <ArrowBackIosIcon />
             </IconButton>
             <Typography variant="h4" textAlign={"center"} width={"100%"}>

@@ -41,10 +41,7 @@ namespace TheDuckMobile_WebAPI.Controllers
         [HttpPost("check-phone-number")]
         public async Task<IActionResult> CheckPhoneNumber([FromBody] CheckPhoneNumberRequest request)
         {
-            bool exist = await _userServices.CheckCustomerExists(request.Phone!);
             Regex regex = new Regex(@"^(\+84)\d{9,10}$");
-
-
             if (!regex.IsMatch(request.Phone!) || !request.Phone!.StartsWith("+84"))
             {
                 return BadRequest(new GenericResponse
@@ -55,8 +52,10 @@ namespace TheDuckMobile_WebAPI.Controllers
                 });
             }
 
-            List<string> phoneNotVerified = _configuration.GetSection("AppSettings:PhoneNotVerified").Get<List<string>>();
 
+            bool exist = await _userServices.CheckCustomerExists(request.Phone!);
+
+            List<string> phoneNotVerified = _configuration.GetSection("AppSettings:PhoneNotVerified").Get<List<string>>();
             if (phoneNotVerified != null && phoneNotVerified.Contains(request.Phone!))
             {
                 return Ok(new GenericResponse
@@ -251,7 +250,6 @@ namespace TheDuckMobile_WebAPI.Controllers
         {
             // Check email format is valid and belongs to minhtunguyen.onmicrosoft.com
             Regex regex = new Regex(@"^([a-zA-Z0-9_\-\.]+)@minhtunguyen\.onmicrosoft\.com$");
-
             if (!regex.IsMatch(request.Email!))
             {
                 return BadRequest(new GenericResponse
@@ -263,7 +261,6 @@ namespace TheDuckMobile_WebAPI.Controllers
             }
 
             var exist = await _userServices.CheckStaffExists(request.Email!);
-
             if (exist)
             {
                 var result = await _userServices.CheckAndSendOTP(request.Email!);
