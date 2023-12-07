@@ -35,13 +35,13 @@ CartTable.propTypes = {
 
 CartTable.defaultProps = {
   products: [],
-  onProductCartChange: () => {},
+  onProductCartChange: () => { },
   selectedProducts: [],
-  onSelectProduct: () => {},
+  onSelectProduct: () => { },
 };
 
 function CartTable(props) {
-  const { products, onProductCartChange, selectedProducts, onSelectProduct } =
+  const { products, onProductCartChange, selectedProducts, onSelectProduct, setCoupon, setDeleteDiscount } =
     props;
   const navigate = useNavigate();
 
@@ -158,9 +158,8 @@ function CartTable(props) {
                       size="large"
                       aria-label="minus"
                       sx={{
-                        cursor: `${
-                          product?.quantity === 1 ? "not-allowed" : "pointer"
-                        }`,
+                        cursor: `${product?.quantity === 1 ? "not-allowed" : "pointer"
+                          }`,
                       }}
                       onClick={() => {
                         onProductCartChange(
@@ -169,6 +168,8 @@ function CartTable(props) {
                               p.productVersionId === product.productVersionId
                             ) {
                               p.quantity = Math.max(1, p.quantity - 1);
+                              setCoupon({});
+                              setDeleteDiscount(true);
                             }
                             return p;
                           })
@@ -191,6 +192,8 @@ function CartTable(props) {
                               p.quantity < p.maxQuantity
                             ) {
                               p.quantity = Math.max(1, p.quantity + 1);
+                              setCoupon({});
+                              setDeleteDiscount(true);
                             }
                             return p;
                           })

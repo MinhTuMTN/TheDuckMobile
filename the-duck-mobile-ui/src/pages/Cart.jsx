@@ -13,6 +13,7 @@ function Cart(props) {
   const [products, setProducts] = React.useState([]); // [{id, name, price, quantity, image}
   const [coupon, setCoupon] = React.useState({});
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [deleteDiscount, setDeleteDiscount] = useState(false);
 
   const handleGetProductCartDetails = useCallback(async () => {
     const cart = JSON.parse(localStorage.getItem("cart"));
@@ -37,11 +38,15 @@ function Cart(props) {
     );
     if (index === -1) {
       setSelectedProducts([...selectedProducts, product]);
+      setCoupon({});
+      setDeleteDiscount(true);
     } else {
       setSelectedProducts([
         ...selectedProducts.slice(0, index),
         ...selectedProducts.slice(index + 1),
       ]);
+      setCoupon({});
+      setDeleteDiscount(true);
     }
   };
 
@@ -54,6 +59,7 @@ function Cart(props) {
       )
     );
     setSelectedProducts(newSelectedProducts);
+
   }, [products, selectedProducts]);
 
   return (
@@ -80,12 +86,16 @@ function Cart(props) {
           onProductCartChange={setProducts}
           selectedProducts={selectedProducts}
           onSelectProduct={handleSelectProduct}
+          setCoupon={setCoupon}
+          setDeleteDiscount={setDeleteDiscount}
         />
 
         <CartTotal
           selectedProducts={selectedProducts}
           coupon={coupon}
           onCouponChange={setCoupon}
+          deleteDiscount={deleteDiscount}
+          setDeleteDiscount={setDeleteDiscount}
         />
       </Stack>
     </Stack>
