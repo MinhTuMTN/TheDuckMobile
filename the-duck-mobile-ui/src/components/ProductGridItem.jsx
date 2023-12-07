@@ -190,7 +190,7 @@ const ProductGridItem = ({ productInfo, styled }) => {
         <RatingContainer alignItems={"center"}>
           <Rating
             name="half-rating-read"
-            defaultValue={productInfo.rate}
+            value={productInfo.rate}
             precision={0.1}
             size="small"
             readOnly

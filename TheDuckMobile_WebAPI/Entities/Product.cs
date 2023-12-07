@@ -42,8 +42,13 @@ namespace TheDuckMobile_WebAPI.Entities
             set => _brand = value;
         }
 
+        private ICollection<Vote>? _votes;
         [JsonIgnore]
-        public virtual ICollection<Vote>? Votes { get; set; }
+        public virtual ICollection<Vote>? Votes
+        {
+            get => _lazyLoader.Load(this, ref _votes);
+            set => _votes = value;
+        }
 
         [JsonIgnore]
         public virtual ICollection<ProductVersion>? ProductVersions { get; set; }
