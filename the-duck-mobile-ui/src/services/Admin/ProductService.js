@@ -30,9 +30,14 @@ export const updateProductThumbnail = (productId, data) => {
   });
 };
 export const createProduct = (data) => {
-  return post("productadmin", data, {
-    "Content-Type": "multipart/form-data",
-  });
+  return post(
+    "productadmin",
+    data,
+    {
+      "Content-Type": "multipart/form-data",
+    },
+    120000
+  );
 };
 
 export const getProductSpecialFeatures = (productId) => {

@@ -123,8 +123,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 if (user != null)
                 {
                     customer = (Customer)user;
-                    customer.Point += (int)totalPrice / 100;
-                    await _dataContext.SaveChangesAsync();
+                    //customer.Point += (int)totalPrice / 100;
+                    //await _dataContext.SaveChangesAsync();
                 }
 
                 Coupon? coupon = null;

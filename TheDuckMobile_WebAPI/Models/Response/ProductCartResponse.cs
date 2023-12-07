@@ -15,6 +15,7 @@ namespace TheDuckMobile_WebAPI.Models.Response
         public int MaxQuantity { get; set; }
         public string? ColorName { get; set; }
         public string? ColorCode { get; set; }
+        public bool IsDeleted { get; set; }
 
         public ProductCartResponse()
         {

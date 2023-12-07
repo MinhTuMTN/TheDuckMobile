@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Common;
 using TheDuckMobile_WebAPI.Entities;
+using TheDuckMobile_WebAPI.ErrorHandler;
 using TheDuckMobile_WebAPI.Models.Request;
 using TheDuckMobile_WebAPI.Services.Admin;
 
@@ -19,8 +20,17 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
         public async Task<bool> CheckCustomerExists(string phoneNumber)
         {
-            var user = await _context.Customers.FirstOrDefaultAsync(user => user.Phone == phoneNumber && !user.IsDeleted);
-            return user != null;
+            var user = await _context.Customers.FirstOrDefaultAsync(user => user.Phone == phoneNumber);
+
+            if (user == null)
+                return false;
+            else
+            {
+                if (user.IsDeleted)
+                    throw new ExceptionWithStatusCode(400, "Tài khoản đã bị khóa");
+                else
+                    return true;
+            }
         }
 
         public async Task<User?> FindUserByPhone(string phoneNumber)
@@ -82,9 +92,17 @@ namespace TheDuckMobile_WebAPI.Services.Impl
         {
             var staff = await _context
                 .Staffs
-                .FirstOrDefaultAsync(staff => staff.Email == email && !staff.IsDeleted);
+                .FirstOrDefaultAsync(staff => staff.Email == email);
 
-            return staff != null;
+            if (staff == null)
+                return false;
+            else
+            {
+                if (staff.IsDeleted)
+                    throw new ExceptionWithStatusCode(400, "Tài khoản đã bị khóa");
+                else
+                    return true;
+            }
         }
 
         public async Task<bool?> CheckAndSendOTP(string email)

@@ -59,7 +59,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                     .FirstOrDefaultAsync(pv => pv.ProductVersionId == userCartItem.ProductVersionId);
 
                 if (productVersion is null)
-                    throw new CustomNotFoundException($"Product version with product version id {userCartItem.ProductVersionId} not found");
+                    continue;
 
                 productCartResponses.Add(new ProductCartResponse
                 {
@@ -73,7 +73,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                     Quantity = userCartItem.Quantity,
                     MaxQuantity = productVersion.Quantity,
                     ColorName = productVersion.Color!.ColorName,
-                    ColorCode = productVersion.Color.ColorCode
+                    ColorCode = productVersion.Color.ColorCode,
+                    IsDeleted = productVersion.IsDeleted
                 });
             }
 
@@ -108,7 +109,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             var product = await _context.Products
                 .Include(p => p.Votes)
                 .Include(p => p.Catalog)
-                .FirstOrDefaultAsync(p => p.ProductId == productId);
+                .FirstOrDefaultAsync(p => p.ProductId == productId && !p.IsDeleted);
 
             if (product is null)
                 throw new CustomNotFoundException("Product not found");

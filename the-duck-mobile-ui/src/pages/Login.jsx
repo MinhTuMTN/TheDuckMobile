@@ -79,7 +79,6 @@ function Login(props) {
       ? phone.trim().toLowerCase()
       : "+84" + phone.slice(1);
 
-    enqueueSnackbar(`Đang gửi mã OTP đến ${phone}`, { variant: "info" });
     const response = isStaffEmail
       ? await checkStaffEmail(phoneNumber)
       : await checkPhoneExists(phoneNumber);
@@ -87,8 +86,11 @@ function Login(props) {
     if (response.success) {
       setPhoneExist(response.data.data);
       setStep(2);
+      enqueueSnackbar(`Đang gửi mã OTP đến ${phone}`, { variant: "info" });
+    } else if (response.statusCode === 400) {
+      enqueueSnackbar("Tài khoản của bạn đã bị khóa", { variant: "error" });
     } else {
-      enqueueSnackbar("Đã có lỗi xảy ra!", { variant: "error" });
+      enqueueSnackbar("Đã có lỗi xảy ra", { variant: "error" });
     }
   };
 

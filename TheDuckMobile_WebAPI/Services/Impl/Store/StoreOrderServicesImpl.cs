@@ -12,11 +12,16 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
     {
         private readonly DataContext _dataContext;
         private readonly IStaffServices _staffServices;
+        private readonly IConfiguration _configuration;
 
-        public StoreOrderServicesImpl(DataContext dataContext, IStaffServices staffServices)
+        public StoreOrderServicesImpl(
+            DataContext dataContext,
+            IStaffServices staffServices,
+            IConfiguration configuration)
         {
             _dataContext = dataContext;
             _staffServices = staffServices;
+            _configuration = configuration;
         }
 
         public async Task<bool> CancelStoreOrder(Guid staffId, Guid orderId)
@@ -36,6 +41,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                     .ThenInclude(oi => oi.StoreProduct!)
                     .ThenInclude(sp => sp.ProductVersion!)
                     .ThenInclude(pv => pv.Product)
+                .Include(o => o.Customer)
                 .FirstOrDefault(o => o.OrderId == orderId
                     && o.OrderState != OrderState.Delivered
                     && o.OrderState != OrderState.Canceled
@@ -77,6 +83,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 throw new UnauthorizedException("Can't access to this resources");
 
             var order = await _dataContext.Orders
+                .Include(o => o.Customer)
                 .FirstOrDefaultAsync(o => o.OrderId == orderId
                                    && o.OrderState == OrderState.Delivering
                                                       && o.StoreId == staff.StoreId
@@ -87,6 +94,11 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
             // Change Order State to Delivered
             order.OrderState = OrderState.Delivered;
             order.StaffId = staff.UserId;
+
+            // Update Customer's Point
+            var customer = order.Customer;
+            if (customer != null)
+                customer.Point += (int)order.Total / 100;
 
             await _dataContext.SaveChangesAsync();
             return true;
