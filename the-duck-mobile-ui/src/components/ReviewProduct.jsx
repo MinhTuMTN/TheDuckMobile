@@ -14,7 +14,7 @@ ReviewProduct.propTypes = {
 };
 
 function ReviewProduct(props) {
-  const { reviews, setReviews } = props;
+  const { reviews, setReviews, setRate, rate } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { token } = useAuth();
   const { search } = useLocation();
@@ -36,6 +36,9 @@ function ReviewProduct(props) {
     const response = await createVote(search.split("=")[1], reviewRequest);
     if (response.success) {
       enqueueSnackbar("Đánh giá thành công", { variant: "success" });
+      const totalRating = response.data.data.reduce((acc, item) => acc + item.rate, 0);
+      const averageRating = response.data.data.length > 0 ? totalRating / response.data.data.length : 0;
+      setRate(parseFloat(averageRating))
       setReviewRequest({
         rate: 0,
         comment: "",

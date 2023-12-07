@@ -100,6 +100,7 @@ function ProductDetails(props) {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedVersion, setSelectedVersion] = useState({});
   const [quantity, setQuantity] = useState(1);
+  const [rate, setRate] = useState(0);
   const navigate = useNavigate();
 
   const handleGetProductDetails = useCallback(async () => {
@@ -107,6 +108,8 @@ function ProductDetails(props) {
 
     if (response.success) {
       setInfo(response.data.data);
+
+      setRate(response.data.data.rate);
 
       const colors = response.data.data.productColorVersions;
       setColors(colors);
@@ -297,8 +300,8 @@ function ProductDetails(props) {
                   </Box>
 
                   <ProductDetailsRating
-                    rating={info?.rate}
-                    numReviews={info?.votes?.length}
+                    rating={rate}
+                    numReviews={votes?.length}
                   />
 
                   <ProductDetailsShortDesc desc={info?.productDescription} />
@@ -417,6 +420,8 @@ function ProductDetails(props) {
                   attributes={info?.catalogAttributes}
                   reviews={votes}
                   setReviews={setVotes}
+                  setRate={setRate}
+                  rate={rate}
                   activeTab={state?.activeTab}
                 />
               </Grid>
