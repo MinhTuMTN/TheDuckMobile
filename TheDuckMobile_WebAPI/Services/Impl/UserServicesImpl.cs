@@ -20,7 +20,8 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
         public async Task<bool> CheckCustomerExists(string phoneNumber)
         {
-            var user = await _context.Customers.FirstOrDefaultAsync(user => user.Phone == phoneNumber);
+            string altPhone = phoneNumber.StartsWith("+84") ? phoneNumber.Replace("+84", "0") : phoneNumber;
+            var user = await _context.Customers.FirstOrDefaultAsync(user => user.Phone == phoneNumber || user.Phone == altPhone);
 
             if (user == null)
                 return false;
@@ -40,6 +41,10 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
         public async Task<User> CreateCustomer(RegisterRequest request)
         {
+            // Check Date of birth must be lower than now
+            if (request.DateOfBirth > DateTime.Now)
+                throw new ExceptionWithStatusCode(400, "Date of birth not valid");
+
             var customer = new Customer
             {
                 FullName = request.FullName,
@@ -64,6 +69,9 @@ namespace TheDuckMobile_WebAPI.Services.Impl
 
         public async Task<User?> EditInformationUser(Guid userId, EditInformationUserRequest request)
         {
+            if (request.DateOfBirth > DateTime.Now)
+                throw new ExceptionWithStatusCode(400, "Date of birth not valid");
+
             var user = await _context.Users.FirstOrDefaultAsync(user => user.UserId == userId && !user.IsDeleted);
 
             if (user == null)

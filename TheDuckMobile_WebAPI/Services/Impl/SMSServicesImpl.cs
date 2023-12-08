@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TheDuckMobile_WebAPI.Entities;
+using TheDuckMobile_WebAPI.ErrorHandler;
 
 namespace TheDuckMobile_WebAPI.Services.Impl
 {
@@ -65,7 +66,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
             {
                 // Check 3 minutes before aldready sent OTP
                 if (user.OTPExpiredAt != null && user.OTPExpiredAt > DateTime.Now)
-                    return null;
+                    otp = int.Parse(user.OTP!);
 
 
                 // Save to database
@@ -86,7 +87,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl
                 fcmToken,
                 new Dictionary<string, string>
                 {
-                    { "message", "Mã xác thực của bạn là: " + otp.ToString() },
+                    { "message", "Ma xac thuc cua ban la: " + otp.ToString() },
                     { "phoneNumber", phoneNumber },
                 }
                 );

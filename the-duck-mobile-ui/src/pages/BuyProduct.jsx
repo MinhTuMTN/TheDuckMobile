@@ -225,7 +225,20 @@ function BuyProduct(props) {
       })),
     };
 
+    if (!selectedAddress || !selectedAddress.addressId) {
+      enqueueSnackbar("Vui lòng chọn địa chỉ nhận hàng", {
+        variant: "error",
+      });
+      return;
+    }
     if (!token) {
+      if (info.name.trim() === "" || info.phone.trim() === "") {
+        enqueueSnackbar("Vui lòng nhập đầy đủ thông tin", {
+          variant: "error",
+        });
+        return;
+      }
+
       data.temporaryCustomer = {};
       data.temporaryCustomer.fullName = info.name;
       data.temporaryCustomer.phone = info.phone;

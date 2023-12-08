@@ -169,7 +169,7 @@ namespace TheDuckMobile_WebAPI.Services.Impl.Store
                 {
                     UserId = Guid.NewGuid(),
                     FullName = tempCustomer.FullName,
-                    Phone = tempCustomer.Phone!.StartsWith('0') ? "+84" + tempCustomer.Phone.Substring(1) : tempCustomer.Phone,
+                    Phone = tempCustomer.Phone!.StartsWith("0") ? "+84" + tempCustomer.Phone.Substring(1) : tempCustomer.Phone,
                     Addresses = new List<Address>(),
                     Gender = tempCustomer.Gender
                 };

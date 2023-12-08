@@ -116,7 +116,7 @@ function Login(props) {
       );
     }
     if (!response.success) {
-      enqueueSnackbar("OTP không hợp lệ", { variant: "error" });
+      enqueueSnackbar("OTP hoặc thông tin không hợp lệ", { variant: "error" });
     } else {
       setToken(response.data.data);
       enqueueSnackbar("Đăng nhập thành công", { variant: "success" });
